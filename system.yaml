@@ -1,0 +1,39 @@
+title: Low-Cost Attritable Communications Relay UAS
+domain: defense
+tier: exploratory
+status: draft
+project_type: independent research / concept exploration
+standards:
+  - UAF 1.2 (Strategic, Operational, Resources viewpoints)
+  - SysML 1.6 (structural decomposition, applied informally)
+  - INCOSE SE Handbook v5 (process reference)
+assurance_framework: none — exploratory concept study, not an acquisition program
+system_class: Group 1 sUAS (notional); no safety integrity level assigned
+summary: >
+  Notional low-cost, attritable quadrotor carrying a communications-relay
+  payload, intended to extend the control and telemetry link range of a
+  separate small UAS beyond direct line of sight. Modeled at capability
+  and architecture level only.
+
+scope:
+  in_scope:
+    - Capability gap articulation and operational concept
+    - Platform architecture (airframe, propulsion, power, avionics)
+    - Interface definition and cost/mass budget allocation
+    - Requirements and end-to-end traceability
+  out_of_scope:
+    - RF waveform, frequency plan, protocol, modulation, or link budget
+    - Antenna design, gain patterns, or transmit power
+    - Electronic warfare technique or counter-EW design
+    - Weapons or munitions integration of any kind
+    - Hardware build, flight test, or spectrum-radiating experimentation
+
+id_scheme:
+  CAP: capability (strategic viewpoint)
+  OA:  operational activity
+  OP:  operational performer
+  CMP: physical component (resource viewpoint)
+  FUN: system function
+  IFC: interface
+  REQ: requirement
+  TS:  open trade study
