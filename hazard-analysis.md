@@ -28,8 +28,8 @@ project does not meet.
 |---|---|---|---|---|---|---|---|---|
 | HAZ-001 | Uncommanded descent / crash | MODE-001..004 | Power loss, control failure, structural failure | Platform loss; ground impact hazard | High | TODO | TODO | TODO |
 | HAZ-002 | Flyaway (loss of platform command link) | MODE-001..003 | Platform command link loss (IFC-EXT-005) | Uncontrolled flight beyond operator area | High | TODO | REQ-FUN-005 (RTL) | FUN-FLT-04 |
-| HAZ-003 | Battery thermal event | All | Cell damage, overcurrent, charge fault | Fire; injury; loss of platform | High | TODO | TODO | CMP-PWR-01 |
-| HAZ-004 | Propeller contact injury | MODE-005, ground handling | Inadvertent motor arming | Injury to personnel | High | TODO | Motor arming inhibit in MODE-005 | TODO |
+| HAZ-003 | Battery thermal event | All | Cell damage, overcurrent, charge fault | Fire; injury; loss of platform | High | TODO | REQ-SAF-001 | CMP-PWR-01 |
+| HAZ-004 | Propeller contact injury | MODE-005, ground handling | Inadvertent motor arming | Injury to personnel | High | TODO | REQ-SAF-002 | TODO |
 | HAZ-005 | Loss of relay function while airborne | MODE-002 → MODE-003 | Payload failure, power rail loss | Relayed link drops; remote UAS may be stranded | Medium | TODO | TODO | FUN-REL-01, FUN-REL-02 |
 | HAZ-006 | Station drift | MODE-002 | Position hold failure, wind, GNSS loss | Relay geometry degrades; link margin lost | Medium | TODO | REQ-FUN-003 | FUN-FLT-03 |
 | HAZ-007 | Battery depletion before recovery | MODE-002, MODE-004 | Endurance overestimate, headwind | Platform loss | Medium | TODO | REQ-FUN-005 | FUN-PWR-02 |

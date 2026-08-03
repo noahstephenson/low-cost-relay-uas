@@ -65,6 +65,14 @@ graph LR
 | REQ-CON-001 | CAP-004 | All | I | TODO |
 | REQ-CON-002 | CAP-004 | CMP-AVN-01 | I | TODO |
 | REQ-CON-003 | — | All | I | TODO |
+| REQ-CON-004 | CAP-002 | CMP-AVN-03, FUN-FLT-03 | A | TODO |
+| REQ-FUN-006 | — | FUN-PWR-01 / CMP-AVN-01 | D | TODO |
+| REQ-FUN-007 | CAP-004 | FUN-FLT-01, FUN-FLT-04 | D `Deferred` | TODO |
+| REQ-PER-005 | CAP-004 | All | D `Deferred` | TODO |
+| REQ-IFC-003 | — | CMP-COM-01 | I | TODO |
+| REQ-IFC-004 | — | CMP-MNT-01 / IFC-INT-007 | T `Deferred` | TODO |
+| REQ-SAF-001 | — | CMP-PWR-01, CMP-PWR-02 | I `Deferred` | TODO |
+| REQ-SAF-002 | — | CMP-AVN-01 | D | TODO |
 
 ## Matrix 4 — Hazard to Mitigating Requirement
 
@@ -72,8 +80,8 @@ graph LR
 |---|---|---|---|
 | HAZ-001 | Uncommanded descent / crash | TODO | TODO |
 | HAZ-002 | Flyaway | REQ-FUN-005 | TODO |
-| HAZ-003 | Battery thermal event | TODO — **unmitigated** | TODO |
-| HAZ-004 | Propeller contact injury | TODO (MODE-005 inhibit) | TODO |
+| HAZ-003 | Battery thermal event | REQ-SAF-001 | TODO |
+| HAZ-004 | Propeller contact injury | REQ-SAF-002 | TODO |
 | HAZ-005 | Loss of relay function airborne | TODO | TODO |
 | HAZ-006 | Station drift | REQ-FUN-003 | TODO |
 | HAZ-007 | Battery depletion before recovery | REQ-FUN-005 | TODO |
@@ -96,7 +104,7 @@ lists them.
 |---|---|---|
 | CAP-003 has no allocated function | Matrix 1 | Inherent — mechanism lives in deferred payload |
 | All external RF interfaces undefined | Matrix 5 | Intentional — TS-009 out of scope |
-| HAZ-003 unmitigated | Matrix 4 | **Real gap** — needs a requirement |
+| HAZ-003 mitigation (REQ-SAF-001) not yet verified | Matrix 4 | Expected at this maturity — verification method is `I` `Deferred` |
 | Most verification statuses empty | Matrix 3 | Expected at this maturity |
 | Budgets not rolled up | `architecture.md` | Needs component data from TS-001..003 |
 
