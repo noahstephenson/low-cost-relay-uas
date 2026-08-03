@@ -26,21 +26,40 @@ component table is a gap; a `TS-` reference is a *known* gap with a defined shap
 | TS-010 | Environmental envelope | All | Temperature, wind, precipitation limits | Open |
 | TS-011 | Recovery approach (recoverable vs. genuinely attritable) | CMP-AFR-03, FUN-FLT-04 | Cost of recovery features vs. unit replacement cost | Open |
 
-## TS-009 — Note on Deferral
+## TS-009 — Formal Deferral
 
-TS-009 covers frequency, waveform, protocol, modulation, transmit power, antenna type
-and gain, and link budget. It is deferred rather than open because resolving it is
-outside this project's scope by design, not merely unfinished.
+Every other entry in the Register above is an open trade study: a decision this
+project intends to make, currently sitting at Open, Scoped, or Resolved while it
+waits its turn. TS-009 is categorically different, and its `Status` reflects that:
+**Deferred**, not Open. This is not "not yet decided." It is **not this project's
+decision to make.** RF frequency plan, waveform, protocol, modulation, transmit
+power, antenna type and gain, and link budget are listed under `system.yaml`'s
+`out_of_scope` from the start, alongside antenna design, gain patterns, transmit
+power, and electronic-warfare/counter-EW technique. There is no state this project
+reaches where TS-009 becomes a study to work; it is a boundary of the study itself.
 
-Anyone picking this up should treat it as a separate effort requiring RF engineering
-expertise, and — before any radiating hardware exists — spectrum authorization from
-the relevant national authority. In a defense-affiliated context it would also
-require export control review. See `REQ-DEF-001` through `REQ-DEF-005`.
+**What would actually have to happen for someone to pick this up.** Consistent with
+the language already used in README's Scope Boundaries and Disclaimer sections:
+moving toward a real payload would require RF engineering expertise as a separate
+effort, spectrum authorization from the relevant national authority before any
+radiating hardware exists, and — in a defense-affiliated context — export control
+review. None of that is addressed here, and none of it is this repository's
+competence to address. See `REQ-DEF-001` through `REQ-DEF-005` for the specific
+items recorded as out of scope rather than silently dropped.
 
-The architecture is deliberately built so that TS-009 can be resolved independently:
-`CMP-COM-01` touches the rest of the system through exactly two interfaces
-(`IFC-INT-003` power, `IFC-INT-007` mechanical), so a payload decision does not
-ripple into the platform design.
+**Why the rest of the model doesn't have to wait on it.** This is the payoff of one
+of the two choices `architecture.md` calls out as shaping everything downstream: the
+payload is isolated behind exactly two interfaces. `CMP-COM-01` touches the rest of
+the system through `IFC-INT-003` (regulated power) and `IFC-INT-007` (mechanical
+retention), and nothing else — no data path, no control signal, no shared structure.
+`REQ-IFC-003` exists specifically to hold that boundary in place: *"The payload
+interface shall be limited to power (`IFC-INT-003`) and mechanical retention
+(`IFC-INT-007`)"* — its own rationale states plainly that "a third interface would
+break the isolation the architecture depends on." As long as that requirement holds,
+TS-009 can be picked up — by this project, by someone else entirely, on whatever
+timeline RF engineering, spectrum authorization, and export control allow — without
+the platform architecture around it needing to change. A payload decision is a
+mount-and-rail question, not a redesign.
 
 ## Worked Trade Studies
 
