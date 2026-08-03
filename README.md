@@ -5,18 +5,22 @@
 
 ## Overview
 
-<!-- STUB: 2-3 paragraphs. What the system is, why the concept exists, what the
-     three-node relay arrangement looks like at a glance. Keep factual; avoid
-     claiming performance this model does not substantiate. -->
+A small rotary-wing platform whose sole mission is to carry a communications-relay
+payload to altitude and hold station, extending the control and telemetry link
+between a ground control node and a separate remote UAS operating beyond direct line
+of sight.
 
-TODO — A small, deliberately inexpensive rotary-wing platform whose sole mission is to
-carry a communications-relay payload to altitude and hold station, extending the
-control and telemetry link between a ground control node and a separate remote UAS
-operating beyond direct line of sight.
+The concept's organizing assumption is that the relay function deserves its own
+airframe. The prevailing alternative is to treat relay as one mission among several
+for a general-purpose small UAS — which works, but means every relay sortie ties up a
+platform sized and priced for a harder job. A purpose-built relay node can shed
+everything the relay mission does not need and spend the savings on unit cost. If the
+platform is cheap enough, losing one stops being an incident and becomes a
+consumable.
 
-The design driver is unit cost. The concept assumes the platform is attritable —
-cheap enough that loss is tolerable — which inverts the usual optimization from
-capability-per-airframe toward capability-per-dollar.
+That inversion — optimizing for capability-per-dollar rather than
+capability-per-airframe — is the hypothesis this model exists to structure. It is not
+a demonstrated finding, and this repository does not claim to have validated it.
 
 ## Scope Boundaries
 
@@ -38,9 +42,11 @@ This repository models **capability justification and system architecture**.
 - Hardware build, flight test, or any spectrum-radiating experimentation
 
 The communications payload (`CMP-COM-01`) is modeled as a **black box** throughout:
-defined by its function and interfaces, not its implementation. Moving toward
-hardware would require RF engineering expertise, spectrum authorization, and — in a
-defense-affiliated context — export control review. None of that is addressed here.
+defined by its function and interfaces, not its implementation. It touches the rest of
+the system through exactly two interfaces — `IFC-INT-003` (power) and `IFC-INT-007`
+(mechanical) — so payload decisions do not ripple into platform design. Moving toward
+hardware would require RF engineering expertise, spectrum authorization, and, in a
+defense-affiliated context, export control review. None of that is addressed here.
 
 ## Repository Structure
 
@@ -72,15 +78,28 @@ defense-affiliated context — export control review. None of that is addressed 
 - Spectrum management authority — governs any real implementation
 - Launch and recovery handling, transport, and field sustainment equipment
 
+The boundary is drawn so the relay payload sits *inside* it physically but *outside*
+it analytically. The platform is specified to carry an unspecified payload within a
+defined mass, power, and volume envelope. This is what allows the architecture to
+proceed while TS-009 remains deferred.
+
 ## Operational Environment
 
-<!-- STUB: describe the intended employment environment. Candidates below —
-     replace with your own analysis and delete what does not apply. -->
+Notional employment is dismounted small-unit operation from unimproved sites: hand
+launch, no support equipment, no prepared surface, no ground infrastructure beyond
+what the unit already carries. The platform is transported by the same personnel who
+employ it, which bounds mass and volume more tightly than any performance requirement
+does.
 
-TODO — Notional employment is dismounted small-unit operation from unimproved sites.
-Environmental envelope (temperature, wind, precipitation) is **not yet specified**;
-setting it is TS-010. No environmental qualification standard is invoked — this is a
-concept study, not a qualification program.
+The environmental envelope — temperature, wind, precipitation limits — is **not yet
+specified**. Setting it is TS-010, and it matters more than it might appear: wind
+tolerance during station keeping drives thrust margin, which drives propulsion sizing
+and therefore much of the unit cost. A concept that holds station in calm air and
+drifts in moderate wind is a different, and considerably cheaper, system than one that
+does not.
+
+No environmental qualification standard is invoked. This is a concept study, not a
+qualification program.
 
 ## Operating Modes
 
@@ -90,37 +109,69 @@ Mode IDs are referenced by `requirements.md` and `hazard-analysis.md`.
 |---|---|---|---|---|
 | MODE-001 | Transit | Climb and fly to station | FUN-FLT-01, FUN-FLT-02, FUN-CMD-01 | Payload may be inactive |
 | MODE-002 | Station Keeping | Loiter at relay altitude, payload active | FUN-FLT-01, FUN-FLT-03, FUN-REL-01, FUN-REL-02 | Primary mission mode |
-| MODE-003 | Relay Degraded | Partial or failed payload function; platform airborne | FUN-FLT-01, FUN-FLT-03 | TODO — define degraded criteria |
-| MODE-004 | Return / Recovery | Return to launch on low battery or command | FUN-FLT-01, FUN-FLT-04, FUN-PWR-02 | Relay function ends |
-| MODE-005 | Ground Safe | Powered on ground; payload and motors inhibited | FUN-PWR-01 | Motor arming inhibited |
+| MODE-003 | Relay Degraded | Payload function lost or partial; platform airborne and controllable | FUN-FLT-01, FUN-FLT-03, FUN-CMD-01 | Entered on loss of payload power or operator declaration; exit is to MODE-004 |
+| MODE-004 | Return / Recovery | Return to launch on low battery or command | FUN-FLT-01, FUN-FLT-04, FUN-PWR-02 | Relay function ends on entry |
+| MODE-005 | Ground Safe | Powered on ground; payload and motors inhibited | FUN-PWR-01 | Motor arming inhibited (REQ-FUN-006) |
+
+MODE-003 exists because the platform outliving its payload is the expected partial
+failure, not an edge case. A relay that has lost its payload is still an aircraft with
+stored energy in the air, and the mode makes explicit that it must still be flown home
+rather than treated as expendable the moment it stops being useful.
 
 ## Key Technical Challenges
 
-<!-- STUB: each item should become a short paragraph of real analysis. -->
+1. **Endurance versus unit cost.** These are coupled through a loop that does not close
+   easily on a cheap airframe. Rotary-wing hover is power-hungry, so endurance comes
+   from battery mass; but added battery mass raises hover power, so returns diminish
+   and eventually reverse. Structural efficiency is what buys margin in that loop, and
+   structural efficiency is exactly what an inexpensive airframe gives up. The concept
+   therefore has a real possibility of failing on its own terms — of needing enough
+   battery and structure to hold useful station time that it prices itself out of
+   attritability. Establishing where that curve sits is the most load-bearing open
+   question in the model (TS-001, TS-002, TS-003).
 
-1. **Endurance versus unit cost.** TODO — Endurance drives battery mass, which drives
-   airframe and propulsion sizing, which drives cost. The concept lives or dies on
-   where this curve is cut.
+2. **Station keeping without assuming GNSS.** The environments that motivate an
+   airborne relay are the same environments where satellite navigation is least
+   dependable, so a design that silently assumes GNSS has assumed away part of its own
+   justification. The mitigating observation is that relay geometry is far more
+   tolerant than precision hover: a relay node needs to stay roughly where it was put,
+   not hold a survey point. If the acceptable drift box is tens of metres rather than
+   metres, the sensing burden drops substantially. Quantifying that tolerance requires
+   the link characterisation this project defers (TS-009), so TS-007 has to be framed
+   as a range of approaches rather than a single decision.
 
-2. **Station-keeping without heavy dependence on GNSS.** TODO — A relay is only useful
-   if it holds a stable position, but GNSS availability cannot be assumed in the
-   environments that motivate the concept.
+3. **Payload mass fraction on a deliberately cheap airframe.** Treating the payload as
+   a black box is analytically clean but pushes a real problem into the mass budget:
+   the platform must be sized for a payload *envelope* rather than a payload. Size the
+   envelope generously and the airframe grows to carry mass that may never be
+   installed; size it tightly and the architecture stops being payload-agnostic, which
+   was the point. This is the clearest cost of the black-box decision, and it is worth
+   stating plainly rather than absorbing quietly (TS-004, TS-006).
 
-3. **Payload mass fraction on a deliberately cheap airframe.** TODO
+4. **Attritability versus recoverability.** Below some unit cost, features that exist
+   to recover the platform cost more than the platform. Robust landing gear,
+   return-to-launch, and the navigation needed to support it are all recovery
+   features. The complication is that cost is not uniformly distributed: the battery is
+   typically the most expensive reusable component, so "attritable airframe,
+   recoverable battery" may be the coherent position rather than treating the whole
+   aircraft as consumable. TS-011 should resolve this, and it will move REQ-FUN-005 in
+   one direction or the other.
 
-4. **Attritability versus recoverability.** TODO — If the platform is cheap enough to
-   lose, how much design effort should go into recovering it?
-
-5. **Payload-agnostic mount and power interface.** TODO — Keeping `CMP-COM-01` a true
-   black box requires the mechanical and power interfaces to be genuinely generic.
+5. **Keeping the payload interface genuinely generic.** The black-box treatment only
+   holds if `IFC-INT-003` and `IFC-INT-007` are specified without reference to what is
+   on the other side. The failure mode is subtle: a power rail sized for one
+   anticipated payload, or a mount whose bolt pattern reflects one anticipated form
+   factor, produces an architecture that claims a modularity it does not have.
+   Guarding against this means specifying an envelope and accepting the
+   overprovisioning that comes with it (TS-004, TS-006).
 
 ## Stakeholders
 
 | Stakeholder | Role |
 |---|---|
-| Small-unit operator | Employs and recovers the relay platform |
-| Remote UAS operator | Consumer of the extended link; drives relay requirements |
-| Sustainment / logistics | Handles battery supply, spares, and unit replacement |
+| Small-unit operator | Employs, launches, and recovers the relay platform |
+| Remote UAS operator | Consumer of the extended link; their tolerance for link loss drives relay requirements |
+| Sustainment / logistics | Battery supply, spares, unit replacement; bears the consequence of attritability |
 | Spectrum management authority | External; governs any radiating implementation |
 | Research advisor / reviewer | Evaluates the concept and its assumptions |
 
@@ -141,8 +192,8 @@ Mode IDs are referenced by `requirements.md` and `hazard-analysis.md`.
 All content is derived from publicly available information and original analysis. No
 export-controlled, classified, or proprietary content is included. The communications
 payload is intentionally left unspecified. Nothing here constitutes a design suitable
-for fabrication, and any physical implementation would require appropriate
-engineering review, spectrum authorization, and regulatory compliance.
+for fabrication, and any physical implementation would require appropriate engineering
+review, spectrum authorization, and regulatory compliance.
 
 ## License
 
