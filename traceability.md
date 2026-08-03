@@ -123,7 +123,7 @@ lists them.
 | HAZ-005 mitigation (REQ-FUN-007) covers platform safety only, not the relay/mission function | Matrix 4 | **Real gap** — payload is a black box (TS-009); no in-scope requirement restores relay function |
 | HAZ-009 has no hazard defined | Hazard Log | Reserved ID, not yet populated — no basis in the model to define one without inventing a hazard |
 | Most verification statuses empty | Matrix 3 | Expected at this maturity |
-| Budgets not rolled up | `architecture.md` | Needs component data from TS-001..003 |
+| Budgets not rolled up — mass/cost/endurance are a coupled loop (TS-002/TS-003), not three independent gaps, and the loop may not close favorably at every candidate endurance target | `architecture.md` | **Real, substantive gap** — not just blocked on missing component data; see TS-002/TS-003 finding |
 
 ## Consistency Checks
 

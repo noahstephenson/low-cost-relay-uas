@@ -160,14 +160,20 @@ should be treated as a change to the architecture's central assumption, not a de
 
 | Budget | Target | Allocated | Margin | Notes |
 |---|---|---|---|---|
-| Mass | [TBD] | [TBD] | [TBD] | Blocked on TS-001, TS-002, TS-003; payload entry is an envelope, not a value |
-| Unit cost | [TBD] | [TBD] | [TBD] | Blocked on the same three; CMP-PWR-01 expected to dominate reusable cost |
-| Power | [TBD] | [TBD] | [TBD] | Hover draw dominates; payload allocation is an envelope per TS-004 |
-| Endurance | [TBD] | — | — | Derived, not allocated. See REQ-PER-002 |
+| Mass | [TBD] — bounded below by dry mass (airframe + propulsion hardware + avionics + payload mount + payload envelope; TS-001/TS-006), bounded above by battery mass, which is coupled to REQ-PER-002 and TS-002's hover efficiency, not independently settable | [TBD] | [TBD] | Coupled loop, not yet closed — see TS-002/TS-003 for the iteration and finding. Payload entry is an envelope, not a value |
+| Unit cost | [TBD] | [TBD] | [TBD] | CMP-PWR-01 (battery) is the dominant, least cost-elastic driver — see TS-002/TS-003 finding. Coupled to the same endurance target as Mass, not an independent number |
+| Power | [TBD] | [TBD] | [TBD] | Hover draw dominates; set jointly by AUW (see Mass row) and TS-002's disk-loading choice. Payload allocation is an envelope per TS-004 |
+| Endurance | [TBD] | — | — | Derived, not allocated. See REQ-PER-002. TS-002/TS-003 finding: no candidate value is risk-free — a short-dwell target plausibly converges to a small, cheap design of marginal operational utility; a mission-useful-dwell target risks pricing the platform out of CAP-004. Not resolved here |
 
-Budgets are deliberately empty. Populating them requires TS-001 through TS-003, and
-filling them with plausible figures beforehand would make the model appear more
-resolved than it is. Endurance is marked *derived* because it is an output of the mass
+Budgets are deliberately empty, and as of TS-002/TS-003 that emptiness is no longer
+just "blocked on more component data." Working the propulsion/battery loop showed the
+three quantities above are not independent `[TBD]`s that TS-001 through TS-003 will
+fill in one at a time — they are three views of a single unresolved coupling, and the
+iteration (see `trade-studies.md`) suggests the loop does not obviously close
+favorably at every candidate endurance target. Filling these cells with plausible
+figures now would make the model appear more resolved than it is, and in this case
+would also paper over a real, load-bearing open question rather than an ordinary gap
+in component data. Endurance is marked *derived* because it is an output of the mass
 and power budgets rather than an independent allocation — writing a number there
 before the others are closed would invert the dependency.
 
