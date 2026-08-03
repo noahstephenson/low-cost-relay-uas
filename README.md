@@ -197,4 +197,8 @@ review, spectrum authorization, and regulatory compliance.
 
 ## License
 
-TODO — MIT or CC-BY-4.0 recommended for an open concept study.
+[CC BY 4.0](LICENSE) — Creative Commons Attribution 4.0 International. Chosen
+over MIT because the repository's content is primarily analysis and
+documentation (a concept study), not software; attribution licensing fits
+that better than a permissive software license. The one script in this
+repo (`scripts/check-ids.py`) is covered by the same terms.
