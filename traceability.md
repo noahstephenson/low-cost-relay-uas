@@ -78,14 +78,28 @@ graph LR
 
 | HAZ ID | Hazard | Mitigating REQ | Residual |
 |---|---|---|---|
-| HAZ-001 | Uncommanded descent / crash | TODO | TODO |
+| HAZ-001 | Uncommanded descent / crash | **Unmitigated** | TODO |
 | HAZ-002 | Flyaway | REQ-FUN-005 | TODO |
 | HAZ-003 | Battery thermal event | REQ-SAF-001 | TODO |
 | HAZ-004 | Propeller contact injury | REQ-SAF-002 | TODO |
-| HAZ-005 | Loss of relay function airborne | TODO | TODO |
+| HAZ-005 | Loss of relay function airborne | REQ-FUN-007 `Partial` | TODO |
 | HAZ-006 | Station drift | REQ-FUN-003 | TODO |
 | HAZ-007 | Battery depletion before recovery | REQ-FUN-005 | TODO |
 | HAZ-008 | Payload separation in flight | REQ-IFC-001 | TODO |
+
+> **HAZ-001 note.** No requirement in the current architecture manages the
+> consequences of an in-flight power, control, or structural failure — there is no
+> redundancy, no structural margin requirement, and (see Open Questions in
+> `hazard-analysis.md`) no flight termination or geofence function to fall back on.
+> Left explicitly unmitigated rather than closed with a requirement the architecture
+> does not support. TS-011 (recovery approach) is the closest open trade study and
+> may eventually produce a mitigating requirement, but has not yet.
+>
+> **HAZ-005 note.** REQ-FUN-007 mitigates the platform-safety half of this hazard —
+> MODE-003 keeps the aircraft controllable and recoverable after losing payload
+> function — but does not restore the relay function itself. The mission-loss
+> consequence ("remote UAS may be stranded") remains unmitigated; the payload is a
+> black box (TS-009) and no in-scope requirement reaches inside it.
 
 ## Matrix 5 — Interface to Requirement
 
@@ -105,6 +119,9 @@ lists them.
 | CAP-003 has no allocated function | Matrix 1 | Inherent — mechanism lives in deferred payload |
 | All external RF interfaces undefined | Matrix 5 | Intentional — TS-009 out of scope |
 | HAZ-003 mitigation (REQ-SAF-001) not yet verified | Matrix 4 | Expected at this maturity — verification method is `I` `Deferred` |
+| HAZ-001 unmitigated | Matrix 4 | **Real gap** — no redundancy, structural margin, or flight-termination requirement exists; TS-011 is the closest open trade study |
+| HAZ-005 mitigation (REQ-FUN-007) covers platform safety only, not the relay/mission function | Matrix 4 | **Real gap** — payload is a black box (TS-009); no in-scope requirement restores relay function |
+| HAZ-009 has no hazard defined | Hazard Log | Reserved ID, not yet populated — no basis in the model to define one without inventing a hazard |
 | Most verification statuses empty | Matrix 3 | Expected at this maturity |
 | Budgets not rolled up | `architecture.md` | Needs component data from TS-001..003 |
 
