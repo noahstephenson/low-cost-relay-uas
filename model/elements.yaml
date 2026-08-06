@@ -55,7 +55,7 @@
     {"id": "CMP-AVN-03", "name": "GNSS / compass module", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
     {"id": "CMP-AVN-04", "name": "Control link receiver", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
     {"id": "CMP-COM-01", "name": "Relay payload module (black box)", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
-    {"id": "CMP-COM-02", "name": "Antenna interface (black-box physical resource)", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
+    {"id": "CMP-COM-02", "name": "Antenna physical-resource envelope", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
     {"id": "CMP-MNT-01", "name": "Modular payload bay", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]}
   ],
   "modes": [
@@ -74,7 +74,7 @@
     {"id": "TS-006", "name": "Payload mount interface standard", "status": "open", "evidence_basis": "internal_document", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-007"]},
     {"id": "TS-007", "name": "Station-keeping approach and GNSS dependence", "status": "open", "evidence_basis": "internal_document", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-007"]},
     {"id": "TS-008", "name": "Platform command link approach", "status": "open", "evidence_basis": "internal_document", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-007"]},
-    {"id": "TS-009", "name": "Relay payload characterization", "status": "deferred_out_of_scope", "evidence_basis": "internal_document", "decision_status": "not_applicable", "applicable_configurations": ["CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"], "source_ids": ["SRC-REPO-007"]},
+    {"id": "TS-009", "name": "Relay payload characterization", "status": "deferred_out_of_scope", "evidence_basis": "internal_document", "decision_status": "not_applicable", "applicable_configurations": ["CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"], "source_ids": ["SRC-REPO-007"], "configuration_note": "Unknown CFG-REC payload characteristics remain evidence claims and gaps (CLM-REC-003, CLM-REC-004), not a design trade study imposed on the recovered article."},
     {"id": "TS-010", "name": "Environmental envelope", "status": "open", "evidence_basis": "internal_document", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-007"]},
     {"id": "TS-011", "name": "Recovery approach", "status": "open", "evidence_basis": "internal_document", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-007"]}
   ],
@@ -101,12 +101,12 @@
   ],
   "verifications": [
     {"id": "VER-001", "name": "Requirement and architecture analysis", "method": "analysis", "status": "candidate", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-004"]},
-    {"id": "VER-002", "name": "Structured traceability audit", "method": "analysis", "status": "implemented_by_validator", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"], "source_ids": ["SRC-DEC-001"]},
-    {"id": "VER-003", "name": "Source and evidence-record inspection", "method": "inspection", "status": "candidate", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"], "source_ids": ["SRC-DEC-001"]},
+    {"id": "VER-002", "name": "Structured traceability audit", "method": "analysis", "status": "implemented_by_validator", "evidence_basis": "internal_document", "decision_status": "proposed", "applicable_configurations": ["CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"], "applicability_scope": "model-governance audit; not physical verification of any configuration", "source_ids": ["SRC-DEC-001"]},
+    {"id": "VER-003", "name": "Source and evidence-record inspection", "method": "inspection", "status": "candidate", "evidence_basis": "internal_document", "decision_status": "proposed", "applicable_configurations": ["CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"], "applicability_scope": "evidence-record inspection; for CFG-REC this does not verify the physical article", "source_ids": ["SRC-DEC-001"]},
     {"id": "VER-004", "name": "Operational-scenario walkthrough", "method": "analysis", "status": "candidate", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"], "source_ids": ["SRC-DEC-001"]},
     {"id": "VER-005", "name": "Interface-catalog inspection", "method": "inspection", "status": "candidate", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"], "source_ids": ["SRC-DEC-001"]},
     {"id": "VER-006", "name": "Hazard-control-requirement cross-reference", "method": "analysis", "status": "candidate", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-DEC-001"]},
-    {"id": "VER-007", "name": "Configuration-applicability review", "method": "inspection", "status": "candidate", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"], "source_ids": ["SRC-DEC-001"]},
+    {"id": "VER-007", "name": "Configuration-applicability review", "method": "inspection", "status": "candidate", "evidence_basis": "internal_document", "decision_status": "proposed", "applicable_configurations": ["CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"], "applicability_scope": "model-governance review; not physical verification of CFG-REC", "source_ids": ["SRC-DEC-001"]},
     {"id": "VER-008", "name": "Deferred physical verification method", "method": "deferred demonstration or test", "status": "deferred_out_of_scope", "evidence_basis": "unknown", "decision_status": "not_applicable", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-004"]}
   ],
   "decisions": [
@@ -119,7 +119,20 @@
       "authority": "project owner",
       "date": "2026-08-06",
       "applicable_configurations": ["CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"],
+      "applicability_scope": "research-project governance; not a physical requirement imposed on CFG-REC",
       "source_ids": ["SRC-DEC-001"]
+    },
+    {
+      "id": "DEC-002",
+      "name": "Select UAF terminology and version posture",
+      "statement": "The project owner shall decide whether to intentionally retain UAF 1.2 terminology, use version-neutral UAF concepts, or plan a later migration to UAF 1.3. Until then, the current UAF 1.2 repository claim remains unchanged and no UAF conformance is claimed.",
+      "status": "proposed",
+      "decision_status": "proposed",
+      "authority": "project owner",
+      "date": null,
+      "applicable_configurations": ["CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"],
+      "applicability_scope": "research-project architecture-method governance",
+      "source_ids": ["SRC-DEC-001", "SRC-EXT-003"]
     }
   ]
 }

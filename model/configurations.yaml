@@ -12,6 +12,7 @@
       "decision_status": "not_applicable",
       "predecessor_ids": [],
       "derivation_relationship": "reference configuration",
+      "boundary_semantics": "Descriptive evidence boundary only; does not inherit the proposed CFG-REP/CFG-DOM component, interface, requirement, mode, control, or verification decomposition.",
       "applicable_sources": ["SRC-INT-001", "SRC-INT-002", "SRC-INT-003", "SRC-GAP-001"],
       "known_exclusions": [
         "No exact manufacturer attribution",

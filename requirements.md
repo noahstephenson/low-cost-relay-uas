@@ -49,8 +49,13 @@ to at least one component or explicitly deferred trade study.
 |---|---|---|---|---|---|
 | REQ-IFC-001 | The payload mount shall provide a standardized mechanical interface independent of payload type. | Modularity is the reason the black-box decomposition holds | CAP-004 | CMP-MNT-01 / IFC-INT-007 | I |
 | REQ-IFC-002 | The power subsystem shall provide a regulated payload rail meeting a defined voltage and current envelope. | Payload-agnostic power; envelope rather than point value | — | CMP-PWR-03 / IFC-INT-003 | T `Deferred` |
-| REQ-IFC-003 | The payload interface shall be limited to power (IFC-INT-003) and mechanical retention (IFC-INT-007). | Constrains future changes; a third interface would break the isolation the architecture depends on | — | CMP-COM-01 | I |
+| REQ-IFC-003 | The platform-to-payload interface shall be limited to power (IFC-INT-003) and mechanical retention (IFC-INT-007). | Constrains future platform coupling; payload-internal IFC-INT-010 is not a third platform interface | — | CMP-COM-01 | I |
 | REQ-IFC-004 | The payload mount shall retain the payload under all flight loads with [TBD] margin. | In-flight separation is a falling-object hazard, not merely a mission loss | — | CMP-MNT-01 / IFC-INT-007 | T `Deferred` |
+
+**Reconciliation note (2026-08-06):** `REQ-IFC-003` changed only from "payload
+interface" to "platform-to-payload interface" so `IFC-INT-010`, which remains inside
+the black-box payload envelope, cannot be misread as a third platform interface. The
+requirement intent and ID are unchanged.
 
 ## Safety Requirements
 
@@ -72,10 +77,17 @@ to at least one component or explicitly deferred trade study.
 | REQ-CON-003 | The system shall not integrate weapons or munitions of any kind. | Project scope constraint | — | All | I |
 | REQ-CON-004 | The station-keeping design shall not assume continuous GNSS availability as a precondition. | The environments motivating an airborne relay are those where GNSS is least dependable | CAP-002 | CMP-AVN-03, FUN-FLT-03 | A |
 
+`REQ-CON-003` is a proposed-design constraint and research-project scope control. It
+does not apply retroactively to `CFG-REC` and is not a recovered-article observation.
+
 ## Deferred — Out of Scope
 
 Recorded so the model is honest about what it does not resolve. These are not
 requirements this repository attempts to satisfy.
+
+`REQ-DEF-001` and `REQ-DEF-002` apply to proposed architecture configurations, not
+`CFG-REC`. Unknown recovered payload and antenna characteristics remain evidence
+claims and gaps (`CLM-REC-003`, `CLM-REC-004`, `GAP-REC-001`).
 
 | REQ ID | Item | Disposition |
 |---|---|---|

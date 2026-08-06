@@ -7,11 +7,13 @@ it holds no new information, only relationships between elements defined elsewhe
 by that manifest are the authoritative structured data. This file remains a legacy
 human-readable cross-reference and preserves known gaps; the generated
 [`reports/baseline-traceability.md`](reports/baseline-traceability.md) is the current
-derived matrix. If this file and a structured catalog disagree, record the difference
-as a reconciliation issue rather than silently selecting one.
+derived matrix, and [`reports/architecture-views.md`](reports/architecture-views.md)
+contains generated diagrams. If this file and a structured catalog disagree, the
+structured catalog governs and the difference must be recorded as a reconciliation
+issue.
 
 > **Baseline Candidate - Not Approved.** The matrices below are retained for context
-> and include known stale or incomplete entries documented in
+> and retain unresolved or incomplete relationships documented in
 > [`model/traceability.yaml`](model/traceability.yaml).
 
 ## Thread Overview
@@ -19,7 +21,8 @@ as a reconciliation issue rather than silently selecting one.
 The end-to-end thread this model is built to demonstrate:
 
 ```mermaid
-graph LR
+flowchart LR
+    %% Configuration scope: version-neutral trace pattern; concrete generated thread is CFG-REP / CFG-DOM
     CAP["Capability<br/>CAP-*"] --> OA["Operational Activity<br/>OA-*"]
     OA --> FUN["Function<br/>FUN-*"]
     FUN --> CMP["Component<br/>CMP-*"]
@@ -34,8 +37,8 @@ graph LR
 |---|---|---|
 | CAP-001 | Beyond-Line-of-Sight Control | OA-004, OA-005 |
 | CAP-002 | Terrain-Masked Operation | OA-002, OA-003 |
-| CAP-003 | Contested-Spectrum Resilience | TODO — see note below |
-| CAP-004 | Low-Cost Attritable Fielding | TODO |
+| CAP-003 | Contested-Spectrum Resilience | Unresolved - GAP-TRC-001; see note below |
+| CAP-004 | Low-Cost Attritable Fielding | No dedicated OA; expected at current maturity - GAP-TRC-002 |
 
 > **CAP-003 note.** This capability has no allocated activity or function in the
 > current model, because the mechanisms that would provide it live entirely inside
@@ -61,28 +64,28 @@ graph LR
 
 | REQ ID | Traces Up (CAP) | Traces Down (CMP / FUN) | Verify | Status |
 |---|---|---|---|---|
-| REQ-FUN-001 | CAP-001 | FUN-REL-01 / CMP-COM-01 | A | TODO |
-| REQ-FUN-002 | CAP-001 | FUN-REL-02 / CMP-COM-01 | A | TODO |
-| REQ-FUN-003 | CAP-002 | FUN-FLT-03 / CMP-AVN-01 | A | TODO |
-| REQ-FUN-004 | — | FUN-CMD-01 / CMP-AVN-04 | A | TODO |
-| REQ-FUN-005 | CAP-004 | FUN-FLT-04 / CMP-AVN-01 | D `Deferred` | TODO |
-| REQ-PER-001 | CAP-004 | All | A | TODO |
-| REQ-PER-002 | CAP-001 | CMP-PWR-01 | A `Deferred` | TODO |
-| REQ-PER-003 | CAP-004 | All | I | TODO |
-| REQ-PER-004 | — | CMP-MNT-01 | I | TODO |
-| REQ-IFC-001 | CAP-004 | CMP-MNT-01 / IFC-INT-007 | I | TODO |
-| REQ-IFC-002 | — | CMP-PWR-03 / IFC-INT-003 | T `Deferred` | TODO |
-| REQ-CON-001 | CAP-004 | All | I | TODO |
-| REQ-CON-002 | CAP-004 | CMP-AVN-01 | I | TODO |
-| REQ-CON-003 | — | All | I | TODO |
-| REQ-CON-004 | CAP-002 | CMP-AVN-03, FUN-FLT-03 | A | TODO |
-| REQ-FUN-006 | — | FUN-PWR-01 / CMP-AVN-01 | D | TODO |
-| REQ-FUN-007 | CAP-004 | FUN-FLT-01, FUN-FLT-04 | D `Deferred` | TODO |
-| REQ-PER-005 | CAP-004 | All | D `Deferred` | TODO |
-| REQ-IFC-003 | — | CMP-COM-01 | I | TODO |
-| REQ-IFC-004 | — | CMP-MNT-01 / IFC-INT-007 | T `Deferred` | TODO |
-| REQ-SAF-001 | — | CMP-PWR-01, CMP-PWR-02 | I `Deferred` | TODO |
-| REQ-SAF-002 | — | CMP-AVN-01 | D | TODO |
+| REQ-FUN-001 | CAP-001 | FUN-REL-01 / CMP-COM-01 | A | Candidate; analysis not executed |
+| REQ-FUN-002 | CAP-001 | FUN-REL-02 / CMP-COM-01 | A | Candidate; analysis not executed |
+| REQ-FUN-003 | CAP-002 | FUN-FLT-03 / CMP-AVN-01 | A | Candidate; evidence deferred |
+| REQ-FUN-004 | — | FUN-CMD-01 / CMP-AVN-04 | A | Candidate; analysis not executed |
+| REQ-FUN-005 | CAP-004 | FUN-FLT-04 / CMP-AVN-01 | D `Deferred` | Deferred physical evidence |
+| REQ-PER-001 | CAP-004 | All | A | Candidate; unresolved value |
+| REQ-PER-002 | CAP-001 | CMP-PWR-01 | A `Deferred` | Candidate; unresolved value |
+| REQ-PER-003 | CAP-004 | All | I | Candidate; unresolved value |
+| REQ-PER-004 | — | CMP-MNT-01 | I | Candidate; unresolved value |
+| REQ-IFC-001 | CAP-004 | CMP-MNT-01 / IFC-INT-007 | I | Candidate; inspection not executed |
+| REQ-IFC-002 | — | CMP-PWR-03 / IFC-INT-003 | T `Deferred` | Deferred physical evidence |
+| REQ-CON-001 | CAP-004 | All | I | Candidate; inspection not executed |
+| REQ-CON-002 | CAP-004 | CMP-AVN-01 | I | Candidate; inspection not executed |
+| REQ-CON-003 | — | Proposed designs; project scope | I | Scope control; not applicable to CFG-REC |
+| REQ-CON-004 | CAP-002 | CMP-AVN-03, FUN-FLT-03 | A | Candidate; analysis not executed |
+| REQ-FUN-006 | — | FUN-PWR-01 / CMP-AVN-01 | D | Candidate analysis only; no physical evidence |
+| REQ-FUN-007 | CAP-004 | FUN-FLT-01, FUN-FLT-04 | D `Deferred` | Deferred physical evidence |
+| REQ-PER-005 | CAP-004 | All | D `Deferred` | Deferred physical evidence |
+| REQ-IFC-003 | — | CMP-COM-01 / IFC-INT-003 / IFC-INT-007 | I | Candidate; wording reconciled |
+| REQ-IFC-004 | — | CMP-MNT-01 / IFC-INT-007 | T `Deferred` | Deferred physical evidence |
+| REQ-SAF-001 | — | CMP-PWR-01, CMP-PWR-02 | I `Deferred` | Deferred physical evidence |
+| REQ-SAF-002 | — | CMP-AVN-01 | D | Candidate analysis only; no physical evidence |
 | REQ-DEF-001 | CAP-001 | CMP-COM-01 / IFC-EXT-001..004 | Deferred | Deferred — TS-009 |
 | REQ-DEF-002 | CAP-001 | CMP-COM-01 | Deferred | Deferred — TS-009 |
 | REQ-DEF-003 | — | External regulatory authority | External | Deferred |
@@ -93,14 +96,14 @@ graph LR
 
 | HAZ ID | Hazard | Mitigating REQ | Residual |
 |---|---|---|---|
-| HAZ-001 | Uncommanded descent / crash | **Unmitigated** | TODO |
-| HAZ-002 | Flyaway | REQ-FUN-005 | TODO |
-| HAZ-003 | Battery thermal event | REQ-SAF-001 | TODO |
-| HAZ-004 | Propeller contact injury | REQ-SAF-002 | TODO |
-| HAZ-005 | Loss of relay function airborne | REQ-FUN-007 `Partial` | TODO |
-| HAZ-006 | Station drift | REQ-FUN-003 | TODO |
-| HAZ-007 | Battery depletion before recovery | REQ-FUN-005 | TODO |
-| HAZ-008 | Payload separation in flight | REQ-IFC-001 | TODO |
+| HAZ-001 | Uncommanded descent / crash | **Unmitigated** | GAP-HAZ-001 |
+| HAZ-002 | Flyaway | CTL-003 / REQ-FUN-005 | Candidate; unverified - GAP-VER-001 |
+| HAZ-003 | Battery thermal event | CTL-002 / REQ-SAF-001 | Candidate; unverified - GAP-VER-001 |
+| HAZ-004 | Propeller contact injury | CTL-001 / REQ-FUN-006 / REQ-SAF-002 | VER-004 and VER-006 candidate analysis only; no physical evidence |
+| HAZ-005 | Loss of relay function airborne | CTL-004 / REQ-FUN-007 `Partial` | Candidate; physical evidence deferred |
+| HAZ-006 | Station drift | REQ-FUN-003 | Candidate; unverified - GAP-VER-001 |
+| HAZ-007 | Battery depletion before recovery | CTL-003 / REQ-FUN-005 | Candidate; unverified - GAP-VER-001 |
+| HAZ-008 | Payload separation in flight | CTL-005 / REQ-IFC-004 | VER-008 physical verification deferred; REQ-IFC-001 is supporting standardization only |
 
 > **HAZ-001 note.** No requirement in the current architecture manages the
 > consequences of an in-flight power, control, or structural failure — there is no
@@ -118,11 +121,13 @@ graph LR
 
 ## Matrix 5 — Interface to Requirement
 
-| IFC ID | Type | Requirement | Defined? |
+| Interface scope | IDs | Configuration / disposition | Human-readable authority |
 |---|---|---|---|
-| IFC-INT-001..007 | Internal | REQ-IFC-001, REQ-IFC-002 | Partial |
-| IFC-EXT-001..004 | External RF | REQ-DEF-001 | **No — TS-009** |
-| IFC-EXT-005 | External RF | TODO | **No — TS-008** |
+| Current platform internal | IFC-INT-001, IFC-INT-002, IFC-INT-003, IFC-INT-004, IFC-INT-005, IFC-INT-006, IFC-INT-007, IFC-INT-009 | CFG-REP / CFG-DOM; candidate | `architecture.md` current-candidate table |
+| Payload black-box internal | IFC-INT-010 | CFG-REP / CFG-DOM; not a platform crossing; no verification allocation | `architecture.md` payload-internal table |
+| Future digital | IFC-INT-008 | CFG-DIG / CFG-SOS only; proposed | `architecture.md` future-digital table |
+| Current external traffic and command | IFC-EXT-001, IFC-EXT-002, IFC-EXT-003, IFC-EXT-004, IFC-EXT-005 | CFG-REP / CFG-DOM; implementation intentionally undefined; GAP-IFC-001 / GAP-IFC-002 | `architecture.md` external table |
+| Support / governance | IFC-EXT-006 | CFG-REP / CFG-DOM / CFG-DIG / CFG-SOS; proposed | `architecture.md` support table |
 
 ## Coverage Gaps
 

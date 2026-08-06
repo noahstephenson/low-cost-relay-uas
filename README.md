@@ -21,7 +21,8 @@ boundary, while the **C2 Ecosystem** is the outer system-of-systems context. Ext
 vehicles, users, services, authorities, and infrastructure remain independently
 managed unless a source establishes otherwise. See the generated
 [`baseline-candidate.md`](reports/baseline-candidate.md) and
-[`baseline-gaps.md`](reports/baseline-gaps.md) views.
+[`baseline-gaps.md`](reports/baseline-gaps.md) views. The generated diagram suite is
+in [`architecture-views.md`](reports/architecture-views.md).
 
 ## Overview
 
@@ -62,9 +63,12 @@ This repository models **capability justification and system architecture**.
 - Hardware build, flight test, or any spectrum-radiating experimentation
 
 The communications payload (`CMP-COM-01`) is modeled as a **black box** throughout:
-defined by its function and interfaces, not its implementation. It touches the rest of
-the system through exactly two interfaces — `IFC-INT-003` (power) and `IFC-INT-007`
-(mechanical) — so payload decisions do not ripple into platform design. Moving toward
+defined by its function and interfaces, not its implementation. In `CFG-REP` and
+`CFG-DOM`, it crosses into the rest of the platform through exactly two interfaces -
+`IFC-INT-003` (power) and `IFC-INT-007` (mechanical retention). `IFC-INT-010` is
+wholly internal to the payload envelope and only records physical coupling to
+`CMP-COM-02`, the antenna physical-resource envelope; it is not a third platform
+interface and defines no RF characteristics. Moving toward
 hardware would require RF engineering expertise, spectrum authorization, and, in a
 defense-affiliated context, export control review. None of that is addressed here.
 
@@ -83,6 +87,7 @@ defense-affiliated context, export control review. None of that is addressed her
 | `.seal/*.yaml` | Source-authority and proof records |
 | `reports/*.md` | Generated baseline views; no independent architecture authority |
 | `scripts/validate-baseline.py` | Standard-library structural validation and report generation |
+| `scripts/generate-mermaid-views.py` | Deterministic generation and freshness checks for `reports/architecture-views.md` |
 
 ## Relay UAS Product Boundary (Inner)
 
@@ -106,6 +111,11 @@ The boundary is drawn so the relay payload sits *inside* it physically but *outs
 it analytically. The platform is specified to carry an unspecified payload within a
 defined mass, power, and volume envelope. This is what allows the architecture to
 proceed while TS-009 remains deferred.
+
+This proposed inner-boundary decomposition applies to `CFG-REP`, `CFG-DOM`,
+`CFG-DIG`, and the Relay-UAS constituent inside `CFG-SOS`. `CFG-REC` is a descriptive
+evidence configuration and does not automatically inherit the proposed component,
+interface, requirement, mode, control, or verification structure.
 
 ## C2 Ecosystem Context Boundary (Outer)
 
@@ -220,6 +230,12 @@ rather than treated as expendable the moment it stops being useful.
 > No MIL-STD, airworthiness, or safety-certification standard is invoked. This is an
 > exploratory concept study with no assurance framework, no certification basis, and
 > no safety integrity level. Any such claim would be unearned.
+
+OMG lists UAF 1.3 (April 2026) as the current formal version. This repository retains
+its existing UAF 1.2 terminology pending owner review of `DEC-002` and
+`GAP-STD-001`. It does not claim conformance to UAF 1.2 or UAF 1.3; the open decision
+is whether to intentionally retain 1.2 terminology, use version-neutral concepts, or
+plan a later migration.
 
 ## Disclaimer
 

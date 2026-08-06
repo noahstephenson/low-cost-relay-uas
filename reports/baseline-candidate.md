@@ -11,7 +11,7 @@ Reconcile the existing exploratory architecture with configuration, evidence, de
 
 ## Status and approval
 
-- Model version: `0.2.0-baseline-candidate`
+- Model version: `0.3.0-baseline-candidate`
 - Baseline status: `baseline_candidate_not_approved`
 - Approval state: `not_approved`
 
@@ -23,11 +23,15 @@ Reconcile the existing exploratory architecture with configuration, evidence, de
 
 Role: product boundary. Evidence basis: `proposed_design`. Decision status: `proposed`.
 
+Configuration scope: CFG-REP, CFG-DOM, CFG-DIG, CFG-SOS.
+
 Includes: airframe, structure, propulsion, electrical power, flight control, platform command link, relay payload as a black box, payload management at architecture level, antennas as black-box physical resources, payload mounting, configuration and maintenance interfaces.
 
 ### C2 Ecosystem (outer)
 
 Role: system-of-systems context boundary. Evidence basis: `proposed_design`. Decision status: `proposed`.
+
+Configuration scope: CFG-SOS.
 
 Includes: operator, ground-control system, relay UAS, remote UAS, UGV, radio users, network services, maintenance personnel, spectrum-management authority, supporting infrastructure.
 
@@ -56,13 +60,24 @@ The register classifies repository inspection and reverse-engineering reports se
 
 ## Current architecture coverage
 
-- Sources: 16
+- Sources: 17
 - Claims: 14
 - Configurations: 5
 - Operational scenarios: 8
 - Interfaces: 16
 - Requirements classified: 27
-- Recorded gaps: 18
+- Recorded gaps: 17
+
+## Generated architecture views
+
+See [`architecture-views.md`](architecture-views.md) for deterministic configuration, context, resource, behavioral, hazard, traceability, and governance diagrams generated from the catalogs.
+
+## Standards-version posture
+
+- Current repository claim: UAF 1.2 terminology is retained for the current baseline candidate.
+- Current OMG formal version: UAF 1.3 (April 2026)
+- Conformance claim: `none`
+- Owner decision: `DEC-002` / `GAP-STD-001`
 
 ## Major unresolved decisions
 

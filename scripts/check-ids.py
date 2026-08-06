@@ -128,6 +128,8 @@ def find_all_references(text):
     text = FENCE_RE.sub("", text)
     out = []
     for m in ID_TOKEN_RE.finditer(text):
+        if text[max(0, m.start() - 4):m.start()] == "GAP-":
+            continue  # gap codes can contain ID-shaped suffixes such as GAP-IFC-001
         end = m.end()
         if end < len(text) and text[end] in ("-", "*"):
             continue  # wildcard/family stem, not a concrete ID

@@ -273,6 +273,24 @@
       "notes": "Used as a source-authority, proof, gap, and readiness governance method; not a substitute for UAF modeling."
     },
     {
+      "id": "SRC-EXT-003",
+      "title": "OMG Unified Architecture Framework 1.3 specification page",
+      "source_type": "external publication",
+      "kind": "external_source_snapshot",
+      "description": "Official OMG specification page identifying UAF 1.3 as a formal version adopted in April 2026 and listing UAF 1.2 as the preceding formal version.",
+      "authority_state": "externally_sourced",
+      "approval_state": "not_required",
+      "confidence": 0.99,
+      "location": "https://www.omg.org/spec/UAF/1.3/About-UAF",
+      "owner": "Object Management Group",
+      "date": "2026-04",
+      "revision": "UAF 1.3 formal specification page accessed 2026-08-06",
+      "accessed_date": "2026-08-06",
+      "reliability": "official standards-body source",
+      "applicable_configurations": ["CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"],
+      "notes": "Supports only the standards-version fact; it does not establish this repository's UAF conformance or approve migration."
+    },
+    {
       "id": "SRC-GAP-001",
       "title": "Original standalone teardown photograph and measurement set",
       "source_type": "missing-source",

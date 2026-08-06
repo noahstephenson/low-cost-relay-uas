@@ -11,6 +11,9 @@ framework.
 > proposed outer boundary with unresolved activities, interfaces, requirements, and
 > verification authority. Authoritative candidate scenarios and performers are in
 > [`model/operational-scenarios.yaml`](model/operational-scenarios.yaml).
+> The deterministic cross-view diagram suite is generated at
+> [`reports/architecture-views.md`](reports/architecture-views.md); structured
+> catalogs remain authoritative.
 
 ## Viewpoint Selection
 
@@ -30,7 +33,8 @@ framework.
 ### St-Tx: Capability Taxonomy
 
 ```mermaid
-graph TD
+flowchart TD
+    %% Configuration scope: CFG-REP / CFG-DOM / CFG-DIG / CFG-SOS; not CFG-REC
     CAP000["CAP-000<br/>Extended-Range sUAS Employment"]
     CAP001["CAP-001<br/>Beyond-Line-of-Sight Control"]
     CAP002["CAP-002<br/>Terrain-Masked Operation"]
@@ -113,9 +117,10 @@ dedicated airframe is a solution to a problem no one has.
 ### Op-Tx: Operational Concept (OV-1 equivalent)
 
 ```mermaid
-graph LR
+flowchart LR
+    %% Configuration scope: CFG-REP / CFG-DOM
     subgraph GROUND["Ground Segment"]
-        OPR["Operator"]
+        OP010["OP-010<br/>Operator"]
         OP001["OP-001<br/>Ground Control Node"]
     end
 
@@ -127,22 +132,29 @@ graph LR
         OP003["OP-003<br/>Remote UAS Node"]
     end
 
-    OPR --> OP001
-    OP001 -->|Control, outbound| OP002
-    OP002 -->|Control, outbound| OP003
-    OP003 -->|Telemetry, return| OP002
-    OP002 -->|Telemetry, return| OP001
+    OP010 -->|IX-001 / IFC-EXT-005<br/>separate platform command| OP002
+    OP001 -->|IX-002 / IFC-EXT-001<br/>outbound| OP002
+    OP002 -->|IX-003 / IFC-EXT-002<br/>outbound| OP003
+    OP003 -->|IX-004 / IFC-EXT-003<br/>return| OP002
+    OP002 -->|IX-005 / IFC-EXT-004<br/>return| OP001
 
     TERRAIN["Terrain / distance<br/>blocks direct path"]
     OP001 -.->|blocked| TERRAIN
     TERRAIN -.->|blocked| OP003
 ```
 
-| OP ID | Performer | Description | In System Boundary |
-|---|---|---|---|
-| OP-001 | Ground Control Node | Originates control traffic and consumes returned telemetry. Independently operated; this model does not specify it. | No |
-| OP-002 | Relay Node | The system under study. Holds position between the other two nodes and retransmits in both directions. | **Yes** |
-| OP-003 | Remote UAS Node | The system being relayed for. Independently operated; its link tolerance is an input to this design, not an output of it. | No |
+| OP ID | Performer | Description | Configuration scope | In Relay-UAS Boundary |
+|---|---|---|---|---|
+| OP-001 | Ground Control Node | Independently managed external system that originates control traffic and consumes returned telemetry. | CFG-REP / CFG-DOM / CFG-DIG / CFG-SOS | No |
+| OP-002 | Relay UAS / Relay Node | Proposed system under study; does not define the CFG-REC article. | CFG-REP / CFG-DOM / CFG-DIG / CFG-SOS | **Yes** |
+| OP-003 | Remote UAS Node | Independently managed external system being relayed for. | CFG-REP / CFG-DOM / CFG-DIG / CFG-SOS | No |
+| OP-004 | UGV | Independently managed external system; relationship proposed/TBD. | CFG-SOS | No |
+| OP-005 | Radio User | Independently managed external performer; relationship proposed/TBD. | CFG-SOS | No |
+| OP-006 | Network Service | Independently managed external service; relationship proposed/TBD. | CFG-SOS | No |
+| OP-007 | Maintenance Personnel | External supporting performer for configuration and maintenance. | CFG-REP / CFG-DOM / CFG-DIG / CFG-SOS | No |
+| OP-008 | Spectrum-Management Authority | Independent external authority; no design authority is inferred. | CFG-REP / CFG-DOM / CFG-DIG / CFG-SOS | No |
+| OP-009 | Supporting Infrastructure | Independently managed external resource; relationship proposed/TBD. | CFG-SOS | No |
+| OP-010 | Operator | Human performer outside the product boundary. | CFG-REP / CFG-DOM / CFG-DIG / CFG-SOS | No |
 
 **Narrative.** The direct path between OP-001 and OP-003 does not close — because of
 distance (CAP-001), obstruction (CAP-002), or both. OP-002 is positioned so that two
@@ -184,7 +196,8 @@ are not the mission.
 ### Rs-Sr: Resource Structure (SV-1 equivalent)
 
 ```mermaid
-graph TB
+flowchart TB
+    %% Configuration scope: summary only for CFG-REP / CFG-DOM
     SYS["Relay UAS"]
 
     subgraph PLATFORM["Platform"]
@@ -197,6 +210,7 @@ graph TB
     subgraph PAYLOAD["Payload"]
         MNT["CMP-MNT-01<br/>Payload Mount"]
         COM["CMP-COM-01<br/>Relay Payload<br/>(black box)"]
+        ANT["CMP-COM-02<br/>Antenna physical-resource envelope"]
     end
 
     SYS --> AFR
@@ -204,13 +218,20 @@ graph TB
     SYS --> PWR
     SYS --> AVN
     SYS --> MNT
-    MNT --> COM
+    MNT -->|IFC-INT-007<br/>platform-to-payload| COM
+    COM -->|IFC-INT-010<br/>payload-internal physical coupling| ANT
 
     PWR -->|IFC-INT-001| PRP
     PWR -->|IFC-INT-002| AVN
     PWR -->|IFC-INT-003| COM
     AVN -->|IFC-INT-004| PRP
 ```
+
+This is a compact viewpoint summary, not the complete interface inventory. The
+generated resource views in
+[`reports/architecture-views.md`](reports/architecture-views.md) cover every
+`IFC-INT-001` through `IFC-INT-010` and `IFC-EXT-001` through `IFC-EXT-006`, with
+configuration scope and verification maturity.
 
 The payload subgraph connects to the platform through two edges only —
 `IFC-INT-003` (power) and the `CMP-MNT-01` containment relationship carrying
@@ -243,12 +264,16 @@ products that reference each other loosely, kept in step by hand. It is also a
 framework built for programs of record, and adopting its full apparatus here would
 imply an acquisition context this project does not have.
 
-UAF is the OMG standard that superseded DoDAF and MODAF, and it is a SysML profile
-rather than a separate product set. The capability elements and the structural
-elements live in one model with real relationships between them, so the thread from
-CAP-001 down to a component is a queryable trace rather than a claim in a document.
-Its viewpoints also map closely onto DoDAF's, so the views here can be relabeled for a
-DoDAF-literate audience without rework.
+UAF draws on UML/SysML and prior architecture-framework concepts, including work
+related to DoDAF and MODAF. This exploratory repository uses a small subset of that
+vocabulary to keep capability, operational, and resource relationships in one model;
+it does not claim to implement every UAF obligation or to make its views automatically
+interchangeable with a complete DoDAF architecture description.
+
+The repository currently names UAF 1.2. OMG lists UAF 1.3 (April 2026) as the current
+formal version, but no migration or conformance claim is made here. `DEC-002` and
+`GAP-STD-001` leave the owner a deliberate choice among retaining 1.2 terminology,
+using version-neutral UAF concepts, or planning a later migration.
 
 The practical consequence for this repository: the markdown is authored so that every
 ID maps onto a UAF element type when the model is transcribed into MagicDraw — `CAP-`

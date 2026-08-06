@@ -9,14 +9,13 @@
 
 | Code | Category | Gap | Affected IDs | Disposition | Severity |
 |---|---|---|---|---|---|
+| GAP-STD-001 | standards-version decision | UAF 1.3 is the current OMG formal version, while this repository still names UAF 1.2; the owner has not selected intentional retention, version-neutral terminology, or later migration. | DEC-002, SRC-EXT-003, CFG-REP, CFG-DOM, CFG-DIG, CFG-SOS | unresolved | moderate |
 | GAP-REC-001 | configuration mapping | The current generic relay-UAS decomposition is not demonstrated to be an as-built model of CFG-REC. | CFG-REC, CFG-REP, CFG-DOM, CLM-REC-005 | unresolved | major |
 | GAP-SRC-001 | missing evidence | Original standalone teardown photographs, measurements, and inspection records are not present in the repository. | CFG-REC, SRC-GAP-001 | unresolved | major |
 | GAP-CFG-001 | unknown configuration applicability | The untracked Cameo/MagicDraw HTML export has not been reconciled to a configuration or authority level. | SRC-REPO-009 | unresolved | major |
 | GAP-CFG-002 | unknown configuration applicability | HAZ-009 and the external hazards do not yet have defensible configuration applicability. | HAZ-009, HAZ-EXT-001, HAZ-EXT-002, HAZ-EXT-003 | unresolved | moderate |
 | GAP-TRC-001 | unallocated capability | CAP-003 has no allocated operational activity, function, component, or supported requirement mechanism. | CAP-003, REQ-DEF-004, TS-009 | true_coverage_gap | major |
 | GAP-TRC-002 | legacy traceability gap | CAP-004 has no operational-activity allocation in the legacy traceability matrix; the new scenarios constrain it but do not fabricate a mission activity. | CAP-004, SRC-REPO-008 | expected_at_current_maturity | moderate |
-| GAP-CONFLICT-002 | legacy traceability gap | The HAZ-004 view names REQ-SAF-002, but its trace-to field remains TODO and the legacy view does not show the related REQ-FUN-006 arming-inhibit allocation. | HAZ-004, REQ-FUN-006, REQ-SAF-002, CTL-001, SRC-REPO-006 | unresolved | moderate |
-| GAP-CONFLICT-003 | conflicting statements | HAZ-008 is linked to REQ-IFC-001 in legacy views, while REQ-IFC-004 is the more direct load-retention requirement. | HAZ-008, REQ-IFC-001, REQ-IFC-004, CTL-005, SRC-REPO-006, SRC-REPO-008 | contradictory | moderate |
 | GAP-HAZ-001 | unmitigated hazard | HAZ-001 has no defined control or mitigating requirement. | HAZ-001 | true_coverage_gap | major |
 | GAP-HAZ-002 | unmitigated hazard | HAZ-009 remains an undefined placeholder and cannot be analyzed. | HAZ-009 | unresolved | moderate |
 | GAP-IFC-001 | interface verification | IFC-EXT-001 through IFC-EXT-005 have no verification allocation or interface authority. | IFC-EXT-001, IFC-EXT-002, IFC-EXT-003, IFC-EXT-004, IFC-EXT-005 | unresolved | major |

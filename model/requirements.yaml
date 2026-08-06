@@ -237,7 +237,7 @@
     },
     {
       "id": "REQ-IFC-003",
-      "text": "The payload interface shall be limited to power (IFC-INT-003) and mechanical retention (IFC-INT-007).",
+      "text": "The platform-to-payload interface shall be limited to power (IFC-INT-003) and mechanical retention (IFC-INT-007).",
       "classification": "interface",
       "applicable_configurations": ["CFG-REP", "CFG-DOM"],
       "evidence_basis": "proposed_design",
@@ -249,7 +249,8 @@
       "verification_method": "I",
       "verification_status": "candidate",
       "tbd_owner_ids": [],
-      "provenance_gap": null
+      "provenance_gap": null,
+      "reconciliation_note": "2026-08-06: clarified platform-to-payload scope so payload-internal IFC-INT-010 is not misread as a third platform interface; requirement intent is unchanged."
     },
     {
       "id": "REQ-IFC-004",
@@ -335,7 +336,7 @@
       "id": "REQ-CON-003",
       "text": "The system shall not integrate weapons or munitions of any kind.",
       "classification": "safety_and_assurance",
-      "applicable_configurations": ["CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"],
+      "applicable_configurations": ["CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"],
       "evidence_basis": "internal_document",
       "decision_status": "proposed",
       "source_ids": ["SRC-DEC-001", "SRC-REPO-004"],
@@ -344,6 +345,7 @@
       "verification_ids": ["VER-003", "VER-005"],
       "verification_method": "I",
       "verification_status": "scope_control",
+      "applicability_scope": "proposed-design constraint and research-project scope control; not a recovered-article observation",
       "tbd_owner_ids": [],
       "provenance_gap": null
     },
@@ -367,7 +369,7 @@
       "id": "REQ-DEF-001",
       "text": "RF frequency, waveform, protocol, and link budget",
       "classification": "interface",
-      "applicable_configurations": ["CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"],
+      "applicable_configurations": ["CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"],
       "evidence_basis": "internal_document",
       "decision_status": "not_applicable",
       "source_ids": ["SRC-DEC-001", "SRC-REPO-004"],
@@ -383,7 +385,7 @@
       "id": "REQ-DEF-002",
       "text": "Antenna type, gain, and pattern",
       "classification": "interface",
-      "applicable_configurations": ["CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"],
+      "applicable_configurations": ["CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"],
       "evidence_basis": "internal_document",
       "decision_status": "not_applicable",
       "source_ids": ["SRC-DEC-001", "SRC-REPO-004"],

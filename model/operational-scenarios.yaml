@@ -3,7 +3,7 @@
   "baseline_status": "candidate_not_approved",
   "performers": [
     {"id": "OP-001", "name": "Ground Control Node", "management": "independently managed external system", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"], "source_ids": ["SRC-REPO-005"]},
-    {"id": "OP-002", "name": "Relay UAS / Relay Node", "management": "system under study within the inner boundary", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"], "source_ids": ["SRC-REPO-005", "SRC-INT-001"]},
+    {"id": "OP-002", "name": "Relay UAS / Relay Node", "management": "system under study within the proposed inner boundary", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"], "source_ids": ["SRC-REPO-005"]},
     {"id": "OP-003", "name": "Remote UAS Node", "management": "independently managed external system", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"], "source_ids": ["SRC-REPO-005"]},
     {"id": "OP-004", "name": "UGV", "management": "independently managed external system", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-SOS"], "source_ids": ["SRC-DEC-001"]},
     {"id": "OP-005", "name": "Radio User", "management": "independently managed external performer", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-SOS"], "source_ids": ["SRC-DEC-001"]},

@@ -20,7 +20,8 @@
       "evidence_basis": "internal_document",
       "decision_status": "approved",
       "decision_ids": ["DEC-001"],
-      "applicable_configurations": ["CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"]
+      "applicable_configurations": ["CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"],
+      "applicability_scope": "research-project governance; not a physical claim imposed on CFG-REC"
     },
     {
       "id": "CLM-BND-001",

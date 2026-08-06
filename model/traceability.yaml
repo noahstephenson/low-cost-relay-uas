@@ -61,13 +61,15 @@
     {"from": "IX-008", "relation": "realized_by", "to": "TBD", "status": "unresolved", "gap": "GAP-SOS-002"},
     {"from": "IX-009", "relation": "partially_realized_by", "to": "IFC-INT-006", "status": "candidate", "gap": "GAP-SOS-003"},
     {"from": "IX-010", "relation": "realized_by", "to": "IFC-EXT-006", "status": "candidate", "gap": null},
+    {"from": "CMP-COM-01", "relation": "contains_payload_internal_coupling", "to": "IFC-INT-010", "status": "candidate", "gap": null},
+    {"from": "IFC-INT-010", "relation": "couples_inside_payload_envelope_to", "to": "CMP-COM-02", "status": "candidate", "gap": null},
     {"from": "HAZ-002", "relation": "mitigated_by", "to": "CTL-003", "status": "candidate", "gap": null},
     {"from": "HAZ-003", "relation": "mitigated_by", "to": "CTL-002", "status": "candidate", "gap": null},
-    {"from": "HAZ-004", "relation": "mitigated_by", "to": "CTL-001", "status": "candidate", "gap": "GAP-CONFLICT-002"},
+    {"from": "HAZ-004", "relation": "mitigated_by", "to": "CTL-001", "status": "candidate", "gap": null},
     {"from": "HAZ-005", "relation": "mitigated_by", "to": "CTL-004", "status": "candidate", "gap": null},
     {"from": "HAZ-006", "relation": "mitigated_by", "to": "REQ-FUN-003", "status": "candidate", "gap": null},
     {"from": "HAZ-007", "relation": "mitigated_by", "to": "CTL-003", "status": "candidate", "gap": null},
-    {"from": "HAZ-008", "relation": "mitigated_by", "to": "CTL-005", "status": "candidate", "gap": "GAP-CONFLICT-003"},
+    {"from": "HAZ-008", "relation": "mitigated_by", "to": "CTL-005", "status": "candidate", "gap": null},
     {"from": "CTL-001", "relation": "implemented_by", "to": "REQ-FUN-006", "status": "candidate", "gap": null},
     {"from": "CTL-001", "relation": "implemented_by", "to": "REQ-SAF-002", "status": "candidate", "gap": null},
     {"from": "CTL-002", "relation": "implemented_by", "to": "REQ-SAF-001", "status": "candidate", "gap": null},
@@ -76,9 +78,22 @@
     {"from": "CTL-005", "relation": "implemented_by", "to": "REQ-IFC-004", "status": "candidate", "gap": null},
     {"from": "VER-002", "relation": "produces", "to": "EVD-001", "status": "candidate", "gap": null},
     {"from": "VER-003", "relation": "uses", "to": "EVD-002", "status": "established", "gap": null},
-    {"from": "VER-003", "relation": "uses", "to": "EVD-003", "status": "established", "gap": null}
+    {"from": "VER-003", "relation": "uses", "to": "EVD-003", "status": "established", "gap": null},
+    {"from": "DEC-002", "relation": "governs_standard_version_for", "to": "CFG-REP", "status": "unresolved", "gap": "GAP-STD-001"},
+    {"from": "DEC-002", "relation": "governs_standard_version_for", "to": "CFG-DOM", "status": "unresolved", "gap": "GAP-STD-001"},
+    {"from": "DEC-002", "relation": "governs_standard_version_for", "to": "CFG-DIG", "status": "unresolved", "gap": "GAP-STD-001"},
+    {"from": "DEC-002", "relation": "governs_standard_version_for", "to": "CFG-SOS", "status": "unresolved", "gap": "GAP-STD-001"}
   ],
   "gaps": [
+    {
+      "code": "GAP-STD-001",
+      "category": "standards-version decision",
+      "statement": "UAF 1.3 is the current OMG formal version, while this repository still names UAF 1.2; the owner has not selected intentional retention, version-neutral terminology, or later migration.",
+      "affected_ids": ["DEC-002", "SRC-EXT-003", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"],
+      "disposition": "unresolved",
+      "severity": "moderate",
+      "next_action": "Project owner reviews DEC-002. Retain the UAF 1.2 claim and make no conformance claim until a decision is approved."
+    },
     {
       "code": "GAP-REC-001",
       "category": "configuration mapping",
@@ -132,24 +147,6 @@
       "disposition": "expected_at_current_maturity",
       "severity": "moderate",
       "next_action": "Decide whether affordability and attritability need a dedicated lifecycle activity or remain cross-cutting constraints."
-    },
-    {
-      "code": "GAP-CONFLICT-002",
-      "category": "legacy traceability gap",
-      "statement": "The HAZ-004 view names REQ-SAF-002, but its trace-to field remains TODO and the legacy view does not show the related REQ-FUN-006 arming-inhibit allocation.",
-      "affected_ids": ["HAZ-004", "REQ-FUN-006", "REQ-SAF-002", "CTL-001", "SRC-REPO-006"],
-      "disposition": "unresolved",
-      "severity": "moderate",
-      "next_action": "Review the proposed CTL-001 allocation and reconcile the remaining legacy trace-to field without treating the candidate relation as approved."
-    },
-    {
-      "code": "GAP-CONFLICT-003",
-      "category": "conflicting statements",
-      "statement": "HAZ-008 is linked to REQ-IFC-001 in legacy views, while REQ-IFC-004 is the more direct load-retention requirement.",
-      "affected_ids": ["HAZ-008", "REQ-IFC-001", "REQ-IFC-004", "CTL-005", "SRC-REPO-006", "SRC-REPO-008"],
-      "disposition": "contradictory",
-      "severity": "moderate",
-      "next_action": "Review whether both requirements contribute and approve the control allocation before changing the human-readable view."
     },
     {
       "code": "GAP-HAZ-001",

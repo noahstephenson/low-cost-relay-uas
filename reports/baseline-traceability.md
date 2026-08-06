@@ -70,13 +70,15 @@ A relationship may be absent at this maturity. `TBD` and gap codes are preserved
 | IX-008 | realized_by | TBD | unresolved | GAP-SOS-002 |
 | IX-009 | partially_realized_by | IFC-INT-006 | candidate | GAP-SOS-003 |
 | IX-010 | realized_by | IFC-EXT-006 | candidate | - |
+| CMP-COM-01 | contains_payload_internal_coupling | IFC-INT-010 | candidate | - |
+| IFC-INT-010 | couples_inside_payload_envelope_to | CMP-COM-02 | candidate | - |
 | HAZ-002 | mitigated_by | CTL-003 | candidate | - |
 | HAZ-003 | mitigated_by | CTL-002 | candidate | - |
-| HAZ-004 | mitigated_by | CTL-001 | candidate | GAP-CONFLICT-002 |
+| HAZ-004 | mitigated_by | CTL-001 | candidate | - |
 | HAZ-005 | mitigated_by | CTL-004 | candidate | - |
 | HAZ-006 | mitigated_by | REQ-FUN-003 | candidate | - |
 | HAZ-007 | mitigated_by | CTL-003 | candidate | - |
-| HAZ-008 | mitigated_by | CTL-005 | candidate | GAP-CONFLICT-003 |
+| HAZ-008 | mitigated_by | CTL-005 | candidate | - |
 | CTL-001 | implemented_by | REQ-FUN-006 | candidate | - |
 | CTL-001 | implemented_by | REQ-SAF-002 | candidate | - |
 | CTL-002 | implemented_by | REQ-SAF-001 | candidate | - |
@@ -86,6 +88,10 @@ A relationship may be absent at this maturity. `TBD` and gap codes are preserved
 | VER-002 | produces | EVD-001 | candidate | - |
 | VER-003 | uses | EVD-002 | established | - |
 | VER-003 | uses | EVD-003 | established | - |
+| DEC-002 | governs_standard_version_for | CFG-REP | unresolved | GAP-STD-001 |
+| DEC-002 | governs_standard_version_for | CFG-DOM | unresolved | GAP-STD-001 |
+| DEC-002 | governs_standard_version_for | CFG-DIG | unresolved | GAP-STD-001 |
+| DEC-002 | governs_standard_version_for | CFG-SOS | unresolved | GAP-STD-001 |
 
 ## Requirement mappings
 

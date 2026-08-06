@@ -12,6 +12,9 @@ concept. IDs defined here are referenced by `requirements.md`, `uaf-views.md`, a
 > `CFG-REP` and `CFG-DOM`; it is not asserted to be the as-built `CFG-REC` article.
 > The Relay UAS is the inner product boundary; the broader C2 Ecosystem remains an
 > outer, proposed system-of-systems context.
+> Generated configuration, context, resource, sequence, hazard, and governance
+> diagrams are maintained in
+> [`reports/architecture-views.md`](reports/architecture-views.md).
 
 ## Architecture Overview
 
@@ -23,9 +26,10 @@ and interface discipline rather than configuration.
 
 Two choices shape everything downstream.
 
-**The payload is isolated behind two interfaces.** `CMP-COM-01` connects to the rest
-of the system through `IFC-INT-003` (regulated power) and `IFC-INT-007` (mechanical
-retention), and nothing else. No data path, no control signal, no shared structure.
+**The payload is isolated behind two platform interfaces.** `CMP-COM-01` connects to
+the rest of the platform through `IFC-INT-003` (regulated power) and `IFC-INT-007`
+(mechanical retention), and nothing else in `CFG-REP`/`CFG-DOM`. No platform data
+path or payload-control signal is defined in those configurations.
 This is what lets the platform architecture proceed while TS-009 stays deferred — and
 it also means a payload change is a mount-and-rail question rather than a redesign.
 The cost is that the platform must be sized for a payload envelope rather than a
@@ -103,12 +107,13 @@ dependency the concept's own justification argues against (see README challenge 
 | CMP ID | Component | Qty | Description | Trade Study |
 |---|---|---|---|---|
 | CMP-COM-01 | Relay payload module | 1 | Black box. Accepts regulated power and mechanical retention; performs FUN-REL-01 and FUN-REL-02 | TS-009 |
-| CMP-COM-02 | Antenna interface | TBD | Physical RF interface only. Type, count, and placement deferred | TS-009 |
+| CMP-COM-02 | Antenna physical-resource envelope | TBD | Black-box physical-resource envelope; count, type, placement, and all characteristics remain undefined | TS-009 |
 
-`CMP-COM-02` is listed separately from `CMP-COM-01` because antenna *placement* is a
-platform concern even when antenna *design* is not — mounting location, clearance from
-structure, and mass distribution affect the airframe regardless of what the antenna
-turns out to be. The platform can reserve volume and mass for it without characterising it.
+`CMP-COM-02` is a resource, not an interface. `IFC-INT-010` represents only the
+existence of physical coupling between that resource envelope and `CMP-COM-01`, wholly
+inside the relay-payload black-box envelope. It does not expose another
+platform-to-payload interface and defines no count, type, connector, location, role,
+or RF characteristic.
 
 ### Payload Mount
 
@@ -136,34 +141,66 @@ Recorded explicitly rather than left blank, so the gap is visibly intentional.
 
 ## Interfaces
 
-Internal interfaces (`IFC-INT-`) are within the system boundary; external
-(`IFC-EXT-`) cross it.
+The tables below are configuration-specific views of the authoritative interface
+catalog. `proposed` and `candidate` are maturity labels, not approval. `VER-008` is a
+deferred physical method, not executed evidence.
 
-| IFC ID | From | To | Data / Flow | Type |
-|---|---|---|---|---|
-| IFC-INT-001 | CMP-PWR-02 | CMP-PRP-02 (x4) | Main bus power | Electrical |
-| IFC-INT-002 | CMP-PWR-03 | CMP-AVN-01 | Regulated avionics power | Electrical |
-| IFC-INT-003 | CMP-PWR-03 | CMP-COM-01 | Regulated payload power | Electrical |
-| IFC-INT-004 | CMP-AVN-01 | CMP-PRP-02 (x4) | Motor commands | Signal |
-| IFC-INT-005 | CMP-AVN-04 | CMP-AVN-01 | Platform control input | Signal |
-| IFC-INT-006 | CMP-PWR-02 | CMP-AVN-01 | Battery state telemetry | Signal |
-| IFC-INT-007 | CMP-MNT-01 | CMP-COM-01 | Mechanical retention | Mechanical |
-| IFC-EXT-001 | Ground control node | CMP-COM-01 | Relayed traffic (outbound) | RF — **undefined** |
-| IFC-EXT-002 | CMP-COM-01 | Remote UAS node | Relayed traffic (outbound) | RF — **undefined** |
-| IFC-EXT-003 | Remote UAS node | CMP-COM-01 | Relayed traffic (return) | RF — **undefined** |
-| IFC-EXT-004 | CMP-COM-01 | Ground control node | Relayed traffic (return) | RF — **undefined** |
-| IFC-EXT-005 | Platform operator | CMP-AVN-04 | Platform command and control | RF — **undefined** |
+### Current candidate platform interfaces - CFG-REP / CFG-DOM
 
-> **RF interfaces are intentionally left undefined.** `IFC-EXT-001` through
-> `IFC-EXT-004` are declared as existing with a direction and traffic class only;
-> characterising them is TS-009 and is out of scope for this repository. `IFC-EXT-005`
-> is a different question — the platform's own command link is a conventional sUAS
-> control problem (TS-008), not a relay-payload problem, and is undefined here only
-> because the trade study has not been worked.
+| IFC ID | Endpoints | Direction | Flow class | Maturity | Verification | Unknown attributes |
+|---|---|---|---|---|---|---|
+| IFC-INT-001 | CMP-PWR-02 to CMP-PRP-02 | A to B | electrical power | proposed design / proposed | VER-005; VER-008 deferred | voltage; current; connector; protection; wiring allocation |
+| IFC-INT-002 | CMP-PWR-03 to CMP-AVN-01 | A to B | electrical power | proposed design / proposed | VER-005; VER-008 deferred | voltage; current; connector; power-quality envelope |
+| IFC-INT-003 | CMP-PWR-03 to CMP-COM-01 | A to B | electrical power; platform-to-payload crossing | proposed design / proposed | VER-005; VER-008 deferred | voltage/current envelopes; connector; protection; thermal allocation |
+| IFC-INT-004 | CMP-AVN-01 to CMP-PRP-02 | A to B | command and control | proposed design / proposed | VER-005; VER-008 deferred | signal format; timing; connector; fault response |
+| IFC-INT-005 | CMP-AVN-04 to CMP-AVN-01 | A to B | command and control | proposed design / proposed | VER-005; VER-008 deferred | protocol; connector; timing; failsafe behavior |
+| IFC-INT-006 | CMP-PWR-02 to CMP-AVN-01 | A to B | health and status | proposed design / proposed | VER-005; VER-008 deferred | measurement set; accuracy; update rate; connector; fault indication |
+| IFC-INT-007 | CMP-MNT-01 to CMP-COM-01 | bidirectional physical | mechanical mounting; platform-to-payload crossing | proposed design / proposed | VER-005; VER-008 deferred | geometry; load envelope; retention margin; inspection criteria |
+| IFC-INT-009 | CMP-AVN-02 to CMP-AVN-01 | A to B | navigation and timing | engineering inference / proposed | VER-005; VER-008 deferred | sensor set; data format; timing; accuracy; fault detection; connector |
 
-`IFC-INT-003` and `IFC-INT-007` are the entire payload coupling. Any proposal that
-adds a third payload interface — a data line, a control signal, shared cooling —
-should be treated as a change to the architecture's central assumption, not a detail.
+### Relay-payload black-box internal interface - CFG-REP / CFG-DOM
+
+| IFC ID | Endpoints | Direction | Flow class | Maturity | Verification | Unknown attributes |
+|---|---|---|---|---|---|---|
+| IFC-INT-010 | CMP-COM-01 to CMP-COM-02 | bidirectional physical | physical-resource coupling inside payload envelope | proposed design / proposed | none allocated - GAP-IFC-001 | count; type; role; placement; connector; all RF characteristics |
+
+`IFC-INT-010` is not a platform boundary crossing. The only
+platform-to-payload interfaces in `CFG-REP` and `CFG-DOM` are `IFC-INT-003` and
+`IFC-INT-007`.
+
+### Future digital interface - CFG-DIG / CFG-SOS only
+
+| IFC ID | Endpoints | Direction | Flow class | Maturity | Verification | Unknown attributes |
+|---|---|---|---|---|---|---|
+| IFC-INT-008 | CMP-AVN-01 to CMP-COM-01 | bidirectional | payload management and health/status | proposed design / proposed future interface | VER-004; VER-005; VER-007 candidate | adoption decision; data model; protocol; connector; timing; authority; failure response |
+
+`IFC-INT-008` is omitted from current `CFG-REP`/`CFG-DOM` resource views because it
+would violate their two-interface platform-to-payload boundary. Its presence in a
+future view does not approve it.
+
+### Current external traffic and platform command - CFG-REP / CFG-DOM
+
+| IFC ID | Endpoints | Direction | Flow class | Maturity | Verification | Unknown attributes |
+|---|---|---|---|---|---|---|
+| IFC-EXT-001 | OP-001 to CMP-COM-01 | A to B | command and control | proposed design / proposed; intentionally undefined path | none allocated - GAP-IFC-001 | frequency; waveform; protocol; power; data rate; message format; compatibility; authority |
+| IFC-EXT-002 | CMP-COM-01 to OP-003 | A to B | command and control | proposed design / proposed; intentionally undefined path | none allocated - GAP-IFC-001 | frequency; waveform; protocol; power; data rate; message format; compatibility; authority |
+| IFC-EXT-003 | OP-003 to CMP-COM-01 | A to B | telemetry | proposed design / proposed; intentionally undefined path | none allocated - GAP-IFC-001 | frequency; waveform; protocol; power; data rate; message format; compatibility; authority |
+| IFC-EXT-004 | CMP-COM-01 to OP-001 | A to B | telemetry | proposed design / proposed; intentionally undefined path | none allocated - GAP-IFC-001 | frequency; waveform; protocol; power; data rate; message format; compatibility; authority |
+| IFC-EXT-005 | OP-010 to CMP-AVN-04 | A to B | command and control; separate platform command | proposed design / proposed; intentionally undefined path | none allocated - GAP-IFC-001 | frequency; waveform; protocol; power; message format; failsafe behavior; authority |
+
+External implementation attributes remain intentionally undefined. `IFC-EXT-005`
+is independent of `IFC-EXT-001` through `IFC-EXT-004`; it controls the relay
+platform rather than carrying relayed mission traffic.
+
+### Support and governance - CFG-REP / CFG-DOM / CFG-DIG / CFG-SOS
+
+| IFC ID | Endpoints | Direction | Flow class | Maturity | Verification | Unknown attributes |
+|---|---|---|---|---|---|---|
+| IFC-EXT-006 | OP-007 to OP-002 | bidirectional | configuration and maintenance | proposed design / proposed support interface | VER-004; VER-005; VER-007 candidate | data set; format; transport; authorization; retention period; tool ownership |
+
+`IFC-EXT-006` is a support/governance interface, not a mission-traffic interface.
+The generated resource diagrams show why it is omitted from the airborne relay
+traffic view.
 
 ## Budgets
 

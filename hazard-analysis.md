@@ -6,7 +6,8 @@ Preliminary hazard identification for the relay UAS concept.
 > relationships are maintained in [`model/elements.yaml`](model/elements.yaml),
 > [`model/requirements.yaml`](model/requirements.yaml), and
 > [`model/traceability.yaml`](model/traceability.yaml). This human-readable view is
-> retained without silently resolving its known TODOs or conflicting mitigation links.
+> reconciled to those candidate relationships; unresolved evidence and coverage gaps
+> remain explicit.
 
 > **Not a safety assessment.** No safety standard is invoked, no severity/probability
 > matrix is claimed as authoritative, and no risk acceptance authority exists for this
@@ -32,14 +33,14 @@ project does not meet.
 
 | HAZ ID | Hazard | Mode(s) | Cause | Effect | Sev | Like | Mitigation | Traces To |
 |---|---|---|---|---|---|---|---|---|
-| HAZ-001 | Uncommanded descent / crash | MODE-001..004 | Power loss, control failure, structural failure | Platform loss; ground impact hazard | High | Medium | **Unmitigated** — no consequence-management requirement exists in the current architecture (no redundancy, no structural margin requirement, no flight termination function; see Open Questions) | TODO |
+| HAZ-001 | Uncommanded descent / crash | MODE-001..004 | Power loss, control failure, structural failure | Platform loss; ground impact hazard | High | Medium | **Unmitigated** - no consequence-management requirement exists in the current architecture | Unresolved - GAP-HAZ-001 |
 | HAZ-002 | Flyaway (loss of platform command link) | MODE-001..003 | Platform command link loss (IFC-EXT-005) | Uncontrolled flight beyond operator area | High | Medium | REQ-FUN-005 (RTL) | FUN-FLT-04 |
 | HAZ-003 | Battery thermal event | All | Cell damage, overcurrent, charge fault | Fire; injury; loss of platform | High | Medium | REQ-SAF-001 | CMP-PWR-01 |
-| HAZ-004 | Propeller contact injury | MODE-005, ground handling | Inadvertent motor arming | Injury to personnel | High | High | REQ-SAF-002 | TODO |
+| HAZ-004 | Propeller contact injury | MODE-005, ground handling | Inadvertent motor arming | Injury to personnel | High | High | CTL-001: REQ-FUN-006 provides the Ground Safe arming inhibit; REQ-SAF-002 provides operator-visible armed-state indication | VER-004 scenario walkthrough and VER-006 cross-reference are candidate analysis only; no physical evidence |
 | HAZ-005 | Loss of relay function while airborne | MODE-002 → MODE-003 | Payload failure, power rail loss | Relayed link drops; remote UAS may be stranded | Medium | High | REQ-FUN-007 (platform safety only — MODE-003 keeps the aircraft controllable/recoverable; does not restore relay function, which is a black-box payload concern per TS-009) | FUN-REL-01, FUN-REL-02 |
 | HAZ-006 | Station drift | MODE-002 | Position hold failure, wind, GNSS loss | Relay geometry degrades; link margin lost | Medium | Medium | REQ-FUN-003 | FUN-FLT-03 |
 | HAZ-007 | Battery depletion before recovery | MODE-002, MODE-004 | Endurance overestimate, headwind | Platform loss | Medium | Medium | REQ-FUN-005 | FUN-PWR-02 |
-| HAZ-008 | Payload separation in flight | MODE-001..004 | Mount failure (IFC-INT-007) | Falling object hazard; payload loss | High | Low | REQ-IFC-001 | CMP-MNT-01 |
+| HAZ-008 | Payload separation in flight | MODE-001..004 | Mount failure (IFC-INT-007) | Falling object hazard; payload loss | High | Low | CTL-005 implemented by REQ-IFC-004; REQ-IFC-001 supports standardization but is not the primary retention mitigation | CMP-MNT-01; IFC-INT-007; VER-008 physical verification deferred |
 | HAZ-009 | Reserved — no hazard identified | — | — | — | — | — | Not applicable — no hazard defined | — |
 
 ## Hazards Outside This Model
