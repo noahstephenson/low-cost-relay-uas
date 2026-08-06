@@ -2,6 +2,12 @@
 
 Preliminary hazard identification for the relay UAS concept.
 
+> **Structured reconciliation.** Hazard, control, requirement, verification, and gap
+> relationships are maintained in [`model/elements.yaml`](model/elements.yaml),
+> [`model/requirements.yaml`](model/requirements.yaml), and
+> [`model/traceability.yaml`](model/traceability.yaml). This human-readable view is
+> retained without silently resolving its known TODOs or conflicting mitigation links.
+
 > **Not a safety assessment.** No safety standard is invoked, no severity/probability
 > matrix is claimed as authoritative, and no risk acceptance authority exists for this
 > project. This file identifies hazards so the architecture can reason about them —

@@ -1,0 +1,125 @@
+{
+  "schema_version": "1.0",
+  "baseline_status": "candidate_not_approved",
+  "needs": [
+    {
+      "id": "NEED-001",
+      "name": "Extend command, telemetry, and permitted mission-data reach through an airborne relay architecture",
+      "evidence_basis": "proposed_design",
+      "decision_status": "proposed",
+      "applicable_configurations": ["CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"],
+      "source_ids": ["SRC-REPO-002", "SRC-REPO-005"]
+    }
+  ],
+  "capabilities": [
+    {"id": "CAP-000", "name": "Extended-Range sUAS Employment", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"], "source_ids": ["SRC-REPO-005"]},
+    {"id": "CAP-001", "name": "Beyond-Line-of-Sight Control", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"], "source_ids": ["SRC-REPO-005"]},
+    {"id": "CAP-002", "name": "Terrain-Masked Operation", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"], "source_ids": ["SRC-REPO-005"]},
+    {"id": "CAP-003", "name": "Contested-Spectrum Resilience", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"], "source_ids": ["SRC-REPO-005"]},
+    {"id": "CAP-004", "name": "Low-Cost Attritable Fielding", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-005"]}
+  ],
+  "operational_activities": [
+    {"id": "OA-001", "name": "Maintain flight", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-005"]},
+    {"id": "OA-002", "name": "Transit to station", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-005"]},
+    {"id": "OA-003", "name": "Hold station", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-005"]},
+    {"id": "OA-004", "name": "Relay outbound traffic", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-005"]},
+    {"id": "OA-005", "name": "Relay return traffic", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-005"]},
+    {"id": "OA-006", "name": "Return and recover", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-005"]}
+  ],
+  "functions": [
+    {"id": "FUN-FLT-01", "name": "Maintain stable flight", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
+    {"id": "FUN-FLT-02", "name": "Navigate to station", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
+    {"id": "FUN-FLT-03", "name": "Hold station", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
+    {"id": "FUN-FLT-04", "name": "Return to launch", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
+    {"id": "FUN-REL-01", "name": "Relay outbound traffic", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
+    {"id": "FUN-REL-02", "name": "Relay return traffic", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
+    {"id": "FUN-PWR-01", "name": "Distribute and regulate power", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
+    {"id": "FUN-PWR-02", "name": "Report battery state", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
+    {"id": "FUN-CMD-01", "name": "Receive platform command link", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]}
+  ],
+  "components": [
+    {"id": "CMP-AFR-01", "name": "Center frame plate", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
+    {"id": "CMP-AFR-02", "name": "Arm assembly", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
+    {"id": "CMP-AFR-03", "name": "Landing gear", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
+    {"id": "CMP-AFR-04", "name": "Payload mount interface", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
+    {"id": "CMP-AFR-05", "name": "Fastener and hardware set", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
+    {"id": "CMP-PRP-01", "name": "Brushless motor", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
+    {"id": "CMP-PRP-02", "name": "Electronic speed controller", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
+    {"id": "CMP-PRP-03", "name": "Propeller", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
+    {"id": "CMP-PWR-01", "name": "Battery pack", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
+    {"id": "CMP-PWR-02", "name": "Power distribution board", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
+    {"id": "CMP-PWR-03", "name": "Step-down regulator(s)", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
+    {"id": "CMP-PWR-04", "name": "Battery connector", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
+    {"id": "CMP-AVN-01", "name": "Flight controller", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
+    {"id": "CMP-AVN-02", "name": "IMU / sensor suite", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
+    {"id": "CMP-AVN-03", "name": "GNSS / compass module", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
+    {"id": "CMP-AVN-04", "name": "Control link receiver", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
+    {"id": "CMP-COM-01", "name": "Relay payload module (black box)", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
+    {"id": "CMP-COM-02", "name": "Antenna interface (black-box physical resource)", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]},
+    {"id": "CMP-MNT-01", "name": "Modular payload bay", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-003"]}
+  ],
+  "modes": [
+    {"id": "MODE-001", "name": "Transit", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-002"]},
+    {"id": "MODE-002", "name": "Station Keeping", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-002"]},
+    {"id": "MODE-003", "name": "Relay Degraded", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-002"]},
+    {"id": "MODE-004", "name": "Return / Recovery", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-002"]},
+    {"id": "MODE-005", "name": "Ground Safe", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-002"]}
+  ],
+  "trade_studies": [
+    {"id": "TS-001", "name": "Airframe material and construction method", "status": "open", "evidence_basis": "internal_document", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-007"]},
+    {"id": "TS-002", "name": "Propulsion sizing", "status": "open", "evidence_basis": "internal_document", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-007"]},
+    {"id": "TS-003", "name": "Battery architecture", "status": "open", "evidence_basis": "internal_document", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-007"]},
+    {"id": "TS-004", "name": "Payload power allocation", "status": "open", "evidence_basis": "internal_document", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-007"]},
+    {"id": "TS-005", "name": "Flight controller selection", "status": "open", "evidence_basis": "internal_document", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-007"]},
+    {"id": "TS-006", "name": "Payload mount interface standard", "status": "open", "evidence_basis": "internal_document", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-007"]},
+    {"id": "TS-007", "name": "Station-keeping approach and GNSS dependence", "status": "open", "evidence_basis": "internal_document", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-007"]},
+    {"id": "TS-008", "name": "Platform command link approach", "status": "open", "evidence_basis": "internal_document", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-007"]},
+    {"id": "TS-009", "name": "Relay payload characterization", "status": "deferred_out_of_scope", "evidence_basis": "internal_document", "decision_status": "not_applicable", "applicable_configurations": ["CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"], "source_ids": ["SRC-REPO-007"]},
+    {"id": "TS-010", "name": "Environmental envelope", "status": "open", "evidence_basis": "internal_document", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-007"]},
+    {"id": "TS-011", "name": "Recovery approach", "status": "open", "evidence_basis": "internal_document", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-007"]}
+  ],
+  "hazards": [
+    {"id": "HAZ-001", "name": "Uncommanded descent / crash", "evidence_basis": "engineering_inference", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-006"]},
+    {"id": "HAZ-002", "name": "Flyaway", "evidence_basis": "engineering_inference", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-006"]},
+    {"id": "HAZ-003", "name": "Battery thermal event", "evidence_basis": "engineering_inference", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-006"]},
+    {"id": "HAZ-004", "name": "Propeller contact injury", "evidence_basis": "engineering_inference", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-006"]},
+    {"id": "HAZ-005", "name": "Loss of relay function while airborne", "evidence_basis": "engineering_inference", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-006"]},
+    {"id": "HAZ-006", "name": "Station drift", "evidence_basis": "engineering_inference", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-006"]},
+    {"id": "HAZ-007", "name": "Battery depletion before recovery", "evidence_basis": "engineering_inference", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-006"]},
+    {"id": "HAZ-008", "name": "Payload separation in flight", "evidence_basis": "engineering_inference", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-006"]},
+    {"id": "HAZ-009", "name": "Undefined placeholder hazard", "evidence_basis": "unknown", "decision_status": "not_applicable", "applicable_configurations": ["TBD"], "source_ids": ["SRC-REPO-006"]},
+    {"id": "HAZ-EXT-001", "name": "RF exposure to personnel", "evidence_basis": "engineering_inference", "decision_status": "not_applicable", "applicable_configurations": ["TBD"], "source_ids": ["SRC-REPO-006"]},
+    {"id": "HAZ-EXT-002", "name": "Interference with other spectrum users", "evidence_basis": "engineering_inference", "decision_status": "not_applicable", "applicable_configurations": ["TBD"], "source_ids": ["SRC-REPO-006"]},
+    {"id": "HAZ-EXT-003", "name": "Airspace conflict with crewed aircraft", "evidence_basis": "engineering_inference", "decision_status": "not_applicable", "applicable_configurations": ["TBD"], "source_ids": ["SRC-REPO-006"]}
+  ],
+  "controls": [
+    {"id": "CTL-001", "name": "Ground-safe motor arming inhibit and visible armed-state indication", "mitigates": ["HAZ-004"], "implemented_by": ["REQ-FUN-006", "REQ-SAF-002"], "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-004", "SRC-REPO-006"]},
+    {"id": "CTL-002", "name": "Battery over-current protection and physical retention", "mitigates": ["HAZ-003"], "implemented_by": ["REQ-SAF-001"], "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-004", "SRC-REPO-006"]},
+    {"id": "CTL-003", "name": "Low-battery return and recovery response", "mitigates": ["HAZ-002", "HAZ-007"], "implemented_by": ["REQ-FUN-005"], "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-004", "SRC-REPO-006"]},
+    {"id": "CTL-004", "name": "Maintain platform control after relay-payload loss", "mitigates": ["HAZ-005"], "implemented_by": ["REQ-FUN-007"], "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-004", "SRC-REPO-006"]},
+    {"id": "CTL-005", "name": "Payload retention under flight loads", "mitigates": ["HAZ-008"], "implemented_by": ["REQ-IFC-004"], "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-004", "SRC-REPO-006"]}
+  ],
+  "verifications": [
+    {"id": "VER-001", "name": "Requirement and architecture analysis", "method": "analysis", "status": "candidate", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-004"]},
+    {"id": "VER-002", "name": "Structured traceability audit", "method": "analysis", "status": "implemented_by_validator", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"], "source_ids": ["SRC-DEC-001"]},
+    {"id": "VER-003", "name": "Source and evidence-record inspection", "method": "inspection", "status": "candidate", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"], "source_ids": ["SRC-DEC-001"]},
+    {"id": "VER-004", "name": "Operational-scenario walkthrough", "method": "analysis", "status": "candidate", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"], "source_ids": ["SRC-DEC-001"]},
+    {"id": "VER-005", "name": "Interface-catalog inspection", "method": "inspection", "status": "candidate", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"], "source_ids": ["SRC-DEC-001"]},
+    {"id": "VER-006", "name": "Hazard-control-requirement cross-reference", "method": "analysis", "status": "candidate", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-DEC-001"]},
+    {"id": "VER-007", "name": "Configuration-applicability review", "method": "inspection", "status": "candidate", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"], "source_ids": ["SRC-DEC-001"]},
+    {"id": "VER-008", "name": "Deferred physical verification method", "method": "deferred demonstration or test", "status": "deferred_out_of_scope", "evidence_basis": "unknown", "decision_status": "not_applicable", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-REPO-004"]}
+  ],
+  "decisions": [
+    {
+      "id": "DEC-001",
+      "name": "Retain baseline-candidate status and project safety/scope constraints",
+      "statement": "The baseline shall remain not approved, and the existing restrictions on RF detail, fabrication, physical testing, deployable communications specifications, and weapons integration shall remain in force.",
+      "status": "approved",
+      "decision_status": "approved",
+      "authority": "project owner",
+      "date": "2026-08-06",
+      "applicable_configurations": ["CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"],
+      "source_ids": ["SRC-DEC-001"]
+    }
+  ]
+}

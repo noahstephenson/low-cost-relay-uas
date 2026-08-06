@@ -3,10 +3,16 @@
 Cross-reference matrices linking every ID in the model. This file is the join table —
 it holds no new information, only relationships between elements defined elsewhere.
 
-**Source of truth:** components/functions/interfaces live in `architecture.md`,
-requirements in `requirements.md`, capabilities and activities in `uaf-views.md`,
-hazards in `hazard-analysis.md`. If a matrix here disagrees with a source file, the
-source file wins and this file is stale.
+**Source of truth:** `system.yaml` is the model manifest. The YAML catalogs referenced
+by that manifest are the authoritative structured data. This file remains a legacy
+human-readable cross-reference and preserves known gaps; the generated
+[`reports/baseline-traceability.md`](reports/baseline-traceability.md) is the current
+derived matrix. If this file and a structured catalog disagree, record the difference
+as a reconciliation issue rather than silently selecting one.
+
+> **Baseline Candidate - Not Approved.** The matrices below are retained for context
+> and include known stale or incomplete entries documented in
+> [`model/traceability.yaml`](model/traceability.yaml).
 
 ## Thread Overview
 

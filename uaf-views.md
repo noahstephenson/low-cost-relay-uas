@@ -4,6 +4,14 @@ Strategic, Operational, and Resources viewpoints. UAF viewpoint names are given 
 their approximate DoDAF 2.02 equivalents for readers more familiar with that
 framework.
 
+> **Baseline and configuration note.** These diagrams are human-readable views of a
+> baseline candidate, not approval evidence. The current three-node operational view
+> is a proposed `CFG-REP`/`CFG-DOM` thread. The recovered article (`CFG-REC`) is a
+> separate evidence configuration, and the UAS-UGV-radio C2 context (`CFG-SOS`) is a
+> proposed outer boundary with unresolved activities, interfaces, requirements, and
+> verification authority. Authoritative candidate scenarios and performers are in
+> [`model/operational-scenarios.yaml`](model/operational-scenarios.yaml).
+
 ## Viewpoint Selection
 
 | UAF Viewpoint | View | DoDAF Equivalent | Purpose |

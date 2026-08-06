@@ -4,6 +4,15 @@ Physical decomposition, functional allocation, and interfaces for the relay UAS
 concept. IDs defined here are referenced by `requirements.md`, `uaf-views.md`, and
 `traceability.md`.
 
+> **Baseline authority.** This file is a human-readable architecture view. The
+> configuration-aware element and interface records in
+> [`model/elements.yaml`](model/elements.yaml) and
+> [`model/interfaces.yaml`](model/interfaces.yaml) are the authoritative structured
+> data for the baseline candidate. The decomposition below maps provisionally to
+> `CFG-REP` and `CFG-DOM`; it is not asserted to be the as-built `CFG-REC` article.
+> The Relay UAS is the inner product boundary; the broader C2 Ecosystem remains an
+> outer, proposed system-of-systems context.
+
 ## Architecture Overview
 
 The decomposition is a conventional quadrotor split into five platform subsystems

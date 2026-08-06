@@ -1,0 +1,128 @@
+{
+  "schema_version": "1.0",
+  "baseline_status": "candidate_not_approved",
+  "configurations": [
+    {
+      "id": "CFG-REC",
+      "name": "Recovered Reference Article",
+      "purpose": "Record the recovered or reference article as represented by available teardown records without treating inference as observation.",
+      "system_boundary": "Relay UAS",
+      "maturity": "observed_record_with_gaps",
+      "approval_status": "not_approved",
+      "decision_status": "not_applicable",
+      "predecessor_ids": [],
+      "derivation_relationship": "reference configuration",
+      "applicable_sources": ["SRC-INT-001", "SRC-INT-002", "SRC-INT-003", "SRC-GAP-001"],
+      "known_exclusions": [
+        "No exact manufacturer attribution",
+        "No unsupported internal payload decomposition",
+        "No inferred battery, propulsion, or RF values",
+        "No build or test specification"
+      ],
+      "unresolved_questions": [
+        "Exact battery architecture",
+        "Propulsion component ratings and corner mapping",
+        "Relay-module identities and internal behavior",
+        "Antenna roles",
+        "Functions of auxiliary modules",
+        "Complete standalone teardown evidence set"
+      ]
+    },
+    {
+      "id": "CFG-REP",
+      "name": "Safe Functional-Replica Architecture",
+      "purpose": "Describe a non-deployable, architecture-level functional replica derived from the reference article while preserving black-box payload and safety constraints.",
+      "system_boundary": "Relay UAS",
+      "maturity": "proposed_architecture",
+      "approval_status": "not_approved",
+      "decision_status": "proposed",
+      "predecessor_ids": ["CFG-REC"],
+      "derivation_relationship": "proposed functional derivation, not an exact clone",
+      "applicable_sources": ["SRC-REPO-002", "SRC-REPO-003", "SRC-REPO-004", "SRC-INT-001", "SRC-INT-002", "SRC-INT-003"],
+      "known_exclusions": [
+        "RF implementation details",
+        "Fabrication and flight-test instructions",
+        "Weapons or munitions integration",
+        "Unidentified recovered auxiliary modules"
+      ],
+      "unresolved_questions": [
+        "Extent to which the current generic component model represents the recovered article",
+        "Mass, cost, power, endurance, and payload envelopes",
+        "Platform command-link architecture",
+        "Verification evidence"
+      ]
+    },
+    {
+      "id": "CFG-DOM",
+      "name": "Domestic Low-Cost Relay-UAS Architecture",
+      "purpose": "Describe a domestically sourced low-cost relay-UAS architecture at system and interface level.",
+      "system_boundary": "Relay UAS",
+      "maturity": "proposed_architecture",
+      "approval_status": "not_approved",
+      "decision_status": "proposed",
+      "predecessor_ids": ["CFG-REP"],
+      "derivation_relationship": "proposed substitution architecture",
+      "applicable_sources": ["SRC-REPO-002", "SRC-REPO-003", "SRC-REPO-004", "SRC-INT-002"],
+      "known_exclusions": [
+        "Supplier selection",
+        "Part-number selection",
+        "Fabrication and integration instructions",
+        "Claims of domestic-content or modular-open-system compliance"
+      ],
+      "unresolved_questions": [
+        "Domestic-content criteria and approval authority",
+        "Component substitutions",
+        "Interface conformance criteria",
+        "Cost and logistics evidence"
+      ]
+    },
+    {
+      "id": "CFG-DIG",
+      "name": "Future Digital Multi-Platform Relay Architecture",
+      "purpose": "Describe a future architecture-level digital relay capable of serving more than one external platform type.",
+      "system_boundary": "Relay UAS",
+      "maturity": "concept_candidate",
+      "approval_status": "not_approved",
+      "decision_status": "proposed",
+      "predecessor_ids": ["CFG-REP"],
+      "derivation_relationship": "future concept branch",
+      "applicable_sources": ["SRC-REPO-002", "SRC-REPO-005", "SRC-INT-001", "SRC-INT-002"],
+      "known_exclusions": [
+        "Protocol, waveform, frequency, or network implementation",
+        "Claims of interoperability, security, or resilience",
+        "Deployable communications-system specification"
+      ],
+      "unresolved_questions": [
+        "Payload-management boundary",
+        "Supported platform classes",
+        "Information-assurance requirements",
+        "Interface standards and conformance evidence"
+      ]
+    },
+    {
+      "id": "CFG-SOS",
+      "name": "UAS-UGV-Radio C2 System-of-Systems Architecture",
+      "purpose": "Describe the complete architecture context connecting operator, ground control, relay UAS, remote UAS, UGV, radio users, services, authorities, and support infrastructure.",
+      "system_boundary": "C2 Ecosystem",
+      "maturity": "context_and_scenario_candidate",
+      "approval_status": "not_approved",
+      "decision_status": "proposed",
+      "predecessor_ids": ["CFG-DIG"],
+      "derivation_relationship": "outer system-of-systems context containing the relay UAS as one constituent",
+      "applicable_sources": ["SRC-DEC-001", "SRC-REPO-005"],
+      "known_exclusions": [
+        "Implementation details for independently managed external systems",
+        "Operational deployment procedures",
+        "Detailed network or RF design",
+        "Claims of end-to-end interoperability"
+      ],
+      "unresolved_questions": [
+        "External-system ownership and approval authorities",
+        "UGV and radio-user information exchanges",
+        "Network-service dependencies",
+        "Cross-system safety and assurance responsibilities",
+        "System-of-systems verification strategy"
+      ]
+    }
+  ]
+}

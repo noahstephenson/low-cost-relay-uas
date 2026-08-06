@@ -3,6 +3,26 @@
 > **Status: exploratory draft.** Independent concept study. Not affiliated with any
 > program of record, and not a build specification. See [Scope Boundaries](#scope-boundaries).
 
+> **Baseline Candidate - Not Approved.** The reconciled structured baseline is
+> governed by [`system.yaml`](system.yaml), the catalogs under [`model/`](model/),
+> and the source/proof records under [`.seal/`](.seal/). This candidate has not been
+> approved by the project owner.
+
+## Baseline Reconciliation
+
+This repository distinguishes the recovered reference article (`CFG-REC`) from the
+safe functional-replica (`CFG-REP`), domestic (`CFG-DOM`), future digital
+(`CFG-DIG`), and complete system-of-systems (`CFG-SOS`) architecture candidates.
+Existing prose is not approved truth merely because it predates the reconciliation.
+Each structured claim records its evidence basis separately from its decision status.
+
+The structured model uses two boundaries: the **Relay UAS** is the inner product
+boundary, while the **C2 Ecosystem** is the outer system-of-systems context. External
+vehicles, users, services, authorities, and infrastructure remain independently
+managed unless a source establishes otherwise. See the generated
+[`baseline-candidate.md`](reports/baseline-candidate.md) and
+[`baseline-gaps.md`](reports/baseline-gaps.md) views.
+
 ## Overview
 
 A small rotary-wing platform whose sole mission is to carry a communications-relay
@@ -59,8 +79,12 @@ defense-affiliated context, export control review. None of that is addressed her
 | `hazard-analysis.md` | Hazards (`HAZ-`) and mitigations |
 | `trade-studies.md` | Open decisions (`TS-`) this model does not resolve |
 | `traceability.md` | Cross-reference matrices linking every ID |
+| `model/*.yaml` | Authoritative configuration, element, claim, scenario, interface, requirement, and relationship catalogs |
+| `.seal/*.yaml` | Source-authority and proof records |
+| `reports/*.md` | Generated baseline views; no independent architecture authority |
+| `scripts/validate-baseline.py` | Standard-library structural validation and report generation |
 
-## System Boundary
+## Relay UAS Product Boundary (Inner)
 
 **Inside the system boundary**
 
@@ -82,6 +106,16 @@ The boundary is drawn so the relay payload sits *inside* it physically but *outs
 it analytically. The platform is specified to carry an unspecified payload within a
 defined mass, power, and volume envelope. This is what allows the architecture to
 proceed while TS-009 remains deferred.
+
+## C2 Ecosystem Context Boundary (Outer)
+
+The outer boundary adds the operator, ground-control system, remote UAS, UGV, radio
+users, network services, maintenance personnel, spectrum-management authority, and
+supporting infrastructure as a proposed system-of-systems context. The existing
+three-node operational concept remains the current candidate thread for `CFG-REP`
+and `CFG-DOM`; it does not establish that the UGV, radio-user, or broader data-return
+threads are supported. Those candidate threads and their explicit TBDs are maintained
+in [`model/operational-scenarios.yaml`](model/operational-scenarios.yaml).
 
 ## Operational Environment
 

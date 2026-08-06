@@ -1,39 +1,156 @@
-title: Low-Cost Attritable Communications Relay UAS
-domain: defense
-tier: exploratory
-status: draft
-project_type: independent research / concept exploration
-standards:
-  - UAF 1.2 (Strategic, Operational, Resources viewpoints)
-  - SysML 1.6 (structural decomposition, applied informally)
-  - INCOSE SE Handbook v5 (process reference)
-assurance_framework: none — exploratory concept study, not an acquisition program
-system_class: Group 1 sUAS (notional); no safety integrity level assigned
-summary: >
-  Notional low-cost, attritable quadrotor carrying a communications-relay
-  payload, intended to extend the control and telemetry link range of a
-  separate small UAS beyond direct line of sight. Modeled at capability
-  and architecture level only.
-
-scope:
-  in_scope:
-    - Capability gap articulation and operational concept
-    - Platform architecture (airframe, propulsion, power, avionics)
-    - Interface definition and cost/mass budget allocation
-    - Requirements and end-to-end traceability
-  out_of_scope:
-    - RF waveform, frequency plan, protocol, modulation, or link budget
-    - Antenna design, gain patterns, or transmit power
-    - Electronic warfare technique or counter-EW design
-    - Weapons or munitions integration of any kind
-    - Hardware build, flight test, or spectrum-radiating experimentation
-
-id_scheme:
-  CAP: capability (strategic viewpoint)
-  OA:  operational activity
-  OP:  operational performer
-  CMP: physical component (resource viewpoint)
-  FUN: system function
-  IFC: interface
-  REQ: requirement
-  TS:  open trade study
+{
+  "schema_version": "1.0",
+  "model_version": "0.2.0-baseline-candidate",
+  "title": "Low-Cost Attritable Communications Relay UAS",
+  "domain": "defense",
+  "tier": "exploratory",
+  "project_type": "independent research / concept exploration",
+  "status": "baseline_candidate_not_approved",
+  "baseline": {
+    "label": "Baseline Candidate - Not Approved",
+    "purpose": "Reconcile the existing exploratory architecture with configuration, evidence, decision, and traceability records without adding implementation detail.",
+    "approval_state": "not_approved",
+    "approval_authority": "project owner",
+    "approval_decision_id": null,
+    "candidate_date": "2026-08-06"
+  },
+  "authority": {
+    "manifest": "system.yaml",
+    "structured_catalogs": "authoritative structured model data",
+    "markdown_views": "human-readable derived and explanatory architecture views",
+    "generated_reports": "derived views with no independent architecture authority",
+    "reconciliation_rule": "Record a reconciliation issue when structured data and a human-readable view disagree."
+  },
+  "standards": [
+    "UAF 1.2 (Strategic, Operational, Resources viewpoints)",
+    "SysML 1.6 (structural decomposition, applied informally)",
+    "INCOSE SE Handbook v5 (process reference)"
+  ],
+  "assurance_framework": "none - exploratory concept study, not an acquisition program",
+  "system_class": "notional small UAS class; recovered-article mass class remains unknown",
+  "summary": "Candidate architecture for an airborne communications-relay platform and its larger C2 ecosystem. The recovered article, replica concept, domestic concept, digital concept, and system-of-systems context are separate configurations.",
+  "scope": {
+    "in_scope": [
+      "Capability gap articulation and operational concept",
+      "Architecture-level platform decomposition",
+      "Black-box communications-payload interfaces",
+      "Configuration, requirements, hazards, evidence, and traceability"
+    ],
+    "out_of_scope": [
+      "RF frequency, waveform, modulation, transmit power, link budget, or antenna design",
+      "Electronic-warfare techniques",
+      "Weapons or munitions integration",
+      "Fabrication, hardware build, flight-test, or spectrum-radiating instructions",
+      "A deployable communications-system specification"
+    ]
+  },
+  "system_boundaries": {
+    "inner": {
+      "name": "Relay UAS",
+      "role": "product boundary",
+      "includes": [
+        "airframe",
+        "structure",
+        "propulsion",
+        "electrical power",
+        "flight control",
+        "platform command link",
+        "relay payload as a black box",
+        "payload management at architecture level",
+        "antennas as black-box physical resources",
+        "payload mounting",
+        "configuration and maintenance interfaces"
+      ],
+      "excludes": [
+        "ground-control system",
+        "remote UAS",
+        "UGV",
+        "radio users",
+        "external network services",
+        "spectrum-management authority",
+        "supporting infrastructure"
+      ],
+      "evidence_basis": "proposed_design",
+      "decision_status": "proposed",
+      "applicable_configurations": ["CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"]
+    },
+    "outer": {
+      "name": "C2 Ecosystem",
+      "role": "system-of-systems context boundary",
+      "includes": [
+        "operator",
+        "ground-control system",
+        "relay UAS",
+        "remote UAS",
+        "UGV",
+        "radio users",
+        "network services",
+        "maintenance personnel",
+        "spectrum-management authority",
+        "supporting infrastructure"
+      ],
+      "independent_management_rule": "External constituent systems remain independently managed unless a structured source establishes otherwise.",
+      "evidence_basis": "proposed_design",
+      "decision_status": "proposed",
+      "applicable_configurations": ["CFG-SOS"]
+    }
+  },
+  "enumerations": {
+    "evidence_basis": [
+      "physically_observed",
+      "internal_document",
+      "external_source",
+      "engineering_inference",
+      "proposed_design",
+      "unknown"
+    ],
+    "decision_status": ["not_applicable", "proposed", "approved", "rejected", "superseded"]
+  },
+  "catalogs": {
+    "sources": ".seal/sources.yaml",
+    "proof": ".seal/proof.yaml",
+    "configurations": "model/configurations.yaml",
+    "elements": "model/elements.yaml",
+    "claims": "model/claims.yaml",
+    "operational_scenarios": "model/operational-scenarios.yaml",
+    "interfaces": "model/interfaces.yaml",
+    "requirements": "model/requirements.yaml",
+    "traceability": "model/traceability.yaml"
+  },
+  "generated_reports": [
+    "reports/baseline-candidate.md",
+    "reports/baseline-gaps.md",
+    "reports/baseline-traceability.md"
+  ],
+  "human_readable_views": [
+    "README.md",
+    "uaf-views.md",
+    "architecture.md",
+    "requirements.md",
+    "hazard-analysis.md",
+    "trade-studies.md",
+    "traceability.md"
+  ],
+  "id_scheme": {
+    "CFG": "configuration baseline",
+    "NEED": "stakeholder or mission need",
+    "CAP": "capability",
+    "SCN": "operational scenario or mission thread",
+    "OA": "operational activity",
+    "OP": "operational performer",
+    "IX": "operational information exchange",
+    "FUN": "system function",
+    "CMP": "physical component or resource",
+    "IFC": "interface",
+    "REQ": "requirement",
+    "HAZ": "hazard",
+    "CTL": "hazard control",
+    "VER": "verification activity or method",
+    "EVD": "verification or supporting evidence",
+    "TS": "open trade study",
+    "MODE": "operating mode",
+    "CLM": "architecture claim",
+    "SRC": "evidence source",
+    "DEC": "human decision record"
+  }
+}

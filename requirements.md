@@ -4,6 +4,13 @@ Requirement IDs are referenced by `architecture.md`, `uaf-views.md`, and
 `traceability.md`. Every requirement must trace upward to a capability and downward
 to at least one component or explicitly deferred trade study.
 
+> **Structured classification.** [`model/requirements.yaml`](model/requirements.yaml)
+> preserves every existing requirement ID and text while adding configuration
+> applicability, evidence basis, decision status, upstream rationale, allocation,
+> verification, and TBD ownership. It is the authoritative structured requirement
+> catalog for the baseline candidate. The requirements remain proposed unless an
+> explicit decision record states otherwise.
+
 ## Conventions
 
 - **Shall** statements only. One requirement per row.
