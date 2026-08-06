@@ -9,7 +9,8 @@ needed in CI):
   2. Every CMP-/FUN-/IFC- referenced anywhere exists in architecture.md.
   3. Every CAP- has at least one allocated OA- or an explicit documented
      exception.
-  4. Every HAZ- has a mitigating REQ- or is explicitly marked unmitigated.
+  4. Every HAZ- has a mitigating REQ- or an explicit unmitigated/not-applicable
+     disposition.
   5. No duplicate IDs within a prefix.
   6. No ID referenced anywhere that is not defined somewhere.
 
@@ -46,6 +47,7 @@ prose — they are not otherwise subject to the six required checks.
 """
 
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -295,7 +297,7 @@ def main():
              details)
         )
 
-    # ---- Check 4: every HAZ- has a mitigating REQ- or is marked unmitigated ----
+    # ---- Check 4: every HAZ- has a mitigating REQ- or explicit disposition ----
     haz_log_text = section(file_text.get("hazard-analysis.md", ""), r"Hazard Log")
     haz_gaps = []
     for row in iter_table_rows(haz_log_text.splitlines()):
@@ -307,13 +309,14 @@ def main():
         mitigation_cell = row[7] if len(row) > 7 else ""
         has_req = bool(re.search(r"\bREQ-[A-Z0-9-]+\b", mitigation_cell))
         marked_unmitigated = "unmitigated" in mitigation_cell.lower()
-        if not has_req and not marked_unmitigated:
+        marked_not_applicable = "not applicable" in mitigation_cell.lower()
+        if not has_req and not marked_unmitigated and not marked_not_applicable:
             haz_gaps.append((haz_id, mitigation_cell or "(empty)"))
     if haz_gaps:
         details = [f"  {h}: mitigation = \"{m}\" — no REQ- and not marked unmitigated"
                    for h, m in haz_gaps]
         failures.append(
-            ("Every HAZ- has a mitigating REQ- or is explicitly marked unmitigated",
+            ("Every HAZ- has a mitigating REQ- or an explicit disposition",
              details)
         )
 
@@ -340,4 +343,9 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    markdown_status = main()
+    validator = Path(__file__).with_name("validate-baseline.py")
+    baseline_result = subprocess.run(
+        [sys.executable, str(validator), "--ids-only"], check=False
+    )
+    sys.exit(markdown_status or baseline_result.returncode)

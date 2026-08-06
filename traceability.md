@@ -3,10 +3,16 @@
 Cross-reference matrices linking every ID in the model. This file is the join table —
 it holds no new information, only relationships between elements defined elsewhere.
 
-**Source of truth:** components/functions/interfaces live in `architecture.md`,
-requirements in `requirements.md`, capabilities and activities in `uaf-views.md`,
-hazards in `hazard-analysis.md`. If a matrix here disagrees with a source file, the
-source file wins and this file is stale.
+**Source of truth:** `system.yaml` is the model manifest. The YAML catalogs referenced
+by that manifest are the authoritative structured data. This file remains a legacy
+human-readable cross-reference and preserves known gaps; the generated
+[`reports/baseline-traceability.md`](reports/baseline-traceability.md) is the current
+derived matrix. If this file and a structured catalog disagree, record the difference
+as a reconciliation issue rather than silently selecting one.
+
+> **Baseline Candidate - Not Approved.** The matrices below are retained for context
+> and include known stale or incomplete entries documented in
+> [`model/traceability.yaml`](model/traceability.yaml).
 
 ## Thread Overview
 
@@ -35,6 +41,10 @@ graph LR
 > current model, because the mechanisms that would provide it live entirely inside
 > the deferred payload (TS-009). Left deliberately unallocated rather than
 > papered over — an unallocated capability is a real finding, not a formatting gap.
+>
+> **CAP-004 note.** Affordability and attritability are currently cross-cutting
+> lifecycle constraints rather than a mission activity. No dedicated `OA-` is
+> allocated until the model owner decides whether fielding needs its own activity.
 
 ## Matrix 2 — Operational Activity to Function to Component
 
@@ -73,6 +83,11 @@ graph LR
 | REQ-IFC-004 | — | CMP-MNT-01 / IFC-INT-007 | T `Deferred` | TODO |
 | REQ-SAF-001 | — | CMP-PWR-01, CMP-PWR-02 | I `Deferred` | TODO |
 | REQ-SAF-002 | — | CMP-AVN-01 | D | TODO |
+| REQ-DEF-001 | CAP-001 | CMP-COM-01 / IFC-EXT-001..004 | Deferred | Deferred — TS-009 |
+| REQ-DEF-002 | CAP-001 | CMP-COM-01 | Deferred | Deferred — TS-009 |
+| REQ-DEF-003 | — | External regulatory authority | External | Deferred |
+| REQ-DEF-004 | CAP-003 | Unallocated | Deferred | Deferred — TS-009 |
+| REQ-DEF-005 | — | External compliance authority | External | Deferred |
 
 ## Matrix 4 — Hazard to Mitigating Requirement
 
@@ -132,6 +147,6 @@ Candidate CI checks over these tables:
 - [ ] Every `REQ-` in `requirements.md` appears in Matrix 3
 - [ ] Every `CMP-`/`FUN-`/`IFC-` referenced here exists in `architecture.md`
 - [ ] Every `CAP-` has at least one allocated `OA-` *or* an explicit note explaining why not
-- [ ] Every `HAZ-` has a mitigating `REQ-` or is explicitly marked unmitigated
+- [ ] Every `HAZ-` has a mitigating `REQ-` or an explicit unmitigated/not-applicable disposition
 - [ ] No duplicate IDs within a prefix
 - [ ] No ID referenced that is not defined somewhere
