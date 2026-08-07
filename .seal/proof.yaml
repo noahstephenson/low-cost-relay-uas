@@ -10,6 +10,7 @@
       "status": "proven",
       "source_refs": [
         "SRC-DEC-001",
+        "SRC-DEC-002",
         "SRC-REPO-001",
         "SRC-REPO-002"
       ],
@@ -606,7 +607,10 @@
       "subject_ids": [
         "MODE-003",
         "HAZ-005",
-        "REQ-FUN-007"
+        "REQ-FUN-007",
+        "FUN-HLT-01",
+        "IFC-EXT-007",
+        "REQ-FUN-008"
       ],
       "rationale": "The existing mode model and requirement set explicitly preserve platform control after payload loss.",
       "contradicts": [],
@@ -776,10 +780,10 @@
     {
       "id": "EVD-004",
       "type": "repo_observation",
-      "method": "Static inspection of the repository architecture and local HTML export",
+      "method": "Static inspection of the repository architecture excluding the deferred local HTML export",
       "source": {
         "kind": "repo_observation",
-        "summary": "Repository files SRC-REPO-001 through SRC-REPO-009"
+        "summary": "Repository architecture files and registered metadata; SRC-REPO-009 excluded"
       },
       "result": "Existing IDs, candidate architecture claims, stale trace links, and configuration ambiguities were recorded.",
       "supports": [
@@ -808,8 +812,7 @@
         "SRC-REPO-005",
         "SRC-REPO-006",
         "SRC-REPO-007",
-        "SRC-REPO-008",
-        "SRC-REPO-009"
+        "SRC-REPO-008"
       ],
       "authority_state": "repo_observed",
       "approval_state": "pending",
@@ -818,8 +821,7 @@
         "CFG-REP",
         "CFG-DOM",
         "CFG-DIG",
-        "CFG-SOS",
-        "TBD"
+        "CFG-SOS"
       ],
       "evidence_basis": "internal_document",
       "decision_status": "not_applicable"

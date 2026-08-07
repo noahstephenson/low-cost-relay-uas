@@ -248,6 +248,47 @@
       "provenance_gap": null
     },
     {
+      "id": "REQ-FUN-008",
+      "text": "The system shall make current operating mode and detected Relay-UAS health/status available to the operator.",
+      "classification": "safety_and_assurance",
+      "applicable_configurations": [
+        "CFG-REP",
+        "CFG-DOM"
+      ],
+      "evidence_basis": "proposed_design",
+      "decision_status": "proposed",
+      "source_ids": [
+        "SRC-DEC-002",
+        "SRC-REPO-004"
+      ],
+      "upstream_refs": [
+        "SCN-001",
+        "SCN-002",
+        "SCN-007",
+        "SCN-008",
+        "IX-009",
+        "DEC-004"
+      ],
+      "allocation_refs": [
+        "FUN-HLT-01",
+        "CMP-AVN-01",
+        "IFC-INT-006",
+        "IFC-EXT-007"
+      ],
+      "verification_ids": [
+        "VER-004",
+        "VER-005",
+        "VER-008",
+        "VER-009"
+      ],
+      "verification_method": "I/D",
+      "verification_status": "deferred",
+      "tbd_owner_ids": [
+        "DEC-004"
+      ],
+      "provenance_gap": null
+    },
+    {
       "id": "REQ-PER-001",
       "text": "System unit cost shall not exceed [TBD].",
       "classification": "mission_and_stakeholder",
@@ -893,6 +934,36 @@
       "provenance_gap": null
     }
   ],
+  "requirement_quality_audit": [
+    {"requirement_id": "REQ-FUN-001", "quality_result": "pass", "note": "Single outbound-relay behavior with clear upward rationale and black-box allocation.", "verification_readiness": "external_authority_required"},
+    {"requirement_id": "REQ-FUN-002", "quality_result": "pass", "note": "Single return-relay behavior with clear upward rationale and black-box allocation.", "verification_readiness": "external_authority_required"},
+    {"requirement_id": "REQ-FUN-003", "quality_result": "pass_with_open_tbd", "note": "Necessary station-keeping requirement; tolerance remains an owned design TBD.", "verification_readiness": "analysis_blocked_by_tbd", "tbd_governance": {"category": "design_tbd", "owner_ids": ["TS-007"], "dependency": "Station-keeping concept and environmental assumptions", "reason": "No position tolerance has been selected.", "verification_implication": "Analysis criteria and later physical evidence cannot be finalized."}},
+    {"requirement_id": "REQ-FUN-004", "quality_result": "pass", "note": "Implementation-neutral platform-command behavior remains separate from relay traffic.", "verification_readiness": "external_authority_required"},
+    {"requirement_id": "REQ-FUN-005", "quality_result": "pass", "note": "Necessary recovery behavior; the low-battery threshold remains dependent on TS-003 and TS-011.", "verification_readiness": "analysis_blocked_by_tbd"},
+    {"requirement_id": "REQ-FUN-006", "quality_result": "pass", "note": "Single ground-safe arming behavior with direct hazard-control trace.", "verification_readiness": "physical_evidence_required"},
+    {"requirement_id": "REQ-FUN-007", "quality_result": "pass", "note": "Controllability and recoverability are retained as one linked payload-loss safety objective; HAZ-001 remains separate.", "verification_readiness": "physical_evidence_required"},
+    {"requirement_id": "REQ-FUN-008", "quality_result": "new_proposed_requirement", "note": "Architecture-level mode and health/status visibility supports readiness and recovery decisions without defining messages or implementation.", "verification_readiness": "physical_evidence_required"},
+    {"requirement_id": "REQ-PER-001", "quality_result": "pass_with_open_tbd", "note": "Cross-cutting CAP-004 constraint; no component-only allocation is semantically appropriate.", "verification_readiness": "analysis_blocked_by_tbd", "tbd_governance": {"category": "design_tbd", "owner_ids": ["TS-001", "TS-002", "TS-003"], "dependency": "Coupled component selection, mass, power, and endurance model", "reason": "The project owner has not selected a unit-cost target.", "verification_implication": "Cost analysis cannot establish compliance."}},
+    {"requirement_id": "REQ-PER-002", "quality_result": "pass_with_open_tbd", "note": "Necessary endurance objective governed by the coupled TS-002/TS-003 loop.", "verification_readiness": "analysis_blocked_by_tbd", "tbd_governance": {"category": "design_tbd", "owner_ids": ["TS-001", "TS-002", "TS-003"], "dependency": "Gross mass, propulsion demand, battery requirement, and cost", "reason": "No on-station endurance target has been selected.", "verification_implication": "Battery sizing analysis and physical endurance evidence remain blocked."}},
+    {"requirement_id": "REQ-PER-003", "quality_result": "pass_with_open_tbd", "note": "Cross-cutting system constraint governed by the same budget loop as endurance and cost.", "verification_readiness": "analysis_blocked_by_tbd", "tbd_governance": {"category": "design_tbd", "owner_ids": ["TS-001", "TS-002", "TS-003"], "dependency": "Dry mass, payload envelope, propulsion sizing, and battery mass", "reason": "No gross-mass limit has been selected.", "verification_implication": "Mass inspection has no acceptance threshold."}},
+    {"requirement_id": "REQ-PER-004", "quality_result": "pass_with_open_tbd", "note": "Single payload-envelope requirement; mass and volume are intentionally unresolved together.", "verification_readiness": "analysis_blocked_by_tbd", "tbd_governance": {"category": "design_tbd", "owner_ids": ["TS-006"], "dependency": "Payload-mount standard and coupled gross-mass budget", "reason": "No payload mass or volume envelope has been selected.", "verification_implication": "Interface inspection and physical fit evidence lack acceptance criteria."}},
+    {"requirement_id": "REQ-PER-005", "quality_result": "pass", "note": "Transport and launch clauses express one single-operator portability objective.", "verification_readiness": "physical_evidence_required"},
+    {"requirement_id": "REQ-IFC-001", "quality_result": "pass", "note": "Necessary payload-modularity constraint; standard selection remains open under TS-006.", "verification_readiness": "analysis_blocked_by_tbd"},
+    {"requirement_id": "REQ-IFC-002", "quality_result": "pass", "note": "Implementation-neutral power-envelope requirement; allocation remains within the two-crossing boundary.", "verification_readiness": "analysis_blocked_by_tbd"},
+    {"requirement_id": "REQ-IFC-003", "quality_result": "pass", "note": "Model-verifiable boundary constraint with unchanged intent and exact crossing IDs.", "verification_readiness": "model_verifiable_now"},
+    {"requirement_id": "REQ-IFC-004", "quality_result": "pass_with_open_tbd", "note": "Necessary payload-retention safety requirement; physical margin remains unselected.", "verification_readiness": "analysis_blocked_by_tbd", "tbd_governance": {"category": "design_tbd", "owner_ids": ["TS-006"], "dependency": "Payload envelope, mount concept, and flight-load basis", "reason": "No retention margin or load basis has been selected.", "verification_implication": "Physical retention verification cannot establish compliance."}},
+    {"requirement_id": "REQ-SAF-001", "quality_result": "pass", "note": "Compound battery-installation control is retained pending physical-design decomposition.", "verification_readiness": "physical_evidence_required"},
+    {"requirement_id": "REQ-SAF-002", "quality_result": "pass", "note": "Single operator-visible armed-state behavior with direct CTL-001 trace.", "verification_readiness": "physical_evidence_required"},
+    {"requirement_id": "REQ-CON-001", "quality_result": "cross_cutting_constraint", "note": "Selection rule applies across resource trade studies and does not require a synthetic component allocation.", "verification_readiness": "analysis_blocked_by_tbd"},
+    {"requirement_id": "REQ-CON-002", "quality_result": "pass", "note": "Specific but implementation-neutral selection constraint allocated to the flight controller.", "verification_readiness": "analysis_blocked_by_tbd"},
+    {"requirement_id": "REQ-CON-003", "quality_result": "scope_control", "note": "Project-level prohibition is model-verifiable and is not attributed to CFG-REC.", "verification_readiness": "model_verifiable_now"},
+    {"requirement_id": "REQ-CON-004", "quality_result": "pass", "note": "Necessary station-keeping design constraint; solution remains open under TS-007.", "verification_readiness": "analysis_blocked_by_tbd"},
+    {"requirement_id": "REQ-DEF-001", "quality_result": "deferred_topic", "note": "Recorded scope boundary rather than a requirement claimed satisfied.", "verification_readiness": "intentionally_deferred"},
+    {"requirement_id": "REQ-DEF-002", "quality_result": "deferred_topic", "note": "Recorded scope boundary rather than a requirement claimed satisfied.", "verification_readiness": "intentionally_deferred"},
+    {"requirement_id": "REQ-DEF-003", "quality_result": "external_authority_topic", "note": "Authorization belongs to an external authority and is not claimed by this model.", "verification_readiness": "external_authority_required"},
+    {"requirement_id": "REQ-DEF-004", "quality_result": "honest_coverage_gap", "note": "CAP-003 has no current mechanism; no partial satisfaction is claimed.", "verification_readiness": "intentionally_deferred"},
+    {"requirement_id": "REQ-DEF-005", "quality_result": "external_authority_topic", "note": "External review is outside current architecture authority.", "verification_readiness": "external_authority_required"}
+  ],
   "hazards": [
     {
       "id": "HAZ-001",
@@ -903,6 +974,9 @@
         "CFG-REP",
         "CFG-DOM"
       ],
+      "control_disposition": "owner_decision_required",
+      "control_refs": [],
+      "gap_refs": ["GAP-HAZ-001"],
       "source_ids": [
         "SRC-REPO-006"
       ]
@@ -916,6 +990,8 @@
         "CFG-REP",
         "CFG-DOM"
       ],
+      "control_disposition": "candidate_control_defined",
+      "control_refs": ["CTL-003"],
       "source_ids": [
         "SRC-REPO-006"
       ]
@@ -929,6 +1005,8 @@
         "CFG-REP",
         "CFG-DOM"
       ],
+      "control_disposition": "candidate_control_defined",
+      "control_refs": ["CTL-002"],
       "source_ids": [
         "SRC-REPO-006"
       ]
@@ -942,6 +1020,8 @@
         "CFG-REP",
         "CFG-DOM"
       ],
+      "control_disposition": "candidate_control_defined",
+      "control_refs": ["CTL-001"],
       "source_ids": [
         "SRC-REPO-006"
       ]
@@ -955,6 +1035,8 @@
         "CFG-REP",
         "CFG-DOM"
       ],
+      "control_disposition": "candidate_control_defined",
+      "control_refs": ["CTL-004"],
       "source_ids": [
         "SRC-REPO-006"
       ]
@@ -968,6 +1050,8 @@
         "CFG-REP",
         "CFG-DOM"
       ],
+      "control_disposition": "direct_candidate_requirement",
+      "control_refs": ["REQ-FUN-003"],
       "source_ids": [
         "SRC-REPO-006"
       ]
@@ -981,6 +1065,8 @@
         "CFG-REP",
         "CFG-DOM"
       ],
+      "control_disposition": "candidate_control_defined",
+      "control_refs": ["CTL-003"],
       "source_ids": [
         "SRC-REPO-006"
       ]
@@ -994,6 +1080,8 @@
         "CFG-REP",
         "CFG-DOM"
       ],
+      "control_disposition": "candidate_control_defined",
+      "control_refs": ["CTL-005"],
       "source_ids": [
         "SRC-REPO-006"
       ]
@@ -1004,6 +1092,8 @@
       "evidence_basis": "unknown",
       "decision_status": "not_applicable",
       "applicable_configurations": [],
+      "control_disposition": "reserved_inactive",
+      "control_refs": [],
       "source_ids": [
         "SRC-REPO-006"
       ],
@@ -1015,9 +1105,11 @@
       "name": "RF exposure to personnel",
       "evidence_basis": "engineering_inference",
       "decision_status": "not_applicable",
-      "applicable_configurations": [
-        "TBD"
-      ],
+      "applicable_configurations": [],
+      "applicability_scope": "external employment context intentionally deferred",
+      "control_disposition": "external_authority_required",
+      "control_refs": [],
+      "gap_refs": ["GAP-CFG-002"],
       "source_ids": [
         "SRC-REPO-006"
       ]
@@ -1027,9 +1119,11 @@
       "name": "Interference with other spectrum users",
       "evidence_basis": "engineering_inference",
       "decision_status": "not_applicable",
-      "applicable_configurations": [
-        "TBD"
-      ],
+      "applicable_configurations": [],
+      "applicability_scope": "external employment context intentionally deferred",
+      "control_disposition": "external_authority_required",
+      "control_refs": [],
+      "gap_refs": ["GAP-CFG-002"],
       "source_ids": [
         "SRC-REPO-006"
       ]
@@ -1039,9 +1133,11 @@
       "name": "Airspace conflict with crewed aircraft",
       "evidence_basis": "engineering_inference",
       "decision_status": "not_applicable",
-      "applicable_configurations": [
-        "TBD"
-      ],
+      "applicable_configurations": [],
+      "applicability_scope": "external employment context intentionally deferred",
+      "control_disposition": "external_authority_required",
+      "control_refs": [],
+      "gap_refs": ["GAP-CFG-002"],
       "source_ids": [
         "SRC-REPO-006"
       ]
@@ -1157,6 +1253,8 @@
       "name": "Requirement and architecture analysis",
       "method": "analysis",
       "status": "candidate",
+      "readiness": "model_verifiable_now",
+      "readiness_note": "The method can be executed against the current requirements and architecture, but it does not establish physical performance.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1172,6 +1270,8 @@
       "name": "Structured traceability audit",
       "method": "analysis",
       "status": "implemented_by_validator",
+      "readiness": "model_verifiable_now",
+      "readiness_note": "The repository validator executes structural traceability checks and produces model evidence only.",
       "evidence_basis": "internal_document",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1191,6 +1291,8 @@
       "name": "Source and evidence-record inspection",
       "method": "inspection",
       "status": "candidate",
+      "readiness": "model_verifiable_now",
+      "readiness_note": "Registered source and evidence records can be inspected now without claiming physical verification.",
       "evidence_basis": "internal_document",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1210,6 +1312,8 @@
       "name": "Operational-scenario walkthrough",
       "method": "analysis",
       "status": "candidate",
+      "readiness": "model_verifiable_now",
+      "readiness_note": "Current scenarios can be walked through at architecture level; this is not an operational procedure or physical demonstration.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1227,6 +1331,8 @@
       "name": "Interface-catalog inspection",
       "method": "inspection",
       "status": "candidate",
+      "readiness": "model_verifiable_now",
+      "readiness_note": "Interface endpoints, direction, purpose, configuration, unknowns, and authority status can be inspected now.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1244,6 +1350,8 @@
       "name": "Hazard-control-requirement cross-reference",
       "method": "analysis",
       "status": "candidate",
+      "readiness": "model_verifiable_now",
+      "readiness_note": "Hazard, control, and requirement cross-references can be reviewed now without assigning safety credit.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1259,6 +1367,8 @@
       "name": "Configuration-applicability review",
       "method": "inspection",
       "status": "candidate",
+      "readiness": "model_verifiable_now",
+      "readiness_note": "Configuration applicability can be inspected now without verifying any physical configuration.",
       "evidence_basis": "internal_document",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1278,6 +1388,8 @@
       "name": "Deferred physical verification method",
       "method": "deferred demonstration or test",
       "status": "deferred_out_of_scope",
+      "readiness": "physical_evidence_required",
+      "readiness_note": "Physical demonstration, inspection, or test evidence does not exist in this baseline.",
       "evidence_basis": "unknown",
       "decision_status": "not_applicable",
       "applicable_configurations": [
@@ -1286,6 +1398,26 @@
       ],
       "source_ids": [
         "SRC-REPO-004"
+      ]
+    },
+    {
+      "id": "VER-009",
+      "name": "External interface conformance verification",
+      "method": "external-authority review and future conformance evidence",
+      "status": "blocked_by_external_authority",
+      "readiness": "external_authority_required",
+      "readiness_note": "The model can verify logical definition completeness now, but compatibility cannot be established without external authority, specifications, and execution evidence.",
+      "evidence_basis": "unknown",
+      "decision_status": "proposed",
+      "applicable_configurations": [
+        "CFG-REP",
+        "CFG-DOM",
+        "CFG-DIG",
+        "CFG-SOS"
+      ],
+      "applicability_scope": "external interface conformance only; does not verify implementation or approve an interface",
+      "source_ids": [
+        "SRC-DEC-002"
       ]
     }
   ],
@@ -1448,6 +1580,19 @@
       ]
     }
   ],
+  "tbd_governance": [
+    {"subject_id": "TS-001", "category": "design_tbd", "owner_category": "project_owner_design_decision", "dependency_ids": ["TS-002", "TS-003", "TS-006"], "reason": "Structure cannot be selected independently of gross mass, propulsion geometry, battery mass, and payload mounting.", "verification_implication": "Cost, mass, portability, and component-selection checks remain blocked."},
+    {"subject_id": "TS-002", "category": "design_tbd", "owner_category": "project_owner_design_decision", "dependency_ids": ["TS-001", "TS-003", "TS-010"], "reason": "Propulsion sizing depends on unresolved gross mass, battery feedback, structure, and environment.", "verification_implication": "Performance analysis and physical evidence remain blocked."},
+    {"subject_id": "TS-003", "category": "design_tbd", "owner_category": "project_owner_design_decision", "dependency_ids": ["TS-001", "TS-002", "TS-004", "TS-011"], "reason": "Battery architecture depends on endurance, power, recovery, mass, and cost targets.", "verification_implication": "Endurance, mass, low-battery recovery, and safety verification remain blocked."},
+    {"subject_id": "TS-004", "category": "design_tbd", "owner_category": "project_owner_design_decision", "dependency_ids": ["TS-003", "TS-006"], "reason": "The payload power envelope depends on an unresolved payload envelope and system power budget.", "verification_implication": "REQ-IFC-002 analysis and physical verification remain blocked."},
+    {"subject_id": "TS-005", "category": "design_tbd", "owner_category": "project_owner_design_decision", "dependency_ids": ["TS-007", "TS-008"], "reason": "Flight-controller selection depends on navigation and platform-command architecture choices.", "verification_implication": "REQ-CON-002 inspection remains blocked by selection."},
+    {"subject_id": "TS-006", "category": "design_tbd", "owner_category": "project_owner_design_decision", "dependency_ids": ["TS-001", "TS-004"], "reason": "Payload mounting depends on the unresolved payload, structure, power, and load envelopes.", "verification_implication": "REQ-PER-004, REQ-IFC-001, and REQ-IFC-004 acceptance criteria remain blocked."},
+    {"subject_id": "TS-007", "category": "design_tbd", "owner_category": "project_owner_design_decision", "dependency_ids": ["TS-010"], "reason": "Station-keeping architecture depends on tolerance and environmental assumptions.", "verification_implication": "REQ-FUN-003 and REQ-CON-004 analysis remain blocked."},
+    {"subject_id": "TS-008", "category": "external_authority_tbd", "owner_category": "project_owner_and_external_interface_authority", "dependency_ids": [], "reason": "The platform-command architecture lacks an external conformance authority and approved interface basis.", "verification_implication": "REQ-FUN-004 and IFC-EXT-005 conformance cannot be established."},
+    {"subject_id": "TS-009", "category": "intentionally_deferred", "owner_category": "outside_current_project_scope", "dependency_ids": [], "reason": "Relay-payload implementation characterization is explicitly outside this project.", "verification_implication": "CAP-003 and implementation attributes remain unsupported without partial-satisfaction claims."},
+    {"subject_id": "TS-010", "category": "evidence_tbd", "owner_category": "project_owner_then_physical_evidence_authority", "dependency_ids": ["TS-002", "TS-007"], "reason": "No approved environmental envelope or evidence basis exists.", "verification_implication": "Station-keeping and propulsion acceptance criteria remain incomplete."},
+    {"subject_id": "TS-011", "category": "design_tbd", "owner_category": "project_owner_design_decision", "dependency_ids": ["TS-003"], "reason": "Recovery architecture depends on battery behavior, system value, and an owner-selected safety objective.", "verification_implication": "REQ-FUN-005 and recovery evidence remain blocked."}
+  ],
   "decisions": [
     {
       "id": "DEC-001",
@@ -1487,6 +1632,77 @@
       "source_ids": [
         "SRC-DEC-001",
         "SRC-EXT-003"
+      ]
+    },
+    {
+      "id": "DEC-003",
+      "name": "Select HAZ-001 architecture-level safety objective",
+      "statement": "The project owner shall decide whether HAZ-001 receives a generic loss-of-platform-command recovery or containment control and requirement, remains explicitly unmitigated, or is deferred pending a designated safety authority.",
+      "status": "proposed",
+      "decision_status": "proposed",
+      "authority": "project owner",
+      "date": null,
+      "applicable_configurations": [
+        "CFG-REP",
+        "CFG-DOM"
+      ],
+      "applicability_scope": "candidate architecture safety objective only; no implementation behavior or safety credit",
+      "options": [
+        "Add a generic proposed recovery or containment control and requirement without prescribing implementation",
+        "Retain HAZ-001 as explicitly unmitigated in the candidate architecture",
+        "Defer the safety objective until a designated safety authority supplies criteria"
+      ],
+      "recommendation": "Select the generic architecture-level control path, then review exact requirement wording before adding CTL and REQ records.",
+      "source_ids": [
+        "SRC-DEC-002",
+        "SRC-REPO-006"
+      ]
+    },
+    {
+      "id": "DEC-004",
+      "name": "Accept explicit Relay-UAS health/status architecture",
+      "statement": "The project owner shall decide whether FUN-HLT-01, IFC-EXT-007, and REQ-FUN-008 remain part of the current CFG-REP and CFG-DOM candidate architecture.",
+      "status": "proposed",
+      "decision_status": "proposed",
+      "authority": "project owner",
+      "date": null,
+      "applicable_configurations": [
+        "CFG-REP",
+        "CFG-DOM"
+      ],
+      "applicability_scope": "logical health/status purpose and traceability only; implementation and external conformance remain undefined",
+      "options": [
+        "Accept the proposed architecture-level health/status function, logical return interface, and requirement",
+        "Retain IX-009 as an unresolved exchange without current-system realization",
+        "Limit current status architecture to battery state and remove broader recovery-decision claims"
+      ],
+      "recommendation": "Accept the proposed logical thread because current setup and recovery scenarios already depend on mode and platform-status awareness.",
+      "source_ids": [
+        "SRC-DEC-002"
+      ]
+    },
+    {
+      "id": "DEC-005",
+      "name": "Confirm CAP-004 cross-cutting semantics",
+      "statement": "The project owner shall decide whether CAP-004 remains a cross-cutting affordability and attritability constraint rather than receiving a dedicated operational activity.",
+      "status": "proposed",
+      "decision_status": "proposed",
+      "authority": "project owner",
+      "date": null,
+      "applicable_configurations": [
+        "CFG-REP",
+        "CFG-DOM"
+      ],
+      "applicability_scope": "capability-to-requirement and trade-study semantics",
+      "options": [
+        "Confirm CAP-004 as a cross-cutting constraint on requirements, trade studies, configurations, and resources",
+        "Define a justified lifecycle activity if the project later models affordability management as behavior",
+        "Defer the semantic decision and retain the prior coverage warning"
+      ],
+      "recommendation": "Confirm the cross-cutting treatment and do not create a meaningless mission activity.",
+      "source_ids": [
+        "SRC-DEC-002",
+        "SRC-REPO-005"
       ]
     }
   ]

@@ -27,6 +27,30 @@
       "notes": "Directs creation of a baseline candidate, preserves safety constraints, and explicitly withholds baseline approval."
     },
     {
+      "id": "SRC-DEC-002",
+      "title": "Project-owner current-architecture maturation work-package instruction",
+      "source_type": "human decision record",
+      "kind": "human_input",
+      "description": "Direct project-owner instructions to mature CFG-REP and CFG-DOM, improve verification readiness, preserve explicit deferrals, and withhold technical approval.",
+      "authority_state": "human_approved",
+      "approval_state": "approved",
+      "confidence": 1.0,
+      "location": "Project-owner instruction supplied to Codex on 2026-08-07",
+      "owner": "project owner",
+      "date": "2026-08-07",
+      "revision": "current candidate-architecture maturation work package",
+      "accessed_date": "2026-08-07",
+      "reliability": "high for scope and process authority",
+      "applicable_configurations": [
+        "CFG-REC",
+        "CFG-REP",
+        "CFG-DOM",
+        "CFG-DIG",
+        "CFG-SOS"
+      ],
+      "notes": "Authorizes proposed model maturation and human-review recommendations. It does not approve new architecture elements, safety controls, interfaces, requirements, or the baseline."
+    },
+    {
       "id": "SRC-REPO-001",
       "title": "System model manifest",
       "source_type": "repository document",

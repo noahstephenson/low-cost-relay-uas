@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "model_version": "0.4.0-baseline-candidate",
+  "model_version": "0.5.0-baseline-candidate",
   "title": "Low-Cost Attritable Communications Relay UAS",
   "domain": "defense",
   "tier": "exploratory",
@@ -133,12 +133,28 @@
       "intentionally_out_of_scope"
     ],
     "gap_disposition": [
+      "closed",
       "expected_at_current_maturity",
       "intentionally_out_of_scope",
       "deferred",
       "unresolved",
       "contradictory",
       "true_coverage_gap"
+    ],
+    "verification_readiness": [
+      "model_verifiable_now",
+      "analysis_blocked_by_tbd",
+      "physical_evidence_required",
+      "external_authority_required",
+      "intentionally_deferred"
+    ],
+    "gap_audit_classification": [
+      "A_closeable_by_model_work",
+      "B_project_owner_decision",
+      "C_physical_or_external_evidence",
+      "D_intentional_deferral",
+      "E_future_configuration",
+      "F_false_positive_model_health_gap"
     ]
   },
   "catalogs": {

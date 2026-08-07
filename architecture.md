@@ -29,10 +29,10 @@ axis is `CFG-REP -> CFG-DIG -> CFG-SOS`.
 ```mermaid
 flowchart LR
     %% Configuration scope: CFG-REC / CFG-REP / CFG-DOM / CFG-DIG / CFG-SOS
-    CFG_REC["CFG-REC<br/>Reference evidence<br/>[UNVERIFIED mapping]"] -->|"informs - not exact inheritance"| CFG_REP["CFG-REP<br/>Replica architecture<br/>[PROPOSED]"]
-    CFG_REP --> CFG_DOM["CFG-DOM<br/>Domestic candidate<br/>[PROPOSED]"]
-    CFG_REP --> CFG_DIG["CFG-DIG<br/>Digital extension<br/>[PROPOSED]"]
-    CFG_DIG --> CFG_SOS["CFG-SOS<br/>C2 Ecosystem context<br/>[PROPOSED]"]
+    CFG_REC["CFG-REC<br/>Reference evidence only<br/>mapping unverified"] -->|"informs - not exact inheritance"| CFG_REP["CFG-REP<br/>Current proposed baseline"]
+    CFG_REP --> CFG_DOM["CFG-DOM<br/>Current candidate<br/>substitution criteria unresolved"]
+    CFG_REP --> CFG_DIG["CFG-DIG<br/>Future extension<br/>adds IFC-INT-008 candidate"]
+    CFG_DIG --> CFG_SOS["CFG-SOS<br/>Future outer context<br/>not current implementation"]
 ```
 
 **Reference evidence — `CFG-REC`.** This boundary describes what the registered
@@ -41,6 +41,8 @@ interfaces, requirements, modes, controls, or verification claims.
 
 **Current candidate architecture — `CFG-REP` / `CFG-DOM`.** These configurations
 carry the present Relay-UAS decomposition and the two-interface payload boundary.
+`CFG-DOM` currently changes supply-chain intent only; no component substitution or
+domestic-content criterion has been selected.
 
 **Future extensions — `CFG-DIG` / `CFG-SOS`.** These add a proposed digital payload
 management path and broader independently managed performers. They do not silently
@@ -57,12 +59,12 @@ flowchart LR
         OP_010["OP-010<br/>Operator"]
         OP_001["OP-001<br/>Ground control"]
         OP_003["OP-003<br/>Remote UAS"]
-        OP_004["OP-004<br/>UGV [TBD]"]
-        OP_005["OP-005<br/>Radio user [TBD]"]
-        OP_006["OP-006<br/>Network service [TBD]"]
+        OP_004["OP-004<br/>UGV [FUTURE]"]
+        OP_005["OP-005<br/>Radio user [FUTURE]"]
+        OP_006["OP-006<br/>Network service [FUTURE]"]
         OP_007["OP-007<br/>Maintenance"]
         OP_008["OP-008<br/>Spectrum authority"]
-        OP_009["OP-009<br/>Support infrastructure [TBD]"]
+        OP_009["OP-009<br/>Support infrastructure [FUTURE]"]
         subgraph INNER["Relay UAS inner boundary"]
             OP_002["OP-002<br/>Relay UAS [PROPOSED]"]
         end
@@ -97,13 +99,15 @@ flowchart LR
     CAP_000 --> CAP_004["CAP-004<br/>Low-cost attritable fielding"]
     CAP_001 --> SCN_003["SCN-003 / SCN-004<br/>Bidirectional relay"]
     CAP_002 --> SCN_002["SCN-002<br/>Launch and positioning"]
-    CAP_004 --> SCN_001["SCN-001<br/>Setup and initialization"]
+    CAP_004 --> COST_MASS["REQ-PER-001 / REQ-PER-003<br/>cost and mass constraints"]
+    CAP_004 --> COUPLED["TS-001 / TS-002 / TS-003<br/>coupled design trades"]
     CAP_003 -.-> GAP_TRC_001["GAP-TRC-001<br/>No allocated mechanism"]
 ```
 
 `CAP-003` remains deliberately unallocated because every potential mechanism is
-inside deferred payload work (`TS-009`). `CAP-004` is currently a cross-cutting
-constraint rather than a dedicated operational activity.
+inside deferred payload work (`TS-009`). `CAP-004` is explicitly cross-cutting: it
+constrains requirements, trade studies, configurations, and resource choices rather
+than creating a meaningless operational activity (`DEC-005`).
 
 The current mission thread keeps Relay-UAS platform command separate from relayed
 traffic:
@@ -164,6 +168,7 @@ flowchart LR
     OP_001["OP-001<br/>Ground control"] <-->|"IFC-EXT-001 / IFC-EXT-004"| CMP_COM_01
     CMP_COM_01 <-->|"IFC-EXT-002 / IFC-EXT-003"| OP_003["OP-003<br/>Remote UAS"]
     OP_010["OP-010<br/>Operator"] -->|"IFC-EXT-005<br/>separate platform command"| CMP_AVN_04["CMP-AVN-04<br/>Control receiver"]
+    CMP_AVN_01["CMP-AVN-01<br/>Flight control"] -->|"IFC-EXT-007<br/>health/status return"| OP_010
 ```
 
 Only `IFC-INT-003` and `IFC-INT-007` cross the current platform-to-payload boundary.
@@ -172,10 +177,13 @@ define another platform interface or any antenna characteristic. `IFC-INT-008` i
 future `CFG-DIG`/`CFG-SOS` payload-management candidate and is absent from the current
 architecture.
 
-The complete 16-interface inventory, including internal power, control, health,
+The complete 17-interface inventory, including internal power, control, health,
 navigation, external traffic, and maintenance groups, is generated in the diagram
-atlas. External-interface authority and verification remain open (`GAP-IFC-001`),
-while implementation attributes remain intentionally out of scope (`GAP-IFC-002`).
+atlas. Every external interface now has model-review allocation, but real conformance
+still requires external authority, specifications, and evidence (`VER-009` /
+`GAP-IFC-001`). Implementation attributes remain intentionally out of scope
+(`GAP-IFC-002`). Internal battery-state telemetry (`IFC-INT-006`) is an input to the
+health function, not a substitute for the external `IFC-EXT-007` status return.
 
 ## 7. Operational Behavior
 
@@ -188,6 +196,7 @@ stateDiagram-v2
     state "MODE-003 Relay Degraded" as MODE_003
     state "MODE-004 Return / Recovery" as MODE_004
     [*] --> MODE_005
+    MODE_005 --> MODE_005: SCN-001 / OA-007 readiness
     MODE_005 --> MODE_001: SCN-002
     MODE_001 --> MODE_002: SCN-002 station established
     MODE_002 --> MODE_003: SCN-007 payload degraded
@@ -219,23 +228,25 @@ sequenceDiagram
     participant Relay as OP-002 Relay UAS
     participant Operator as OP-010 Platform operator
     Payload--xGround: SCN-007 relay degradation
-    Relay-->>Operator: IX-009 partial health/status
+    Relay-->>Operator: IX-009 / IFC-EXT-007 health/status [PROPOSED]
     Operator->>Relay: IX-001 independent platform command
     alt Platform remains controllable
-        Note over Payload,Relay: MODE-003 - REQ-FUN-007 [PROPOSED]
+        Note over Payload,Relay: MODE-003 - REQ-FUN-007 / REQ-FUN-008 [PROPOSED]
         Relay-->>Operator: transition toward MODE-004
     else Platform control also impaired
         Note over Relay,Operator: HAZ-001 / GAP-HAZ-001
     end
 ```
 
-The degraded branch ends at explicit gaps rather than inventing a recovery behavior.
-UGV, sensor/video, and broader health/status threads are future extensions, not
-current-system behavior.
+`SCN-001` now maps to `OA-007` Prepare Relay UAS for operation, supported by
+`FUN-CFG-01` and `FUN-HLT-01`, while the system remains in `MODE-005`. This is an
+architecture thread, not a startup checklist. The degraded branch still ends at
+explicit safety and evidence gaps rather than inventing a recovery behavior. UGV and
+sensor/video threads remain future extensions.
 
 ## 8. Requirements and Constraints Summary
 
-The 27 `REQ-*` records are authoritative in `model/assurance.yaml`. They cover relay
+The 28 `REQ-*` records are authoritative in `model/assurance.yaml`. They cover relay
 function, station keeping and recovery, unresolved performance envelopes, payload
 interfaces, basic safety controls, project constraints, and explicitly deferred
 items.
@@ -244,12 +255,28 @@ Bracketed `[TBD]` values are load-bearing unknowns with trade-study ownership. T
 must not be replaced with borrowed figures. In particular:
 
 - `REQ-IFC-003`: the platform-to-payload interface is limited to `IFC-INT-003` power and `IFC-INT-007` mechanical retention.
+- `REQ-FUN-008`: proposed mode and health/status visibility supports setup and recovery decisions without defining implementation.
 - `REQ-CON-003`: the project excludes weapons and munitions; it is not a recovered-article observation.
 - `REQ-DEF-001..005`: deferred or externally owned topics, not requirements claimed satisfied here.
 
 Mass, unit cost, power, endurance, and payload envelopes form one coupled open problem
 (`GAP-BUDGET-001`), not five independent blanks. The worked TS-002/TS-003 analysis is
 preserved in `trade-studies.md`.
+
+```mermaid
+flowchart LR
+    %% Configuration scope: CFG-REP / CFG-DOM
+    TS_006["TS-006<br/>Payload mount"] --> REQ_PER_004["REQ-PER-004<br/>Payload envelope"]
+    REQ_PER_004 --> REQ_PER_003["REQ-PER-003<br/>Gross mass"]
+    TS_001["TS-001<br/>Structure"] --> REQ_PER_003
+    REQ_PER_003 --> TS_002["TS-002<br/>Propulsion demand"]
+    TS_002 --> TS_003["TS-003<br/>Battery requirement"]
+    TS_004["TS-004<br/>Payload power"] --> TS_003
+    REQ_PER_002["REQ-PER-002<br/>Endurance target"] --> TS_003
+    TS_003 -->|"battery mass feedback"| REQ_PER_003
+    TS_003 --> REQ_PER_001["REQ-PER-001<br/>Unit cost"]
+    REQ_PER_001 -.-> GAP_BUDGET_001["GAP-BUDGET-001<br/>targets and evidence unresolved"]
+```
 
 ## 9. Hazards and Controls Summary
 
@@ -259,7 +286,7 @@ No authoritative severity/probability scheme or risk-acceptance authority exists
 ```mermaid
 flowchart LR
     %% Configuration scope: CFG-REP / CFG-DOM
-    HAZ_001["HAZ-001<br/>Uncommanded descent"] -.-> GAP_HAZ_001["GAP-HAZ-001<br/>No defined control"]
+    HAZ_001["HAZ-001<br/>Uncommanded descent"] -.-> GAP_HAZ_001["GAP-HAZ-001<br/>DEC-003 owner decision"]
     HAZ_004["HAZ-004<br/>Propeller contact"] --> CTL_001["CTL-001<br/>Ground-safe arming control"]
     CTL_001 --> REQ_FUN_006["REQ-FUN-006<br/>Arming inhibit"]
     CTL_001 --> REQ_SAF_002["REQ-SAF-002<br/>Visible armed state"]
@@ -291,12 +318,25 @@ The near-term admissible work is model review, trace inspection, and source/evid
 governance. Hardware-dependent evidence remains deferred and must not be inferred
 from a passing repository validator.
 
+```mermaid
+flowchart LR
+    %% Configuration scope: CFG-REP / CFG-DOM with project-scope deferrals
+    MODEL_NOW["MODEL-VERIFIABLE-NOW<br/>REQ-IFC-003 / REQ-CON-003"] --> VER_002["VER-002<br/>Structured audit<br/>EVD-001"]
+    ANALYSIS_TBD["ANALYSIS-BLOCKED-BY-TBD<br/>REQ-FUN-003 / REQ-PER-002"] -.-> VER_001["VER-001<br/>Architecture analysis"]
+    PHYSICAL["PHYSICAL-EVIDENCE-REQUIRED<br/>REQ-FUN-006 / REQ-FUN-008"] -.-> VER_008["VER-008<br/>Deferred physical method"]
+    EXTERNAL["EXTERNAL-AUTHORITY-REQUIRED<br/>REQ-FUN-001 / REQ-FUN-004"] -.-> VER_009["VER-009<br/>External conformance"]
+    DEFERRED["INTENTIONALLY-DEFERRED<br/>REQ-DEF-001 / REQ-DEF-004"] -.-> TS_009["TS-009<br/>Formal deferral"]
+```
+
 ## 11. Key Traceability Threads
 
-- Mission: `NEED-001 -> CAP-001 -> SCN-003 -> OA-004 -> FUN-REL-01 -> CMP-COM-01 -> REQ-FUN-001 -> VER-001`.
+- Mission relay: `NEED-001 -> CAP-001 -> SCN-003 -> OA-004 -> IX-002 / IX-003 -> FUN-REL-01 -> CMP-COM-01 -> IFC-EXT-001 / IFC-EXT-002 -> REQ-FUN-001 -> VER-001 / VER-009`.
+- Return telemetry: `SCN-004 -> OA-005 -> IX-004 / IX-005 -> FUN-REL-02 -> CMP-COM-01 -> IFC-EXT-003 / IFC-EXT-004 -> REQ-FUN-002 -> VER-001 / VER-009`.
+- Station keeping: `CAP-002 -> SCN-002 -> OA-003 -> FUN-FLT-03 -> CMP-AVN-01 / CMP-AVN-02 / CMP-AVN-03 -> REQ-FUN-003 / REQ-CON-004 -> VER-001 / VER-008`.
 - Ground safety: `HAZ-004 -> CTL-001 -> REQ-FUN-006 / REQ-SAF-002 -> VER-004 / VER-006 -> GAP-VER-001`.
 - Payload retention: `HAZ-008 -> CTL-005 -> REQ-IFC-004 -> VER-005 / VER-008 -> GAP-VER-001`.
-- Standards: `DEC-002 -> CFG-REP / CFG-DOM / CFG-DIG / CFG-SOS -> GAP-STD-001`.
+- Relay loss and recovery: `SCN-007 -> MODE-003 -> HAZ-005 -> CTL-004 -> REQ-FUN-007 -> FUN-FLT-01 / FUN-FLT-04 -> VER-006 / VER-008 -> GAP-VER-001`.
+- Health/status: `SCN-007 -> IX-009 -> FUN-HLT-01 -> CMP-AVN-01 -> IFC-EXT-007 -> REQ-FUN-008 -> VER-005 / VER-008 / VER-009`.
 
 The full relationship set belongs only in `model/traceability.yaml`; the generated
 baseline report presents gap-oriented summaries rather than another matrix copy.
@@ -304,14 +344,57 @@ baseline report presents gap-oriented summaries rather than another matrix copy.
 ## 12. Open Architecture Gaps
 
 The principal retained gaps are recovered-to-candidate mapping and missing source
-evidence; `CAP-003`; `HAZ-001`; external-interface verification authority; UGV and
-sensor/video integration; health/status coverage; the mass/cost/power/endurance
-coupling; physical verification evidence; and the unresolved UAF-version decision.
+evidence; unsupported `CAP-003`; unmitigated `HAZ-001`; external-interface
+conformance authority; future UGV and sensor/video integration; unresolved
+mass/cost/power/endurance targets; physical evidence; and the UAF-version decision.
+
+This pass closes the SCN-001 activity mismatch and the health/status architecture
+coverage gap. It reclassifies the former CAP-004 activity warning as a false-positive
+model-health gap. External conformance, physical evidence, and owner decisions remain
+open rather than being hidden behind those model improvements.
 
 Cameo reconciliation is deferred future work outside this package and is not a
 principal active deficiency. No Cameo content was used to close any gap.
 
-## 13. Standards Posture
+## 13. Project-owner decisions required
+
+### DEC-003 - HAZ-001 safety objective
+
+- **Decision question:** Should `HAZ-001` receive a generic recovery or containment control and requirement?
+- **Why it matters:** The current candidate has no architecture-level response when platform command/control is lost and recovery may still be possible.
+- **Affected IDs:** `HAZ-001`, `GAP-HAZ-001`, `SCN-002`, `SCN-008`.
+- **Option A:** Add a generic proposed `CTL-*` and `REQ-*` path without prescribing implementation.
+- **Option B:** Retain `HAZ-001` as explicitly unmitigated.
+- **Option C:** Defer the safety objective until a designated safety authority supplies criteria.
+- **Codex recommendation:** Option A, with exact wording reviewed before new control and requirement records are created.
+- **What changes if accepted:** A proposed hazard-control-requirement-verification path is added.
+- **What remains open either way:** Physical behavior, acceptance criteria, execution evidence, and safety authority.
+
+### DEC-004 - Explicit health/status return
+
+- **Decision question:** Should `FUN-HLT-01`, `IFC-EXT-007`, and `REQ-FUN-008` remain in the current candidate architecture?
+- **Why it matters:** Setup, mode awareness, and recovery decisions already depend on more than internal battery-state telemetry.
+- **Affected IDs:** `IX-009`, `IFC-INT-006`, `FUN-HLT-01`, `IFC-EXT-007`, `REQ-FUN-008`.
+- **Option A:** Accept the proposed architecture-level health/status thread.
+- **Option B:** Return `IX-009` to an unresolved exchange with no current-system realization.
+- **Option C:** Limit the current model to battery state and remove broader status claims.
+- **Codex recommendation:** Option A because it makes the existing scenario logic explicit without selecting implementation.
+- **What changes if accepted:** The proposed logical thread remains the candidate basis for later design and verification.
+- **What remains open either way:** Minimum status content, transport, external authority, physical behavior, and conformance evidence.
+
+### DEC-005 - CAP-004 semantics
+
+- **Decision question:** Should `CAP-004` remain a cross-cutting affordability and attritability constraint rather than receive a dedicated operational activity?
+- **Why it matters:** A forced mission activity would misrepresent cost and logistics as operational behavior.
+- **Affected IDs:** `CAP-004`, `REQ-PER-001`, `REQ-PER-003`, `REQ-PER-004`, `REQ-PER-005`, `REQ-CON-001`, `REQ-CON-002`, `TS-001`, `TS-002`, `TS-003`, `TS-004`, `TS-006`.
+- **Option A:** Confirm the cross-cutting treatment.
+- **Option B:** Add a lifecycle activity later only if affordability management is deliberately modeled as behavior.
+- **Option C:** Restore the prior coverage warning.
+- **Codex recommendation:** Option A; do not create a synthetic activity merely for checker coverage.
+- **What changes if accepted:** `GAP-TRC-002` remains reclassified and closed.
+- **What remains open either way:** All numeric targets, component choices, and physical/economic evidence.
+
+## 14. Standards Posture
 
 The repository uses a small UAF vocabulary subset:
 

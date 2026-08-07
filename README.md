@@ -68,6 +68,18 @@ UGV, radio users, services, authorities, maintenance, and supporting infrastruct
 Those constituents remain independently managed unless a structured source proves
 otherwise.
 
+## Current candidate at a glance
+
+- `CFG-REP` and `CFG-DOM` are the current proposed Relay-UAS architecture; `CFG-DOM` has no selected substitutions yet.
+- `SCN-001 -> OA-007` represents preparation and readiness in `MODE-005` without defining a procedure.
+- `IX-009 -> FUN-HLT-01 -> IFC-EXT-007 -> REQ-FUN-008` is the proposed health/status return for setup and recovery decisions.
+- External interfaces are model-reviewable now, but real conformance still requires external authority and evidence.
+- The largest open questions are `HAZ-001`, the coupled mass/cost/power/endurance targets, external conformance, physical evidence, and unsupported `CAP-003`.
+
+The project owner still must decide the `HAZ-001` safety objective (`DEC-003`), whether
+to retain the explicit health/status thread (`DEC-004`), and whether to confirm
+`CAP-004` as a cross-cutting constraint (`DEC-005`). None is approved by this pass.
+
 ## What is authoritative
 
 - [`system.yaml`](system.yaml): manifest, boundaries, enumerations, and standards posture.

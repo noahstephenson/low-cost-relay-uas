@@ -44,12 +44,23 @@ SHORT_LABELS = {
     "GAP-REC-001": "Recovered-to-candidate mapping unresolved",
     "GAP-HAZ-001": "HAZ-001 has no defined control",
     "GAP-VER-001": "Execution evidence missing",
+    "GAP-BUDGET-001": "Coupled targets and evidence unresolved",
+    "GAP-IFC-001": "External conformance authority missing",
+    "OA-007": "Prepare Relay UAS",
+    "FUN-CFG-01": "Establish configuration and readiness",
+    "FUN-HLT-01": "Monitor and report health/status",
+    "IFC-EXT-007": "Health/status return",
     "REQ-FUN-001": "Relay outbound traffic",
     "REQ-FUN-006": "Inhibit arming in Ground Safe",
     "REQ-FUN-007": "Remain controllable after payload loss",
+    "REQ-FUN-008": "Provide mode and health/status",
     "REQ-IFC-004": "Retain payload under flight loads",
     "REQ-SAF-001": "Protect and retain battery",
     "REQ-SAF-002": "Show armed state to operator",
+    "VER-009": "External conformance verification",
+    "DEC-003": "Select HAZ-001 safety objective",
+    "DEC-004": "Accept health/status architecture",
+    "DEC-005": "Confirm CAP-004 semantics",
 }
 
 
@@ -114,12 +125,14 @@ def node(index: dict[str, dict[str, Any]], item_id: str, extra: str = "") -> str
 def status_of(index: dict[str, dict[str, Any]], item_id: str) -> str:
     record = index[item_id]
     if item_id.startswith("GAP-"):
+        if record.get("disposition") == "closed":
+            return "[CLOSED]"
         return "[DEFERRED]" if record.get("disposition") == "deferred" else "[UNRESOLVED]"
     status = record.get("decision_status") or record.get("status") or "unverified"
     labels = {
         "proposed": "[PROPOSED]",
         "deferred": "[DEFERRED]",
-        "unknown": "[TBD]",
+        "unknown": "[UNRESOLVED]",
         "candidate": "[PROPOSED]",
         "unverified": "[UNVERIFIED]",
     }
@@ -205,10 +218,15 @@ def generated_header() -> list[str]:
 
 def configuration_view(catalogs: dict[str, dict[str, Any]], index: dict[str, dict[str, Any]]) -> list[str]:
     body: list[str] = []
+    delta_labels = {
+        "CFG-REC": "evidence only - mapping unverified",
+        "CFG-REP": "current proposed baseline",
+        "CFG-DOM": "current - substitution criteria unresolved",
+        "CFG-DIG": "future - adds IFC-INT-008 candidate",
+        "CFG-SOS": "future outer context - OP-004 / OP-005 / OP-006",
+    }
     for config in catalogs["architecture"]["configurations"]:
-        extra = "reference evidence - [UNVERIFIED mapping]" if config["id"] == "CFG-REC" else "[PROPOSED]"
-        if config["id"] == "CFG-SOS":
-            extra = "outer system-of-systems context - [PROPOSED]"
+        extra = delta_labels[config["id"]]
         body.append("    " + node(index, config["id"], extra))
     for config in catalogs["architecture"]["configurations"]:
         for predecessor in config.get("predecessor_ids", []):
@@ -219,10 +237,10 @@ def configuration_view(catalogs: dict[str, dict[str, Any]], index: dict[str, dic
             )
     return flow_diagram(
         "1",
-        "Configuration derivation",
+        "Configuration derivation and delta",
         "CFG-REC / CFG-REP / CFG-DOM / CFG-DIG / CFG-SOS",
         body,
-        "Derivation denotes an architecture relationship, not exact inheritance, equivalence, or approval.",
+        "Derivation denotes lineage, not exact inheritance, equivalence, or approval. Future context is outside the current implementation baseline.",
     )
 
 
@@ -232,12 +250,12 @@ def boundary_view(index: dict[str, dict[str, Any]]) -> list[str]:
         "        " + node(index, "OP-010", "independently managed human performer"),
         "        " + node(index, "OP-001", "independently managed external system"),
         "        " + node(index, "OP-003", "independently managed external system"),
-        "        " + node(index, "OP-004", "proposed / TBD"),
-        "        " + node(index, "OP-005", "proposed / TBD"),
-        "        " + node(index, "OP-006", "proposed / TBD"),
+        "        " + node(index, "OP-004", "future / unresolved"),
+        "        " + node(index, "OP-005", "future / unresolved"),
+        "        " + node(index, "OP-006", "future / unresolved"),
         "        " + node(index, "OP-007", "external support performer"),
         "        " + node(index, "OP-008", "independent authority"),
-        "        " + node(index, "OP-009", "proposed / TBD"),
+        "        " + node(index, "OP-009", "future / unresolved"),
         '        subgraph INNER["Relay UAS inner boundary - proposed for CFG-REP/CFG-DOM/CFG-DIG"]',
         "            " + node(index, "OP-002", "system under study"),
         "        end",
@@ -247,17 +265,17 @@ def boundary_view(index: dict[str, dict[str, Any]]) -> list[str]:
         '    OP_002 <-->|"mission traffic relationship"| OP_003',
         '    OP_007 <-->|"IX-010 / IFC-EXT-006 support"| OP_002',
         '    OP_008 -.->|"external authority - criteria unresolved"| OP_002',
-        '    OP_001 -.->|"IX-006 / IX-007 proposed / TBD"| OP_004',
-        '    OP_002 -.->|"relationship proposed / TBD"| OP_005',
-        '    OP_002 -.->|"relationship proposed / TBD"| OP_006',
-        '    OP_009 -.->|"support relationship proposed / TBD"| OP_002',
+        '    OP_001 -.->|"IX-006 / IX-007 future / unresolved"| OP_004',
+        '    OP_002 -.->|"future relationship unresolved"| OP_005',
+        '    OP_002 -.->|"future relationship unresolved"| OP_006',
+        '    OP_009 -.->|"future support relationship unresolved"| OP_002',
     ]
     return flow_diagram(
         "2",
         "Two-boundary context",
         "CFG-SOS outer context - CFG-REP / CFG-DOM / CFG-DIG inner constituent",
         body,
-        "External constituents remain independently managed. Dashed relationships are proposed or TBD.",
+        "External constituents remain independently managed. Dashed relationships are future or unresolved.",
     )
 
 
@@ -278,7 +296,7 @@ def operational_connectivity_view(
     ]
     for exchange_id in exchange_ids:
         exchange = index[exchange_id]
-        interface_id = realization.get(exchange_id, "TBD")
+        interface_id = realization.get(exchange_id, "UNRESOLVED")
         label = f"{exchange_id} / {interface_id}<br/>{clean_label(exchange['flow_class'], 34)}"
         body.append(
             f'    {mermaid_key(exchange["from"])} -->|"{label}"| {mermaid_key(exchange["to"])}'
@@ -306,7 +324,7 @@ def resource_diagrams(catalogs: dict[str, dict[str, Any]], index: dict[str, dict
         '    CMP_AFR_01 -.->|"structural decomposition"| CMP_AFR_03',
         '    CMP_AFR_01 -.->|"structural decomposition"| CMP_AFR_04',
         '    CMP_AFR_01 -.->|"hardware set"| CMP_AFR_05',
-        '    CMP_AFR_04 -.->|"mount relationship [TBD]"| CMP_MNT_01',
+        '    CMP_AFR_04 -.->|"mount relationship [UNRESOLVED]"| CMP_MNT_01',
         edge_for_interface(interfaces["IFC-INT-007"]),
     ])
     lines.extend(flow_diagram("4A", "Structure and payload mounting", "CFG-REP / CFG-DOM", body))
@@ -379,8 +397,8 @@ def resource_diagrams(catalogs: dict[str, dict[str, Any]], index: dict[str, dict
         "    " + node(index, "CMP-AVN-01"),
         "    " + node(index, "CMP-COM-01", "future payload [PROPOSED]"),
         edge_for_interface(interfaces["IFC-INT-008"], label_suffix="future / proposed"),
-        "    " + node(index, "IX-008", "future sensor-data exchange [TBD]"),
-        '    IX_008 -.->|"realizing interface TBD - GAP-SOS-002"| CMP_COM_01',
+        "    " + node(index, "IX-008", "future sensor-data exchange [UNRESOLVED]"),
+        '    IX_008 -.->|"realizing interface unresolved - GAP-SOS-002"| CMP_COM_01',
     ]
     lines.extend(flow_diagram(
         "4F",
@@ -434,7 +452,7 @@ def launch_sequence(index: dict[str, dict[str, Any]]) -> list[str]:
         "    Receiver->>Flight: IFC-INT-005 platform control input",
         "    Nav-->>Flight: IFC-INT-009 navigation/timing information",
         "    Flight->>Propulsion: IFC-INT-004 propulsion command",
-        "    Relay-->>Operator: IX-009 partial health/status - GAP-SOS-003",
+        "    Relay-->>Operator: IX-009 / IFC-EXT-007 health/status [PROPOSED]",
         "    Note over Operator,Relay: SCN-002 architecture walkthrough - no procedure defined",
     ]
     return sequence_diagram("6", "Launch and positioning sequence", "CFG-REP / CFG-DOM", body)
@@ -466,7 +484,7 @@ def degradation_sequence(index: dict[str, dict[str, Any]]) -> list[str]:
         '    participant Relay as OP-002 Relay UAS platform',
         '    participant Operator as OP-010 Platform operator',
         "    Payload--xGround: SCN-007 relay function loss or degradation",
-        "    Relay-->>Operator: IX-009 health/status indication (partial)",
+        "    Relay-->>Operator: IX-009 / IFC-EXT-007 health/status [PROPOSED]",
         "    Operator->>Relay: IX-001 / IFC-EXT-005 independent platform command",
         "    alt Payload lost and platform remains controllable",
         "        Note over Payload,Relay: MODE-003 - CTL-004 / REQ-FUN-007 [PROPOSED]",
@@ -509,6 +527,60 @@ def lifecycle_view(index: dict[str, dict[str, Any]]) -> list[str]:
     )
 
 
+def health_status_view(index: dict[str, dict[str, Any]]) -> list[str]:
+    item_ids = [
+        "SCN-007", "IX-009", "IFC-INT-006", "FUN-HLT-01", "CMP-AVN-01",
+        "IFC-EXT-007", "OP-010", "REQ-FUN-008", "VER-005", "VER-008", "VER-009",
+    ]
+    body = ["    " + node(index, item_id, status_of(index, item_id)) for item_id in item_ids]
+    body.extend([
+        '    SCN_007 -->|"uses"| IX_009',
+        '    IX_009 -->|"supported by"| FUN_HLT_01',
+        '    IFC_INT_006 -->|"battery-state input only"| FUN_HLT_01',
+        '    FUN_HLT_01 -->|"allocated to"| CMP_AVN_01',
+        '    FUN_HLT_01 -->|"logical return"| IFC_EXT_007',
+        '    IFC_EXT_007 -->|"made available to"| OP_010',
+        '    REQ_FUN_008 -->|"allocates behavior"| FUN_HLT_01',
+        '    REQ_FUN_008 -->|"model review"| VER_005',
+        '    REQ_FUN_008 -.->|"physical evidence"| VER_008',
+        '    REQ_FUN_008 -.->|"external conformance"| VER_009',
+    ])
+    return flow_diagram(
+        "9A",
+        "Health/status logical thread",
+        "CFG-REP / CFG-DOM",
+        body,
+        "The logical status purpose is proposed. Message content, transport, external authority, and physical evidence remain unresolved.",
+    )
+
+
+def design_dependency_view(index: dict[str, dict[str, Any]]) -> list[str]:
+    item_ids = [
+        "REQ-PER-004", "TS-006", "TS-001", "REQ-PER-003", "TS-002",
+        "TS-004", "REQ-PER-002", "TS-003", "REQ-PER-001", "GAP-BUDGET-001",
+    ]
+    body = ["    " + node(index, item_id, status_of(index, item_id)) for item_id in item_ids]
+    body.extend([
+        '    TS_006 -->|"defines payload envelope"| REQ_PER_004',
+        '    REQ_PER_004 -->|"contributes to"| REQ_PER_003',
+        '    TS_001 -->|"sets dry-mass contribution"| REQ_PER_003',
+        '    REQ_PER_003 -->|"drives propulsion demand"| TS_002',
+        '    TS_002 -->|"drives power demand"| TS_003',
+        '    TS_004 -->|"adds payload-power demand"| TS_003',
+        '    REQ_PER_002 -->|"sets energy demand"| TS_003',
+        '    TS_003 -->|"adds battery mass"| REQ_PER_003',
+        '    TS_003 -->|"adds battery cost"| REQ_PER_001',
+        '    REQ_PER_001 -.->|"targets and evidence unresolved"| GAP_BUDGET_001',
+    ])
+    return flow_diagram(
+        "9B",
+        "Mass-cost-power-endurance dependency",
+        "CFG-REP / CFG-DOM",
+        body,
+        "This is one coupled design problem. The diagram adds no values and does not resolve any trade study.",
+    )
+
+
 def hazard_view(catalogs: dict[str, dict[str, Any]], index: dict[str, dict[str, Any]]) -> list[str]:
     controls = catalogs["assurance"]["controls"]
     requirements = {item["id"]: item for item in catalogs["assurance"]["requirements"]}
@@ -542,11 +614,38 @@ def hazard_view(catalogs: dict[str, dict[str, Any]], index: dict[str, dict[str, 
     )
 
 
+def verification_readiness_view(index: dict[str, dict[str, Any]]) -> list[str]:
+    body = [
+        '    MODEL_NOW["MODEL-VERIFIABLE-NOW<br/>REQ-IFC-003 / REQ-CON-003"]',
+        '    ANALYSIS_TBD["ANALYSIS-BLOCKED-BY-TBD<br/>REQ-FUN-003 / REQ-PER-002<br/>GAP-BUDGET-001"]',
+        '    PHYSICAL["PHYSICAL-EVIDENCE-REQUIRED<br/>REQ-FUN-006 / REQ-FUN-008<br/>GAP-VER-001"]',
+        '    EXTERNAL["EXTERNAL-AUTHORITY-REQUIRED<br/>REQ-FUN-001 / REQ-FUN-004<br/>GAP-IFC-001"]',
+        '    DEFERRED["INTENTIONALLY-DEFERRED<br/>REQ-DEF-001 / REQ-DEF-004"]',
+        "    " + node(index, "VER-002", "produces EVD-001 model evidence"),
+        "    " + node(index, "VER-001", "analysis method"),
+        "    " + node(index, "VER-008", "future physical evidence"),
+        "    " + node(index, "VER-009", "external authority required"),
+        "    " + node(index, "TS-009", "formal deferral"),
+        '    MODEL_NOW -->|"executable now"| VER_002',
+        '    ANALYSIS_TBD -.->|"criteria unresolved"| VER_001',
+        '    PHYSICAL -.->|"no execution evidence"| VER_008',
+        '    EXTERNAL -.->|"authority and specification absent"| VER_009',
+        '    DEFERRED -.->|"outside current scope"| TS_009',
+    ]
+    return flow_diagram(
+        "10A",
+        "Verification readiness",
+        "CFG-REP / CFG-DOM with project-scope deferrals",
+        body,
+        "Readiness classifies the next admissible verification step. It does not claim requirement satisfaction or physical evidence.",
+    )
+
+
 def trace_view(index: dict[str, dict[str, Any]]) -> list[str]:
     ids = [
         "NEED-001", "CAP-001", "SCN-003", "OA-004", "IX-002",
         "FUN-REL-01", "CMP-COM-01", "IFC-EXT-001",
-        "REQ-FUN-001", "VER-001", "GAP-VER-001",
+        "REQ-FUN-001", "VER-001", "VER-009", "GAP-IFC-001",
     ]
     body = ["    " + node(index, item_id, status_of(index, item_id)) for item_id in ids]
     body.extend([
@@ -558,8 +657,9 @@ def trace_view(index: dict[str, dict[str, Any]]) -> list[str]:
         '    FUN_REL_01 -->|"allocated to"| CMP_COM_01',
         '    CMP_COM_01 -->|"external interface"| IFC_EXT_001',
         '    IFC_EXT_001 -->|"allocated requirement"| REQ_FUN_001',
-        '    REQ_FUN_001 -->|"verification allocation"| VER_001',
-        '    VER_001 -.->|"execution evidence unresolved"| GAP_VER_001',
+        '    REQ_FUN_001 -->|"model analysis"| VER_001',
+        '    REQ_FUN_001 -.->|"external conformance"| VER_009',
+        '    VER_009 -.->|"authority and evidence unresolved"| GAP_IFC_001',
     ])
     return flow_diagram(
         "11",
@@ -603,14 +703,18 @@ def interface_inventory(catalogs: dict[str, dict[str, Any]]) -> list[str]:
     lines = [
         "## Generated interface inventory",
         "",
-        "This inventory is generated directly from `model/architecture.yaml`. Empty",
-        "verification cells are explicit gaps, not evidence of completion.",
+        "This inventory is generated directly from `model/architecture.yaml`. Model-review",
+        "allocation is distinct from real-world external conformance and execution evidence.",
         "",
-        "| ID | Endpoints | Direction | Flow class | Configurations | Maturity | Verification | Unknown attributes |",
-        "|---|---|---|---|---|---|---|---|",
+        "| ID | Endpoints | Direction | Flow class | Configurations | Maturity | Model review | External conformance | Unknown attributes |",
+        "|---|---|---|---|---|---|---|---|---|",
     ]
     for interface in catalogs["architecture"]["interfaces"]:
         verification = ", ".join(interface.get("verification_ids", [])) or "None - explicit gap"
+        model_review = ", ".join(interface.get("internal_model_verification_ids", [])) or verification
+        external_conformance = interface.get(
+            "external_conformance_status", "not an external conformance interface"
+        )
         unknowns = "; ".join(interface.get("unknown_attributes", [])) or "None recorded"
         maturity = f"{interface.get('evidence_basis')} / {interface.get('decision_status')}"
         row = [
@@ -620,7 +724,8 @@ def interface_inventory(catalogs: dict[str, dict[str, Any]]) -> list[str]:
             interface["flow_class"],
             ", ".join(interface["applicable_configurations"]),
             maturity,
-            verification,
+            model_review,
+            external_conformance,
             unknowns,
         ]
         lines.append("| " + " | ".join(str(value).replace("|", "\\|") for value in row) + " |")
@@ -647,8 +752,11 @@ def render(catalogs: dict[str, dict[str, Any]]) -> str:
     lines.extend(relay_sequence(index))
     lines.extend(degradation_sequence(index))
     lines.extend(lifecycle_view(index))
+    lines.extend(health_status_view(index))
+    lines.extend(design_dependency_view(index))
     lines.extend(["## Assurance and traceability views", ""])
     lines.extend(hazard_view(catalogs, index))
+    lines.extend(verification_readiness_view(index))
     lines.extend(trace_view(index))
     lines.extend(governance_view(index))
     lines.extend(interface_inventory(catalogs))

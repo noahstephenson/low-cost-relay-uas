@@ -62,9 +62,9 @@ GAP_RE = re.compile(r"^GAP-[A-Z0-9]+(?:-[A-Z0-9]+)*$")
 GAP_TOKEN_RE = re.compile(r"\bGAP-[A-Z0-9]+(?:-[A-Z0-9]+)*\b")
 MERMAID_HEADERS = {"flowchart", "sequenceDiagram", "stateDiagram-v2"}
 
-# Exact prefix counts from the pre-refactor authoritative catalogs. Together with
-# uniqueness and reference resolution, these guard the ID-preservation acceptance test.
-PRESERVED_ID_COUNTS = {
+# Minimum prefix counts from the accepted consolidated baseline. New proposed elements
+# may be added, but no accepted identifier family may silently lose records.
+PRESERVED_ID_MINIMUMS = {
     "CAP": 5, "CFG": 5, "CLM": 14, "CMP": 19, "CTL": 5, "DEC": 2,
     "EVD": 4, "FUN": 9, "HAZ": 12, "IFC": 16, "IX": 10, "MODE": 5,
     "NEED": 1, "OA": 6, "OP": 10, "REQ": 27, "SCN": 8, "SRC": 17,
@@ -74,14 +74,18 @@ PRESERVED_ID_COUNTS = {
 REFERENCE_KEYS = {
     "subject_ids", "decision_ids", "applicable_configurations", "applicable_sources",
     "predecessor_ids", "performers", "activities", "information_exchanges",
-    "related_requirements", "related_hazards", "verification_ids", "claim_ids",
+    "system_functions", "related_modes", "related_requirements", "related_hazards",
+    "verification_ids", "claim_ids", "constrains_requirement_ids", "trade_study_ids",
     "operational_scenarios", "upstream_refs", "allocation_refs", "tbd_owner_ids",
     "contradicts", "supersedes", "mitigates", "implemented_by", "evidence_ids",
     "source_refs", "evidence_refs", "gap_refs", "counterevidence_refs", "blocks",
-    "object_refs", "supports", "refutes", "source_ids",
+    "object_refs", "supports", "refutes", "source_ids", "affected_ids", "control_refs", "owner_ids",
+    "dependency_ids", "internal_model_verification_ids",
+    "external_conformance_verification_ids",
 }
 SINGULAR_REFERENCE_KEYS = {
     "claim_id", "decision_id", "gap_id", "endpoint_a", "endpoint_b", "from", "to",
+    "requirement_id", "subject_id",
 }
 REFERENCE_SENTINELS = {"TBD", "All", "External", "None"}
 
@@ -233,36 +237,46 @@ def render_baseline(catalogs: dict[str, dict[str, Any]]) -> str:
 
     active_gaps = [
         gap for gap in traceability["gaps"]
-        if gap.get("disposition") not in {"deferred", "intentionally_out_of_scope"}
+        if gap.get("disposition") not in {"closed", "deferred", "intentionally_out_of_scope"}
     ]
-    deferred_gaps = [gap for gap in traceability["gaps"] if gap not in active_gaps]
+    closed_gaps = [gap for gap in traceability["gaps"] if gap.get("disposition") == "closed"]
+    deferred_gaps = [
+        gap for gap in traceability["gaps"]
+        if gap.get("disposition") in {"deferred", "intentionally_out_of_scope"}
+    ]
     lines.extend([
         "",
         "## Active architecture gaps",
         "",
-        "| Gap | Category | Severity | Affected model area |",
-        "|---|---|---|---|",
+        "| Gap | Category | Outcome | Severity | Affected model area |",
+        "|---|---|---|---|---|",
     ])
     for gap in active_gaps:
         lines.append(
-            f"| {gap['code']} | {pipe(gap['category'])} | {pipe(gap['severity'])} | "
+            f"| {gap['code']} | {pipe(gap['category'])} | {pipe(gap.get('work_package_outcome'))} | "
+            f"{pipe(gap['severity'])} | "
             f"{pipe(gap['affected_ids'])} |"
         )
 
     verification_status = collections.Counter(
-        item.get("verification_status", "unspecified") for item in assurance["requirements"]
+        item.get("verification_readiness", "unspecified")
+        for item in assurance["requirement_quality_audit"]
     )
     lines.extend([
         "",
         "## Verification status",
         "",
-        f"- Requirement allocations: {', '.join(f'{key}: {value}' for key, value in sorted(verification_status.items()))}.",
+        f"- Requirement readiness: {', '.join(f'{key}: {value}' for key, value in sorted(verification_status.items()))}.",
         "- `VER-*` records are methods or planned activities unless an `EVD-*` execution record says otherwise.",
         "- Physical verification evidence remains absent or deferred (`GAP-VER-001`).",
         "",
         "## Concise traceability summary",
         "",
-        "- `NEED-001 -> CAP-001 -> SCN-003 -> OA-004 -> FUN-REL-01 -> CMP-COM-01 -> REQ-FUN-001 -> VER-001`.",
+        "- Mission relay: `NEED-001 -> CAP-001 -> SCN-003 -> OA-004 -> IX-002 / IX-003 -> FUN-REL-01 -> CMP-COM-01 -> IFC-EXT-001 / IFC-EXT-002 -> REQ-FUN-001 -> VER-001 / VER-009`.",
+        "- Return telemetry: `SCN-004 -> OA-005 -> IX-004 / IX-005 -> FUN-REL-02 -> CMP-COM-01 -> IFC-EXT-003 / IFC-EXT-004 -> REQ-FUN-002 -> VER-001 / VER-009`.",
+        "- Station keeping: `CAP-002 -> SCN-002 -> OA-003 -> FUN-FLT-03 -> CMP-AVN-01 / CMP-AVN-02 / CMP-AVN-03 -> REQ-FUN-003 / REQ-CON-004`.",
+        "- Setup and ground safety: `SCN-001 -> OA-007 -> MODE-005 -> HAZ-004 -> CTL-001 -> REQ-FUN-006 / REQ-SAF-002 -> VER-006`.",
+        "- Health/status: `SCN-007 -> IX-009 -> FUN-HLT-01 -> CMP-AVN-01 -> IFC-EXT-007 -> REQ-FUN-008 -> VER-005 / VER-008 / VER-009`.",
         "- `HAZ-004 -> CTL-001 -> REQ-FUN-006 / REQ-SAF-002 -> VER-004 / VER-006 -> GAP-VER-001`.",
         "- `HAZ-008 -> CTL-005 -> REQ-IFC-004 -> VER-005 / VER-008 -> GAP-VER-001`.",
         "- Current platform-to-payload crossings are only `IFC-INT-003` and `IFC-INT-007`; `IFC-INT-010` is payload-internal.",
@@ -274,6 +288,16 @@ def render_baseline(catalogs: dict[str, dict[str, Any]]) -> str:
     for gap in active_gaps:
         if gap.get("severity") in {"major", "blocker"}:
             lines.append(f"- `{gap['code']}`: {gap['next_action']}")
+
+    lines.extend([
+        "",
+        "## Closed or reclassified gaps in this maturation pass",
+        "",
+    ])
+    for gap in closed_gaps:
+        lines.append(
+            f"- `{gap['code']}` - **{gap.get('work_package_outcome', 'CLOSED')}**: {gap['statement']}"
+        )
 
     lines.extend([
         "",
@@ -338,10 +362,10 @@ def validate_mermaid_documents(definitions: set[str], gap_codes: set[str]) -> li
         errors.extend(f"{path.relative_to(ROOT)}: {item}" for item in fence_errors)
         if path == ROOT / "README.md" and len(blocks) != 1:
             errors.append(f"README.md must contain exactly one Mermaid diagram, found {len(blocks)}")
-        if path == ROOT / "architecture.md" and not 8 <= len(blocks) <= 10:
-            errors.append(f"architecture.md must contain 8-10 Mermaid diagrams, found {len(blocks)}")
-        if path == ATLAS_REPORT and not 14 <= len(blocks) <= 18:
-            errors.append(f"architecture atlas must contain 14-18 Mermaid diagrams, found {len(blocks)}")
+        if path == ROOT / "architecture.md" and not 8 <= len(blocks) <= 12:
+            errors.append(f"architecture.md must contain 8-12 Mermaid diagrams, found {len(blocks)}")
+        if path == ATLAS_REPORT and not 14 <= len(blocks) <= 22:
+            errors.append(f"architecture atlas must contain 14-22 Mermaid diagrams, found {len(blocks)}")
         for title, block in blocks:
             lines = [line for line in block.splitlines() if line.strip()]
             if not lines:
@@ -410,9 +434,11 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
         definitions[item_id] = path
 
     prefix_counts = collections.Counter(item_id.split("-", 1)[0] for item_id in definitions)
-    for prefix, expected in PRESERVED_ID_COUNTS.items():
-        if prefix_counts[prefix] != expected:
-            errors.append(f"preserved {prefix}- ID count is {prefix_counts[prefix]}, expected {expected}")
+    for prefix, minimum in PRESERVED_ID_MINIMUMS.items():
+        if prefix_counts[prefix] < minimum:
+            errors.append(
+                f"preserved {prefix}- ID count is {prefix_counts[prefix]}, minimum is {minimum}"
+            )
 
     gap_codes: set[str] = set()
     for index, gap in enumerate(catalogs["traceability"].get("gaps", [])):
@@ -547,6 +573,9 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
     performer_ids = {item["id"] for item in architecture["performers"]}
     exchange_ids = {item["id"] for item in architecture["information_exchanges"]}
     activity_ids = {item["id"] for item in architecture["operational_activities"]}
+    function_ids = {item["id"] for item in architecture["functions"]}
+    mode_ids = {item["id"] for item in architecture["modes"]}
+    current_configs = {"CFG-REP", "CFG-DOM"}
     for scenario in architecture["scenarios"]:
         if not scenario.get("performers") or any(item not in performer_ids for item in scenario["performers"]):
             errors.append(f"{scenario['id']} has unresolved performers")
@@ -554,18 +583,91 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
             errors.append(f"{scenario['id']} has unresolved information exchanges")
         if any(item not in activity_ids and item != "TBD" for item in scenario.get("activities", [])):
             errors.append(f"{scenario['id']} has unresolved activities")
+        if any(item not in function_ids for item in scenario.get("system_functions", [])):
+            errors.append(f"{scenario['id']} has unresolved system functions")
+        if any(item not in mode_ids for item in scenario.get("related_modes", [])):
+            errors.append(f"{scenario['id']} has unresolved modes")
+        if current_configs.intersection(scenario.get("applicable_configurations", [])):
+            for field in (
+                "activities", "information_exchanges", "system_functions", "related_modes",
+                "related_requirements", "related_hazards", "verification_ids",
+            ):
+                if not scenario.get(field):
+                    errors.append(f"current scenario {scenario['id']} lacks {field}")
+            for field in ("evidence_ids", "gap_refs"):
+                if field not in scenario:
+                    errors.append(f"current scenario {scenario['id']} lacks explicit {field}")
+        elif not scenario.get("activities") and scenario.get("activity_allocation_disposition") != "future_configuration_gap":
+            errors.append(f"future scenario {scenario['id']} lacks an activity-allocation disposition")
 
     classifications = set(system["enumerations"]["requirement_classification"])
+    readiness_values = set(system["enumerations"]["verification_readiness"])
+    requirement_ids = {item["id"] for item in assurance["requirements"]}
+    quality_audits = assurance.get("requirement_quality_audit", [])
+    audit_ids = [item.get("requirement_id") for item in quality_audits]
+    if set(audit_ids) != requirement_ids or len(audit_ids) != len(set(audit_ids)):
+        errors.append("requirement quality audit must contain exactly one entry for every requirement")
+    audit_by_requirement = {item.get("requirement_id"): item for item in quality_audits}
     for requirement in assurance["requirements"]:
         if requirement.get("classification") not in classifications:
             errors.append(f"{requirement['id']} has invalid requirement classification")
         if not requirement.get("upstream_refs") and not requirement.get("provenance_gap"):
             errors.append(f"{requirement['id']} lacks provenance or a documented gap")
+        if not requirement.get("verification_ids"):
+            errors.append(f"{requirement['id']} lacks verification allocation")
+        audit = audit_by_requirement.get(requirement["id"], {})
+        if audit.get("verification_readiness") not in readiness_values:
+            errors.append(f"{requirement['id']} lacks controlled verification readiness")
+        if "[TBD]" in requirement.get("text", ""):
+            governance = audit.get("tbd_governance")
+            required_tbd_fields = {"category", "owner_ids", "dependency", "reason", "verification_implication"}
+            if not isinstance(governance, dict) or not required_tbd_fields.issubset(governance):
+                errors.append(f"{requirement['id']} has an ungoverned substantive TBD")
+        if not requirement.get("allocation_refs") and audit.get("quality_result") not in {
+            "cross_cutting_constraint", "scope_control", "deferred_topic",
+            "honest_coverage_gap", "external_authority_topic", "pass_with_open_tbd",
+        }:
+            errors.append(f"{requirement['id']} lacks downward allocation or a semantic exception")
+
+    for verification in assurance["verifications"]:
+        if verification.get("readiness") not in readiness_values:
+            errors.append(f"{verification['id']} lacks controlled readiness")
+        if not verification.get("readiness_note"):
+            errors.append(f"{verification['id']} lacks readiness rationale")
+
+    for hazard in assurance["hazards"]:
+        if not hazard.get("control_disposition"):
+            errors.append(f"{hazard['id']} lacks an explicit control disposition")
+        if "control_refs" not in hazard:
+            errors.append(f"{hazard['id']} lacks explicit control references")
+    for control in assurance["controls"]:
+        if not control.get("implemented_by"):
+            errors.append(f"{control['id']} has no implementing requirement")
 
     relationships = {
         (item["from"], item["relation"], item["to"]): item
         for item in traceability["relationships"]
     }
+    for exchange in architecture["information_exchanges"]:
+        if current_configs.intersection(exchange.get("applicable_configurations", [])):
+            realized = any(
+                relation["from"] == exchange["id"]
+                and relation["relation"] == "realized_by"
+                and not relation.get("gap")
+                for relation in traceability["relationships"]
+            )
+            if not realized:
+                errors.append(f"current exchange {exchange['id']} lacks an ungapped interface realization")
+    for function in architecture["functions"]:
+        if current_configs.intersection(function.get("applicable_configurations", [])):
+            allocated = any(
+                relation["from"] == function["id"]
+                and relation["relation"] == "allocated_to"
+                and not relation.get("gap")
+                for relation in traceability["relationships"]
+            )
+            if not allocated:
+                errors.append(f"current function {function['id']} lacks resource allocation")
     required_relationships = {
         ("HAZ-004", "mitigated_by", "CTL-001"),
         ("CTL-001", "implemented_by", "REQ-FUN-006"),
@@ -584,6 +686,22 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
     for gap in traceability["gaps"]:
         if gap.get("disposition") not in gap_dispositions:
             errors.append(f"{gap['code']} has invalid disposition")
+        if gap.get("audit_classification") not in set(system["enumerations"]["gap_audit_classification"]):
+            errors.append(f"{gap['code']} lacks a controlled audit classification")
+        if not gap.get("work_package_outcome") or not gap.get("next_action"):
+            errors.append(f"{gap['code']} lacks an outcome or concrete next action")
+
+    for interface in architecture["interfaces"]:
+        if not interface["id"].startswith("IFC-EXT-"):
+            continue
+        if interface.get("logical_definition_status") != "complete_at_architecture_level":
+            errors.append(f"{interface['id']} lacks logical-definition completeness status")
+        if "VER-005" not in interface.get("internal_model_verification_ids", []):
+            errors.append(f"{interface['id']} lacks internal interface-catalog review")
+        if interface.get("external_conformance_verification_ids") != ["VER-009"]:
+            errors.append(f"{interface['id']} lacks separated external-conformance verification")
+        if interface.get("external_conformance_status") != "external_authority_and_execution_evidence_required":
+            errors.append(f"{interface['id']} obscures external authority or evidence status")
 
     inner = system["system_boundaries"]["inner"]
     if "CFG-REC" in inner.get("applicable_configurations", []):
@@ -695,7 +813,7 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
     deferred = []
     for gap in traceability["gaps"]:
         summary = f"{gap['code']}: {gap['statement']}"
-        if gap.get("disposition") in {"deferred", "intentionally_out_of_scope"}:
+        if gap.get("disposition") in {"closed", "deferred", "intentionally_out_of_scope"}:
             deferred.append(summary)
         else:
             active.append(summary)
@@ -770,7 +888,7 @@ def main() -> int:
     print(f"ACTIVE ARCHITECTURE GAPS: {len(active_gaps)}")
     for gap in active_gaps:
         print(f"- {gap}")
-    print(f"INTENTIONAL OR SECONDARY DEFERRALS: {len(deferrals)}")
+    print(f"CLOSED, DEFERRED, OR SECONDARY ITEMS: {len(deferrals)}")
     for gap in deferrals:
         print(f"- {gap}")
     return 1 if errors else 0

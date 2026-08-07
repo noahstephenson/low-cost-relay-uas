@@ -28,6 +28,28 @@ plausible value.
 | TS-010 | Environmental envelope | All | Temperature, wind, precipitation limits | Open |
 | TS-011 | Recovery approach (recoverable vs. genuinely attritable) | CMP-AFR-03, FUN-FLT-04 | Cost of recovery features vs. unit replacement cost | Open |
 
+## Coupled architecture dependency
+
+The structured model now records the governing dependency rather than treating cost,
+mass, endurance, payload capacity, and propulsion as independent blanks:
+
+`TS-006 -> REQ-PER-004 -> REQ-PER-003 -> TS-002 -> TS-003 -> REQ-PER-003`
+
+`REQ-PER-002 -> TS-003 -> REQ-PER-001`
+
+`TS-001 -> REQ-PER-003` and `TS-004 -> TS-003`
+
+The feedback from `TS-003` battery requirement to `REQ-PER-003` gross mass is the
+central loop. `CAP-004` constrains this entire set through `REQ-PER-001`,
+`REQ-PER-003`, `REQ-PER-004`, and the associated trade studies. No target or value is
+selected here. Generated view 9B in `reports/architecture-views.md` provides the
+compact diagram.
+
+TBD governance is explicit in `model/assurance.yaml`: TS-001 through TS-008 and
+TS-011 are design decisions, TS-010 requires an evidence basis before criteria can
+be finalized, and TS-009 is intentionally deferred. External-interface authority is
+tracked separately from design TBDs.
+
 ## TS-009 — Formal Deferral
 
 Every other entry in the Register above is an open trade study: a decision this

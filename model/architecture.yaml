@@ -246,8 +246,27 @@
         "CFG-REP",
         "CFG-DOM"
       ],
+      "semantic_role": "cross_cutting_architecture_constraint",
+      "activity_allocation_required": false,
+      "constrains_requirement_ids": [
+        "REQ-PER-001",
+        "REQ-PER-003",
+        "REQ-PER-004",
+        "REQ-PER-005",
+        "REQ-CON-001",
+        "REQ-CON-002"
+      ],
+      "trade_study_ids": [
+        "TS-001",
+        "TS-002",
+        "TS-003",
+        "TS-004",
+        "TS-006"
+      ],
+      "semantic_rationale": "Affordability and attritability constrain requirements, trade studies, configuration choices, and resource selections. They are not discrete mission behavior and do not justify a synthetic operational activity.",
       "source_ids": [
-        "SRC-REPO-005"
+        "SRC-REPO-005",
+        "SRC-DEC-002"
       ]
     }
   ],
@@ -483,6 +502,20 @@
       "source_ids": [
         "SRC-REPO-005"
       ]
+    },
+    {
+      "id": "OA-007",
+      "name": "Prepare Relay UAS for operation",
+      "evidence_basis": "proposed_design",
+      "decision_status": "proposed",
+      "applicable_configurations": [
+        "CFG-REP",
+        "CFG-DOM"
+      ],
+      "source_ids": [
+        "SRC-DEC-002",
+        "SRC-REPO-005"
+      ]
     }
   ],
   "information_exchanges": [
@@ -663,16 +696,14 @@
       "purpose": "Establish an architecture-level candidate thread for preparing the relay UAS and external control context without defining build or operating procedures.",
       "applicable_configurations": [
         "CFG-REP",
-        "CFG-DOM",
-        "CFG-DIG",
-        "CFG-SOS"
+        "CFG-DOM"
       ],
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "initiating_event": "Operator elects to prepare the system for a mission context.",
       "preconditions": [
         "Relay UAS is in MODE-005",
-        "Required external systems are available; exact readiness criteria are TBD"
+        "Required external systems are available; readiness criteria require owner definition"
       ],
       "performers": [
         "OP-010",
@@ -681,7 +712,11 @@
         "OP-007"
       ],
       "activities": [
-        "OA-001"
+        "OA-007"
+      ],
+      "system_functions": [
+        "FUN-CFG-01",
+        "FUN-HLT-01"
       ],
       "information_exchanges": [
         "IX-001",
@@ -693,6 +728,7 @@
       "termination_condition": "System remains in MODE-005 until unresolved readiness conditions are addressed.",
       "related_requirements": [
         "REQ-FUN-006",
+        "REQ-FUN-008",
         "REQ-SAF-002",
         "REQ-PER-005"
       ],
@@ -702,7 +738,15 @@
       ],
       "verification_ids": [
         "VER-004",
+        "VER-005",
         "VER-006"
+      ],
+      "related_modes": [
+        "MODE-005"
+      ],
+      "evidence_ids": [],
+      "gap_refs": [
+        "GAP-VER-001"
       ],
       "claim_ids": [
         "CLM-SCP-001",
@@ -728,7 +772,7 @@
       "preconditions": [
         "SCN-001 completed",
         "Platform command link available",
-        "Station tolerance remains TBD"
+        "Station tolerance remains unresolved under TS-007"
       ],
       "performers": [
         "OP-010",
@@ -738,6 +782,13 @@
         "OA-001",
         "OA-002",
         "OA-003"
+      ],
+      "system_functions": [
+        "FUN-CMD-01",
+        "FUN-FLT-01",
+        "FUN-FLT-02",
+        "FUN-FLT-03",
+        "FUN-HLT-01"
       ],
       "information_exchanges": [
         "IX-001",
@@ -749,6 +800,7 @@
       "related_requirements": [
         "REQ-FUN-003",
         "REQ-FUN-004",
+        "REQ-FUN-008",
         "REQ-PER-005",
         "REQ-CON-004"
       ],
@@ -759,7 +811,20 @@
       ],
       "verification_ids": [
         "VER-004",
+        "VER-005",
         "VER-008"
+      ],
+      "related_modes": [
+        "MODE-005",
+        "MODE-001",
+        "MODE-002"
+      ],
+      "evidence_ids": [],
+      "gap_refs": [
+        "GAP-HAZ-001",
+        "GAP-IFC-001",
+        "GAP-BUDGET-001",
+        "GAP-VER-001"
       ],
       "claim_ids": [
         "CLM-ARC-003",
@@ -796,6 +861,9 @@
       "activities": [
         "OA-004"
       ],
+      "system_functions": [
+        "FUN-REL-01"
+      ],
       "information_exchanges": [
         "IX-002",
         "IX-003"
@@ -812,7 +880,17 @@
       ],
       "verification_ids": [
         "VER-001",
-        "VER-004"
+        "VER-004",
+        "VER-005",
+        "VER-009"
+      ],
+      "related_modes": [
+        "MODE-002"
+      ],
+      "evidence_ids": [],
+      "gap_refs": [
+        "GAP-IFC-001",
+        "GAP-VER-001"
       ],
       "claim_ids": [
         "CLM-ARC-001",
@@ -849,6 +927,9 @@
       "activities": [
         "OA-005"
       ],
+      "system_functions": [
+        "FUN-REL-02"
+      ],
       "information_exchanges": [
         "IX-004",
         "IX-005"
@@ -865,7 +946,17 @@
       ],
       "verification_ids": [
         "VER-001",
-        "VER-004"
+        "VER-004",
+        "VER-005",
+        "VER-009"
+      ],
+      "related_modes": [
+        "MODE-002"
+      ],
+      "evidence_ids": [],
+      "gap_refs": [
+        "GAP-IFC-001",
+        "GAP-VER-001"
       ],
       "claim_ids": [
         "CLM-ARC-001",
@@ -889,7 +980,7 @@
       "decision_status": "proposed",
       "initiating_event": "A future ground-control context requires command or telemetry exchange with a UGV.",
       "preconditions": [
-        "TBD - no UGV integration baseline exists",
+        "No UGV integration baseline exists",
         "External ownership and interface authority are identified"
       ],
       "performers": [
@@ -898,16 +989,15 @@
         "OP-002",
         "OP-004"
       ],
-      "activities": [
-        "TBD"
-      ],
+      "activities": [],
+      "activity_allocation_disposition": "future_configuration_gap",
       "information_exchanges": [
         "IX-006",
         "IX-007"
       ],
-      "expected_outcome": "TBD - candidate bidirectional information exchange is represented at architecture level only.",
-      "degraded_outcome": "TBD - degraded behavior and external-system responsibilities are unresolved.",
-      "termination_condition": "TBD - no approved operational thread exists.",
+      "expected_outcome": "Candidate bidirectional information exchange is represented at architecture level only; no current support is claimed.",
+      "degraded_outcome": "Degraded behavior and external-system responsibilities remain unresolved.",
+      "termination_condition": "No termination condition is allocated because no approved operational thread exists.",
       "related_requirements": [],
       "related_hazards": [],
       "verification_ids": [
@@ -938,7 +1028,7 @@
       "decision_status": "proposed",
       "initiating_event": "A future remote platform produces permitted video or sensor data for a ground consumer.",
       "preconditions": [
-        "TBD - current three-node architecture models telemetry, not a verified sensor-data service",
+        "The current three-node architecture models telemetry, not a verified sensor-data service",
         "External data consumer and authority are identified"
       ],
       "performers": [
@@ -947,14 +1037,13 @@
         "OP-001",
         "OP-010"
       ],
-      "activities": [
-        "TBD"
-      ],
+      "activities": [],
+      "activity_allocation_disposition": "future_configuration_gap",
       "information_exchanges": [
         "IX-008"
       ],
-      "expected_outcome": "TBD - data reaches an authorized consumer at architecture level.",
-      "degraded_outcome": "TBD - loss, delay, and partial-data behavior are unresolved.",
+      "expected_outcome": "A future candidate path reaches an authorized consumer at architecture level; no current support is claimed.",
+      "degraded_outcome": "Loss, delay, and partial-data behavior remain unresolved.",
       "termination_condition": "Data demand ends or the scenario transitions to SCN-007.",
       "related_requirements": [],
       "related_hazards": [],
@@ -999,6 +1088,12 @@
         "OA-001",
         "OA-006"
       ],
+      "system_functions": [
+        "FUN-CMD-01",
+        "FUN-FLT-01",
+        "FUN-FLT-04",
+        "FUN-HLT-01"
+      ],
       "information_exchanges": [
         "IX-001",
         "IX-009"
@@ -1008,7 +1103,8 @@
       "termination_condition": "Relay UAS is recovered, landed, or otherwise no longer airborne.",
       "related_requirements": [
         "REQ-FUN-005",
-        "REQ-FUN-007"
+        "REQ-FUN-007",
+        "REQ-FUN-008"
       ],
       "related_hazards": [
         "HAZ-002",
@@ -1017,8 +1113,20 @@
       ],
       "verification_ids": [
         "VER-004",
+        "VER-005",
         "VER-006",
         "VER-008"
+      ],
+      "related_modes": [
+        "MODE-002",
+        "MODE-003",
+        "MODE-004"
+      ],
+      "evidence_ids": [],
+      "gap_refs": [
+        "GAP-HAZ-001",
+        "GAP-IFC-001",
+        "GAP-VER-001"
       ],
       "claim_ids": [
         "CLM-ARC-003",
@@ -1037,9 +1145,7 @@
       "purpose": "Represent architecture-level mission termination, relay-UAS recovery, and disposition of available configuration or status records.",
       "applicable_configurations": [
         "CFG-REP",
-        "CFG-DOM",
-        "CFG-DIG",
-        "CFG-SOS"
+        "CFG-DOM"
       ],
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
@@ -1056,6 +1162,11 @@
       "activities": [
         "OA-006"
       ],
+      "system_functions": [
+        "FUN-CMD-01",
+        "FUN-FLT-04",
+        "FUN-HLT-01"
+      ],
       "information_exchanges": [
         "IX-001",
         "IX-009",
@@ -1067,6 +1178,7 @@
       "related_requirements": [
         "REQ-FUN-004",
         "REQ-FUN-005",
+        "REQ-FUN-008",
         "REQ-PER-005"
       ],
       "related_hazards": [
@@ -1076,7 +1188,20 @@
       ],
       "verification_ids": [
         "VER-004",
-        "VER-007"
+        "VER-005",
+        "VER-006",
+        "VER-007",
+        "VER-008"
+      ],
+      "related_modes": [
+        "MODE-004",
+        "MODE-005"
+      ],
+      "evidence_ids": [],
+      "gap_refs": [
+        "GAP-HAZ-001",
+        "GAP-IFC-001",
+        "GAP-VER-001"
       ],
       "claim_ids": [
         "CLM-BND-001",
@@ -1205,6 +1330,34 @@
         "CFG-DOM"
       ],
       "source_ids": [
+        "SRC-REPO-003"
+      ]
+    },
+    {
+      "id": "FUN-CFG-01",
+      "name": "Establish operational configuration and readiness state",
+      "evidence_basis": "proposed_design",
+      "decision_status": "proposed",
+      "applicable_configurations": [
+        "CFG-REP",
+        "CFG-DOM"
+      ],
+      "source_ids": [
+        "SRC-DEC-002",
+        "SRC-REPO-003"
+      ]
+    },
+    {
+      "id": "FUN-HLT-01",
+      "name": "Monitor and report Relay-UAS health/status",
+      "evidence_basis": "proposed_design",
+      "decision_status": "proposed",
+      "applicable_configurations": [
+        "CFG-REP",
+        "CFG-DOM"
+      ],
+      "source_ids": [
+        "SRC-DEC-002",
         "SRC-REPO-003"
       ]
     }
@@ -1795,7 +1948,7 @@
       "direction": "a_to_b",
       "flow_class": "command and control",
       "interface_type": "external antenna or RF path - undefined",
-      "owner": "shared external boundary; authority TBD",
+      "owner": "shared external boundary; conformance authority unresolved",
       "applicable_configurations": [
         "CFG-REP",
         "CFG-DOM"
@@ -1806,12 +1959,25 @@
       "normal_behavior": "Carries architecture-level outbound traffic toward the relay payload.",
       "failure_behavior": "Outbound traffic is unavailable or degraded.",
       "security_concerns": [
-        "All security criteria are TBD"
+        "Security criteria require external authority and remain intentionally unspecified"
       ],
       "safety_concerns": [
         "Loss of remote-system command may create external consequences not allocated to the Relay UAS"
       ],
-      "verification_ids": [],
+      "verification_ids": [
+        "VER-005",
+        "VER-007",
+        "VER-009"
+      ],
+      "logical_definition_status": "complete_at_architecture_level",
+      "internal_model_verification_ids": [
+        "VER-005",
+        "VER-007"
+      ],
+      "external_conformance_verification_ids": [
+        "VER-009"
+      ],
+      "external_conformance_status": "external_authority_and_execution_evidence_required",
       "source_ids": [
         "SRC-REPO-003",
         "SRC-REPO-005"
@@ -1841,7 +2007,7 @@
       "direction": "a_to_b",
       "flow_class": "command and control",
       "interface_type": "external antenna or RF path - undefined",
-      "owner": "shared external boundary; authority TBD",
+      "owner": "shared external boundary; conformance authority unresolved",
       "applicable_configurations": [
         "CFG-REP",
         "CFG-DOM"
@@ -1852,12 +2018,25 @@
       "normal_behavior": "Carries architecture-level outbound traffic from the relay payload toward the remote UAS.",
       "failure_behavior": "Outbound traffic is unavailable or degraded.",
       "security_concerns": [
-        "All security criteria are TBD"
+        "Security criteria require external authority and remain intentionally unspecified"
       ],
       "safety_concerns": [
         "Loss of remote-system command may create external consequences not allocated to the Relay UAS"
       ],
-      "verification_ids": [],
+      "verification_ids": [
+        "VER-005",
+        "VER-007",
+        "VER-009"
+      ],
+      "logical_definition_status": "complete_at_architecture_level",
+      "internal_model_verification_ids": [
+        "VER-005",
+        "VER-007"
+      ],
+      "external_conformance_verification_ids": [
+        "VER-009"
+      ],
+      "external_conformance_status": "external_authority_and_execution_evidence_required",
       "source_ids": [
         "SRC-REPO-003",
         "SRC-REPO-005"
@@ -1887,7 +2066,7 @@
       "direction": "a_to_b",
       "flow_class": "telemetry",
       "interface_type": "external antenna or RF path - undefined",
-      "owner": "shared external boundary; authority TBD",
+      "owner": "shared external boundary; conformance authority unresolved",
       "applicable_configurations": [
         "CFG-REP",
         "CFG-DOM"
@@ -1898,12 +2077,25 @@
       "normal_behavior": "Carries architecture-level return traffic from the remote UAS toward the relay payload.",
       "failure_behavior": "Return traffic is unavailable or degraded.",
       "security_concerns": [
-        "All security criteria are TBD"
+        "Security criteria require external authority and remain intentionally unspecified"
       ],
       "safety_concerns": [
         "Loss of remote-system status may create external consequences not allocated to the Relay UAS"
       ],
-      "verification_ids": [],
+      "verification_ids": [
+        "VER-005",
+        "VER-007",
+        "VER-009"
+      ],
+      "logical_definition_status": "complete_at_architecture_level",
+      "internal_model_verification_ids": [
+        "VER-005",
+        "VER-007"
+      ],
+      "external_conformance_verification_ids": [
+        "VER-009"
+      ],
+      "external_conformance_status": "external_authority_and_execution_evidence_required",
       "source_ids": [
         "SRC-REPO-003",
         "SRC-REPO-005"
@@ -1933,7 +2125,7 @@
       "direction": "a_to_b",
       "flow_class": "telemetry",
       "interface_type": "external antenna or RF path - undefined",
-      "owner": "shared external boundary; authority TBD",
+      "owner": "shared external boundary; conformance authority unresolved",
       "applicable_configurations": [
         "CFG-REP",
         "CFG-DOM"
@@ -1944,12 +2136,25 @@
       "normal_behavior": "Carries architecture-level return traffic from the relay payload toward ground control.",
       "failure_behavior": "Return traffic is unavailable or degraded.",
       "security_concerns": [
-        "All security criteria are TBD"
+        "Security criteria require external authority and remain intentionally unspecified"
       ],
       "safety_concerns": [
         "Loss of remote-system status may create external consequences not allocated to the Relay UAS"
       ],
-      "verification_ids": [],
+      "verification_ids": [
+        "VER-005",
+        "VER-007",
+        "VER-009"
+      ],
+      "logical_definition_status": "complete_at_architecture_level",
+      "internal_model_verification_ids": [
+        "VER-005",
+        "VER-007"
+      ],
+      "external_conformance_verification_ids": [
+        "VER-009"
+      ],
+      "external_conformance_status": "external_authority_and_execution_evidence_required",
       "source_ids": [
         "SRC-REPO-003",
         "SRC-REPO-005"
@@ -1979,7 +2184,7 @@
       "direction": "a_to_b",
       "flow_class": "command and control",
       "interface_type": "external antenna or RF path - undefined",
-      "owner": "Relay UAS command-link authority TBD",
+      "owner": "Relay UAS command-link conformance authority unresolved",
       "applicable_configurations": [
         "CFG-REP",
         "CFG-DOM"
@@ -1993,13 +2198,26 @@
       "normal_behavior": "Carries command input for the Relay UAS independently of relayed mission traffic.",
       "failure_behavior": "Platform command is unavailable or degraded; response criteria remain unresolved.",
       "security_concerns": [
-        "Command authenticity and integrity criteria are TBD"
+        "Command authenticity and integrity criteria require external authority"
       ],
       "safety_concerns": [
         "Flyaway",
         "Loss of recovery capability"
       ],
-      "verification_ids": [],
+      "verification_ids": [
+        "VER-005",
+        "VER-007",
+        "VER-009"
+      ],
+      "logical_definition_status": "complete_at_architecture_level",
+      "internal_model_verification_ids": [
+        "VER-005",
+        "VER-007"
+      ],
+      "external_conformance_verification_ids": [
+        "VER-009"
+      ],
+      "external_conformance_status": "external_authority_and_execution_evidence_required",
       "source_ids": [
         "SRC-REPO-003"
       ],
@@ -2026,7 +2244,7 @@
       "direction": "bidirectional",
       "flow_class": "payload management and health and status",
       "interface_type": "candidate internal logical interface",
-      "owner": "CFG-DIG architecture authority TBD",
+      "owner": "CFG-DIG architecture authority unresolved",
       "applicable_configurations": [
         "CFG-DIG",
         "CFG-SOS"
@@ -2037,10 +2255,10 @@
         "SCN-007",
         "SCN-008"
       ],
-      "normal_behavior": "TBD - architecture-level candidate for payload enable, configuration, and status in future configurations only.",
-      "failure_behavior": "TBD - future payload may be unavailable, misconfigured, or unable to report status.",
+      "normal_behavior": "Architecture-level candidate for payload enable, configuration, and status in future configurations only.",
+      "failure_behavior": "A future payload may be unavailable, misconfigured, or unable to report status; behavior is unresolved.",
       "security_concerns": [
-        "Authorization, integrity, and configuration-control criteria are TBD"
+        "Authorization, integrity, and configuration-control criteria are unresolved"
       ],
       "safety_concerns": [
         "Payload-state ambiguity",
@@ -2090,7 +2308,7 @@
       "normal_behavior": "Provides architecture-level sensor information to support stable flight and station keeping.",
       "failure_behavior": "Navigation or timing information may become invalid or unavailable, degrading flight or station keeping.",
       "security_concerns": [
-        "Integrity and trust criteria are TBD"
+        "Integrity and trust criteria are unresolved"
       ],
       "safety_concerns": [
         "Station drift",
@@ -2138,12 +2356,14 @@
       "normal_behavior": "Represents only the existence of physical coupling inside the relay-payload black-box envelope; it is not a platform-to-payload interface and defines no RF characteristics.",
       "failure_behavior": "Relay traffic may be unavailable or degraded.",
       "security_concerns": [
-        "All implementation and assurance criteria are out of scope or TBD"
+        "All implementation and assurance criteria remain intentionally unspecified"
       ],
       "safety_concerns": [
         "Physical retention and external compliance responsibilities remain unresolved"
       ],
-      "verification_ids": [],
+      "verification_ids": [
+        "VER-005"
+      ],
       "source_ids": [
         "SRC-REPO-003"
       ],
@@ -2169,7 +2389,7 @@
       "direction": "bidirectional",
       "flow_class": "configuration and maintenance",
       "interface_type": "external support interface",
-      "owner": "Maintenance and Relay UAS authorities TBD",
+      "owner": "Maintenance and Relay UAS conformance authorities unresolved",
       "applicable_configurations": [
         "CFG-REP",
         "CFG-DOM",
@@ -2183,7 +2403,7 @@
       "normal_behavior": "Exchanges approved configuration identifiers, maintenance status, and evidence references at architecture level.",
       "failure_behavior": "Configuration state or maintenance status cannot be established.",
       "security_concerns": [
-        "Configuration authorization and integrity criteria are TBD"
+        "Configuration authorization and integrity criteria require external authority"
       ],
       "safety_concerns": [
         "Incorrect or unknown configuration state",
@@ -2192,8 +2412,18 @@
       "verification_ids": [
         "VER-004",
         "VER-005",
+        "VER-007",
+        "VER-009"
+      ],
+      "logical_definition_status": "complete_at_architecture_level",
+      "internal_model_verification_ids": [
+        "VER-005",
         "VER-007"
       ],
+      "external_conformance_verification_ids": [
+        "VER-009"
+      ],
+      "external_conformance_status": "external_authority_and_execution_evidence_required",
       "source_ids": [
         "SRC-DEC-001",
         "SRC-REPO-002"
@@ -2211,6 +2441,70 @@
         "authorization",
         "retention period",
         "tool ownership"
+      ]
+    },
+    {
+      "id": "IFC-EXT-007",
+      "name": "Relay-UAS health and status return",
+      "endpoint_a": "CMP-AVN-01",
+      "endpoint_b": "OP-010",
+      "direction": "a_to_b",
+      "flow_class": "health and status",
+      "interface_type": "external logical status interface - implementation undefined",
+      "owner": "Relay UAS and operator conformance authorities unresolved",
+      "applicable_configurations": [
+        "CFG-REP",
+        "CFG-DOM"
+      ],
+      "operational_scenarios": [
+        "SCN-001",
+        "SCN-002",
+        "SCN-007",
+        "SCN-008"
+      ],
+      "normal_behavior": "Makes current operating mode and detected architecture-level platform health/status available to the operator for readiness and recovery decisions.",
+      "failure_behavior": "Platform health or mode status is unavailable or incomplete, reducing the information available for readiness and recovery decisions.",
+      "security_concerns": [
+        "Status integrity and authorization criteria require external authority"
+      ],
+      "safety_concerns": [
+        "Incorrect or unavailable status may impair a recovery decision",
+        "No safety credit is assigned"
+      ],
+      "verification_ids": [
+        "VER-004",
+        "VER-005",
+        "VER-007",
+        "VER-008",
+        "VER-009"
+      ],
+      "logical_definition_status": "complete_at_architecture_level",
+      "internal_model_verification_ids": [
+        "VER-004",
+        "VER-005",
+        "VER-007"
+      ],
+      "external_conformance_verification_ids": [
+        "VER-009"
+      ],
+      "external_conformance_status": "external_authority_and_execution_evidence_required",
+      "source_ids": [
+        "SRC-DEC-002",
+        "SRC-REPO-003"
+      ],
+      "claim_ids": [
+        "CLM-ARC-003",
+        "CLM-HAZ-001"
+      ],
+      "evidence_basis": "proposed_design",
+      "decision_status": "proposed",
+      "unknown_attributes": [
+        "minimum status set",
+        "format",
+        "transport",
+        "update behavior",
+        "endpoint compatibility",
+        "conformance authority"
       ]
     }
   ],

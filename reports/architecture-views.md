@@ -13,20 +13,20 @@ only as a descriptive evidence configuration and does not inherit the proposed
 
 ## Configuration and context views
 
-### 1. Configuration derivation
+### 1. Configuration derivation and delta
 
 Configuration scope: `CFG-REC / CFG-REP / CFG-DOM / CFG-DIG / CFG-SOS`.
 
-Derivation denotes an architecture relationship, not exact inheritance, equivalence, or approval.
+Derivation denotes lineage, not exact inheritance, equivalence, or approval. Future context is outside the current implementation baseline.
 
 ```mermaid
 flowchart LR
     %% Configuration scope: CFG-REC / CFG-REP / CFG-DOM / CFG-DIG / CFG-SOS
-    CFG_REC["CFG-REC<br/>Reference evidence<br/>reference evidence - [UNVERIFIED mapping]"]
-    CFG_REP["CFG-REP<br/>Replica candidate<br/>[PROPOSED]"]
-    CFG_DOM["CFG-DOM<br/>Domestic candidate<br/>[PROPOSED]"]
-    CFG_DIG["CFG-DIG<br/>Digital extension<br/>[PROPOSED]"]
-    CFG_SOS["CFG-SOS<br/>C2 Ecosystem context<br/>outer system-of-systems context - [PROPOSED]"]
+    CFG_REC["CFG-REC<br/>Reference evidence<br/>evidence only - mapping unverified"]
+    CFG_REP["CFG-REP<br/>Replica candidate<br/>current proposed baseline"]
+    CFG_DOM["CFG-DOM<br/>Domestic candidate<br/>current - substitution criteria unresolved"]
+    CFG_DIG["CFG-DIG<br/>Digital extension<br/>future - adds IFC-INT-008 candidate"]
+    CFG_SOS["CFG-SOS<br/>C2 Ecosystem context<br/>future outer context - OP-004 / OP-005 / OP-006"]
     CFG_REC -->|"proposed functional derivation, not an exact clone<br/>derivation is not approval"| CFG_REP
     CFG_REP -->|"proposed substitution architecture<br/>derivation is not approval"| CFG_DOM
     CFG_REP -->|"future concept branch<br/>derivation is not approval"| CFG_DIG
@@ -37,7 +37,7 @@ flowchart LR
 
 Configuration scope: `CFG-SOS outer context - CFG-REP / CFG-DOM / CFG-DIG inner constituent`.
 
-External constituents remain independently managed. Dashed relationships are proposed or TBD.
+External constituents remain independently managed. Dashed relationships are future or unresolved.
 
 ```mermaid
 flowchart LR
@@ -46,12 +46,12 @@ flowchart LR
         OP_010["OP-010<br/>Operator<br/>independently managed human performer"]
         OP_001["OP-001<br/>Ground Control Node<br/>independently managed external system"]
         OP_003["OP-003<br/>Remote UAS Node<br/>independently managed external system"]
-        OP_004["OP-004<br/>UGV<br/>proposed / TBD"]
-        OP_005["OP-005<br/>Radio User<br/>proposed / TBD"]
-        OP_006["OP-006<br/>Network Service<br/>proposed / TBD"]
+        OP_004["OP-004<br/>UGV<br/>future / unresolved"]
+        OP_005["OP-005<br/>Radio User<br/>future / unresolved"]
+        OP_006["OP-006<br/>Network Service<br/>future / unresolved"]
         OP_007["OP-007<br/>Maintenance Personnel<br/>external support performer"]
         OP_008["OP-008<br/>Spectrum-Management Authority<br/>independent authority"]
-        OP_009["OP-009<br/>Supporting Infrastructure<br/>proposed / TBD"]
+        OP_009["OP-009<br/>Supporting Infrastructure<br/>future / unresolved"]
         subgraph INNER["Relay UAS inner boundary - proposed for CFG-REP/CFG-DOM/CFG-DIG"]
             OP_002["OP-002<br/>Relay UAS / Relay Node<br/>system under study"]
         end
@@ -61,10 +61,10 @@ flowchart LR
     OP_002 <-->|"mission traffic relationship"| OP_003
     OP_007 <-->|"IX-010 / IFC-EXT-006 support"| OP_002
     OP_008 -.->|"external authority - criteria unresolved"| OP_002
-    OP_001 -.->|"IX-006 / IX-007 proposed / TBD"| OP_004
-    OP_002 -.->|"relationship proposed / TBD"| OP_005
-    OP_002 -.->|"relationship proposed / TBD"| OP_006
-    OP_009 -.->|"support relationship proposed / TBD"| OP_002
+    OP_001 -.->|"IX-006 / IX-007 future / unresolved"| OP_004
+    OP_002 -.->|"future relationship unresolved"| OP_005
+    OP_002 -.->|"future relationship unresolved"| OP_006
+    OP_009 -.->|"future support relationship unresolved"| OP_002
 ```
 
 ### 3. Current three-node operational connectivity
@@ -108,7 +108,7 @@ flowchart LR
     CMP_AFR_01 -.->|"structural decomposition"| CMP_AFR_03
     CMP_AFR_01 -.->|"structural decomposition"| CMP_AFR_04
     CMP_AFR_01 -.->|"hardware set"| CMP_AFR_05
-    CMP_AFR_04 -.->|"mount relationship [TBD]"| CMP_MNT_01
+    CMP_AFR_04 -.->|"mount relationship [UNRESOLVED]"| CMP_MNT_01
     CMP_MNT_01 <-->|"IFC-INT-007<br/>mechanical mounting"| CMP_COM_01
 ```
 
@@ -212,8 +212,8 @@ flowchart LR
     CMP_AVN_01["CMP-AVN-01<br/>Flight controller"]
     CMP_COM_01["CMP-COM-01<br/>Relay payload module (black box)<br/>future payload [PROPOSED]"]
     CMP_AVN_01 <-->|"IFC-INT-008<br/>payload management and health and status<br/>future / proposed"| CMP_COM_01
-    IX_008["IX-008<br/>Video or sensor-data return candidate<br/>future sensor-data exchange [TBD]"]
-    IX_008 -.->|"realizing interface TBD - GAP-SOS-002"| CMP_COM_01
+    IX_008["IX-008<br/>Video or sensor-data return candidate<br/>future sensor-data exchange [UNRESOLVED]"]
+    IX_008 -.->|"realizing interface unresolved - GAP-SOS-002"| CMP_COM_01
 ```
 
 ## Behavioral views
@@ -264,7 +264,7 @@ sequenceDiagram
     Receiver->>Flight: IFC-INT-005 platform control input
     Nav-->>Flight: IFC-INT-009 navigation/timing information
     Flight->>Propulsion: IFC-INT-004 propulsion command
-    Relay-->>Operator: IX-009 partial health/status - GAP-SOS-003
+    Relay-->>Operator: IX-009 / IFC-EXT-007 health/status [PROPOSED]
     Note over Operator,Relay: SCN-002 architecture walkthrough - no procedure defined
 ```
 
@@ -304,7 +304,7 @@ sequenceDiagram
     participant Relay as OP-002 Relay UAS platform
     participant Operator as OP-010 Platform operator
     Payload--xGround: SCN-007 relay function loss or degradation
-    Relay-->>Operator: IX-009 health/status indication (partial)
+    Relay-->>Operator: IX-009 / IFC-EXT-007 health/status [PROPOSED]
     Operator->>Relay: IX-001 / IFC-EXT-005 independent platform command
     alt Payload lost and platform remains controllable
         Note over Payload,Relay: MODE-003 - CTL-004 / REQ-FUN-007 [PROPOSED]
@@ -342,6 +342,69 @@ flowchart LR
     SCN_007 -->|"recovery intent"| SCN_008
     SCN_001 -.->|"future CFG-SOS / GAP-SOS-001"| SCN_005
     SCN_001 -.->|"future CFG-DIG / CFG-SOS / GAP-SOS-002"| SCN_006
+```
+
+### 9A. Health/status logical thread
+
+Configuration scope: `CFG-REP / CFG-DOM`.
+
+The logical status purpose is proposed. Message content, transport, external authority, and physical evidence remain unresolved.
+
+```mermaid
+flowchart LR
+    %% Configuration scope: CFG-REP / CFG-DOM
+    SCN_007["SCN-007<br/>Relay degradation, loss, or recovery<br/>[PROPOSED]"]
+    IX_009["IX-009<br/>Relay-UAS health and status<br/>[PROPOSED]"]
+    IFC_INT_006["IFC-INT-006<br/>Battery-state telemetry<br/>[PROPOSED]"]
+    FUN_HLT_01["FUN-HLT-01<br/>Monitor and report health/status<br/>[PROPOSED]"]
+    CMP_AVN_01["CMP-AVN-01<br/>Flight controller<br/>[PROPOSED]"]
+    IFC_EXT_007["IFC-EXT-007<br/>Health/status return<br/>[PROPOSED]"]
+    OP_010["OP-010<br/>Operator<br/>[PROPOSED]"]
+    REQ_FUN_008["REQ-FUN-008<br/>Provide mode and health/status<br/>[PROPOSED]"]
+    VER_005["VER-005<br/>Interface-catalog inspection<br/>[PROPOSED]"]
+    VER_008["VER-008<br/>Deferred physical verification method<br/>not_applicable"]
+    VER_009["VER-009<br/>External conformance verification<br/>[PROPOSED]"]
+    SCN_007 -->|"uses"| IX_009
+    IX_009 -->|"supported by"| FUN_HLT_01
+    IFC_INT_006 -->|"battery-state input only"| FUN_HLT_01
+    FUN_HLT_01 -->|"allocated to"| CMP_AVN_01
+    FUN_HLT_01 -->|"logical return"| IFC_EXT_007
+    IFC_EXT_007 -->|"made available to"| OP_010
+    REQ_FUN_008 -->|"allocates behavior"| FUN_HLT_01
+    REQ_FUN_008 -->|"model review"| VER_005
+    REQ_FUN_008 -.->|"physical evidence"| VER_008
+    REQ_FUN_008 -.->|"external conformance"| VER_009
+```
+
+### 9B. Mass-cost-power-endurance dependency
+
+Configuration scope: `CFG-REP / CFG-DOM`.
+
+This is one coupled design problem. The diagram adds no values and does not resolve any trade study.
+
+```mermaid
+flowchart LR
+    %% Configuration scope: CFG-REP / CFG-DOM
+    REQ_PER_004["REQ-PER-004<br/>The payload bay shall accommodate a payload of up to [TBD] mass within a [TBD] volume envelope.<br/>[PROPOSED]"]
+    TS_006["TS-006<br/>Payload mount interface standard<br/>[PROPOSED]"]
+    TS_001["TS-001<br/>Airframe material and construction method<br/>[PROPOSED]"]
+    REQ_PER_003["REQ-PER-003<br/>System gross mass shall not exceed [TBD].<br/>[PROPOSED]"]
+    TS_002["TS-002<br/>Propulsion sizing<br/>[PROPOSED]"]
+    TS_004["TS-004<br/>Payload power allocation<br/>[PROPOSED]"]
+    REQ_PER_002["REQ-PER-002<br/>The system shall provide at least [TBD] minutes of on-station endurance.<br/>[PROPOSED]"]
+    TS_003["TS-003<br/>Battery architecture<br/>[PROPOSED]"]
+    REQ_PER_001["REQ-PER-001<br/>System unit cost shall not exceed [TBD].<br/>[PROPOSED]"]
+    GAP_BUDGET_001["GAP-BUDGET-001<br/>Coupled targets and evidence unresolved<br/>[UNRESOLVED]"]
+    TS_006 -->|"defines payload envelope"| REQ_PER_004
+    REQ_PER_004 -->|"contributes to"| REQ_PER_003
+    TS_001 -->|"sets dry-mass contribution"| REQ_PER_003
+    REQ_PER_003 -->|"drives propulsion demand"| TS_002
+    TS_002 -->|"drives power demand"| TS_003
+    TS_004 -->|"adds payload-power demand"| TS_003
+    REQ_PER_002 -->|"sets energy demand"| TS_003
+    TS_003 -->|"adds battery mass"| REQ_PER_003
+    TS_003 -->|"adds battery cost"| REQ_PER_001
+    REQ_PER_001 -.->|"targets and evidence unresolved"| GAP_BUDGET_001
 ```
 
 ## Assurance and traceability views
@@ -388,6 +451,32 @@ flowchart LR
     VER_008 -.->|"execution evidence missing"| GAP_VER_001
 ```
 
+### 10A. Verification readiness
+
+Configuration scope: `CFG-REP / CFG-DOM with project-scope deferrals`.
+
+Readiness classifies the next admissible verification step. It does not claim requirement satisfaction or physical evidence.
+
+```mermaid
+flowchart LR
+    %% Configuration scope: CFG-REP / CFG-DOM with project-scope deferrals
+    MODEL_NOW["MODEL-VERIFIABLE-NOW<br/>REQ-IFC-003 / REQ-CON-003"]
+    ANALYSIS_TBD["ANALYSIS-BLOCKED-BY-TBD<br/>REQ-FUN-003 / REQ-PER-002<br/>GAP-BUDGET-001"]
+    PHYSICAL["PHYSICAL-EVIDENCE-REQUIRED<br/>REQ-FUN-006 / REQ-FUN-008<br/>GAP-VER-001"]
+    EXTERNAL["EXTERNAL-AUTHORITY-REQUIRED<br/>REQ-FUN-001 / REQ-FUN-004<br/>GAP-IFC-001"]
+    DEFERRED["INTENTIONALLY-DEFERRED<br/>REQ-DEF-001 / REQ-DEF-004"]
+    VER_002["VER-002<br/>Structured traceability audit<br/>produces EVD-001 model evidence"]
+    VER_001["VER-001<br/>Requirement and architecture analysis<br/>analysis method"]
+    VER_008["VER-008<br/>Deferred physical verification method<br/>future physical evidence"]
+    VER_009["VER-009<br/>External conformance verification<br/>external authority required"]
+    TS_009["TS-009<br/>Relay payload characterization<br/>formal deferral"]
+    MODEL_NOW -->|"executable now"| VER_002
+    ANALYSIS_TBD -.->|"criteria unresolved"| VER_001
+    PHYSICAL -.->|"no execution evidence"| VER_008
+    EXTERNAL -.->|"authority and specification absent"| VER_009
+    DEFERRED -.->|"outside current scope"| TS_009
+```
+
 ### 11. End-to-end architecture trace
 
 Configuration scope: `CFG-REP / CFG-DOM`.
@@ -407,7 +496,8 @@ flowchart LR
     IFC_EXT_001["IFC-EXT-001<br/>Ground-control outbound traffic to relay payload<br/>[PROPOSED]"]
     REQ_FUN_001["REQ-FUN-001<br/>Relay outbound traffic<br/>[PROPOSED]"]
     VER_001["VER-001<br/>Requirement and architecture analysis<br/>[PROPOSED]"]
-    GAP_VER_001["GAP-VER-001<br/>Execution evidence missing<br/>[UNRESOLVED]"]
+    VER_009["VER-009<br/>External conformance verification<br/>[PROPOSED]"]
+    GAP_IFC_001["GAP-IFC-001<br/>External conformance authority missing<br/>[UNRESOLVED]"]
     NEED_001 -->|"motivates"| CAP_001
     CAP_001 -->|"exercised by"| SCN_003
     SCN_003 -->|"uses"| OA_004
@@ -416,8 +506,9 @@ flowchart LR
     FUN_REL_01 -->|"allocated to"| CMP_COM_01
     CMP_COM_01 -->|"external interface"| IFC_EXT_001
     IFC_EXT_001 -->|"allocated requirement"| REQ_FUN_001
-    REQ_FUN_001 -->|"verification allocation"| VER_001
-    VER_001 -.->|"execution evidence unresolved"| GAP_VER_001
+    REQ_FUN_001 -->|"model analysis"| VER_001
+    REQ_FUN_001 -.->|"external conformance"| VER_009
+    VER_009 -.->|"authority and evidence unresolved"| GAP_IFC_001
 ```
 
 ### 12. Evidence and approval governance
@@ -450,27 +541,28 @@ flowchart LR
 
 ## Generated interface inventory
 
-This inventory is generated directly from `model/architecture.yaml`. Empty
-verification cells are explicit gaps, not evidence of completion.
+This inventory is generated directly from `model/architecture.yaml`. Model-review
+allocation is distinct from real-world external conformance and execution evidence.
 
-| ID | Endpoints | Direction | Flow class | Configurations | Maturity | Verification | Unknown attributes |
-|---|---|---|---|---|---|---|---|
-| IFC-INT-001 | CMP-PWR-02 to CMP-PRP-02 | a_to_b | electrical power | CFG-REP, CFG-DOM | proposed_design / proposed | VER-005, VER-008 | voltage; current; connector; protection; wiring allocation |
-| IFC-INT-002 | CMP-PWR-03 to CMP-AVN-01 | a_to_b | electrical power | CFG-REP, CFG-DOM | proposed_design / proposed | VER-005, VER-008 | voltage; current; connector; power-quality envelope |
-| IFC-INT-003 | CMP-PWR-03 to CMP-COM-01 | a_to_b | electrical power | CFG-REP, CFG-DOM | proposed_design / proposed | VER-005, VER-008 | voltage envelope; current envelope; connector; protection; thermal allocation |
-| IFC-INT-004 | CMP-AVN-01 to CMP-PRP-02 | a_to_b | command and control | CFG-REP, CFG-DOM | proposed_design / proposed | VER-005, VER-008 | signal format; timing; connector; fault response |
-| IFC-INT-005 | CMP-AVN-04 to CMP-AVN-01 | a_to_b | command and control | CFG-REP, CFG-DOM | proposed_design / proposed | VER-005, VER-008 | protocol; connector; timing; failsafe behavior |
-| IFC-INT-006 | CMP-PWR-02 to CMP-AVN-01 | a_to_b | health and status | CFG-REP, CFG-DOM | proposed_design / proposed | VER-005, VER-008 | measurement set; accuracy; update rate; connector; fault indication |
-| IFC-INT-007 | CMP-MNT-01 to CMP-COM-01 | bidirectional_physical | mechanical mounting | CFG-REP, CFG-DOM | proposed_design / proposed | VER-005, VER-008 | geometry; load envelope; retention margin; inspection criteria |
-| IFC-EXT-001 | OP-001 to CMP-COM-01 | a_to_b | command and control | CFG-REP, CFG-DOM | proposed_design / proposed | None - explicit gap | frequency; waveform; protocol; power; data rate; message format; endpoint compatibility; verification authority |
-| IFC-EXT-002 | CMP-COM-01 to OP-003 | a_to_b | command and control | CFG-REP, CFG-DOM | proposed_design / proposed | None - explicit gap | frequency; waveform; protocol; power; data rate; message format; endpoint compatibility; verification authority |
-| IFC-EXT-003 | OP-003 to CMP-COM-01 | a_to_b | telemetry | CFG-REP, CFG-DOM | proposed_design / proposed | None - explicit gap | frequency; waveform; protocol; power; data rate; message format; endpoint compatibility; verification authority |
-| IFC-EXT-004 | CMP-COM-01 to OP-001 | a_to_b | telemetry | CFG-REP, CFG-DOM | proposed_design / proposed | None - explicit gap | frequency; waveform; protocol; power; data rate; message format; endpoint compatibility; verification authority |
-| IFC-EXT-005 | OP-010 to CMP-AVN-04 | a_to_b | command and control | CFG-REP, CFG-DOM | proposed_design / proposed | None - explicit gap | frequency; waveform; protocol; power; message format; failsafe behavior; verification authority |
-| IFC-INT-008 | CMP-AVN-01 to CMP-COM-01 | bidirectional | payload management and health and status | CFG-DIG, CFG-SOS | proposed_design / proposed | VER-004, VER-005, VER-007 | adoption decision; data model; protocol; connector; timing; authority; failure response |
-| IFC-INT-009 | CMP-AVN-02 to CMP-AVN-01 | a_to_b | navigation and timing | CFG-REP, CFG-DOM | engineering_inference / proposed | VER-005, VER-008 | sensor set; data format; timing; accuracy; fault detection; connector |
-| IFC-INT-010 | CMP-COM-01 to CMP-COM-02 | bidirectional_physical | physical-resource coupling | CFG-REP, CFG-DOM | proposed_design / proposed | None - explicit gap | antenna count; role; placement; connector; all RF characteristics |
-| IFC-EXT-006 | OP-007 to OP-002 | bidirectional | configuration and maintenance | CFG-REP, CFG-DOM, CFG-DIG, CFG-SOS | proposed_design / proposed | VER-004, VER-005, VER-007 | data set; format; transport; authorization; retention period; tool ownership |
+| ID | Endpoints | Direction | Flow class | Configurations | Maturity | Model review | External conformance | Unknown attributes |
+|---|---|---|---|---|---|---|---|---|
+| IFC-INT-001 | CMP-PWR-02 to CMP-PRP-02 | a_to_b | electrical power | CFG-REP, CFG-DOM | proposed_design / proposed | VER-005, VER-008 | not an external conformance interface | voltage; current; connector; protection; wiring allocation |
+| IFC-INT-002 | CMP-PWR-03 to CMP-AVN-01 | a_to_b | electrical power | CFG-REP, CFG-DOM | proposed_design / proposed | VER-005, VER-008 | not an external conformance interface | voltage; current; connector; power-quality envelope |
+| IFC-INT-003 | CMP-PWR-03 to CMP-COM-01 | a_to_b | electrical power | CFG-REP, CFG-DOM | proposed_design / proposed | VER-005, VER-008 | not an external conformance interface | voltage envelope; current envelope; connector; protection; thermal allocation |
+| IFC-INT-004 | CMP-AVN-01 to CMP-PRP-02 | a_to_b | command and control | CFG-REP, CFG-DOM | proposed_design / proposed | VER-005, VER-008 | not an external conformance interface | signal format; timing; connector; fault response |
+| IFC-INT-005 | CMP-AVN-04 to CMP-AVN-01 | a_to_b | command and control | CFG-REP, CFG-DOM | proposed_design / proposed | VER-005, VER-008 | not an external conformance interface | protocol; connector; timing; failsafe behavior |
+| IFC-INT-006 | CMP-PWR-02 to CMP-AVN-01 | a_to_b | health and status | CFG-REP, CFG-DOM | proposed_design / proposed | VER-005, VER-008 | not an external conformance interface | measurement set; accuracy; update rate; connector; fault indication |
+| IFC-INT-007 | CMP-MNT-01 to CMP-COM-01 | bidirectional_physical | mechanical mounting | CFG-REP, CFG-DOM | proposed_design / proposed | VER-005, VER-008 | not an external conformance interface | geometry; load envelope; retention margin; inspection criteria |
+| IFC-EXT-001 | OP-001 to CMP-COM-01 | a_to_b | command and control | CFG-REP, CFG-DOM | proposed_design / proposed | VER-005, VER-007 | external_authority_and_execution_evidence_required | frequency; waveform; protocol; power; data rate; message format; endpoint compatibility; verification authority |
+| IFC-EXT-002 | CMP-COM-01 to OP-003 | a_to_b | command and control | CFG-REP, CFG-DOM | proposed_design / proposed | VER-005, VER-007 | external_authority_and_execution_evidence_required | frequency; waveform; protocol; power; data rate; message format; endpoint compatibility; verification authority |
+| IFC-EXT-003 | OP-003 to CMP-COM-01 | a_to_b | telemetry | CFG-REP, CFG-DOM | proposed_design / proposed | VER-005, VER-007 | external_authority_and_execution_evidence_required | frequency; waveform; protocol; power; data rate; message format; endpoint compatibility; verification authority |
+| IFC-EXT-004 | CMP-COM-01 to OP-001 | a_to_b | telemetry | CFG-REP, CFG-DOM | proposed_design / proposed | VER-005, VER-007 | external_authority_and_execution_evidence_required | frequency; waveform; protocol; power; data rate; message format; endpoint compatibility; verification authority |
+| IFC-EXT-005 | OP-010 to CMP-AVN-04 | a_to_b | command and control | CFG-REP, CFG-DOM | proposed_design / proposed | VER-005, VER-007 | external_authority_and_execution_evidence_required | frequency; waveform; protocol; power; message format; failsafe behavior; verification authority |
+| IFC-INT-008 | CMP-AVN-01 to CMP-COM-01 | bidirectional | payload management and health and status | CFG-DIG, CFG-SOS | proposed_design / proposed | VER-004, VER-005, VER-007 | not an external conformance interface | adoption decision; data model; protocol; connector; timing; authority; failure response |
+| IFC-INT-009 | CMP-AVN-02 to CMP-AVN-01 | a_to_b | navigation and timing | CFG-REP, CFG-DOM | engineering_inference / proposed | VER-005, VER-008 | not an external conformance interface | sensor set; data format; timing; accuracy; fault detection; connector |
+| IFC-INT-010 | CMP-COM-01 to CMP-COM-02 | bidirectional_physical | physical-resource coupling | CFG-REP, CFG-DOM | proposed_design / proposed | VER-005 | not an external conformance interface | antenna count; role; placement; connector; all RF characteristics |
+| IFC-EXT-006 | OP-007 to OP-002 | bidirectional | configuration and maintenance | CFG-REP, CFG-DOM, CFG-DIG, CFG-SOS | proposed_design / proposed | VER-005, VER-007 | external_authority_and_execution_evidence_required | data set; format; transport; authorization; retention period; tool ownership |
+| IFC-EXT-007 | CMP-AVN-01 to OP-010 | a_to_b | health and status | CFG-REP, CFG-DOM | proposed_design / proposed | VER-004, VER-005, VER-007 | external_authority_and_execution_evidence_required | minimum status set; format; transport; update behavior; endpoint compatibility; conformance authority |
 
 ## Validation notes
 
