@@ -7,17 +7,23 @@
       "title": "Project-owner baseline-reconciliation work-package instruction",
       "source_type": "human decision record",
       "kind": "human_input",
-      "description": "Direct project-owner instruction defining work-package scope, baseline-candidate status, and withheld architecture approval.",
+      "description": "Direct project-owner instructions defining refactor scope, baseline-candidate status, safety constraints, and withheld architecture approval.",
       "authority_state": "human_approved",
       "approval_state": "approved",
       "confidence": 1.0,
       "location": "Project-owner instruction supplied to Codex on 2026-08-06",
       "owner": "project owner",
-      "date": "2026-08-06",
-      "revision": "current work-package instruction",
-      "accessed_date": "2026-08-06",
+      "date": "2026-08-07",
+      "revision": "current repository-simplification work package",
+      "accessed_date": "2026-08-07",
       "reliability": "high for scope and process authority",
-      "applicable_configurations": ["CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"],
+      "applicable_configurations": [
+        "CFG-REC",
+        "CFG-REP",
+        "CFG-DOM",
+        "CFG-DIG",
+        "CFG-SOS"
+      ],
       "notes": "Directs creation of a baseline candidate, preserves safety constraints, and explicitly withholds baseline approval."
     },
     {
@@ -35,7 +41,13 @@
       "revision": "working-tree baseline candidate",
       "accessed_date": "2026-08-06",
       "reliability": "authoritative manifest; content not approved",
-      "applicable_configurations": ["CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"],
+      "applicable_configurations": [
+        "CFG-REC",
+        "CFG-REP",
+        "CFG-DOM",
+        "CFG-DIG",
+        "CFG-SOS"
+      ],
       "notes": "Authoritative manifest for catalog locations, boundaries, status, and enumerations."
     },
     {
@@ -50,11 +62,14 @@
       "location": "README.md",
       "owner": "project owner",
       "date": "unknown",
-      "revision": "working-tree exploratory draft",
-      "accessed_date": "2026-08-06",
+      "revision": "consolidated architecture view",
+      "accessed_date": "2026-08-07",
       "reliability": "candidate internal architecture view",
-      "applicable_configurations": ["CFG-REP", "CFG-DOM"],
-      "notes": "Defines the generic relay-UAS concept and black-box payload boundary; does not document the recovered article as-built."
+      "applicable_configurations": [
+        "CFG-REP",
+        "CFG-DOM"
+      ],
+      "notes": "Orients readers to the generic relay-UAS concept and black-box payload boundary; structured catalogs define the model."
     },
     {
       "id": "SRC-REPO-003",
@@ -68,11 +83,14 @@
       "location": "architecture.md",
       "owner": "project owner",
       "date": "unknown",
-      "revision": "working-tree exploratory draft",
-      "accessed_date": "2026-08-06",
+      "revision": "consolidated primary engineering view",
+      "accessed_date": "2026-08-07",
       "reliability": "candidate internal architecture view",
-      "applicable_configurations": ["CFG-REP", "CFG-DOM"],
-      "notes": "Defines existing CMP, FUN, and IFC identifiers and central decomposition assumptions."
+      "applicable_configurations": [
+        "CFG-REP",
+        "CFG-DOM"
+      ],
+      "notes": "Explains CMP, FUN, and IFC relationships; authoritative definitions remain in model/architecture.yaml."
     },
     {
       "id": "SRC-REPO-004",
@@ -83,14 +101,17 @@
       "authority_state": "repo_observed",
       "approval_state": "pending",
       "confidence": 0.95,
-      "location": "requirements.md",
+      "location": "Git history: requirements.md (retired 2026-08-07)",
       "owner": "project owner",
       "date": "unknown",
-      "revision": "working-tree exploratory draft",
+      "revision": "historical repository view; consolidated",
       "accessed_date": "2026-08-06",
       "reliability": "candidate internal requirements view",
-      "applicable_configurations": ["CFG-REP", "CFG-DOM"],
-      "notes": "Contains existing REQ identifiers and text; unresolved values remain explicit."
+      "applicable_configurations": [
+        "CFG-REP",
+        "CFG-DOM"
+      ],
+      "notes": "The maintained requirements.md view was consolidated into architecture.md, the structured model, and generated reports. Git history preserves the source."
     },
     {
       "id": "SRC-REPO-005",
@@ -101,14 +122,19 @@
       "authority_state": "repo_observed",
       "approval_state": "pending",
       "confidence": 0.95,
-      "location": "uaf-views.md",
+      "location": "Git history: uaf-views.md (retired 2026-08-07)",
       "owner": "project owner",
       "date": "unknown",
-      "revision": "working-tree exploratory draft",
+      "revision": "historical repository view; consolidated",
       "accessed_date": "2026-08-06",
       "reliability": "candidate internal architecture view",
-      "applicable_configurations": ["CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"],
-      "notes": "Defines current CAP, OA, and OP identifiers; the implemented operational concept remains a three-node candidate."
+      "applicable_configurations": [
+        "CFG-REP",
+        "CFG-DOM",
+        "CFG-DIG",
+        "CFG-SOS"
+      ],
+      "notes": "The maintained uaf-views.md view was consolidated into architecture.md, the structured model, and generated reports. Git history preserves the source."
     },
     {
       "id": "SRC-REPO-006",
@@ -119,14 +145,17 @@
       "authority_state": "repo_observed",
       "approval_state": "pending",
       "confidence": 0.85,
-      "location": "hazard-analysis.md",
+      "location": "Git history: hazard-analysis.md (retired 2026-08-07)",
       "owner": "project owner",
       "date": "unknown",
-      "revision": "working-tree exploratory draft",
+      "revision": "historical repository view; consolidated",
       "accessed_date": "2026-08-06",
       "reliability": "candidate engineering analysis",
-      "applicable_configurations": ["CFG-REP", "CFG-DOM"],
-      "notes": "Preliminary hazards only; no safety case, acceptance authority, or certification basis."
+      "applicable_configurations": [
+        "CFG-REP",
+        "CFG-DOM"
+      ],
+      "notes": "The maintained hazard-analysis.md view was consolidated into architecture.md, the structured model, and generated reports. Git history preserves the source."
     },
     {
       "id": "SRC-REPO-007",
@@ -143,7 +172,10 @@
       "revision": "working-tree exploratory draft",
       "accessed_date": "2026-08-06",
       "reliability": "candidate internal decision register",
-      "applicable_configurations": ["CFG-REP", "CFG-DOM"],
+      "applicable_configurations": [
+        "CFG-REP",
+        "CFG-DOM"
+      ],
       "notes": "Records open and intentionally deferred decisions; no trade study is treated as resolved."
     },
     {
@@ -155,14 +187,17 @@
       "authority_state": "repo_observed",
       "approval_state": "pending",
       "confidence": 0.7,
-      "location": "traceability.md",
+      "location": "Git history: traceability.md (retired 2026-08-07)",
       "owner": "project owner",
       "date": "unknown",
-      "revision": "working-tree exploratory draft",
+      "revision": "historical repository view; consolidated",
       "accessed_date": "2026-08-06",
       "reliability": "candidate cross-reference with known stale entries",
-      "applicable_configurations": ["CFG-REP", "CFG-DOM"],
-      "notes": "Known omissions and contradictions are recorded in model/traceability.yaml and the generated gap report."
+      "applicable_configurations": [
+        "CFG-REP",
+        "CFG-DOM"
+      ],
+      "notes": "The maintained traceability.md view was consolidated into architecture.md, the structured model, and generated reports. Git history preserves the source."
     },
     {
       "id": "SRC-REPO-009",
@@ -179,8 +214,9 @@
       "revision": "untracked local export",
       "accessed_date": "2026-08-06",
       "reliability": "unreconciled candidate model view",
-      "applicable_configurations": ["TBD"],
-      "notes": "Present in the worktree but not tracked in the repository. Its configuration and authority relative to the Markdown model are unresolved."
+      "applicable_configurations": [],
+      "notes": "Deferred future work outside the repository-simplification work package. The export was not inspected, reconciled, or imported.",
+      "applicability_scope": "deferred_external_artifact"
     },
     {
       "id": "SRC-INT-001",
@@ -197,7 +233,12 @@
       "revision": "local uncontrolled copy; SHA-256 EF32AF40F1AE48CA631249B76EE85B6F726FCB4BCFE3796FD388D2C3DA3033BC",
       "accessed_date": "2026-08-06",
       "reliability": "high for documented observations; moderate for engineering inferences",
-      "applicable_configurations": ["CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG"],
+      "applicable_configurations": [
+        "CFG-REC",
+        "CFG-REP",
+        "CFG-DOM",
+        "CFG-DIG"
+      ],
       "notes": "Records component observations and engineering interpretations. Build-oriented and RF-specific material is outside this repository baseline and is not imported."
     },
     {
@@ -215,7 +256,12 @@
       "revision": "local uncontrolled copy; SHA-256 577F5FD4B6662E7982CDB73663A2534C829627E5ABFC3FEE3FB68D6837271BFA",
       "accessed_date": "2026-08-06",
       "reliability": "high for marked-component records; variable for candidate substitutions",
-      "applicable_configurations": ["CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG"],
+      "applicable_configurations": [
+        "CFG-REC",
+        "CFG-REP",
+        "CFG-DOM",
+        "CFG-DIG"
+      ],
       "notes": "Candidate substitutions and build approaches are source content, not approved baseline decisions."
     },
     {
@@ -233,7 +279,12 @@
       "revision": "local uncontrolled copy; SHA-256 4D28858FD484E94B086ADBC186452B1BD3F4222E50BFF6779C89661298570EF1",
       "accessed_date": "2026-08-06",
       "reliability": "high for documented marked components; moderate for functional interpretations",
-      "applicable_configurations": ["CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG"],
+      "applicable_configurations": [
+        "CFG-REC",
+        "CFG-REP",
+        "CFG-DOM",
+        "CFG-DIG"
+      ],
       "notes": "Contains embedded teardown imagery and identification-confidence labels. Original standalone image files are not present in this repository."
     },
     {
@@ -251,8 +302,9 @@
       "revision": "GitHub main branch reviewed 2026-08-06",
       "accessed_date": "2026-08-06",
       "reliability": "external methodology example",
-      "applicable_configurations": ["TBD"],
-      "notes": "Method and repository-structure reference only; not evidence for this system's technical design."
+      "applicable_configurations": [],
+      "notes": "Method and repository-structure reference only; not evidence for this system's technical design; no CFG-* applicability is asserted.",
+      "applicability_scope": "project_methodology"
     },
     {
       "id": "SRC-EXT-002",
@@ -269,8 +321,9 @@
       "revision": "commit 7fbeef9a821fce9f0656e98b584ade2b012da7fd reviewed 2026-08-06",
       "accessed_date": "2026-08-06",
       "reliability": "external methodology and tooling source",
-      "applicable_configurations": ["TBD"],
-      "notes": "Used as a source-authority, proof, gap, and readiness governance method; not a substitute for UAF modeling."
+      "applicable_configurations": [],
+      "notes": "Used as a source-authority, proof, gap, and readiness governance method; not a substitute for UAF modeling; no CFG-* applicability is asserted.",
+      "applicability_scope": "project_methodology"
     },
     {
       "id": "SRC-EXT-003",
@@ -287,7 +340,12 @@
       "revision": "UAF 1.3 formal specification page accessed 2026-08-06",
       "accessed_date": "2026-08-06",
       "reliability": "official standards-body source",
-      "applicable_configurations": ["CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"],
+      "applicable_configurations": [
+        "CFG-REP",
+        "CFG-DOM",
+        "CFG-DIG",
+        "CFG-SOS"
+      ],
       "notes": "Supports only the standards-version fact; it does not establish this repository's UAF conformance or approve migration."
     },
     {
@@ -305,7 +363,9 @@
       "revision": "unavailable",
       "accessed_date": "2026-08-06",
       "reliability": "unavailable",
-      "applicable_configurations": ["CFG-REC"],
+      "applicable_configurations": [
+        "CFG-REC"
+      ],
       "notes": "Evidence gap. Do not treat unrecorded measurements or photographs as available physical evidence."
     }
   ]

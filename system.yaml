@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "model_version": "0.3.0-baseline-candidate",
+  "model_version": "0.4.0-baseline-candidate",
   "title": "Low-Cost Attritable Communications Relay UAS",
   "domain": "defense",
   "tier": "exploratory",
@@ -8,18 +8,14 @@
   "status": "baseline_candidate_not_approved",
   "baseline": {
     "label": "Baseline Candidate - Not Approved",
-    "purpose": "Reconcile the existing exploratory architecture with configuration, evidence, decision, and traceability records without adding implementation detail.",
+    "purpose": "Maintain one consolidated exploratory architecture, assurance, evidence, and traceability baseline without adding implementation detail.",
     "approval_state": "not_approved",
     "approval_authority": "project owner",
     "approval_decision_id": null,
     "candidate_date": "2026-08-06"
   },
   "authority": {
-    "manifest": "system.yaml",
-    "structured_catalogs": "authoritative structured model data",
-    "markdown_views": "human-readable derived and explanatory architecture views",
-    "generated_reports": "derived views with no independent architecture authority",
-    "reconciliation_rule": "Record a reconciliation issue when structured data and a human-readable view disagree."
+    "rule": "system.yaml is the manifest. The structured catalogs referenced by it are authoritative model data. Markdown documents and generated reports are views of that model."
   },
   "standards": [
     "UAF 1.2 (Strategic, Operational, Resources viewpoints)",
@@ -118,33 +114,48 @@
       "proposed_design",
       "unknown"
     ],
-    "decision_status": ["not_applicable", "proposed", "approved", "rejected", "superseded"]
+    "decision_status": ["not_applicable", "proposed", "approved", "rejected", "superseded"],
+    "requirement_classification": [
+      "mission_and_stakeholder",
+      "system_of_systems",
+      "relay_uas_system",
+      "subsystem",
+      "interface",
+      "safety_and_assurance",
+      "verification"
+    ],
+    "relationship_status": [
+      "established",
+      "candidate",
+      "deferred",
+      "unresolved",
+      "contradictory",
+      "intentionally_out_of_scope"
+    ],
+    "gap_disposition": [
+      "expected_at_current_maturity",
+      "intentionally_out_of_scope",
+      "deferred",
+      "unresolved",
+      "contradictory",
+      "true_coverage_gap"
+    ]
   },
   "catalogs": {
     "sources": ".seal/sources.yaml",
     "proof": ".seal/proof.yaml",
-    "configurations": "model/configurations.yaml",
-    "elements": "model/elements.yaml",
-    "claims": "model/claims.yaml",
-    "operational_scenarios": "model/operational-scenarios.yaml",
-    "interfaces": "model/interfaces.yaml",
-    "requirements": "model/requirements.yaml",
+    "architecture": "model/architecture.yaml",
+    "assurance": "model/assurance.yaml",
     "traceability": "model/traceability.yaml"
   },
   "generated_reports": [
-    "reports/baseline-candidate.md",
-    "reports/baseline-gaps.md",
-    "reports/baseline-traceability.md",
+    "reports/baseline.md",
     "reports/architecture-views.md"
   ],
   "human_readable_views": [
     "README.md",
-    "uaf-views.md",
     "architecture.md",
-    "requirements.md",
-    "hazard-analysis.md",
-    "trade-studies.md",
-    "traceability.md"
+    "trade-studies.md"
   ],
   "id_scheme": {
     "CFG": "configuration baseline",

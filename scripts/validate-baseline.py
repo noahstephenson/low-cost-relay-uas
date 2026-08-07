@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Validate and render the baseline-candidate catalogs.
+"""Validate the consolidated baseline and generate its two derived reports.
 
-The catalogs use JSON-compatible YAML 1.2, so the validator intentionally uses only
-the Python standard library. A structurally valid model may still contain documented
-architecture gaps and intentional deferrals.
+Catalogs use the JSON-compatible subset of YAML 1.2, so validation and generation
+require only the Python standard library. Model validity never implies approval,
+verification completion, safety, or operational readiness.
 """
 
 from __future__ import annotations
@@ -19,105 +19,95 @@ from typing import Any, Iterable
 
 
 ROOT = Path(__file__).resolve().parents[1]
+VIEW_GENERATOR = ROOT / "scripts" / "generate-mermaid-views.py"
+BASELINE_REPORT = ROOT / "reports" / "baseline.md"
+ATLAS_REPORT = ROOT / "reports" / "architecture-views.md"
+
 CATALOG_PATHS = {
     "system": ROOT / "system.yaml",
     "sources": ROOT / ".seal" / "sources.yaml",
     "proof": ROOT / ".seal" / "proof.yaml",
-    "configurations": ROOT / "model" / "configurations.yaml",
-    "elements": ROOT / "model" / "elements.yaml",
-    "claims": ROOT / "model" / "claims.yaml",
-    "scenarios": ROOT / "model" / "operational-scenarios.yaml",
-    "interfaces": ROOT / "model" / "interfaces.yaml",
-    "requirements": ROOT / "model" / "requirements.yaml",
+    "architecture": ROOT / "model" / "architecture.yaml",
+    "assurance": ROOT / "model" / "assurance.yaml",
     "traceability": ROOT / "model" / "traceability.yaml",
 }
 
-REPORT_PATHS = [
-    ROOT / "reports" / "baseline-candidate.md",
-    ROOT / "reports" / "baseline-gaps.md",
-    ROOT / "reports" / "baseline-traceability.md",
-    ROOT / "reports" / "architecture-views.md",
-]
-VIEW_GENERATOR = ROOT / "scripts" / "generate-mermaid-views.py"
+DEFINITION_CONTAINERS = {
+    "sources": ("sources",),
+    "proof": ("claims", "evidence"),
+    "architecture": (
+        "configurations", "needs", "capabilities", "performers",
+        "operational_activities", "information_exchanges", "scenarios",
+        "functions", "components", "interfaces", "modes",
+    ),
+    "assurance": (
+        "requirements", "hazards", "controls", "verifications",
+        "trade_studies", "decisions",
+    ),
+}
 
 PREFIXES = (
     "CFG", "NEED", "CAP", "SCN", "OA", "OP", "IX", "FUN", "CMP", "IFC",
     "REQ", "HAZ", "CTL", "VER", "EVD", "TS", "MODE", "CLM", "SRC", "DEC",
 )
 ID_RE = re.compile(r"^(?:" + "|".join(PREFIXES) + r")-[A-Z0-9][A-Z0-9.-]*$")
-ID_TOKEN_RE = re.compile(r"\b(?:" + "|".join(PREFIXES) + r")-[A-Z0-9]+(?:-[A-Z0-9]+)*\b")
-MERMAID_ID_TOKEN_RE = re.compile(
-    r"\b(?:(?:" + "|".join(PREFIXES) + r")-[A-Z0-9]+(?:-[A-Z0-9]+)*|GAP-[A-Z0-9]+(?:-[A-Z0-9]+)*)\b"
+ID_TOKEN_RE = re.compile(
+    r"\b(?:" + "|".join(PREFIXES) + r")-[A-Z0-9]+(?:-[A-Z0-9]+)*\b"
 )
+MODEL_OR_GAP_TOKEN_RE = re.compile(
+    r"\b(?:(?:" + "|".join(PREFIXES) + r")-[A-Z0-9]+(?:-[A-Z0-9]+)*"
+    r"|GAP-[A-Z0-9]+(?:-[A-Z0-9]+)*)\b"
+)
+GAP_RE = re.compile(r"^GAP-[A-Z0-9]+(?:-[A-Z0-9]+)*$")
 GAP_TOKEN_RE = re.compile(r"\bGAP-[A-Z0-9]+(?:-[A-Z0-9]+)*\b")
-RECOGNIZED_MERMAID_HEADERS = {"flowchart", "sequenceDiagram", "stateDiagram-v2", "requirementDiagram"}
+MERMAID_HEADERS = {"flowchart", "sequenceDiagram", "stateDiagram-v2", "requirementDiagram"}
 
-EXPECTED_EXISTING_IDS = {
-    "CAP-000", "CAP-001", "CAP-002", "CAP-003", "CAP-004",
-    "OA-001", "OA-002", "OA-003", "OA-004", "OA-005", "OA-006",
-    "OP-001", "OP-002", "OP-003",
-    "FUN-FLT-01", "FUN-FLT-02", "FUN-FLT-03", "FUN-FLT-04",
-    "FUN-REL-01", "FUN-REL-02", "FUN-PWR-01", "FUN-PWR-02", "FUN-CMD-01",
-    "CMP-AFR-01", "CMP-AFR-02", "CMP-AFR-03", "CMP-AFR-04", "CMP-AFR-05",
-    "CMP-PRP-01", "CMP-PRP-02", "CMP-PRP-03",
-    "CMP-PWR-01", "CMP-PWR-02", "CMP-PWR-03", "CMP-PWR-04",
-    "CMP-AVN-01", "CMP-AVN-02", "CMP-AVN-03", "CMP-AVN-04",
-    "CMP-COM-01", "CMP-COM-02", "CMP-MNT-01",
-    "IFC-INT-001", "IFC-INT-002", "IFC-INT-003", "IFC-INT-004",
-    "IFC-INT-005", "IFC-INT-006", "IFC-INT-007",
-    "IFC-EXT-001", "IFC-EXT-002", "IFC-EXT-003", "IFC-EXT-004", "IFC-EXT-005",
-    "REQ-FUN-001", "REQ-FUN-002", "REQ-FUN-003", "REQ-FUN-004",
-    "REQ-FUN-005", "REQ-FUN-006", "REQ-FUN-007",
-    "REQ-PER-001", "REQ-PER-002", "REQ-PER-003", "REQ-PER-004", "REQ-PER-005",
-    "REQ-IFC-001", "REQ-IFC-002", "REQ-IFC-003", "REQ-IFC-004",
-    "REQ-SAF-001", "REQ-SAF-002",
-    "REQ-CON-001", "REQ-CON-002", "REQ-CON-003", "REQ-CON-004",
-    "REQ-DEF-001", "REQ-DEF-002", "REQ-DEF-003", "REQ-DEF-004", "REQ-DEF-005",
-    "HAZ-001", "HAZ-002", "HAZ-003", "HAZ-004", "HAZ-005", "HAZ-006",
-    "HAZ-007", "HAZ-008", "HAZ-009", "HAZ-EXT-001", "HAZ-EXT-002", "HAZ-EXT-003",
-    "TS-001", "TS-002", "TS-003", "TS-004", "TS-005", "TS-006",
-    "TS-007", "TS-008", "TS-009", "TS-010", "TS-011",
-    "MODE-001", "MODE-002", "MODE-003", "MODE-004", "MODE-005",
-}
-
-DEFINITION_CONTAINERS = {
-    "sources": ("sources",),
-    "configurations": ("configurations",),
-    "elements": (
-        "needs", "capabilities", "operational_activities", "functions", "components",
-        "modes", "trade_studies", "hazards", "controls", "verifications", "decisions",
-    ),
-    "claims": ("claims",),
-    "scenarios": ("performers", "information_exchanges", "scenarios"),
-    "interfaces": ("interfaces",),
-    "requirements": ("requirements",),
-    "proof": ("evidence",),
+# Exact prefix counts from the pre-refactor authoritative catalogs. Together with
+# uniqueness and reference resolution, these guard the ID-preservation acceptance test.
+PRESERVED_ID_COUNTS = {
+    "CAP": 5, "CFG": 5, "CLM": 14, "CMP": 19, "CTL": 5, "DEC": 2,
+    "EVD": 4, "FUN": 9, "HAZ": 12, "IFC": 16, "IX": 10, "MODE": 5,
+    "NEED": 1, "OA": 6, "OP": 10, "REQ": 27, "SCN": 8, "SRC": 17,
+    "TS": 11, "VER": 8,
 }
 
 REFERENCE_KEYS = {
-    "subject_ids", "source_ids", "decision_ids", "applicable_configurations",
-    "applicable_sources", "predecessor_ids", "performers", "activities",
-    "information_exchanges", "related_requirements", "related_hazards",
-    "verification_ids", "claim_ids", "operational_scenarios", "upstream_refs",
-    "allocation_refs", "tbd_owner_ids", "contradicts", "supersedes", "mitigates",
-    "implemented_by", "evidence_ids",
-    "source_refs", "evidence_refs", "gap_refs", "counterevidence_refs", "blocks", "object_refs",
+    "subject_ids", "decision_ids", "applicable_configurations", "applicable_sources",
+    "predecessor_ids", "performers", "activities", "information_exchanges",
+    "related_requirements", "related_hazards", "verification_ids", "claim_ids",
+    "operational_scenarios", "upstream_refs", "allocation_refs", "tbd_owner_ids",
+    "contradicts", "supersedes", "mitigates", "implemented_by", "evidence_ids",
+    "source_refs", "evidence_refs", "gap_refs", "counterevidence_refs", "blocks",
+    "object_refs", "supports", "refutes", "source_ids",
 }
 SINGULAR_REFERENCE_KEYS = {
-    "claim_id", "decision_id", "gap_id", "endpoint_a", "endpoint_b", "from", "to"
+    "claim_id", "decision_id", "gap_id", "endpoint_a", "endpoint_b", "from", "to",
 }
 REFERENCE_SENTINELS = {"TBD", "All", "External", "None"}
+
+AUTHORITY_RULE = (
+    "system.yaml is the manifest. The structured catalogs referenced by it are "
+    "authoritative model data. Markdown documents and generated reports are views of that model."
+)
+
+RETIRED_CORE_PATHS = {
+    ".seal/README.md",
+    "model/configurations.yaml", "model/elements.yaml", "model/claims.yaml",
+    "model/operational-scenarios.yaml", "model/interfaces.yaml", "model/requirements.yaml",
+    "uaf-views.md", "requirements.md", "hazard-analysis.md", "traceability.md",
+    "reports/baseline-candidate.md", "reports/baseline-gaps.md",
+    "reports/baseline-traceability.md", "scripts/check-ids.py", "scripts/migrate_catalogs.py",
+}
 
 
 def load_catalog(path: Path) -> dict[str, Any]:
     try:
-        with path.open("r", encoding="utf-8-sig") as handle:
-            data = json.load(handle)
+        data = json.loads(path.read_text(encoding="utf-8-sig"))
     except FileNotFoundError as exc:
         raise ValueError(f"missing required catalog: {path.relative_to(ROOT)}") from exc
     except json.JSONDecodeError as exc:
         raise ValueError(
-            f"{path.relative_to(ROOT)} is not valid JSON-compatible YAML: "
+            f"{path.relative_to(ROOT)} is not JSON-compatible YAML: "
             f"line {exc.lineno}, column {exc.colno}: {exc.msg}"
         ) from exc
     if not isinstance(data, dict):
@@ -134,12 +124,15 @@ def definition_records(catalogs: dict[str, dict[str, Any]]) -> list[tuple[str, d
     for catalog_name, containers in DEFINITION_CONTAINERS.items():
         catalog = catalogs[catalog_name]
         for container in containers:
-            value = catalog.get(container, [])
+            value = catalog.get(container)
             if not isinstance(value, list):
+                records.append((f"{catalog_name}.{container}", {}))
                 continue
             for index, record in enumerate(value):
                 if isinstance(record, dict):
                     records.append((f"{catalog_name}.{container}[{index}]", record))
+                else:
+                    records.append((f"{catalog_name}.{container}[{index}]", {}))
     return records
 
 
@@ -160,28 +153,154 @@ def references_in(value: Any, path: str = "") -> Iterable[tuple[str, str]]:
 
 
 def pipe(value: Any) -> str:
-    if value is None or value == "":
+    if value is None or value == "" or value == []:
         return "-"
     if isinstance(value, list):
-        if not value:
-            return "-"
         value = ", ".join(str(item) for item in value)
     return str(value).replace("|", "\\|").replace("\n", " ")
 
 
 def generated_header(source_paths: list[str]) -> list[str]:
-    joined = ", ".join(f"`{item}`" for item in source_paths)
+    sources = ", ".join(f"`{path}`" for path in source_paths)
     return [
-        "<!-- GENERATED VIEW - DO NOT AUTHOR INDEPENDENT ARCHITECTURE FACTS HERE. -->",
+        "<!-- GENERATED VIEW - DO NOT EDIT. -->",
         "",
-        f"> Generated from {joined}. Regenerate with `python scripts/validate-baseline.py --write-reports`.",
-        "> The structured catalogs are authoritative. This report is not an approval record.",
+        f"> Generated from {sources} with `python scripts/validate-baseline.py --write-reports`.",
+        "> This report is a model view, not an approval or verification record.",
         "",
     ]
 
 
+def render_baseline(catalogs: dict[str, dict[str, Any]]) -> str:
+    system = catalogs["system"]
+    architecture = catalogs["architecture"]
+    assurance = catalogs["assurance"]
+    proof = catalogs["proof"]
+    traceability = catalogs["traceability"]
+
+    lines = generated_header([
+        "system.yaml", "model/architecture.yaml", "model/assurance.yaml",
+        "model/traceability.yaml", ".seal/sources.yaml", ".seal/proof.yaml",
+    ])
+    lines.extend([
+        "# Baseline Candidate - Not Approved",
+        "",
+        "## Baseline status",
+        "",
+        f"- Model version: `{system['model_version']}`",
+        f"- Status: `{system['status']}`",
+        f"- Approval: `{system['baseline']['approval_state']}`",
+        "- Model-valid means structurally consistent; it does not mean safe, verified, or ready.",
+        "",
+        "## Configuration summary",
+        "",
+        "| ID | Role | Maturity | Relationship | Approval |",
+        "|---|---|---|---|---|",
+    ])
+    for config in architecture["configurations"]:
+        lines.append(
+            f"| {config['id']} | {pipe(config['purpose'])} | {pipe(config['maturity'])} | "
+            f"{pipe(config['derivation_relationship'])} | {pipe(config['approval_status'])} |"
+        )
+
+    claim_status = collections.Counter(item.get("status", "unknown") for item in proof["claims"])
+    evidence_basis = collections.Counter(item.get("evidence_basis", "unknown") for item in proof["claims"])
+    lines.extend([
+        "",
+        "## Evidence and claim summary",
+        "",
+        f"- Claims: {len(proof['claims'])} ({', '.join(f'{key}: {value}' for key, value in sorted(claim_status.items()))})",
+        f"- Evidence records: {len(proof['evidence'])}",
+        f"- Claim evidence basis: {', '.join(f'{key}: {value}' for key, value in sorted(evidence_basis.items()))}",
+        "- Evidence supports claims; it does not approve the candidate architecture.",
+        "",
+        "<details>",
+        "<summary>Claim register summary</summary>",
+        "",
+        "| Claim | Subject | Status | Confidence | Gaps |",
+        "|---|---|---|---|---|",
+    ])
+    for claim in proof["claims"]:
+        lines.append(
+            f"| {claim['id']} | {pipe(claim['subject'])} | {pipe(claim['status'])} | "
+            f"{pipe(claim['confidence'])} | {pipe(claim.get('gap_refs'))} |"
+        )
+    lines.extend(["", "</details>", "", "## Active decisions", ""])
+    for decision in assurance["decisions"]:
+        lines.append(
+            f"- `{decision['id']}` - {decision['name']} - **{decision['decision_status']}**."
+        )
+
+    active_gaps = [
+        gap for gap in traceability["gaps"]
+        if gap.get("disposition") not in {"deferred", "intentionally_out_of_scope"}
+    ]
+    deferred_gaps = [gap for gap in traceability["gaps"] if gap not in active_gaps]
+    lines.extend([
+        "",
+        "## Active architecture gaps",
+        "",
+        "| Gap | Category | Severity | Affected model area |",
+        "|---|---|---|---|",
+    ])
+    for gap in active_gaps:
+        lines.append(
+            f"| {gap['code']} | {pipe(gap['category'])} | {pipe(gap['severity'])} | "
+            f"{pipe(gap['affected_ids'])} |"
+        )
+
+    verification_status = collections.Counter(
+        item.get("verification_status", "unspecified") for item in assurance["requirements"]
+    )
+    lines.extend([
+        "",
+        "## Verification status",
+        "",
+        f"- Requirement allocations: {', '.join(f'{key}: {value}' for key, value in sorted(verification_status.items()))}.",
+        "- `VER-*` records are methods or planned activities unless an `EVD-*` execution record says otherwise.",
+        "- Physical verification evidence remains absent or deferred (`GAP-VER-001`).",
+        "",
+        "## Concise traceability summary",
+        "",
+        "- `NEED-001 -> CAP-001 -> SCN-003 -> OA-004 -> FUN-REL-01 -> CMP-COM-01 -> REQ-FUN-001 -> VER-001`.",
+        "- `HAZ-004 -> CTL-001 -> REQ-FUN-006 / REQ-SAF-002 -> VER-004 / VER-006 -> GAP-VER-001`.",
+        "- `HAZ-008 -> CTL-005 -> REQ-IFC-004 -> VER-005 / VER-008 -> GAP-VER-001`.",
+        "- Current platform-to-payload crossings are only `IFC-INT-003` and `IFC-INT-007`; `IFC-INT-010` is payload-internal.",
+        "- The complete relationship database remains in `model/traceability.yaml`.",
+        "",
+        "## Items requiring owner attention",
+        "",
+    ])
+    for gap in active_gaps:
+        if gap.get("severity") in {"major", "blocker"}:
+            lines.append(f"- `{gap['code']}`: {gap['next_action']}")
+
+    lines.extend([
+        "",
+        "<details>",
+        "<summary>Intentional deferrals and secondary items</summary>",
+        "",
+    ])
+    for gap in deferred_gaps:
+        lines.append(f"- `{gap['code']}` ({gap['disposition']}): {gap['statement']}")
+    lines.extend([
+        "",
+        "</details>",
+        "",
+        "## Standards posture",
+        "",
+        "The repository retains UAF 1.2 terminology. UAF 1.3 is the current OMG formal version. "
+        "No conformance claim is made; `DEC-002` / `GAP-STD-001` remains unresolved.",
+        "",
+        "## Approval statement",
+        "",
+        "**This baseline remains a candidate and has not been approved.**",
+        "",
+    ])
+    return "\n".join(lines)
+
+
 def extract_mermaid_blocks(markdown: str) -> tuple[list[tuple[str, str]], list[str]]:
-    """Return titled Mermaid blocks and balanced-fence errors."""
     blocks: list[tuple[str, str]] = []
     errors: list[str] = []
     title = "untitled diagram"
@@ -208,357 +327,91 @@ def extract_mermaid_blocks(markdown: str) -> tuple[list[tuple[str, str]], list[s
     return blocks, errors
 
 
-def validate_maintained_mermaid_views(
-    definitions: set[str],
-    gap_codes: set[str],
-) -> list[str]:
-    """Apply repository-wide Mermaid hygiene rules to maintained root documents."""
+def validate_mermaid_documents(definitions: set[str], gap_codes: set[str]) -> list[str]:
     errors: list[str] = []
-    for path in sorted(ROOT.glob("*.md")):
-        text = path.read_text(encoding="utf-8-sig")
-        if "```mermaid" not in text:
+    paths = [ROOT / "README.md", ROOT / "architecture.md", ATLAS_REPORT]
+    for path in paths:
+        if not path.exists():
+            errors.append(f"missing Mermaid-bearing document: {path.relative_to(ROOT)}")
             continue
-        blocks, fence_errors = extract_mermaid_blocks(text)
-        errors.extend(f"{path.name}: {item}" for item in fence_errors)
+        blocks, fence_errors = extract_mermaid_blocks(path.read_text(encoding="utf-8-sig"))
+        errors.extend(f"{path.relative_to(ROOT)}: {item}" for item in fence_errors)
+        if path == ROOT / "README.md" and len(blocks) != 1:
+            errors.append(f"README.md must contain exactly one Mermaid diagram, found {len(blocks)}")
+        if path == ROOT / "architecture.md" and not 8 <= len(blocks) <= 10:
+            errors.append(f"architecture.md must contain 8-10 Mermaid diagrams, found {len(blocks)}")
+        if path == ATLAS_REPORT and not 14 <= len(blocks) <= 18:
+            errors.append(f"architecture atlas must contain 14-18 Mermaid diagrams, found {len(blocks)}")
         for title, block in blocks:
             lines = [line for line in block.splitlines() if line.strip()]
             if not lines:
                 errors.append(f"{path.name}: Mermaid diagram {title!r} is empty")
                 continue
             header = lines[0].split()[0]
-            if header not in RECOGNIZED_MERMAID_HEADERS:
-                errors.append(
-                    f"{path.name}: Mermaid diagram {title!r} has unrecognized header {lines[0]!r}"
-                )
+            if header not in MERMAID_HEADERS:
+                errors.append(f"{path.name}: Mermaid diagram {title!r} uses unsupported header {header}")
             if not any("%% Configuration scope:" in line for line in lines[:4]):
-                errors.append(
-                    f"{path.name}: Mermaid diagram {title!r} lacks an explicit configuration scope"
-                )
+                errors.append(f"{path.name}: Mermaid diagram {title!r} lacks configuration scope")
+            if "…" in block or "â€¦" in block:
+                errors.append(f"{path.name}: Mermaid diagram {title!r} contains a truncated label")
             if any(line.lstrip().startswith("click ") for line in lines):
-                errors.append(f"{path.name}: Mermaid diagram {title!r} contains a prohibited clickable link")
-            for match in MERMAID_ID_TOKEN_RE.finditer(block):
+                errors.append(f"{path.name}: Mermaid diagram {title!r} contains a clickable link")
+            for match in MODEL_OR_GAP_TOKEN_RE.finditer(block):
                 token = match.group(0)
                 if block[match.end():].startswith("-*"):
                     continue
-                if token not in definitions and token not in gap_codes:
-                    errors.append(
-                        f"{path.name}: Mermaid diagram {title!r} references undefined model ID {token}"
-                    )
+                if token.startswith("GAP-"):
+                    if token not in gap_codes:
+                        errors.append(f"{path.name}: diagram {title!r} references undefined gap {token}")
+                elif token not in definitions:
+                    errors.append(f"{path.name}: diagram {title!r} references undefined ID {token}")
+            if header == "sequenceDiagram":
+                participants = sum(1 for line in lines if line.strip().startswith("participant "))
+                if participants > 6:
+                    errors.append(f"{path.name}: sequence {title!r} has {participants} participants; maximum is 6")
+            elif header == "flowchart":
+                node_keys = {
+                    match.group(1)
+                    for line in lines
+                    for match in [re.match(r"\s*([A-Za-z0-9_]+)\[\"", line)]
+                    if match
+                }
+                if len(node_keys) > 12:
+                    errors.append(f"{path.name}: diagram {title!r} has {len(node_keys)} major nodes; split it")
     return errors
 
 
-def validate_generated_views(
-    catalogs: dict[str, dict[str, Any]],
-    definitions: set[str],
-    gap_codes: set[str],
-) -> list[str]:
-    """Validate generated-view structure, scope, IDs, and mandated mappings."""
+def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str], list[str]]:
     errors: list[str] = []
-    path = ROOT / "reports" / "architecture-views.md"
-    if not path.exists():
-        return ["generated architecture view is missing: reports/architecture-views.md"]
-    text = path.read_text(encoding="utf-8-sig")
-    blocks, fence_errors = extract_mermaid_blocks(text)
-    errors.extend(f"reports/architecture-views.md: {item}" for item in fence_errors)
-    if len(blocks) < 12:
-        errors.append(f"generated architecture view has {len(blocks)} Mermaid diagrams; at least 12 are required")
-
-    allowed_generic_nodes = {"BASELINE"}
-    for title, block in blocks:
-        lines = [line for line in block.splitlines() if line.strip()]
-        if not lines:
-            errors.append(f"Mermaid diagram {title!r} is empty")
-            continue
-        header = lines[0].split()[0]
-        if header not in RECOGNIZED_MERMAID_HEADERS:
-            errors.append(f"Mermaid diagram {title!r} has unrecognized header {lines[0]!r}")
-        if not any("%% Configuration scope:" in line for line in lines[:4]):
-            errors.append(f"Mermaid diagram {title!r} lacks an explicit configuration scope")
-        if any(line.lstrip().startswith("click ") for line in lines):
-            errors.append(f"Mermaid diagram {title!r} contains a prohibited clickable link")
-        for token in MERMAID_ID_TOKEN_RE.findall(block):
-            if token not in definitions and token not in gap_codes:
-                errors.append(f"Mermaid diagram {title!r} references undefined model ID {token}")
-        for line in lines:
-            normalized = line.lower().replace("not approved", "")
-            if "proposed" in normalized and "approved" in normalized:
-                errors.append(f"Mermaid diagram {title!r} labels a proposed element as approved")
-            match = re.match(r"\s*([A-Za-z0-9_]+)\[\"", line)
-            if match and match.group(1) not in allowed_generic_nodes:
-                if not MERMAID_ID_TOKEN_RE.search(line):
-                    errors.append(f"Mermaid diagram {title!r} has an architecture node without a model ID: {line.strip()}")
-        if "CFG-REC" in block and re.search(r"\bCMP-[A-Z0-9-]+\b", block):
-            errors.append(f"Mermaid diagram {title!r} silently mixes CFG-REC with proposed CMP resources")
-
-    interface_ids = {item["id"] for item in catalogs["interfaces"]["interfaces"]}
-    for interface_id in sorted(interface_ids):
-        if text.count(interface_id) < 2:
-            errors.append(
-                f"{interface_id} must appear in the generated interface inventory and at least one diagram"
-            )
-    architecture_text = (ROOT / "architecture.md").read_text(encoding="utf-8-sig")
-    for interface_id in sorted(interface_ids):
-        if interface_id not in architecture_text:
-            errors.append(f"architecture.md lacks human-readable coverage for {interface_id}")
-
-    required_fragments = [
-        'HAZ_004 -->|"mitigated by; candidate"| CTL_001',
-        'CTL_001 -->|"implemented by; candidate"| REQ_FUN_006',
-        'CTL_001 -->|"implemented by; candidate"| REQ_SAF_002',
-        'HAZ_008 -->|"mitigated by; candidate"| CTL_005',
-        'CTL_005 -->|"implemented by; candidate"| REQ_IFC_004',
-    ]
-    for fragment in required_fragments:
-        if fragment not in text:
-            errors.append(f"generated hazard mapping is missing {fragment}")
-
-    payload_blocks = [block for _, block in blocks if "IFC-INT-010" in block]
-    if not payload_blocks:
-        errors.append("IFC-INT-010 is absent from generated diagrams")
-    elif not any(
-        "Relay-payload black-box envelope" in block
-        and "payload-internal" in block
-        and "CMP-COM-01" in block
-        and "CMP-COM-02" in block
-        for block in payload_blocks
-    ):
-        errors.append("IFC-INT-010 is not shown inside the relay-payload black-box envelope")
-    return errors
-
-
-def write_reports(catalogs: dict[str, dict[str, Any]]) -> None:
-    reports_dir = ROOT / "reports"
-    reports_dir.mkdir(parents=True, exist_ok=True)
-
-    system = catalogs["system"]
-    configs = catalogs["configurations"]["configurations"]
-    claims = catalogs["claims"]["claims"]
-    scenarios = catalogs["scenarios"]["scenarios"]
-    interfaces = catalogs["interfaces"]["interfaces"]
-    requirements = catalogs["requirements"]["requirements"]
-    sources = catalogs["sources"]["sources"]
-    trace = catalogs["traceability"]
-
-    basis_counts = collections.Counter(claim["evidence_basis"] for claim in claims)
-    candidate = generated_header([
-        "system.yaml", "model/configurations.yaml", "model/claims.yaml",
-        "model/operational-scenarios.yaml", "model/interfaces.yaml",
-        "model/requirements.yaml", ".seal/sources.yaml", ".seal/proof.yaml",
-    ])
-    candidate.extend([
-        "# Baseline Candidate - Not Approved",
-        "",
-        "## Baseline purpose",
-        "",
-        system["baseline"]["purpose"],
-        "",
-        "## Status and approval",
-        "",
-        f"- Model version: `{system['model_version']}`",
-        f"- Baseline status: `{system['status']}`",
-        f"- Approval state: `{system['baseline']['approval_state']}`",
-        "",
-        "**This is a baseline candidate. It has not been approved by the project owner.**",
-        "",
-        "## System boundaries",
-        "",
-    ])
-    for key, boundary in system["system_boundaries"].items():
-        candidate.extend([
-            f"### {boundary['name']} ({key})",
-            "",
-            f"Role: {boundary['role']}. Evidence basis: `{boundary['evidence_basis']}`. "
-            f"Decision status: `{boundary['decision_status']}`.",
-            "",
-            f"Configuration scope: {pipe(boundary['applicable_configurations'])}.",
-            "",
-            f"Includes: {pipe(boundary['includes'])}.",
-            "",
-        ])
-    candidate.extend([
-        "## Configuration summaries",
-        "",
-        "| Configuration | Name | Boundary | Maturity | Approval | Derivation |",
-        "|---|---|---|---|---|---|",
-    ])
-    for config in configs:
-        candidate.append(
-            f"| {config['id']} | {pipe(config['name'])} | {pipe(config['system_boundary'])} | "
-            f"{pipe(config['maturity'])} | {pipe(config['approval_status'])} | "
-            f"{pipe(config['derivation_relationship'])} |"
-        )
-    candidate.extend([
-        "",
-        "## Evidence classification summary",
-        "",
-        "| Evidence basis | Claim count |",
-        "|---|---:|",
-    ])
-    for basis in system["enumerations"]["evidence_basis"]:
-        candidate.append(f"| `{basis}` | {basis_counts.get(basis, 0)} |")
-    candidate.extend([
-        "",
-        "The register classifies repository inspection and reverse-engineering reports separately from "
-        "engineering inference and proposed design. Physically observed claims are limited to visible-marking "
-        "observations documented with embedded source imagery; the article was not re-inspected for this baseline.",
-        "",
-        "## Current architecture coverage",
-        "",
-        f"- Sources: {len(sources)}",
-        f"- Claims: {len(claims)}",
-        f"- Configurations: {len(configs)}",
-        f"- Operational scenarios: {len(scenarios)}",
-        f"- Interfaces: {len(interfaces)}",
-        f"- Requirements classified: {len(requirements)}",
-        f"- Recorded gaps: {len(trace['gaps'])}",
-        "",
-        "## Generated architecture views",
-        "",
-        "See [`architecture-views.md`](architecture-views.md) for deterministic configuration, context, "
-        "resource, behavioral, hazard, traceability, and governance diagrams generated from the catalogs.",
-        "",
-        "## Standards-version posture",
-        "",
-        f"- Current repository claim: {system['standards_posture']['current_repository_claim']}",
-        f"- Current OMG formal version: {system['standards_posture']['current_omg_formal_version']}",
-        f"- Conformance claim: `{system['standards_posture']['conformance_claim']}`",
-        f"- Owner decision: `{system['standards_posture']['decision_id']}` / `{system['standards_posture']['gap_id']}`",
-        "",
-        "## Major unresolved decisions",
-        "",
-    ])
-    for config in configs:
-        for question in config["unresolved_questions"]:
-            candidate.append(f"- **{config['id']}:** {question}")
-    candidate.extend([
-        "",
-        "## Approval statement",
-        "",
-        "This is a baseline candidate. It has not been approved by the project owner.",
-        "",
-    ])
-    REPORT_PATHS[0].write_text("\n".join(candidate), encoding="utf-8", newline="\n")
-
-    gaps_report = generated_header([
-        "model/traceability.yaml", "model/requirements.yaml", "model/interfaces.yaml",
-        "model/operational-scenarios.yaml", "model/elements.yaml", ".seal/sources.yaml",
-    ])
-    gaps_report.extend([
-        "# Baseline Gaps",
-        "",
-        "> These gaps remain visible by design. Their presence does not make the structured baseline invalid.",
-        "",
-        "| Code | Category | Gap | Affected IDs | Disposition | Severity |",
-        "|---|---|---|---|---|---|",
-    ])
-    for gap in trace["gaps"]:
-        gaps_report.append(
-            f"| {gap['code']} | {pipe(gap['category'])} | {pipe(gap['statement'])} | "
-            f"{pipe(gap['affected_ids'])} | {pipe(gap['disposition'])} | {pipe(gap['severity'])} |"
-        )
-
-    unknown_config = [
-        record["id"] for _, record in definition_records(catalogs)
-        if record.get("applicable_configurations") == ["TBD"]
-    ]
-    missing_ifc_verification = [item["id"] for item in interfaces if not item.get("verification_ids")]
-    missing_scenario_exchange = [
-        item["id"] for item in scenarios
-        if not item.get("information_exchanges") or item.get("information_exchanges") == ["TBD"]
-    ]
-    req_provenance_gaps = [item["id"] for item in requirements if item.get("provenance_gap")]
-    proposed_sos = [
-        item["id"] for item in scenarios
-        if "CFG-SOS" in item.get("applicable_configurations", [])
-        and item.get("decision_status") == "proposed"
-    ]
-    gaps_report.extend([
-        "",
-        "## Derived gap indexes",
-        "",
-        f"- Unknown configuration applicability: {pipe(unknown_config)}",
-        f"- Interfaces without verification allocation: {pipe(missing_ifc_verification)}",
-        f"- Scenarios without an information exchange: {pipe(missing_scenario_exchange)}",
-        f"- Requirements with an explicit provenance gap: {pipe(req_provenance_gaps)}",
-        f"- Proposed scenarios touching CFG-SOS: {pipe(proposed_sos)}",
-        "",
-        "## Interpretation",
-        "",
-        "External communications interfaces remain intentionally undefined at implementation level. "
-        "UGV, radio-user, network-service, and broader sensor-data threads are proposals, not current "
-        "three-node architecture capabilities. Mass, cost, power, endurance, capability allocation, "
-        "hazard control, and verification evidence gaps remain open.",
-        "",
-    ])
-    REPORT_PATHS[1].write_text("\n".join(gaps_report), encoding="utf-8", newline="\n")
-
-    trace_report = generated_header([
-        "model/traceability.yaml", "model/requirements.yaml", "model/operational-scenarios.yaml",
-        "model/interfaces.yaml", ".seal/proof.yaml",
-    ])
-    trace_report.extend([
-        "# Baseline Traceability",
-        "",
-        "Logical chain: Need -> Capability -> Scenario -> Performer/Activity -> Information Exchange -> "
-        "Function -> Component -> Interface -> Requirement -> Hazard/Control -> Verification -> Evidence.",
-        "",
-        "A relationship may be absent at this maturity. `TBD` and gap codes are preserved rather than inferred.",
-        "",
-        "## Structured relationships",
-        "",
-        "| From | Relationship | To | Status | Gap |",
-        "|---|---|---|---|---|",
-    ])
-    for relation in trace["relationships"]:
-        trace_report.append(
-            f"| {pipe(relation['from'])} | {pipe(relation['relation'])} | {pipe(relation['to'])} | "
-            f"{pipe(relation['status'])} | {pipe(relation.get('gap'))} |"
-        )
-    trace_report.extend([
-        "",
-        "## Requirement mappings",
-        "",
-        "| Requirement | Classification | Upstream rationale | Allocation | Verification | TBD owner | Gap |",
-        "|---|---|---|---|---|---|---|",
-    ])
-    for requirement in requirements:
-        trace_report.append(
-            f"| {requirement['id']} | {pipe(requirement['classification'])} | "
-            f"{pipe(requirement['upstream_refs'])} | {pipe(requirement['allocation_refs'])} | "
-            f"{pipe(requirement['verification_ids'])} | {pipe(requirement['tbd_owner_ids'])} | "
-            f"{pipe(requirement.get('provenance_gap'))} |"
-        )
-    trace_report.append("")
-    REPORT_PATHS[2].write_text("\n".join(trace_report), encoding="utf-8", newline="\n")
-
-
-def validate(catalogs: dict[str, dict[str, Any]], ids_only: bool = False) -> tuple[list[str], list[str], list[str]]:
-    errors: list[str] = []
-    documented_gaps: list[str] = []
-    intentional_deferrals: list[str] = []
     records = definition_records(catalogs)
-
     definitions: dict[str, str] = {}
+
     for path, record in records:
         item_id = record.get("id")
         if not isinstance(item_id, str):
-            errors.append(f"{path} has no string id")
+            errors.append(f"{path} lacks a string ID")
             continue
         if not ID_RE.fullmatch(item_id):
-            errors.append(f"{path} has invalid id {item_id!r}")
+            errors.append(f"{path} has invalid ID {item_id!r}")
         if item_id in definitions:
-            errors.append(f"duplicate id {item_id}: {definitions[item_id]} and {path}")
+            errors.append(f"duplicate ID {item_id}: {definitions[item_id]} and {path}")
+        definitions[item_id] = path
+
+    prefix_counts = collections.Counter(item_id.split("-", 1)[0] for item_id in definitions)
+    for prefix, expected in PRESERVED_ID_COUNTS.items():
+        if prefix_counts[prefix] != expected:
+            errors.append(f"preserved {prefix}- ID count is {prefix_counts[prefix]}, expected {expected}")
+
+    gap_codes: set[str] = set()
+    for index, gap in enumerate(catalogs["traceability"].get("gaps", [])):
+        code = gap.get("code")
+        if not isinstance(code, str) or not GAP_RE.fullmatch(code):
+            errors.append(f"traceability.gaps[{index}] has invalid code {code!r}")
+        elif code in gap_codes:
+            errors.append(f"duplicate gap code {code}")
         else:
-            definitions[item_id] = path
+            gap_codes.add(code)
 
-    missing_existing = sorted(EXPECTED_EXISTING_IDS - definitions.keys())
-    if missing_existing:
-        errors.append("existing IDs missing from structured catalogs: " + ", ".join(missing_existing))
-
-    gap_codes = {
-        item["code"] for item in catalogs["traceability"].get("gaps", [])
-        if isinstance(item.get("code"), str)
-    }
     for catalog_name, catalog in catalogs.items():
         for ref_path, reference in references_in(catalog, catalog_name):
             if reference in REFERENCE_SENTINELS:
@@ -566,210 +419,140 @@ def validate(catalogs: dict[str, dict[str, Any]], ids_only: bool = False) -> tup
             if reference.startswith("GAP-"):
                 if reference not in gap_codes:
                     errors.append(f"{ref_path} references undefined gap {reference}")
-                continue
-            if ID_RE.fullmatch(reference) and reference not in definitions:
-                errors.append(f"{ref_path} references undefined id {reference}")
+            elif ID_RE.fullmatch(reference) and reference not in definitions:
+                errors.append(f"{ref_path} references undefined ID {reference}")
 
-    for markdown in ROOT.glob("*.md"):
+    for markdown in [
+        ROOT / "README.md", ROOT / "architecture.md", ROOT / "trade-studies.md",
+        BASELINE_REPORT, ATLAS_REPORT,
+    ]:
+        if not markdown.exists():
+            continue
         text = markdown.read_text(encoding="utf-8-sig")
         for match in ID_TOKEN_RE.finditer(text):
-            if text[max(0, match.start() - 4):match.start()] == "GAP-":
-                continue
             token = match.group(0)
-            if token == "TS-XXX":
-                continue
-            if any(defined.startswith(token + "-") for defined in definitions):
-                # Human-readable views use family labels such as CMP-AFR-* and
-                # IFC-EXT-*; these are namespaces, not element definitions.
+            if (
+                token == "TS-XXX"
+                or text[match.end():].startswith("-*")
+                or text[max(0, match.start() - 4):match.start()] == "GAP-"
+            ):
                 continue
             if token not in definitions:
-                errors.append(f"{markdown.name} references undefined id {token}")
-        for gap_token in GAP_TOKEN_RE.findall(text):
+                errors.append(f"{markdown.relative_to(ROOT)} references undefined ID {token}")
+        for match in GAP_TOKEN_RE.finditer(text):
+            gap_token = match.group(0)
+            if text[max(0, match.start() - 4):match.start()] == "SRC-":
+                continue
             if gap_token not in gap_codes:
-                errors.append(f"{markdown.name} references undefined gap {gap_token}")
-
-    if ids_only:
-        return errors, documented_gaps, intentional_deferrals
+                errors.append(f"{markdown.relative_to(ROOT)} references undefined gap {gap_token}")
 
     system = catalogs["system"]
-    evidence_values = set(system.get("enumerations", {}).get("evidence_basis", []))
-    decision_values = set(system.get("enumerations", {}).get("decision_status", []))
-    config_ids = {item["id"] for item in catalogs["configurations"]["configurations"]}
+    architecture = catalogs["architecture"]
+    assurance = catalogs["assurance"]
+    proof = catalogs["proof"]
+    sources = catalogs["sources"]
+    traceability = catalogs["traceability"]
+    config_ids = {item["id"] for item in architecture["configurations"]}
+    evidence_values = set(system["enumerations"]["evidence_basis"])
+    decision_values = set(system["enumerations"]["decision_status"])
+
+    if system.get("authority") != {"rule": AUTHORITY_RULE}:
+        errors.append("system.yaml does not contain the single required authority rule")
+    expected_catalogs = {
+        "sources": ".seal/sources.yaml", "proof": ".seal/proof.yaml",
+        "architecture": "model/architecture.yaml", "assurance": "model/assurance.yaml",
+        "traceability": "model/traceability.yaml",
+    }
+    if system.get("catalogs") != expected_catalogs:
+        errors.append("system.yaml catalog map does not match the consolidated authority model")
+    if system.get("generated_reports") != ["reports/baseline.md", "reports/architecture-views.md"]:
+        errors.append("system.yaml must name exactly the two generated reports")
+    if system.get("human_readable_views") != ["README.md", "architecture.md", "trade-studies.md"]:
+        errors.append("system.yaml must name exactly the three primary human-readable documents")
+
+    if system.get("status") == "approved" or system.get("baseline", {}).get("approval_state") == "approved":
+        errors.append("baseline is incorrectly marked approved")
+    for config in architecture["configurations"]:
+        if config.get("approval_status") == "approved":
+            errors.append(f"{config['id']} is incorrectly marked approved")
 
     for path, record in records:
         item_id = record.get("id", path)
         if item_id.startswith("CFG-"):
             continue
         configurations = record.get("applicable_configurations")
-        if not isinstance(configurations, list) or not configurations:
+        scope = record.get("applicability_scope")
+        inactive = record.get("lifecycle_status") == "reserved_inactive"
+        if not isinstance(configurations, list):
             errors.append(f"{item_id} lacks configuration applicability")
+        elif not configurations and not scope and not inactive:
+            errors.append(f"{item_id} has empty configuration applicability without an explicit scope")
         elif any(value != "TBD" and value not in config_ids for value in configurations):
             errors.append(f"{item_id} has invalid configuration applicability {configurations}")
+        if record.get("evidence_basis") not in evidence_values and "evidence_basis" in record:
+            errors.append(f"{item_id} has invalid evidence_basis {record.get('evidence_basis')!r}")
+        if record.get("decision_status") not in decision_values and "decision_status" in record:
+            errors.append(f"{item_id} has invalid decision_status {record.get('decision_status')!r}")
 
-        if "evidence_basis" in record and record["evidence_basis"] not in evidence_values:
-            errors.append(f"{item_id} has invalid evidence_basis {record['evidence_basis']!r}")
-        if "decision_status" in record and record["decision_status"] not in decision_values:
-            errors.append(f"{item_id} has invalid decision_status {record['decision_status']!r}")
-        if record.get("decision_status") == "approved":
-            if item_id.startswith("DEC-"):
-                if not record.get("source_ids"):
-                    errors.append(f"approved decision {item_id} lacks a decision source")
-            elif not record.get("decision_ids"):
-                errors.append(f"approved record {item_id} lacks a DEC reference")
-
-    claims = catalogs["claims"]["claims"]
     source_required = {
         "id", "title", "source_type", "location", "owner", "date", "revision",
-        "accessed_date", "reliability", "applicable_configurations", "notes",
-        "kind", "description", "authority_state", "approval_state", "confidence",
+        "accessed_date", "reliability", "notes", "kind", "description",
+        "authority_state", "approval_state", "confidence", "applicable_configurations",
     }
-    for source in catalogs["sources"]["sources"]:
-        missing = sorted(source_required - source.keys())
+    for source in sources["sources"]:
+        missing = source_required - source.keys()
         if missing:
-            errors.append(f"{source.get('id', 'source')} lacks required source fields: {', '.join(missing)}")
+            errors.append(f"{source.get('id', 'source')} lacks source fields: {', '.join(sorted(missing))}")
+    for source_id in ("SRC-EXT-001", "SRC-EXT-002"):
+        source = next(item for item in sources["sources"] if item["id"] == source_id)
+        if source.get("applicability_scope") != "project_methodology" or source["applicable_configurations"]:
+            errors.append(f"{source_id} must be project-level methodology with no CFG-* applicability")
 
-    config_required = {
-        "id", "name", "purpose", "system_boundary", "maturity", "approval_status",
-        "predecessor_ids", "derivation_relationship", "applicable_sources",
-        "known_exclusions", "unresolved_questions",
-    }
-    for config in catalogs["configurations"]["configurations"]:
-        missing = sorted(config_required - config.keys())
-        if missing:
-            errors.append(f"{config.get('id', 'configuration')} lacks fields: {', '.join(missing)}")
+    claim_ids = {item["id"] for item in proof["claims"]}
+    for claim in proof["claims"]:
+        for required in (
+            "subject", "statement", "subject_ids", "source_refs", "evidence_refs",
+            "evidence_basis", "confidence", "decision_status", "applicable_configurations",
+            "rationale", "contradicts", "supersedes",
+        ):
+            if required not in claim:
+                errors.append(f"{claim['id']} lacks consolidated claim field {required}")
+        if claim.get("evidence_basis") != "unknown" and not claim.get("source_refs"):
+            errors.append(f"{claim['id']} has an evidence basis but no source")
+    for evidence in proof["evidence"]:
+        for supported in evidence.get("supports", []):
+            if supported not in claim_ids:
+                errors.append(f"{evidence['id']} supports undefined claim {supported}")
 
-    for claim in claims:
-        if claim["evidence_basis"] not in evidence_values:
-            errors.append(f"{claim['id']} has invalid claim evidence basis")
-        if claim["decision_status"] not in decision_values:
-            errors.append(f"{claim['id']} has invalid claim decision status")
-        if claim["evidence_basis"] != "unknown" and not claim.get("source_ids"):
-            errors.append(f"evidence-backed claim {claim['id']} has no source")
+    endpoint_types = {"CMP", "OP"}
+    for interface in architecture["interfaces"]:
+        for key in ("endpoint_a", "endpoint_b"):
+            endpoint = interface.get(key)
+            if endpoint not in definitions:
+                errors.append(f"{interface['id']} has undefined {key} {endpoint}")
+            elif endpoint.split("-", 1)[0] not in endpoint_types:
+                errors.append(f"{interface['id']} has invalid endpoint type {endpoint}")
+    performer_ids = {item["id"] for item in architecture["performers"]}
+    exchange_ids = {item["id"] for item in architecture["information_exchanges"]}
+    activity_ids = {item["id"] for item in architecture["operational_activities"]}
+    for scenario in architecture["scenarios"]:
+        if not scenario.get("performers") or any(item not in performer_ids for item in scenario["performers"]):
+            errors.append(f"{scenario['id']} has unresolved performers")
+        if any(item not in exchange_ids and item != "TBD" for item in scenario.get("information_exchanges", [])):
+            errors.append(f"{scenario['id']} has unresolved information exchanges")
+        if any(item not in activity_ids and item != "TBD" for item in scenario.get("activities", [])):
+            errors.append(f"{scenario['id']} has unresolved activities")
 
-    proof_links = catalogs["proof"].get("claims", [])
-    proof_counts = collections.Counter(item.get("id") for item in proof_links)
-    proof_by_id = {item.get("id"): item for item in proof_links}
-    for claim in claims:
-        if proof_counts[claim["id"]] != 1:
-            errors.append(f"{claim['id']} must have exactly one proof link, found {proof_counts[claim['id']]}")
-        elif proof_by_id[claim["id"]].get("evidence_basis") != claim.get("evidence_basis"):
-            errors.append(f"{claim['id']} evidence basis differs between claim and proof registers")
-
-    baseline = system.get("baseline", {})
-    if baseline.get("approval_state") == "approved" or system.get("status") == "approved":
-        errors.append("system baseline is incorrectly marked approved")
-    for config in catalogs["configurations"]["configurations"]:
-        if config.get("approval_status") == "approved":
-            errors.append(f"{config['id']} is incorrectly marked approved")
-
-    inner_boundary = system.get("system_boundaries", {}).get("inner", {})
-    if "CFG-REC" in inner_boundary.get("applicable_configurations", []):
-        errors.append("CFG-REC must not inherit the proposed inner-boundary decomposition")
-    recovered_config = next(
-        item for item in catalogs["configurations"]["configurations"] if item["id"] == "CFG-REC"
-    )
-    if "descriptive evidence" not in recovered_config.get("boundary_semantics", "").lower():
-        errors.append("CFG-REC lacks explicit descriptive-evidence boundary semantics")
-
-    for requirement in catalogs["requirements"]["requirements"]:
-        if "CFG-REC" in requirement.get("applicable_configurations", []):
-            errors.append(
-                f"{requirement['id']} incorrectly imposes a proposed requirement or deferral on CFG-REC"
-            )
-    for interface in catalogs["interfaces"]["interfaces"]:
-        if "CFG-REC" in interface.get("applicable_configurations", []):
-            errors.append(f"{interface['id']} incorrectly applies a proposed interface to CFG-REC")
-    elements = catalogs["elements"]
-    for record in elements.get("modes", []) + elements.get("controls", []):
-        if "CFG-REC" in record.get("applicable_configurations", []):
-            errors.append(f"{record['id']} incorrectly applies proposed design behavior to CFG-REC")
-    ts_009 = next(item for item in elements["trade_studies"] if item["id"] == "TS-009")
-    if "CFG-REC" in ts_009.get("applicable_configurations", []):
-        errors.append("TS-009 must not treat unknown CFG-REC characteristics as a proposed design trade study")
-    relay_performer = next(item for item in catalogs["scenarios"]["performers"] if item["id"] == "OP-002")
-    if "CFG-REC" in relay_performer.get("applicable_configurations", []):
-        errors.append("OP-002 must not impose the proposed operational-performer model on CFG-REC")
-    for verification in elements.get("verifications", []):
-        if "CFG-REC" in verification.get("applicable_configurations", []):
-            scope = verification.get("applicability_scope", "").lower()
-            if "not physical" not in scope and "evidence-record" not in scope:
-                errors.append(
-                    f"{verification['id']} applies to CFG-REC without distinguishing governance/evidence review from physical verification"
-                )
-
-    decisions = {item["id"]: item for item in elements.get("decisions", [])}
-    std_decision = decisions.get("DEC-002", {})
-    if std_decision.get("decision_status") != "proposed":
-        errors.append("DEC-002 must remain an unapproved proposed standards-version decision")
-    if "GAP-STD-001" not in gap_codes:
-        errors.append("GAP-STD-001 must remain visible until DEC-002 is approved")
-    standards = system.get("standards", [])
-    if not any("UAF 1.2" in item for item in standards):
-        errors.append("the current UAF 1.2 repository claim changed without an approved decision")
-    posture = system.get("standards_posture", {})
-    if "UAF 1.3" not in posture.get("current_omg_formal_version", ""):
-        errors.append("standards posture does not record UAF 1.3 as the current OMG formal version")
-    if posture.get("conformance_claim") != "none":
-        errors.append("the baseline must not claim UAF conformance")
-
-    for interface in catalogs["interfaces"]["interfaces"]:
-        if not interface.get("endpoint_a") or not interface.get("endpoint_b"):
-            errors.append(f"{interface['id']} must have two endpoints")
-
-    for scenario in catalogs["scenarios"]["scenarios"]:
-        if not scenario.get("performers"):
-            errors.append(f"{scenario['id']} has no performer")
-
-    for requirement in catalogs["requirements"]["requirements"]:
+    classifications = set(system["enumerations"]["requirement_classification"])
+    for requirement in assurance["requirements"]:
+        if requirement.get("classification") not in classifications:
+            errors.append(f"{requirement['id']} has invalid requirement classification")
         if not requirement.get("upstream_refs") and not requirement.get("provenance_gap"):
-            errors.append(f"{requirement['id']} lacks upstream rationale and a documented provenance gap")
-
-    for report in REPORT_PATHS:
-        if not report.exists():
-            errors.append(f"generated report missing: {report.relative_to(ROOT)}")
-        else:
-            first_lines = "\n".join(report.read_text(encoding="utf-8-sig").splitlines()[:6])
-            if "GENERATED VIEW" not in first_lines:
-                errors.append(f"{report.relative_to(ROOT)} does not identify itself as generated")
-
-    payload_resources = {"CMP-COM-01", "CMP-COM-02"}
-    current_payload_crossings: set[str] = set()
-    for interface in catalogs["interfaces"]["interfaces"]:
-        endpoints = {interface["endpoint_a"], interface["endpoint_b"]}
-        configs = set(interface.get("applicable_configurations", []))
-        if interface["id"].startswith("IFC-INT-") and configs.intersection({"CFG-REP", "CFG-DOM"}):
-            inside_count = len(endpoints.intersection(payload_resources))
-            if inside_count == 1:
-                current_payload_crossings.add(interface["id"])
-    if current_payload_crossings != {"IFC-INT-003", "IFC-INT-007"}:
-        errors.append(
-            "CFG-REP/CFG-DOM platform-to-payload crossings must be exactly "
-            f"IFC-INT-003 and IFC-INT-007, found {sorted(current_payload_crossings)}"
-        )
-    interface_010 = next(
-        item for item in catalogs["interfaces"]["interfaces"] if item["id"] == "IFC-INT-010"
-    )
-    if {interface_010["endpoint_a"], interface_010["endpoint_b"]} != payload_resources:
-        errors.append("IFC-INT-010 must remain wholly inside the relay-payload black-box envelope")
-    if "payload-internal" not in interface_010.get("interface_type", ""):
-        errors.append("IFC-INT-010 must be classified as payload-internal")
-
-    component_002 = next(item for item in elements["components"] if item["id"] == "CMP-COM-02")
-    if component_002.get("name") != "Antenna physical-resource envelope":
-        errors.append("CMP-COM-02 must be named Antenna physical-resource envelope")
-    requirement_ifc_003 = next(
-        item for item in catalogs["requirements"]["requirements"] if item["id"] == "REQ-IFC-003"
-    )
-    expected_ifc_003 = (
-        "The platform-to-payload interface shall be limited to power (IFC-INT-003) "
-        "and mechanical retention (IFC-INT-007)."
-    )
-    if requirement_ifc_003.get("text") != expected_ifc_003:
-        errors.append("REQ-IFC-003 wording does not preserve the reconciled two-interface boundary")
+            errors.append(f"{requirement['id']} lacks provenance or a documented gap")
 
     relationships = {
         (item["from"], item["relation"], item["to"]): item
-        for item in catalogs["traceability"].get("relationships", [])
+        for item in traceability["relationships"]
     }
     required_relationships = {
         ("HAZ-004", "mitigated_by", "CTL-001"),
@@ -778,65 +561,153 @@ def validate(catalogs: dict[str, dict[str, Any]], ids_only: bool = False) -> tup
         ("HAZ-008", "mitigated_by", "CTL-005"),
         ("CTL-005", "implemented_by", "REQ-IFC-004"),
     }
-    for relationship in required_relationships:
-        if relationship not in relationships:
-            errors.append("missing reconciled relationship: " + " -> ".join(relationship))
-        elif relationships[relationship].get("gap"):
-            errors.append("reconciled relationship still carries a stale conflict gap: " + " -> ".join(relationship))
-    if {"GAP-CONFLICT-002", "GAP-CONFLICT-003"}.intersection(gap_codes):
-        errors.append("resolved HAZ-004 or HAZ-008 contradiction gaps remain in the active gap catalog")
+    for relation in required_relationships:
+        if relation not in relationships or relationships[relation].get("gap"):
+            errors.append("missing or gapped reconciled relationship: " + " -> ".join(relation))
+    relation_statuses = set(system["enumerations"]["relationship_status"])
+    gap_dispositions = set(system["enumerations"]["gap_disposition"])
+    for relation in traceability["relationships"]:
+        if relation.get("status") not in relation_statuses:
+            errors.append(f"invalid relationship status in {relation}")
+    for gap in traceability["gaps"]:
+        if gap.get("disposition") not in gap_dispositions:
+            errors.append(f"{gap['code']} has invalid disposition")
 
-    hazard_text = (ROOT / "hazard-analysis.md").read_text(encoding="utf-8-sig")
-    trace_text = (ROOT / "traceability.md").read_text(encoding="utf-8-sig")
-    for token in ["CTL-001", "REQ-FUN-006", "REQ-SAF-002", "VER-006"]:
-        if token not in hazard_text or token not in trace_text:
-            errors.append(f"HAZ-004 human-readable reconciliation lacks {token}")
-    for token in ["CTL-005", "REQ-IFC-004", "VER-008"]:
-        if token not in hazard_text or token not in trace_text:
-            errors.append(f"HAZ-008 human-readable reconciliation lacks {token}")
-    if re.search(r"HAZ-004[^\n]*TODO|HAZ-008[^\n]*REQ-IFC-001\s*\|\s*TODO", hazard_text + "\n" + trace_text):
-        errors.append("stale HAZ-004 or HAZ-008 TODO/mapping remains in human-readable views")
+    inner = system["system_boundaries"]["inner"]
+    if "CFG-REC" in inner.get("applicable_configurations", []):
+        errors.append("CFG-REC must not inherit the proposed inner-boundary decomposition")
+    recovered = next(item for item in architecture["configurations"] if item["id"] == "CFG-REC")
+    if "descriptive evidence" not in recovered.get("boundary_semantics", "").lower():
+        errors.append("CFG-REC lacks descriptive-evidence boundary semantics")
+    for record in assurance["requirements"] + assurance["controls"] + architecture["interfaces"] + architecture["modes"]:
+        if "CFG-REC" in record.get("applicable_configurations", []):
+            errors.append(f"{record['id']} incorrectly applies proposed design semantics to CFG-REC")
+    ts_009 = next(item for item in assurance["trade_studies"] if item["id"] == "TS-009")
+    if "CFG-REC" in ts_009.get("applicable_configurations", []):
+        errors.append("TS-009 must not impose a proposed trade study on CFG-REC")
+    op_002 = next(item for item in architecture["performers"] if item["id"] == "OP-002")
+    if "CFG-REC" in op_002.get("applicable_configurations", []):
+        errors.append("OP-002 must not impose proposed performer semantics on CFG-REC")
 
-    errors.extend(validate_maintained_mermaid_views(set(definitions), gap_codes))
-    errors.extend(validate_generated_views(catalogs, set(definitions), gap_codes))
+    payload_resources = {"CMP-COM-01", "CMP-COM-02"}
+    crossings: set[str] = set()
+    for interface in architecture["interfaces"]:
+        endpoints = {interface["endpoint_a"], interface["endpoint_b"]}
+        configs = set(interface.get("applicable_configurations", []))
+        if interface["id"].startswith("IFC-INT-") and configs.intersection({"CFG-REP", "CFG-DOM"}):
+            if len(endpoints.intersection(payload_resources)) == 1:
+                crossings.add(interface["id"])
+    if crossings != {"IFC-INT-003", "IFC-INT-007"}:
+        errors.append(f"current platform-to-payload crossings are {sorted(crossings)}")
+    ifc_010 = next(item for item in architecture["interfaces"] if item["id"] == "IFC-INT-010")
+    if {ifc_010["endpoint_a"], ifc_010["endpoint_b"]} != payload_resources:
+        errors.append("IFC-INT-010 must remain inside the payload envelope")
+    if "payload-internal" not in ifc_010.get("interface_type", ""):
+        errors.append("IFC-INT-010 lacks payload-internal classification")
+    component = next(item for item in architecture["components"] if item["id"] == "CMP-COM-02")
+    if component.get("name") != "Antenna physical-resource envelope":
+        errors.append("CMP-COM-02 display name changed")
+    req_ifc_003 = next(item for item in assurance["requirements"] if item["id"] == "REQ-IFC-003")
+    expected_requirement = (
+        "The platform-to-payload interface shall be limited to power (IFC-INT-003) "
+        "and mechanical retention (IFC-INT-007)."
+    )
+    if req_ifc_003.get("text") != expected_requirement:
+        errors.append("REQ-IFC-003 wording changed")
 
-    guarded_paths = [
-        ROOT / "system.yaml", ROOT / ".seal", ROOT / "model", ROOT / "reports",
-    ]
+    std_decision = next(item for item in assurance["decisions"] if item["id"] == "DEC-002")
+    if std_decision.get("decision_status") != "proposed" or "GAP-STD-001" not in gap_codes:
+        errors.append("DEC-002 / GAP-STD-001 standards decision must remain unresolved")
+    if not any("UAF 1.2" in item for item in system.get("standards", [])):
+        errors.append("UAF 1.2 terminology was removed without approval")
+    if "UAF 1.3" not in system.get("standards_posture", {}).get("current_omg_formal_version", ""):
+        errors.append("UAF 1.3 current-version fact is missing")
+    if system.get("standards_posture", {}).get("conformance_claim") != "none":
+        errors.append("repository must not claim UAF conformance")
+
+    cameo_source = next(item for item in sources["sources"] if item["id"] == "SRC-REPO-009")
+    cameo_gap = next(item for item in traceability["gaps"] if item["code"] == "GAP-CFG-001")
+    if cameo_source.get("applicability_scope") != "deferred_external_artifact":
+        errors.append("Cameo source is not explicitly deferred")
+    if cameo_gap.get("disposition") != "deferred" or cameo_gap.get("reporting_priority") != "secondary":
+        errors.append("Cameo gap is not deferred secondary work")
+    haz_009 = next(item for item in assurance["hazards"] if item["id"] == "HAZ-009")
+    haz_009_gap = next(item for item in traceability["gaps"] if item["code"] == "GAP-HAZ-002")
+    if haz_009.get("lifecycle_status") != "reserved_inactive" or haz_009_gap.get("disposition") != "deferred":
+        errors.append("HAZ-009 must remain a reserved inactive ID")
+
+    for relative in RETIRED_CORE_PATHS:
+        if (ROOT / relative).exists():
+            errors.append(f"retired architecture file still exists: {relative}")
+    model_files = {path.name for path in (ROOT / "model").glob("*.yaml")}
+    if model_files != {"architecture.yaml", "assurance.yaml", "traceability.yaml"}:
+        errors.append(f"model catalog set is not consolidated: {sorted(model_files)}")
+    report_files = {path.name for path in (ROOT / "reports").glob("*.md")}
+    if report_files != {"architecture-views.md", "baseline.md"}:
+        errors.append(f"generated report set is not consolidated: {sorted(report_files)}")
+    script_files = {path.name for path in (ROOT / "scripts").glob("*.py")}
+    if script_files != {"generate-mermaid-views.py", "validate-baseline.py"}:
+        errors.append(f"supporting Python toolchain is not minimal: {sorted(script_files)}")
+
+    for path in [BASELINE_REPORT, ATLAS_REPORT]:
+        if not path.exists():
+            errors.append(f"generated report missing: {path.relative_to(ROOT)}")
+        elif "GENERATED VIEW" not in "\n".join(path.read_text(encoding="utf-8-sig").splitlines()[:6]):
+            errors.append(f"{path.relative_to(ROOT)} lacks generated-view marker")
+
+    atlas_text = ATLAS_REPORT.read_text(encoding="utf-8-sig") if ATLAS_REPORT.exists() else ""
+    for interface in architecture["interfaces"]:
+        if atlas_text.count(interface["id"]) < 2:
+            errors.append(f"{interface['id']} lacks atlas diagram and inventory coverage")
+    errors.extend(validate_mermaid_documents(set(definitions), gap_codes))
+
     implementation_patterns = [
         re.compile(r"\b\d+(?:\.\d+)?\s*(?:kHz|MHz|GHz|dBm|mW)\b", re.IGNORECASE),
         re.compile(r"\b(?:QPSK|QAM|OFDM|FHSS|DSSS)\b", re.IGNORECASE),
     ]
-    for guarded in guarded_paths:
-        files = [guarded] if guarded.is_file() else list(guarded.rglob("*"))
-        for path in files:
+    guarded = [
+        ROOT / "system.yaml", ROOT / "model", ROOT / ".seal",
+        ROOT / "README.md", ROOT / "architecture.md", ROOT / "trade-studies.md", ROOT / "reports",
+    ]
+    for root in guarded:
+        paths = [root] if root.is_file() else list(root.rglob("*"))
+        for path in paths:
             if not path.is_file() or path.suffix.lower() not in {".yaml", ".md"}:
                 continue
             text = path.read_text(encoding="utf-8-sig")
             for pattern in implementation_patterns:
                 if pattern.search(text):
-                    errors.append(
-                        f"{path.relative_to(ROOT)} contains prohibited RF implementation detail matching {pattern.pattern}"
-                    )
+                    errors.append(f"{path.relative_to(ROOT)} contains prohibited implementation detail")
 
-    for gap in catalogs["traceability"].get("gaps", []):
+    active = []
+    deferred = []
+    for gap in traceability["gaps"]:
         summary = f"{gap['code']}: {gap['statement']}"
-        if gap.get("disposition") in {"intentionally_out_of_scope", "deferred"}:
-            intentional_deferrals.append(summary)
+        if gap.get("disposition") in {"deferred", "intentionally_out_of_scope"}:
+            deferred.append(summary)
         else:
-            documented_gaps.append(summary)
+            active.append(summary)
+    return errors, active, deferred
 
-    return errors, documented_gaps, intentional_deferrals
+
+def generated_outputs_current(catalogs: dict[str, dict[str, Any]]) -> list[str]:
+    errors: list[str] = []
+    expected_baseline = render_baseline(catalogs)
+    if not BASELINE_REPORT.exists() or BASELINE_REPORT.read_text(encoding="utf-8-sig") != expected_baseline:
+        errors.append("reports/baseline.md is stale; run --write-reports")
+    return errors
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--write-reports", action="store_true", help="regenerate derived Markdown reports")
-    parser.add_argument("--ids-only", action="store_true", help="run ID and reference validation only")
+    parser.add_argument("--write-reports", action="store_true", help="regenerate both derived reports")
     parser.add_argument(
-        "--validate-mermaid",
-        action="store_true",
-        help="optionally validate diagrams with locally installed pinned Mermaid CLI",
+        "--check-generated", action="store_true",
+        help="explicitly check generated freshness (also performed by the default command)",
+    )
+    parser.add_argument(
+        "--validate-mermaid", action="store_true",
+        help="use locally installed pinned Mermaid CLI when available",
     )
     args = parser.parse_args()
 
@@ -847,13 +718,11 @@ def main() -> int:
         return 1
 
     if args.write_reports:
-        write_reports(catalogs)
+        BASELINE_REPORT.parent.mkdir(parents=True, exist_ok=True)
+        BASELINE_REPORT.write_text(render_baseline(catalogs), encoding="utf-8", newline="\n")
         generated = subprocess.run(
-            [sys.executable, str(VIEW_GENERATOR)],
-            cwd=ROOT,
-            capture_output=True,
-            text=True,
-            check=False,
+            [sys.executable, str(VIEW_GENERATOR)], cwd=ROOT,
+            capture_output=True, text=True, check=False,
         )
         if generated.stdout.strip():
             print(generated.stdout.strip())
@@ -862,40 +731,36 @@ def main() -> int:
                 print(generated.stderr.strip())
             print("MODEL-INVALID: architecture-view generation failed")
             return 1
+        print("GENERATED-BASELINE-WRITTEN: reports/baseline.md")
 
-    errors, gaps, deferrals = validate(catalogs, ids_only=args.ids_only)
-    if not args.ids_only:
-        view_command = [sys.executable, str(VIEW_GENERATOR), "--check"]
-        if args.validate_mermaid:
-            view_command.append("--validate-syntax")
-        view_check = subprocess.run(
-            view_command,
-            cwd=ROOT,
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        if view_check.stdout.strip():
-            print(view_check.stdout.strip())
-        if view_check.returncode:
-            errors.append("generated architecture views are stale or failed Mermaid syntax validation")
-            if view_check.stderr.strip():
-                errors.append("Mermaid validator error: " + view_check.stderr.strip())
+    errors, active_gaps, deferrals = validate(catalogs)
+    errors.extend(generated_outputs_current(catalogs))
+
+    view_command = [sys.executable, str(VIEW_GENERATOR), "--check"]
+    if args.validate_mermaid:
+        view_command.append("--validate-syntax")
+    view_check = subprocess.run(
+        view_command, cwd=ROOT, capture_output=True, text=True, check=False,
+    )
+    if view_check.stdout.strip():
+        print(view_check.stdout.strip())
+    if view_check.returncode:
+        errors.append("architecture atlas is stale or failed optional syntax validation")
+        if view_check.stderr.strip():
+            errors.append("Mermaid validator error: " + view_check.stderr.strip())
+
     if errors:
         print("MODEL-INVALID FAILURES")
         for error in sorted(set(errors)):
             print(f"- {error}")
     else:
-        print("MODEL-VALID: structured catalogs and references passed validation")
-
-    if not args.ids_only:
-        print(f"DOCUMENTED ARCHITECTURE GAPS: {len(gaps)}")
-        for gap in gaps:
-            print(f"- {gap}")
-        print(f"INTENTIONAL DEFERRALS: {len(deferrals)}")
-        for deferral in deferrals:
-            print(f"- {deferral}")
-
+        print("MODEL-VALID: consolidated catalogs, references, reports, and guards passed")
+    print(f"ACTIVE ARCHITECTURE GAPS: {len(active_gaps)}")
+    for gap in active_gaps:
+        print(f"- {gap}")
+    print(f"INTENTIONAL OR SECONDARY DEFERRALS: {len(deferrals)}")
+    for gap in deferrals:
+        print(f"- {gap}")
     return 1 if errors else 0
 
 

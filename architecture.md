@@ -1,228 +1,329 @@
-# Architecture
+# Relay-UAS Architecture
 
-Physical decomposition, functional allocation, and interfaces for the relay UAS
-concept. IDs defined here are referenced by `requirements.md`, `uaf-views.md`, and
-`traceability.md`.
+> **Baseline Candidate - Not Approved.** This is the primary human-readable view of
+> the structured model. Follow IDs into `model/architecture.yaml`,
+> `model/assurance.yaml`, `.seal/proof.yaml`, and `model/traceability.yaml` for
+> authoritative records and complete metadata.
 
-> **Baseline authority.** This file is a human-readable architecture view. The
-> configuration-aware element and interface records in
-> [`model/elements.yaml`](model/elements.yaml) and
-> [`model/interfaces.yaml`](model/interfaces.yaml) are the authoritative structured
-> data for the baseline candidate. The decomposition below maps provisionally to
-> `CFG-REP` and `CFG-DOM`; it is not asserted to be the as-built `CFG-REC` article.
-> The Relay UAS is the inner product boundary; the broader C2 Ecosystem remains an
-> outer, proposed system-of-systems context.
-> Generated configuration, context, resource, sequence, hazard, and governance
-> diagrams are maintained in
-> [`reports/architecture-views.md`](reports/architecture-views.md).
+## 1. Architecture Purpose
 
-## Architecture Overview
+The concept places a bidirectional communications-relay payload on a conventional
+small UAS so a ground-control node and remote UAS can exchange mission traffic when
+their direct path is too long or obstructed. The platform is valuable because of
+where it can hold station, not because the airframe is novel.
 
-The decomposition is a conventional quadrotor split into five platform subsystems
-(airframe, propulsion, power, avionics, payload mount) plus the relay payload. The
-arrangement is unremarkable by design: novelty in the platform would cost money the
-concept does not have, and the interesting decisions here are about cost allocation
-and interface discipline rather than configuration.
+Three principles organize the model:
 
-Two choices shape everything downstream.
+- Reference evidence, current candidate designs, and future extensions are separate configurations.
+- The relay payload remains a black box behind a narrow platform boundary.
+- Platform command is separate from the traffic relayed for another vehicle.
 
-**The payload is isolated behind two platform interfaces.** `CMP-COM-01` connects to
-the rest of the platform through `IFC-INT-003` (regulated power) and `IFC-INT-007`
-(mechanical retention), and nothing else in `CFG-REP`/`CFG-DOM`. No platform data
-path or payload-control signal is defined in those configurations.
-This is what lets the platform architecture proceed while TS-009 stays deferred — and
-it also means a payload change is a mount-and-rail question rather than a redesign.
-The cost is that the platform must be sized for a payload envelope rather than a
-known payload, which pushes uncertainty into the mass and power budgets.
+No diagram is approval evidence. `[PROPOSED]`, `[TBD]`, `[DEFERRED]`, and
+`[UNVERIFIED]` state maturity explicitly.
 
-**The platform command link is separate from the relay function.** `CMP-AVN-04`
-receives commands for *this aircraft*; `CMP-COM-01` relays traffic for a *different*
-aircraft. They are unrelated systems that happen to share an airframe. Conflating them
-is the most likely modeling error here, so they carry separate IDs, separate
-interfaces (`IFC-EXT-005` versus `IFC-EXT-001..004`), and separate trade studies
-(TS-008 versus TS-009).
+## 2. Configuration Baselines
 
-Four-corner propulsion sets are treated as identical by design. Unlike a
-reverse-engineered article, there is no reason for asymmetry, so `C1`–`C4` differ only
-in propeller rotation direction.
+The current/reference axis is `CFG-REC -> CFG-REP -> CFG-DOM`. The future-extension
+axis is `CFG-REP -> CFG-DIG -> CFG-SOS`.
 
-## Component Breakdown
+```mermaid
+flowchart LR
+    %% Configuration scope: CFG-REC / CFG-REP / CFG-DOM / CFG-DIG / CFG-SOS
+    CFG_REC["CFG-REC<br/>Reference evidence<br/>[UNVERIFIED mapping]"] -->|"informs; not exact inheritance"| CFG_REP["CFG-REP<br/>Replica architecture<br/>[PROPOSED]"]
+    CFG_REP --> CFG_DOM["CFG-DOM<br/>Domestic candidate<br/>[PROPOSED]"]
+    CFG_REP --> CFG_DIG["CFG-DIG<br/>Digital extension<br/>[PROPOSED]"]
+    CFG_DIG --> CFG_SOS["CFG-SOS<br/>C2 Ecosystem context<br/>[PROPOSED]"]
+```
 
-Subsystem prefixes: `AFR` airframe · `PRP` propulsion · `PWR` power · `AVN` avionics
-· `COM` communications payload · `MNT` payload mount.
+**Reference evidence — `CFG-REC`.** This boundary describes what the registered
+sources say about the recovered article. It does not inherit candidate components,
+interfaces, requirements, modes, controls, or verification claims.
 
-### Airframe
+**Current candidate architecture — `CFG-REP` / `CFG-DOM`.** These configurations
+carry the present Relay-UAS decomposition and the two-interface payload boundary.
 
-| CMP ID | Component | Qty | Description | Trade Study |
-|---|---|---|---|---|
-| CMP-AFR-01 | Center frame plate | 1 | Primary structure; carries arm loads into the payload mount and battery cradle | TS-001 |
-| CMP-AFR-02 | Arm assembly | 4 | Motor standoff structure; length sets propeller clearance and therefore diameter limit | TS-001 |
-| CMP-AFR-03 | Landing gear | 4 | Ground contact and payload ground clearance; robustness is a recovery feature, see TS-011 | TS-011 |
-| CMP-AFR-04 | Payload mount interface | 1 | Structural half of the payload attachment; mates CMP-MNT-01 | TS-006 |
-| CMP-AFR-05 | Fastener and hardware set | lot | Commodity COTS hardware; no unique parts intended | — |
+**Future extensions — `CFG-DIG` / `CFG-SOS`.** These add a proposed digital payload
+management path and broader independently managed performers. They do not silently
+modify the current candidate.
 
-### Propulsion
+## 3. System Boundaries
 
-Four identical corner sets, `C1`–`C4`, differing only in propeller rotation direction.
+The inner product boundary is the Relay UAS. The outer context is the C2 Ecosystem.
 
-| CMP ID | Component | Qty | Description | Trade Study |
-|---|---|---|---|---|
-| CMP-PRP-01 | Brushless motor | 4 | Class and KV follow from all-up mass and propeller selection | TS-002 |
-| CMP-PRP-02 | Electronic speed controller | 4 | Current rating follows motor selection; sized for hover draw plus thrust margin | TS-002 |
-| CMP-PRP-03 | Propeller | 4 | Diameter and pitch bounded by CMP-AFR-02 arm length; CW/CCW alternating | TS-002 |
+```mermaid
+flowchart LR
+    %% Configuration scope: CFG-SOS context; CFG-REP / CFG-DOM / CFG-DIG inner constituent
+    subgraph OUTER["C2 Ecosystem outer boundary [PROPOSED]"]
+        OP_010["OP-010<br/>Operator"]
+        OP_001["OP-001<br/>Ground control"]
+        OP_003["OP-003<br/>Remote UAS"]
+        OP_004["OP-004<br/>UGV [TBD]"]
+        OP_005["OP-005<br/>Radio user [TBD]"]
+        OP_006["OP-006<br/>Network service [TBD]"]
+        OP_007["OP-007<br/>Maintenance"]
+        OP_008["OP-008<br/>Spectrum authority"]
+        OP_009["OP-009<br/>Support infrastructure [TBD]"]
+        subgraph INNER["Relay UAS inner boundary"]
+            OP_002["OP-002<br/>Relay UAS [PROPOSED]"]
+        end
+    end
+    OP_010 --> OP_002
+    OP_001 <--> OP_002
+    OP_002 <--> OP_003
+    OP_007 <--> OP_002
+    OP_004 -.-> OP_002
+    OP_005 -.-> OP_002
+    OP_006 -.-> OP_002
+    OP_008 -.-> OP_002
+    OP_009 -.-> OP_002
+```
 
-Propulsion sizing is where the endurance-versus-cost loop is actually resolved. Larger
-propellers hover more efficiently but demand longer arms and more structure; the
-optimum depends on the mass budget, which depends on the battery, which depends on the
-endurance requirement. TS-002 and TS-003 must be worked together rather than in
-sequence.
+External performers remain independently managed. The context does not imply
+interoperability, authority, security, or implementation responsibility.
 
-### Power
+## 4. Capability and Operational Context
 
-| CMP ID | Component | Qty | Description | Trade Study |
-|---|---|---|---|---|
-| CMP-PWR-01 | Battery pack | 1 | Chemistry, cell count, capacity TBD; likely the highest-value single reusable component | TS-003 |
-| CMP-PWR-02 | Power distribution board | 1 | Main bus distribution to four ESCs; current sensing supports FUN-PWR-02 | — |
-| CMP-PWR-03 | Step-down regulator(s) | TBD | Separate rails for avionics and payload; count depends on whether rails are shared | TS-004 |
-| CMP-PWR-04 | Battery connector | 1 | Class follows peak current; also the field-replaceable interface for battery reuse | TS-011 |
+`CAP-001` addresses distance; `CAP-002` addresses obstructed geometry. They remain
+separate because one can bind without the other. The concept hypothesis is the
+intersection of those two capabilities with `CAP-004` low-cost attritability.
 
-### Avionics
+```mermaid
+flowchart LR
+    %% Configuration scope: CFG-REP / CFG-DOM current; CFG-SOS future scenarios
+    NEED_001["NEED-001<br/>Extend mission reach"] --> CAP_000["CAP-000<br/>Extended-range employment"]
+    CAP_000 --> CAP_001["CAP-001<br/>Beyond-line-of-sight control"]
+    CAP_000 --> CAP_002["CAP-002<br/>Terrain-masked operation"]
+    CAP_000 --> CAP_003["CAP-003<br/>Contested-spectrum resilience"]
+    CAP_000 --> CAP_004["CAP-004<br/>Low-cost attritable fielding"]
+    CAP_001 --> SCN_003["SCN-003 / SCN-004<br/>Bidirectional relay"]
+    CAP_002 --> SCN_002["SCN-002<br/>Launch and positioning"]
+    CAP_004 --> SCN_001["SCN-001<br/>Setup and initialization"]
+    CAP_003 -.-> GAP_TRC_001["GAP-TRC-001<br/>No allocated mechanism"]
+```
 
-| CMP ID | Component | Qty | Description | Trade Study |
-|---|---|---|---|---|
-| CMP-AVN-01 | Flight controller | 1 | COTS board capable of running widely supported open-source firmware | TS-005 |
-| CMP-AVN-02 | IMU / sensor suite | 1 | Attitude and barometric altitude; typically integrated on CMP-AVN-01 | — |
-| CMP-AVN-03 | GNSS / compass module | 0–1 | Optional. Presence depends on the station-keeping approach selected in TS-007 | TS-007 |
-| CMP-AVN-04 | Control link receiver | 1 | Command link for **this platform only** — not the relay payload | TS-008 |
+`CAP-003` remains deliberately unallocated because every potential mechanism is
+inside deferred payload work (`TS-009`). `CAP-004` is currently a cross-cutting
+constraint rather than a dedicated operational activity.
 
-`CMP-AVN-03` is deliberately `0–1`. Whether the platform carries GNSS at all is an
-open architectural question, not a detail: a design that requires it inherits a
-dependency the concept's own justification argues against (see README challenge 2).
+The current mission thread keeps Relay-UAS platform command separate from relayed
+traffic:
 
-### Communications Payload — black box
+```mermaid
+flowchart LR
+    %% Configuration scope: CFG-REP / CFG-DOM
+    OP_010["OP-010<br/>Platform operator"] -->|"IX-001 / IFC-EXT-005<br/>platform command"| OP_002["OP-002<br/>Relay UAS"]
+    OP_001["OP-001<br/>Ground control"] -->|"IX-002 / IFC-EXT-001<br/>outbound"| OP_002
+    OP_002 -->|"IX-003 / IFC-EXT-002<br/>outbound"| OP_003["OP-003<br/>Remote UAS"]
+    OP_003 -->|"IX-004 / IFC-EXT-003<br/>return"| OP_002
+    OP_002 -->|"IX-005 / IFC-EXT-004<br/>return"| OP_001
+    OP_001 -.->|"direct path unavailable"| OP_003
+```
 
-> Modeled by function and interface only. No internal decomposition, no RF
-> parameters. See [Scope Boundaries](README.md#scope-boundaries).
+The relay is bidirectional, positional, and logically transparent at this level. No
+frequency, protocol, data-rate, or waveform behavior is asserted.
 
-| CMP ID | Component | Qty | Description | Trade Study |
-|---|---|---|---|---|
-| CMP-COM-01 | Relay payload module | 1 | Black box. Accepts regulated power and mechanical retention; performs FUN-REL-01 and FUN-REL-02 | TS-009 |
-| CMP-COM-02 | Antenna physical-resource envelope | TBD | Black-box physical-resource envelope; count, type, placement, and all characteristics remain undefined | TS-009 |
+## 5. Relay-UAS Logical/Physical Architecture
 
-`CMP-COM-02` is a resource, not an interface. `IFC-INT-010` represents only the
-existence of physical coupling between that resource envelope and `CMP-COM-01`, wholly
-inside the relay-payload black-box envelope. It does not expose another
-platform-to-payload interface and defines no count, type, connector, location, role,
-or RF characteristic.
+The physical architecture is a conventional multicopter decomposition. Representative
+resources show subsystem ownership without reproducing the complete component catalog.
 
-### Payload Mount
+```mermaid
+flowchart TB
+    %% Configuration scope: CFG-REP / CFG-DOM
+    OP_002["OP-002<br/>Relay UAS [PROPOSED]"] --> CMP_AFR_01["CMP-AFR-01<br/>Primary structure"]
+    OP_002 --> CMP_PRP_01["CMP-PRP-01<br/>Propulsion"]
+    OP_002 --> CMP_PWR_01["CMP-PWR-01<br/>Power source"]
+    OP_002 --> CMP_AVN_01["CMP-AVN-01<br/>Flight control"]
+    OP_002 --> CMP_MNT_01["CMP-MNT-01<br/>Payload mount"]
+    OP_002 --> CMP_COM_01["CMP-COM-01<br/>Relay payload black box"]
+    CMP_COM_01 --> CMP_COM_02["CMP-COM-02<br/>Antenna resource envelope"]
+```
 
-| CMP ID | Component | Qty | Description | Trade Study |
-|---|---|---|---|---|
-| CMP-MNT-01 | Modular payload bay | 1 | Mates to CMP-AFR-04; payload-agnostic retention and volume envelope | TS-006 |
+Four-corner propulsion sets are symmetric in the candidate design. Platform novelty
+is avoided because added complexity competes directly with `CAP-004`. Component
+selection remains open in the `TS-*` register.
 
-## Function Allocation
+Two decisions dominate the decomposition:
 
-| FUN ID | Function | Allocated To | Operational Activity |
-|---|---|---|---|
-| FUN-FLT-01 | Maintain stable flight | CMP-AVN-01, CMP-AVN-02, CMP-PRP-01..03 | OA-001 |
-| FUN-FLT-02 | Navigate to station | CMP-AVN-01, CMP-AVN-03 | OA-002 |
-| FUN-FLT-03 | Hold station | CMP-AVN-01, CMP-AVN-02, CMP-AVN-03 | OA-003 |
-| FUN-FLT-04 | Return to launch | CMP-AVN-01 | OA-006 |
-| FUN-REL-01 | Relay outbound traffic (ground → remote) | CMP-COM-01 | OA-004 |
-| FUN-REL-02 | Relay return traffic (remote → ground) | CMP-COM-01 | OA-005 |
-| FUN-PWR-01 | Distribute and regulate power | CMP-PWR-02, CMP-PWR-03 | — |
-| FUN-PWR-02 | Report battery state | CMP-PWR-02, CMP-AVN-01 | OA-006 |
-| FUN-CMD-01 | Receive platform command link | CMP-AVN-04 | OA-002, OA-006 |
+1. `CMP-COM-01` couples to the platform only through power and retention.
+2. `CMP-AVN-04` controls the Relay UAS; it does not perform `FUN-REL-01` or `FUN-REL-02`.
 
-`FUN-PWR-01` has no operational activity because power distribution is an enabling
-function rather than a mission activity — it supports every activity without being one.
-Recorded explicitly rather than left blank, so the gap is visibly intentional.
+## 6. Interfaces
 
-## Interfaces
+The current interface architecture makes the payload boundary explicit while keeping
+external paths implementation-neutral.
 
-The tables below are configuration-specific views of the authoritative interface
-catalog. `proposed` and `candidate` are maturity labels, not approval. `VER-008` is a
-deferred physical method, not executed evidence.
+```mermaid
+flowchart LR
+    %% Configuration scope: CFG-REP / CFG-DOM
+    CMP_PWR_03["CMP-PWR-03<br/>Payload power"] -->|"IFC-INT-003<br/>platform-to-payload"| CMP_COM_01["CMP-COM-01<br/>Relay payload"]
+    CMP_MNT_01["CMP-MNT-01<br/>Payload mount"] <-->|"IFC-INT-007<br/>platform-to-payload"| CMP_COM_01
+    subgraph PAYLOAD["Relay-payload black-box envelope"]
+        CMP_COM_01 <-->|"IFC-INT-010<br/>payload-internal"| CMP_COM_02["CMP-COM-02<br/>Physical-resource envelope"]
+    end
+    OP_001["OP-001<br/>Ground control"] <-->|"IFC-EXT-001 / IFC-EXT-004"| CMP_COM_01
+    CMP_COM_01 <-->|"IFC-EXT-002 / IFC-EXT-003"| OP_003["OP-003<br/>Remote UAS"]
+    OP_010["OP-010<br/>Operator"] -->|"IFC-EXT-005<br/>separate platform command"| CMP_AVN_04["CMP-AVN-04<br/>Control receiver"]
+```
 
-### Current candidate platform interfaces - CFG-REP / CFG-DOM
+Only `IFC-INT-003` and `IFC-INT-007` cross the current platform-to-payload boundary.
+`IFC-INT-010` records physical coupling inside the payload envelope; it does not
+define another platform interface or any antenna characteristic. `IFC-INT-008` is a
+future `CFG-DIG`/`CFG-SOS` payload-management candidate and is absent from the current
+architecture.
 
-| IFC ID | Endpoints | Direction | Flow class | Maturity | Verification | Unknown attributes |
-|---|---|---|---|---|---|---|
-| IFC-INT-001 | CMP-PWR-02 to CMP-PRP-02 | A to B | electrical power | proposed design / proposed | VER-005; VER-008 deferred | voltage; current; connector; protection; wiring allocation |
-| IFC-INT-002 | CMP-PWR-03 to CMP-AVN-01 | A to B | electrical power | proposed design / proposed | VER-005; VER-008 deferred | voltage; current; connector; power-quality envelope |
-| IFC-INT-003 | CMP-PWR-03 to CMP-COM-01 | A to B | electrical power; platform-to-payload crossing | proposed design / proposed | VER-005; VER-008 deferred | voltage/current envelopes; connector; protection; thermal allocation |
-| IFC-INT-004 | CMP-AVN-01 to CMP-PRP-02 | A to B | command and control | proposed design / proposed | VER-005; VER-008 deferred | signal format; timing; connector; fault response |
-| IFC-INT-005 | CMP-AVN-04 to CMP-AVN-01 | A to B | command and control | proposed design / proposed | VER-005; VER-008 deferred | protocol; connector; timing; failsafe behavior |
-| IFC-INT-006 | CMP-PWR-02 to CMP-AVN-01 | A to B | health and status | proposed design / proposed | VER-005; VER-008 deferred | measurement set; accuracy; update rate; connector; fault indication |
-| IFC-INT-007 | CMP-MNT-01 to CMP-COM-01 | bidirectional physical | mechanical mounting; platform-to-payload crossing | proposed design / proposed | VER-005; VER-008 deferred | geometry; load envelope; retention margin; inspection criteria |
-| IFC-INT-009 | CMP-AVN-02 to CMP-AVN-01 | A to B | navigation and timing | engineering inference / proposed | VER-005; VER-008 deferred | sensor set; data format; timing; accuracy; fault detection; connector |
+The complete 16-interface inventory, including internal power, control, health,
+navigation, external traffic, and maintenance groups, is generated in the diagram
+atlas. External-interface authority and verification remain open (`GAP-IFC-001`),
+while implementation attributes remain intentionally out of scope (`GAP-IFC-002`).
 
-### Relay-payload black-box internal interface - CFG-REP / CFG-DOM
+## 7. Operational Behavior
 
-| IFC ID | Endpoints | Direction | Flow class | Maturity | Verification | Unknown attributes |
-|---|---|---|---|---|---|---|
-| IFC-INT-010 | CMP-COM-01 to CMP-COM-02 | bidirectional physical | physical-resource coupling inside payload envelope | proposed design / proposed | none allocated - GAP-IFC-001 | count; type; role; placement; connector; all RF characteristics |
+```mermaid
+stateDiagram-v2
+    %% Configuration scope: CFG-REP / CFG-DOM
+    state "MODE-005 Ground Safe" as MODE_005
+    state "MODE-001 Transit" as MODE_001
+    state "MODE-002 Station Keeping" as MODE_002
+    state "MODE-003 Relay Degraded" as MODE_003
+    state "MODE-004 Return / Recovery" as MODE_004
+    [*] --> MODE_005
+    MODE_005 --> MODE_001: SCN-002
+    MODE_001 --> MODE_002: SCN-002 station established
+    MODE_002 --> MODE_003: SCN-007 payload degraded
+    MODE_003 --> MODE_004: SCN-007 recovery intent
+    MODE_002 --> MODE_004: SCN-008 or REQ-FUN-005
+    MODE_004 --> MODE_005: SCN-008 recovered
+```
 
-`IFC-INT-010` is not a platform boundary crossing. The only
-platform-to-payload interfaces in `CFG-REP` and `CFG-DOM` are `IFC-INT-003` and
-`IFC-INT-007`.
+```mermaid
+sequenceDiagram
+    %% Configuration scope: CFG-REP / CFG-DOM
+    participant Operator as OP-010 Platform operator
+    participant Platform as CMP-AVN-04 Platform command
+    participant Ground as OP-001 Ground control
+    participant Payload as CMP-COM-01 Relay payload
+    participant Remote as OP-003 Remote UAS
+    Operator->>Platform: IX-001 / IFC-EXT-005 platform command
+    Ground->>Payload: IX-002 / IFC-EXT-001 outbound traffic
+    Payload->>Remote: IX-003 / IFC-EXT-002 outbound traffic
+    Remote-->>Payload: IX-004 / IFC-EXT-003 return traffic
+    Payload-->>Ground: IX-005 / IFC-EXT-004 return traffic
+```
 
-### Future digital interface - CFG-DIG / CFG-SOS only
+```mermaid
+sequenceDiagram
+    %% Configuration scope: CFG-REP / CFG-DOM
+    participant Ground as OP-001 Ground control
+    participant Payload as CMP-COM-01 Relay payload
+    participant Relay as OP-002 Relay UAS
+    participant Operator as OP-010 Platform operator
+    Payload--xGround: SCN-007 relay degradation
+    Relay-->>Operator: IX-009 partial health/status
+    Operator->>Relay: IX-001 independent platform command
+    alt Platform remains controllable
+        Note over Payload,Relay: MODE-003; REQ-FUN-007 [PROPOSED]
+        Relay-->>Operator: transition toward MODE-004
+    else Platform control also impaired
+        Note over Relay,Operator: HAZ-001 / GAP-HAZ-001
+    end
+```
 
-| IFC ID | Endpoints | Direction | Flow class | Maturity | Verification | Unknown attributes |
-|---|---|---|---|---|---|---|
-| IFC-INT-008 | CMP-AVN-01 to CMP-COM-01 | bidirectional | payload management and health/status | proposed design / proposed future interface | VER-004; VER-005; VER-007 candidate | adoption decision; data model; protocol; connector; timing; authority; failure response |
+The degraded branch ends at explicit gaps rather than inventing a recovery behavior.
+UGV, sensor/video, and broader health/status threads are future extensions, not
+current-system behavior.
 
-`IFC-INT-008` is omitted from current `CFG-REP`/`CFG-DOM` resource views because it
-would violate their two-interface platform-to-payload boundary. Its presence in a
-future view does not approve it.
+## 8. Requirements and Constraints Summary
 
-### Current external traffic and platform command - CFG-REP / CFG-DOM
+The 27 `REQ-*` records are authoritative in `model/assurance.yaml`. They cover relay
+function, station keeping and recovery, unresolved performance envelopes, payload
+interfaces, basic safety controls, project constraints, and explicitly deferred
+items.
 
-| IFC ID | Endpoints | Direction | Flow class | Maturity | Verification | Unknown attributes |
-|---|---|---|---|---|---|---|
-| IFC-EXT-001 | OP-001 to CMP-COM-01 | A to B | command and control | proposed design / proposed; intentionally undefined path | none allocated - GAP-IFC-001 | frequency; waveform; protocol; power; data rate; message format; compatibility; authority |
-| IFC-EXT-002 | CMP-COM-01 to OP-003 | A to B | command and control | proposed design / proposed; intentionally undefined path | none allocated - GAP-IFC-001 | frequency; waveform; protocol; power; data rate; message format; compatibility; authority |
-| IFC-EXT-003 | OP-003 to CMP-COM-01 | A to B | telemetry | proposed design / proposed; intentionally undefined path | none allocated - GAP-IFC-001 | frequency; waveform; protocol; power; data rate; message format; compatibility; authority |
-| IFC-EXT-004 | CMP-COM-01 to OP-001 | A to B | telemetry | proposed design / proposed; intentionally undefined path | none allocated - GAP-IFC-001 | frequency; waveform; protocol; power; data rate; message format; compatibility; authority |
-| IFC-EXT-005 | OP-010 to CMP-AVN-04 | A to B | command and control; separate platform command | proposed design / proposed; intentionally undefined path | none allocated - GAP-IFC-001 | frequency; waveform; protocol; power; message format; failsafe behavior; authority |
+Bracketed `[TBD]` values are load-bearing unknowns with trade-study ownership. They
+must not be replaced with borrowed figures. In particular:
 
-External implementation attributes remain intentionally undefined. `IFC-EXT-005`
-is independent of `IFC-EXT-001` through `IFC-EXT-004`; it controls the relay
-platform rather than carrying relayed mission traffic.
+- `REQ-IFC-003`: the platform-to-payload interface is limited to `IFC-INT-003` power and `IFC-INT-007` mechanical retention.
+- `REQ-CON-003`: the project excludes weapons and munitions; it is not a recovered-article observation.
+- `REQ-DEF-001..005`: deferred or externally owned topics, not requirements claimed satisfied here.
 
-### Support and governance - CFG-REP / CFG-DOM / CFG-DIG / CFG-SOS
+Mass, unit cost, power, endurance, and payload envelopes form one coupled open problem
+(`GAP-BUDGET-001`), not five independent blanks. The worked TS-002/TS-003 analysis is
+preserved in `trade-studies.md`.
 
-| IFC ID | Endpoints | Direction | Flow class | Maturity | Verification | Unknown attributes |
-|---|---|---|---|---|---|---|
-| IFC-EXT-006 | OP-007 to OP-002 | bidirectional | configuration and maintenance | proposed design / proposed support interface | VER-004; VER-005; VER-007 candidate | data set; format; transport; authorization; retention period; tool ownership |
+## 9. Hazards and Controls Summary
 
-`IFC-EXT-006` is a support/governance interface, not a mission-traffic interface.
-The generated resource diagrams show why it is omitted from the airborne relay
-traffic view.
+The hazard catalog is preliminary architecture reasoning, not a safety assessment.
+No authoritative severity/probability scheme or risk-acceptance authority exists.
 
-## Budgets
+```mermaid
+flowchart LR
+    %% Configuration scope: CFG-REP / CFG-DOM
+    HAZ_001["HAZ-001<br/>Uncommanded descent"] -.-> GAP_HAZ_001["GAP-HAZ-001<br/>No defined control"]
+    HAZ_004["HAZ-004<br/>Propeller contact"] --> CTL_001["CTL-001<br/>Ground-safe arming control"]
+    CTL_001 --> REQ_FUN_006["REQ-FUN-006<br/>Arming inhibit"]
+    CTL_001 --> REQ_SAF_002["REQ-SAF-002<br/>Visible armed state"]
+    REQ_FUN_006 --> VER_006["VER-006<br/>Cross-reference review [UNVERIFIED]"]
+    REQ_SAF_002 --> VER_006
+    VER_006 -.-> GAP_VER_001["GAP-VER-001<br/>Execution evidence missing"]
+    HAZ_008["HAZ-008<br/>Payload separation"] --> CTL_005["CTL-005<br/>Payload retention"]
+    CTL_005 --> REQ_IFC_004["REQ-IFC-004<br/>Retain payload"]
+    REQ_IFC_004 --> VER_008["VER-008<br/>Physical verification [DEFERRED]"]
+    VER_008 -.-> GAP_VER_001
+```
 
-| Budget | Target | Allocated | Margin | Notes |
-|---|---|---|---|---|
-| Mass | [TBD] — bounded below by dry mass (airframe + propulsion hardware + avionics + payload mount + payload envelope; TS-001/TS-006), bounded above by battery mass, which is coupled to REQ-PER-002 and TS-002's hover efficiency, not independently settable | [TBD] | [TBD] | Coupled loop, not yet closed — see TS-002/TS-003 for the iteration and finding. Payload entry is an envelope, not a value |
-| Unit cost | [TBD] | [TBD] | [TBD] | CMP-PWR-01 (battery) is the dominant, least cost-elastic driver — see TS-002/TS-003 finding. Coupled to the same endurance target as Mass, not an independent number |
-| Power | [TBD] | [TBD] | [TBD] | Hover draw dominates; set jointly by AUW (see Mass row) and TS-002's disk-loading choice. Payload allocation is an envelope per TS-004 |
-| Endurance | [TBD] | — | — | Derived, not allocated. See REQ-PER-002. TS-002/TS-003 finding: no candidate value is risk-free — a short-dwell target plausibly converges to a small, cheap design of marginal operational utility; a mission-useful-dwell target risks pricing the platform out of CAP-004. Not resolved here |
+`HAZ-005` is only partially addressed: `REQ-FUN-007` preserves platform control but
+does not restore relay service. `HAZ-009` is a reserved inactive identifier, not an
+active deficiency. External hazards stay deferred pending employment context.
 
-Budgets are deliberately empty, and as of TS-002/TS-003 that emptiness is no longer
-just "blocked on more component data." Working the propulsion/battery loop showed the
-three quantities above are not independent `[TBD]`s that TS-001 through TS-003 will
-fill in one at a time — they are three views of a single unresolved coupling, and the
-iteration (see `trade-studies.md`) suggests the loop does not obviously close
-favorably at every candidate endurance target. Filling these cells with plausible
-figures now would make the model appear more resolved than it is, and in this case
-would also paper over a real, load-bearing open question rather than an ordinary gap
-in component data. Endurance is marked *derived* because it is an output of the mass
-and power budgets rather than an independent allocation — writing a number there
-before the others are closed would invert the dependency.
+The current austere/non-populated employment narrative is an assumption, not an
+enforceable requirement. No flight-termination or geofence function is modeled, so
+`HAZ-001` remains openly unmitigated.
 
-<!-- When TS-001..003 close: consider a script that parses the component tables and
-     computes these rollups, so the budget cannot silently drift from the
-     decomposition. Candidate CI check alongside scripts/check-ids.py. -->
+## 10. Verification Approach
+
+`VER-*` entries allocate analysis, review, inspection, demonstration, or deferred
+physical methods. Allocation is not execution. `EVD-*` records describe available
+repository, source, decision, and validation evidence; none demonstrates physical
+performance or safety.
+
+The near-term admissible work is model review, trace inspection, and source/evidence
+governance. Hardware-dependent evidence remains deferred and must not be inferred
+from a passing repository validator.
+
+## 11. Key Traceability Threads
+
+- Mission: `NEED-001 -> CAP-001 -> SCN-003 -> OA-004 -> FUN-REL-01 -> CMP-COM-01 -> REQ-FUN-001 -> VER-001`.
+- Ground safety: `HAZ-004 -> CTL-001 -> REQ-FUN-006 / REQ-SAF-002 -> VER-004 / VER-006 -> GAP-VER-001`.
+- Payload retention: `HAZ-008 -> CTL-005 -> REQ-IFC-004 -> VER-005 / VER-008 -> GAP-VER-001`.
+- Standards: `DEC-002 -> CFG-REP / CFG-DOM / CFG-DIG / CFG-SOS -> GAP-STD-001`.
+
+The full relationship set belongs only in `model/traceability.yaml`; the generated
+baseline report presents gap-oriented summaries rather than another matrix copy.
+
+## 12. Open Architecture Gaps
+
+The principal retained gaps are recovered-to-candidate mapping and missing source
+evidence; `CAP-003`; `HAZ-001`; external-interface verification authority; UGV and
+sensor/video integration; health/status coverage; the mass/cost/power/endurance
+coupling; physical verification evidence; and the unresolved UAF-version decision.
+
+Cameo reconciliation is deferred future work outside this package and is not a
+principal active deficiency. No Cameo content was used to close any gap.
+
+## 13. Standards Posture
+
+The repository uses a small UAF vocabulary subset:
+
+- Strategic concepts for needs and capabilities.
+- Operational concepts for performers, activities, scenarios, and exchanges.
+- Resource concepts for functions, components, and interfaces.
+
+This keeps capability, operational context, and resource allocation connected in one
+model—something plain SysML would otherwise leave partly in prose—without adopting a
+full acquisition-framework apparatus. UAF draws on UML/SysML and earlier architecture
+framework concepts; this repository does not claim full UAF or DoDAF conformance.
+
+UAF 1.2 terminology remains in use. UAF 1.3 is the current OMG formal version, but
+`DEC-002` / `GAP-STD-001` leaves retention, version-neutral wording, or later migration
+for owner decision. This refactor is not a UAF migration.

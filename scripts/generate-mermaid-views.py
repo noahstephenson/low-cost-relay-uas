@@ -27,13 +27,23 @@ CATALOG_PATHS = {
     "system": ROOT / "system.yaml",
     "sources": ROOT / ".seal" / "sources.yaml",
     "proof": ROOT / ".seal" / "proof.yaml",
-    "configurations": ROOT / "model" / "configurations.yaml",
-    "elements": ROOT / "model" / "elements.yaml",
-    "claims": ROOT / "model" / "claims.yaml",
-    "scenarios": ROOT / "model" / "operational-scenarios.yaml",
-    "interfaces": ROOT / "model" / "interfaces.yaml",
-    "requirements": ROOT / "model" / "requirements.yaml",
+    "architecture": ROOT / "model" / "architecture.yaml",
+    "assurance": ROOT / "model" / "assurance.yaml",
     "traceability": ROOT / "model" / "traceability.yaml",
+}
+
+SHORT_LABELS = {
+    "SRC-INT-001": "Recovered-article research report",
+    "GAP-STD-001": "UAF version decision unresolved",
+    "GAP-REC-001": "Recovered-to-candidate mapping unresolved",
+    "GAP-HAZ-001": "HAZ-001 has no defined control",
+    "GAP-VER-001": "Execution evidence missing",
+    "REQ-FUN-001": "Relay outbound traffic",
+    "REQ-FUN-006": "Inhibit arming in Ground Safe",
+    "REQ-FUN-007": "Remain controllable after payload loss",
+    "REQ-IFC-004": "Retain payload under flight loads",
+    "REQ-SAF-001": "Protect and retain battery",
+    "REQ-SAF-002": "Show armed state to operator",
 }
 
 
@@ -48,18 +58,13 @@ def build_index(catalogs: dict[str, dict[str, Any]]) -> dict[str, dict[str, Any]
     index: dict[str, dict[str, Any]] = {}
     collections = [
         catalogs["sources"].get("sources", []),
-        catalogs["configurations"].get("configurations", []),
-        catalogs["claims"].get("claims", []),
-        catalogs["interfaces"].get("interfaces", []),
-        catalogs["requirements"].get("requirements", []),
-        catalogs["scenarios"].get("performers", []),
-        catalogs["scenarios"].get("information_exchanges", []),
-        catalogs["scenarios"].get("scenarios", []),
+        catalogs["proof"].get("claims", []),
         catalogs["proof"].get("evidence", []),
     ]
-    for key, values in catalogs["elements"].items():
-        if key not in {"schema_version", "baseline_status"} and isinstance(values, list):
-            collections.append(values)
+    for catalog_name in ("architecture", "assurance"):
+        for key, values in catalogs[catalog_name].items():
+            if key != "schema_version" and isinstance(values, list):
+                collections.append(values)
     for collection in collections:
         for record in collection:
             if isinstance(record, dict) and isinstance(record.get("id"), str):
@@ -73,16 +78,19 @@ def mermaid_key(item_id: str) -> str:
     return re.sub(r"[^A-Za-z0-9_]", "_", item_id)
 
 
-def clean_label(value: Any, limit: int = 68) -> str:
+def clean_label(value: Any, _legacy_limit: int | None = None) -> str:
     text = str(value or "").replace("\n", " ").replace('"', "'")
     text = re.sub(r"\s+", " ", text).strip()
-    return text if len(text) <= limit else text[: limit - 1].rstrip() + "…"
+    return text
 
 
 def record_name(record: dict[str, Any]) -> str:
+    if record.get("id") in SHORT_LABELS:
+        return SHORT_LABELS[record["id"]]
     return clean_label(
         record.get("name")
         or record.get("title")
+        or record.get("subject")
         or record.get("text")
         or record.get("statement")
         or record.get("id")
@@ -99,7 +107,17 @@ def node(index: dict[str, dict[str, Any]], item_id: str, extra: str = "") -> str
 
 def status_of(index: dict[str, dict[str, Any]], item_id: str) -> str:
     record = index[item_id]
-    return clean_label(record.get("decision_status") or record.get("status") or "candidate")
+    if item_id.startswith("GAP-"):
+        return "[DEFERRED]" if record.get("disposition") == "deferred" else "[UNRESOLVED]"
+    status = record.get("decision_status") or record.get("status") or "unverified"
+    labels = {
+        "proposed": "[PROPOSED]",
+        "deferred": "[DEFERRED]",
+        "unknown": "[TBD]",
+        "candidate": "[PROPOSED]",
+        "unverified": "[UNVERIFIED]",
+    }
+    return labels.get(str(status), clean_label(status))
 
 
 def flow_diagram(number: str, title: str, scope: str, body: Iterable[str], note: str = "") -> list[str]:
@@ -140,7 +158,7 @@ def relation_map(catalogs: dict[str, dict[str, Any]]) -> dict[tuple[str, str], d
 
 
 def interface_by_id(catalogs: dict[str, dict[str, Any]]) -> dict[str, dict[str, Any]]:
-    return {item["id"]: item for item in catalogs["interfaces"]["interfaces"]}
+    return {item["id"]: item for item in catalogs["architecture"]["interfaces"]}
 
 
 def edge_for_interface(
@@ -181,12 +199,12 @@ def generated_header() -> list[str]:
 
 def configuration_view(catalogs: dict[str, dict[str, Any]], index: dict[str, dict[str, Any]]) -> list[str]:
     body: list[str] = []
-    for config in catalogs["configurations"]["configurations"]:
-        extra = "reference evidence; not approved" if config["id"] == "CFG-REC" else "proposed; not approved"
+    for config in catalogs["architecture"]["configurations"]:
+        extra = "reference evidence; [UNVERIFIED mapping]" if config["id"] == "CFG-REC" else "[PROPOSED]"
         if config["id"] == "CFG-SOS":
-            extra = "outer system-of-systems context; not approved"
+            extra = "outer system-of-systems context; [PROPOSED]"
         body.append("    " + node(index, config["id"], extra))
-    for config in catalogs["configurations"]["configurations"]:
+    for config in catalogs["architecture"]["configurations"]:
         for predecessor in config.get("predecessor_ids", []):
             meaning = clean_label(config["derivation_relationship"], 54)
             body.append(
@@ -218,9 +236,9 @@ def boundary_view(index: dict[str, dict[str, Any]]) -> list[str]:
         "            " + node(index, "OP-002", "system under study"),
         "        end",
         "    end",
-        '    OP_010 -->|"IX-001 candidate platform command"| OP_002',
-        '    OP_001 <-->|"IX-002 through IX-005 candidate relay thread"| OP_002',
-        '    OP_002 <-->|"candidate traffic relationship"| OP_003',
+        '    OP_010 -->|"IX-001 platform command"| OP_002',
+        '    OP_001 <-->|"IX-002 through IX-005 relay thread"| OP_002',
+        '    OP_002 <-->|"mission traffic relationship"| OP_003',
         '    OP_007 <-->|"IX-010 / IFC-EXT-006 support"| OP_002',
         '    OP_008 -.->|"external authority; criteria unresolved"| OP_002',
         '    OP_001 -.->|"IX-006 / IX-007 proposed / TBD"| OP_004',
@@ -278,11 +296,11 @@ def resource_diagrams(catalogs: dict[str, dict[str, Any]], index: dict[str, dict
     structure_ids = ["CMP-AFR-01", "CMP-AFR-02", "CMP-AFR-03", "CMP-AFR-04", "CMP-AFR-05", "CMP-MNT-01", "CMP-COM-01"]
     body = ["    " + node(index, item_id) for item_id in structure_ids]
     body.extend([
-        '    CMP_AFR_01 -.->|"candidate structural decomposition"| CMP_AFR_02',
-        '    CMP_AFR_01 -.->|"candidate structural decomposition"| CMP_AFR_03',
-        '    CMP_AFR_01 -.->|"candidate structural decomposition"| CMP_AFR_04',
-        '    CMP_AFR_01 -.->|"candidate hardware set"| CMP_AFR_05',
-        '    CMP_AFR_04 -.->|"candidate mount relationship; interface detail TBD"| CMP_MNT_01',
+        '    CMP_AFR_01 -.->|"structural decomposition"| CMP_AFR_02',
+        '    CMP_AFR_01 -.->|"structural decomposition"| CMP_AFR_03',
+        '    CMP_AFR_01 -.->|"structural decomposition"| CMP_AFR_04',
+        '    CMP_AFR_01 -.->|"hardware set"| CMP_AFR_05',
+        '    CMP_AFR_04 -.->|"mount relationship [TBD]"| CMP_MNT_01',
         edge_for_interface(interfaces["IFC-INT-007"]),
     ])
     lines.extend(flow_diagram("4A", "Structure and payload mounting", "CFG-REP / CFG-DOM", body))
@@ -290,14 +308,14 @@ def resource_diagrams(catalogs: dict[str, dict[str, Any]], index: dict[str, dict
     power_ids = ["CMP-PWR-01", "CMP-PWR-02", "CMP-PWR-03", "CMP-PWR-04", "CMP-PRP-01", "CMP-PRP-02", "CMP-PRP-03", "CMP-AVN-01", "CMP-COM-01"]
     body = ["    " + node(index, item_id) for item_id in power_ids]
     body.extend([
-        '    CMP_PWR_01 -.->|"candidate source association; IFC not allocated"| CMP_PWR_02',
-        '    CMP_PWR_04 -.->|"candidate resource association; IFC not allocated"| CMP_PWR_02',
+        '    CMP_PWR_01 -.->|"source association; IFC not allocated"| CMP_PWR_02',
+        '    CMP_PWR_04 -.->|"resource association; IFC not allocated"| CMP_PWR_02',
         edge_for_interface(interfaces["IFC-INT-001"]),
         edge_for_interface(interfaces["IFC-INT-002"]),
         edge_for_interface(interfaces["IFC-INT-003"], label_suffix="platform-to-payload"),
         edge_for_interface(interfaces["IFC-INT-006"]),
-        '    CMP_PRP_02 -.->|"candidate propulsion association"| CMP_PRP_01',
-        '    CMP_PRP_01 -.->|"candidate propulsion association"| CMP_PRP_03',
+        '    CMP_PRP_02 -.->|"propulsion association"| CMP_PRP_01',
+        '    CMP_PRP_01 -.->|"propulsion association"| CMP_PRP_03',
     ])
     lines.extend(flow_diagram("4B", "Power and propulsion connectivity", "CFG-REP / CFG-DOM", body))
 
@@ -309,7 +327,7 @@ def resource_diagrams(catalogs: dict[str, dict[str, Any]], index: dict[str, dict
         edge_for_interface(interfaces["IFC-INT-004"]),
         edge_for_interface(interfaces["IFC-INT-006"]),
         edge_for_interface(interfaces["IFC-INT-009"]),
-        '    CMP_AVN_03 -.->|"candidate navigation resource; detailed IFC unresolved"| CMP_AVN_01',
+        '    CMP_AVN_03 -.->|"navigation resource; IFC unresolved"| CMP_AVN_01',
     ])
     lines.extend(flow_diagram("4C", "Avionics and platform control connectivity", "CFG-REP / CFG-DOM", body))
 
@@ -353,9 +371,9 @@ def resource_diagrams(catalogs: dict[str, dict[str, Any]], index: dict[str, dict
 
     body = [
         "    " + node(index, "CMP-AVN-01"),
-        "    " + node(index, "CMP-COM-01", "future payload candidate"),
+        "    " + node(index, "CMP-COM-01", "future payload [PROPOSED]"),
         edge_for_interface(interfaces["IFC-INT-008"], label_suffix="future / proposed"),
-        "    " + node(index, "IX-008", "future sensor-data exchange; unresolved"),
+        "    " + node(index, "IX-008", "future sensor-data exchange [TBD]"),
         '    IX_008 -.->|"realizing interface TBD - GAP-SOS-002"| CMP_COM_01',
     ]
     lines.extend(flow_diagram(
@@ -376,16 +394,16 @@ def mode_view(index: dict[str, dict[str, Any]]) -> list[str]:
         '    state "MODE-003 Relay Degraded" as MODE_003',
         '    state "MODE-004 Return / Recovery" as MODE_004',
         "    [*] --> MODE_005",
-        "    MODE_005 --> MODE_001: SCN-002 candidate transition",
-        "    MODE_001 --> MODE_002: SCN-002 station established; candidate",
+        "    MODE_005 --> MODE_001: SCN-002 transition",
+        "    MODE_001 --> MODE_002: SCN-002 station established",
         "    MODE_002 --> MODE_003: SCN-007 relay function degraded",
-        "    MODE_003 --> MODE_004: SCN-007 recovery intent; candidate",
+        "    MODE_003 --> MODE_004: SCN-007 recovery intent",
         "    MODE_002 --> MODE_004: SCN-008 termination or REQ-FUN-005",
-        "    MODE_004 --> MODE_005: SCN-008 recovered; candidate",
+        "    MODE_004 --> MODE_005: SCN-008 recovered",
         "    note right of MODE_003",
         "      Payload function degraded",
         "      Platform control may remain available",
-        "      REQ-FUN-007 candidate; evidence deferred",
+        "      REQ-FUN-007 [PROPOSED]; evidence [DEFERRED]",
         "    end note",
     ]
     return state_diagram(
@@ -408,9 +426,9 @@ def launch_sequence(index: dict[str, dict[str, Any]]) -> list[str]:
         "    Operator->>Receiver: IX-001 / IFC-EXT-005 platform command intent",
         "    Receiver->>Flight: IFC-INT-005 platform control input",
         "    Nav-->>Flight: IFC-INT-009 navigation/timing information",
-        "    Flight->>Propulsion: IFC-INT-004 candidate propulsion command",
+        "    Flight->>Propulsion: IFC-INT-004 propulsion command",
         "    Relay-->>Operator: IX-009 health/status (partial realization; GAP-SOS-003)",
-        "    Note over Operator,Relay: SCN-002 candidate walkthrough; no protocol, timing, or procedure defined",
+        "    Note over Operator,Relay: SCN-002 architecture walkthrough; no procedure defined",
     ]
     return sequence_diagram("6", "Launch and positioning sequence", "CFG-REP / CFG-DOM", body)
 
@@ -444,7 +462,7 @@ def degradation_sequence(index: dict[str, dict[str, Any]]) -> list[str]:
         "    Relay-->>Operator: IX-009 health/status indication (partial)",
         "    Operator->>Relay: IX-001 / IFC-EXT-005 independent platform command",
         "    alt Payload lost; platform remains controllable",
-        "        Note over Payload,Relay: MODE-003 Relay Degraded; CTL-004 / REQ-FUN-007 candidate",
+        "        Note over Payload,Relay: MODE-003; CTL-004 / REQ-FUN-007 [PROPOSED]",
         "        Relay-->>Operator: transition intent toward MODE-004 Return / Recovery",
         "    else Platform control also impaired",
         "        Note over Relay,Operator: HAZ-001 / GAP-HAZ-001 - no modeled consequence-management behavior",
@@ -464,7 +482,7 @@ def lifecycle_view(index: dict[str, dict[str, Any]]) -> list[str]:
     scenario_ids = [f"SCN-{number:03d}" for number in range(1, 9)]
     body = ["    " + node(index, item_id, status_of(index, item_id)) for item_id in scenario_ids]
     body.extend([
-        '    SCN_001 -->|"candidate progression"| SCN_002',
+        '    SCN_001 -->|"progression"| SCN_002',
         '    SCN_002 -->|"outbound thread"| SCN_003',
         '    SCN_002 -->|"return thread"| SCN_004',
         '    SCN_003 -->|"degraded"| SCN_007',
@@ -485,8 +503,8 @@ def lifecycle_view(index: dict[str, dict[str, Any]]) -> list[str]:
 
 
 def hazard_view(catalogs: dict[str, dict[str, Any]], index: dict[str, dict[str, Any]]) -> list[str]:
-    controls = catalogs["elements"]["controls"]
-    requirements = {item["id"]: item for item in catalogs["requirements"]["requirements"]}
+    controls = catalogs["assurance"]["controls"]
+    requirements = {item["id"]: item for item in catalogs["assurance"]["requirements"]}
     body: list[str] = []
     emitted: set[str] = set()
 
@@ -495,22 +513,19 @@ def hazard_view(catalogs: dict[str, dict[str, Any]], index: dict[str, dict[str, 
             body.append("    " + node(index, item_id, extra))
             emitted.add(item_id)
 
-    for hazard_id in ["HAZ-003", "HAZ-004", "HAZ-005", "HAZ-008"]:
-        emit(hazard_id, "candidate hazard")
+    for hazard_id in ["HAZ-004", "HAZ-008"]:
+        emit(hazard_id, "[PROPOSED]")
         control = next(item for item in controls if hazard_id in item.get("mitigates", []))
-        emit(control["id"], "proposed control")
-        body.append(f'    {mermaid_key(hazard_id)} -->|"mitigated by; candidate"| {mermaid_key(control["id"])}')
+        emit(control["id"], "[PROPOSED]")
+        body.append(f'    {mermaid_key(hazard_id)} -->|"mitigated by"| {mermaid_key(control["id"])}')
         for requirement_id in control["implemented_by"]:
-            emit(requirement_id, "proposed requirement")
-            body.append(f'    {mermaid_key(control["id"])} -->|"implemented by; candidate"| {mermaid_key(requirement_id)}')
+            emit(requirement_id, "[PROPOSED]")
+            body.append(f'    {mermaid_key(control["id"])} -->|"implemented by"| {mermaid_key(requirement_id)}')
             for verification_id in requirements[requirement_id].get("verification_ids", []):
-                emit(verification_id, "candidate or deferred method")
-                body.append(f'    {mermaid_key(requirement_id)} -->|"verification allocation; not execution"| {mermaid_key(verification_id)}')
-                emit("GAP-VER-001", "missing execution evidence")
-                body.append(f'    {mermaid_key(verification_id)} -.->|"no executed evidence"| GAP_VER_001')
-    emit("HAZ-001", "explicitly unmitigated")
-    emit("GAP-HAZ-001", "true architecture coverage gap")
-    body.append('    HAZ_001 -.->|"no defined control"| GAP_HAZ_001')
+                emit(verification_id, "[DEFERRED] or [UNVERIFIED]")
+                body.append(f'    {mermaid_key(requirement_id)} -->|"verification allocation"| {mermaid_key(verification_id)}')
+                emit("GAP-VER-001", "[UNVERIFIED]")
+                body.append(f'    {mermaid_key(verification_id)} -.->|"execution evidence missing"| GAP_VER_001')
     return flow_diagram(
         "10",
         "Hazard-control-requirement-verification",
@@ -522,28 +537,22 @@ def hazard_view(catalogs: dict[str, dict[str, Any]], index: dict[str, dict[str, 
 
 def trace_view(index: dict[str, dict[str, Any]]) -> list[str]:
     ids = [
-        "NEED-001", "CAP-001", "SCN-003", "OA-004", "IX-002", "IX-003",
-        "FUN-REL-01", "CMP-COM-01", "IFC-EXT-001", "IFC-EXT-002",
-        "REQ-FUN-001", "VER-001", "VER-004", "GAP-VER-001",
+        "NEED-001", "CAP-001", "SCN-003", "OA-004", "IX-002",
+        "FUN-REL-01", "CMP-COM-01", "IFC-EXT-001",
+        "REQ-FUN-001", "VER-001", "GAP-VER-001",
     ]
     body = ["    " + node(index, item_id, status_of(index, item_id)) for item_id in ids]
     body.extend([
-        '    NEED_001 -->|"motivates; candidate"| CAP_001',
-        '    CAP_001 -->|"exercised by; candidate"| SCN_003',
-        '    SCN_003 -->|"uses; candidate"| OA_004',
-        '    OA_004 -->|"information exchange; candidate"| IX_002',
-        '    OA_004 -->|"information exchange; candidate"| IX_003',
-        '    IX_002 -->|"supports; candidate"| FUN_REL_01',
-        '    IX_003 -->|"supports; candidate"| FUN_REL_01',
-        '    FUN_REL_01 -->|"allocated to; candidate"| CMP_COM_01',
-        '    CMP_COM_01 -->|"external interface; candidate"| IFC_EXT_001',
-        '    CMP_COM_01 -->|"external interface; candidate"| IFC_EXT_002',
-        '    IFC_EXT_001 -->|"allocated requirement; candidate"| REQ_FUN_001',
-        '    IFC_EXT_002 -->|"allocated requirement; candidate"| REQ_FUN_001',
-        '    REQ_FUN_001 -->|"verification allocation; candidate"| VER_001',
-        '    REQ_FUN_001 -->|"verification allocation; candidate"| VER_004',
+        '    NEED_001 -->|"motivates"| CAP_001',
+        '    CAP_001 -->|"exercised by"| SCN_003',
+        '    SCN_003 -->|"uses"| OA_004',
+        '    OA_004 -->|"information exchange"| IX_002',
+        '    IX_002 -->|"supports"| FUN_REL_01',
+        '    FUN_REL_01 -->|"allocated to"| CMP_COM_01',
+        '    CMP_COM_01 -->|"external interface"| IFC_EXT_001',
+        '    IFC_EXT_001 -->|"allocated requirement"| REQ_FUN_001',
+        '    REQ_FUN_001 -->|"verification allocation"| VER_001',
         '    VER_001 -.->|"execution evidence unresolved"| GAP_VER_001',
-        '    VER_004 -.->|"execution evidence unresolved"| GAP_VER_001',
     ])
     return flow_diagram(
         "11",
@@ -583,40 +592,17 @@ def governance_view(index: dict[str, dict[str, Any]]) -> list[str]:
     )
 
 
-def requirement_example(index: dict[str, dict[str, Any]]) -> list[str]:
-    ids = ["HAZ-004", "CTL-001", "REQ-FUN-006", "REQ-SAF-002", "VER-004", "VER-006", "GAP-VER-001"]
-    body = ["    " + node(index, item_id, status_of(index, item_id)) for item_id in ids]
-    body.extend([
-        '    HAZ_004 -->|"mitigated by; candidate"| CTL_001',
-        '    CTL_001 -->|"satisfied by arming inhibit; candidate"| REQ_FUN_006',
-        '    CTL_001 -->|"satisfied by visible indication; candidate"| REQ_SAF_002',
-        '    REQ_FUN_006 -->|"verified by allocation only"| VER_006',
-        '    REQ_SAF_002 -->|"verified by allocation only"| VER_006',
-        '    REQ_FUN_006 -->|"scenario walkthrough allocation"| VER_004',
-        '    REQ_SAF_002 -->|"scenario walkthrough allocation"| VER_004',
-        '    VER_004 -.->|"no executed physical evidence"| GAP_VER_001',
-        '    VER_006 -.->|"cross-reference only"| GAP_VER_001',
-    ])
-    return flow_diagram(
-        "13",
-        "Requirement relationship example - Ground Safe arming",
-        "CFG-REP / CFG-DOM",
-        body,
-        "A flowchart is used instead of `requirementDiagram` to stay within the most consistently rendered GitHub Mermaid subset when no pinned local parser is available.",
-    )
-
-
 def interface_inventory(catalogs: dict[str, dict[str, Any]]) -> list[str]:
     lines = [
         "## Generated interface inventory",
         "",
-        "This inventory is generated directly from `model/interfaces.yaml`. Empty",
+        "This inventory is generated directly from `model/architecture.yaml`. Empty",
         "verification cells are explicit gaps, not evidence of completion.",
         "",
         "| ID | Endpoints | Direction | Flow class | Configurations | Maturity | Verification | Unknown attributes |",
         "|---|---|---|---|---|---|---|---|",
     ]
-    for interface in catalogs["interfaces"]["interfaces"]:
+    for interface in catalogs["architecture"]["interfaces"]:
         verification = ", ".join(interface.get("verification_ids", [])) or "None - explicit gap"
         unknowns = "; ".join(interface.get("unknown_attributes", [])) or "None recorded"
         maturity = f"{interface.get('evidence_basis')} / {interface.get('decision_status')}"
@@ -658,7 +644,6 @@ def render(catalogs: dict[str, dict[str, Any]]) -> str:
     lines.extend(hazard_view(catalogs, index))
     lines.extend(trace_view(index))
     lines.extend(governance_view(index))
-    lines.extend(requirement_example(index))
     lines.extend(interface_inventory(catalogs))
     return "\n".join(lines).rstrip() + "\n"
 

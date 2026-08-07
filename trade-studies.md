@@ -1,10 +1,12 @@
 # Trade Studies
 
-Open decisions this model does not resolve. Each `TS-` ID is referenced from
-`architecture.md` where it gates a component selection.
+Open decisions this model does not resolve. The `TS-*` register metadata is
+authoritative in `model/assurance.yaml`; this document preserves the substantive
+engineering reasoning that should not be reduced to catalog fields.
 
-The point of this file is to make the model's ignorance explicit. A `TODO` in a
-component table is a gap; a `TS-` reference is a *known* gap with a defined shape.
+The point of this file is to make the model's ignorance explicit. A `TS-*` reference
+is a known gap with a defined question, not permission to fill an unknown with a
+plausible value.
 
 ## Status Legend
 
@@ -39,7 +41,7 @@ power, and electronic-warfare/counter-EW technique. There is no state this proje
 reaches where TS-009 becomes a study to work; it is a boundary of the study itself.
 
 **What would actually have to happen for someone to pick this up.** Consistent with
-the language already used in README's Scope Boundaries and Disclaimer sections:
+the scope constraints summarized in `README.md`:
 moving toward a real payload would require RF engineering expertise as a separate
 effort, spectrum authorization from the relevant national authority before any
 radiating hardware exists, and — in a defense-affiliated context — export control
@@ -52,10 +54,11 @@ of the two choices `architecture.md` calls out as shaping everything downstream:
 payload is isolated behind exactly two interfaces. `CMP-COM-01` touches the rest of
 the system through `IFC-INT-003` (regulated power) and `IFC-INT-007` (mechanical
 retention), and nothing else — no data path, no control signal, no shared structure.
-`REQ-IFC-003` exists specifically to hold that boundary in place: *"The payload
-interface shall be limited to power (`IFC-INT-003`) and mechanical retention
-(`IFC-INT-007`)"* — its own rationale states plainly that "a third interface would
-break the isolation the architecture depends on." As long as that requirement holds,
+`REQ-IFC-003` exists specifically to hold that boundary in place: *"The
+platform-to-payload interface shall be limited to power (`IFC-INT-003`) and
+mechanical retention (`IFC-INT-007`)."* Its rationale is that another platform
+crossing would break the isolation the architecture depends on. As long as that
+requirement holds,
 TS-009 can be picked up — by this project, by someone else entirely, on whatever
 timeline RF engineering, spectrum authorization, and export control allow — without
 the platform architecture around it needing to change. A payload decision is a
@@ -236,7 +239,7 @@ Coupled to TS-002 (above) and TS-001 (structural efficiency).
 
 ### TS-002 / TS-003 — Shared Finding: Does the Endurance-vs-Cost Loop Close?
 
-`uaf-views.md`'s own gap analysis names the falsification condition this finding
+The capability analysis in `architecture.md` names the falsification condition this finding
 addresses directly: *"if the endurance-versus-cost loop in TS-003 closes
 unfavourably, a platform cheap enough to be attritable may not hold station long
 enough to be useful, and the intersection is empty for physical reasons rather than
@@ -269,7 +272,7 @@ making the rest of the platform cheaper:
 None of this means the intersection is *definitely* empty — a short-dwell endurance
 target plausibly converges to a small, genuinely cheap, genuinely attritable
 platform through this same iteration. But a short dwell time is also in tension with
-the reason `OP-002` exists in the first place: `uaf-views.md`'s operational concept
+the reason `OP-002` exists in the first place: the operational concept in `architecture.md`
 describes the relay's value as *positional* and dependent on *sustained* geometry
 (`OA-003`, `FUN-FLT-03`), not a brief window. A relay that must be relaunched every
 few minutes to maintain a link does not obviously deliver `CAP-001`/`CAP-002` in any
@@ -282,8 +285,8 @@ illustrative candidates used above. What this trade study does establish is that
 `REQ-PER-002`, `REQ-PER-003`, and `REQ-PER-001` are not three independent `[TBD]`s
 that can be filled in one at a time — they are three views of the same unresolved
 coupling, and setting any one of them first constrains the other two in ways the
-model does not yet make explicit. See `architecture.md`'s Budgets table and
-`traceability.md`'s Coverage Gaps for how this is carried forward.
+model does not yet make explicit. See the requirements and open-gap summaries in
+`architecture.md` and `reports/baseline.md` for how this is carried forward.
 
 ## Template
 

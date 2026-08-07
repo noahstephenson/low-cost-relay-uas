@@ -1,11 +1,11 @@
-name: Check IDs
+name: Validate Baseline
 
 on:
   push:
   pull_request:
 
 jobs:
-  check-ids:
+  validate-baseline:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -14,5 +14,5 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Run ID consistency checks
-        run: python scripts/check-ids.py
+      - name: Validate consolidated model and generated views
+        run: python scripts/validate-baseline.py --check-generated

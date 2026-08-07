@@ -22,15 +22,15 @@ Derivation denotes an architecture relationship, not exact inheritance, equivale
 ```mermaid
 flowchart LR
     %% Configuration scope: CFG-REC / CFG-REP / CFG-DOM / CFG-DIG / CFG-SOS
-    CFG_REC["CFG-REC<br/>Recovered Reference Article<br/>reference evidence; not approved"]
-    CFG_REP["CFG-REP<br/>Safe Functional-Replica Architecture<br/>proposed; not approved"]
-    CFG_DOM["CFG-DOM<br/>Domestic Low-Cost Relay-UAS Architecture<br/>proposed; not approved"]
-    CFG_DIG["CFG-DIG<br/>Future Digital Multi-Platform Relay Architecture<br/>proposed; not approved"]
-    CFG_SOS["CFG-SOS<br/>UAS-UGV-Radio C2 System-of-Systems Architecture<br/>outer system-of-systems context; not approved"]
+    CFG_REC["CFG-REC<br/>Recovered Reference Article<br/>reference evidence; [UNVERIFIED mapping]"]
+    CFG_REP["CFG-REP<br/>Safe Functional-Replica Architecture<br/>[PROPOSED]"]
+    CFG_DOM["CFG-DOM<br/>Domestic Low-Cost Relay-UAS Architecture<br/>[PROPOSED]"]
+    CFG_DIG["CFG-DIG<br/>Future Digital Multi-Platform Relay Architecture<br/>[PROPOSED]"]
+    CFG_SOS["CFG-SOS<br/>UAS-UGV-Radio C2 System-of-Systems Architecture<br/>outer system-of-systems context; [PROPOSED]"]
     CFG_REC -->|"proposed functional derivation, not an exact clone<br/>derivation is not approval"| CFG_REP
     CFG_REP -->|"proposed substitution architecture<br/>derivation is not approval"| CFG_DOM
     CFG_REP -->|"future concept branch<br/>derivation is not approval"| CFG_DIG
-    CFG_DIG -->|"outer system-of-systems context containing the relay…<br/>derivation is not approval"| CFG_SOS
+    CFG_DIG -->|"outer system-of-systems context containing the relay UAS as one constituent<br/>derivation is not approval"| CFG_SOS
 ```
 
 ### 2. Two-boundary context
@@ -56,9 +56,9 @@ flowchart LR
             OP_002["OP-002<br/>Relay UAS / Relay Node<br/>system under study"]
         end
     end
-    OP_010 -->|"IX-001 candidate platform command"| OP_002
-    OP_001 <-->|"IX-002 through IX-005 candidate relay thread"| OP_002
-    OP_002 <-->|"candidate traffic relationship"| OP_003
+    OP_010 -->|"IX-001 platform command"| OP_002
+    OP_001 <-->|"IX-002 through IX-005 relay thread"| OP_002
+    OP_002 <-->|"mission traffic relationship"| OP_003
     OP_007 <-->|"IX-010 / IFC-EXT-006 support"| OP_002
     OP_008 -.->|"external authority; criteria unresolved"| OP_002
     OP_001 -.->|"IX-006 / IX-007 proposed / TBD"| OP_004
@@ -104,11 +104,11 @@ flowchart LR
     CMP_AFR_05["CMP-AFR-05<br/>Fastener and hardware set"]
     CMP_MNT_01["CMP-MNT-01<br/>Modular payload bay"]
     CMP_COM_01["CMP-COM-01<br/>Relay payload module (black box)"]
-    CMP_AFR_01 -.->|"candidate structural decomposition"| CMP_AFR_02
-    CMP_AFR_01 -.->|"candidate structural decomposition"| CMP_AFR_03
-    CMP_AFR_01 -.->|"candidate structural decomposition"| CMP_AFR_04
-    CMP_AFR_01 -.->|"candidate hardware set"| CMP_AFR_05
-    CMP_AFR_04 -.->|"candidate mount relationship; interface detail TBD"| CMP_MNT_01
+    CMP_AFR_01 -.->|"structural decomposition"| CMP_AFR_02
+    CMP_AFR_01 -.->|"structural decomposition"| CMP_AFR_03
+    CMP_AFR_01 -.->|"structural decomposition"| CMP_AFR_04
+    CMP_AFR_01 -.->|"hardware set"| CMP_AFR_05
+    CMP_AFR_04 -.->|"mount relationship [TBD]"| CMP_MNT_01
     CMP_MNT_01 <-->|"IFC-INT-007<br/>mechanical mounting"| CMP_COM_01
 ```
 
@@ -128,14 +128,14 @@ flowchart LR
     CMP_PRP_03["CMP-PRP-03<br/>Propeller"]
     CMP_AVN_01["CMP-AVN-01<br/>Flight controller"]
     CMP_COM_01["CMP-COM-01<br/>Relay payload module (black box)"]
-    CMP_PWR_01 -.->|"candidate source association; IFC not allocated"| CMP_PWR_02
-    CMP_PWR_04 -.->|"candidate resource association; IFC not allocated"| CMP_PWR_02
+    CMP_PWR_01 -.->|"source association; IFC not allocated"| CMP_PWR_02
+    CMP_PWR_04 -.->|"resource association; IFC not allocated"| CMP_PWR_02
     CMP_PWR_02 -->|"IFC-INT-001<br/>electrical power"| CMP_PRP_02
     CMP_PWR_03 -->|"IFC-INT-002<br/>electrical power"| CMP_AVN_01
     CMP_PWR_03 -->|"IFC-INT-003<br/>electrical power<br/>platform-to-payload"| CMP_COM_01
     CMP_PWR_02 -->|"IFC-INT-006<br/>health and status"| CMP_AVN_01
-    CMP_PRP_02 -.->|"candidate propulsion association"| CMP_PRP_01
-    CMP_PRP_01 -.->|"candidate propulsion association"| CMP_PRP_03
+    CMP_PRP_02 -.->|"propulsion association"| CMP_PRP_01
+    CMP_PRP_01 -.->|"propulsion association"| CMP_PRP_03
 ```
 
 ### 4C. Avionics and platform control connectivity
@@ -157,7 +157,7 @@ flowchart LR
     CMP_AVN_01 -->|"IFC-INT-004<br/>command and control"| CMP_PRP_02
     CMP_PWR_02 -->|"IFC-INT-006<br/>health and status"| CMP_AVN_01
     CMP_AVN_02 -->|"IFC-INT-009<br/>navigation and timing"| CMP_AVN_01
-    CMP_AVN_03 -.->|"candidate navigation resource; detailed IFC unresolved"| CMP_AVN_01
+    CMP_AVN_03 -.->|"navigation resource; IFC unresolved"| CMP_AVN_01
 ```
 
 ### 4D. Payload boundary and external traffic
@@ -176,7 +176,7 @@ flowchart LR
     subgraph PAYLOAD["Relay-payload black-box envelope"]
         CMP_COM_01["CMP-COM-01<br/>Relay payload module (black box)"]
         CMP_COM_02["CMP-COM-02<br/>Antenna physical-resource envelope<br/>physical-resource envelope"]
-        CMP_COM_01 <-->|"IFC-INT-010<br/>physical-resource coupling<br/>payload-internal; no RF characteristi…"| CMP_COM_02
+        CMP_COM_01 <-->|"IFC-INT-010<br/>physical-resource coupling<br/>payload-internal; no RF characteristics"| CMP_COM_02
     end
     CMP_PWR_03 -->|"IFC-INT-003<br/>electrical power<br/>platform boundary crossing"| CMP_COM_01
     CMP_MNT_01 <-->|"IFC-INT-007<br/>mechanical mounting<br/>platform boundary crossing"| CMP_COM_01
@@ -210,9 +210,9 @@ Configuration scope: `CFG-DIG / CFG-SOS only`.
 flowchart LR
     %% Configuration scope: CFG-DIG / CFG-SOS only
     CMP_AVN_01["CMP-AVN-01<br/>Flight controller"]
-    CMP_COM_01["CMP-COM-01<br/>Relay payload module (black box)<br/>future payload candidate"]
-    CMP_AVN_01 <-->|"IFC-INT-008<br/>payload management and health and sta…<br/>future / proposed"| CMP_COM_01
-    IX_008["IX-008<br/>Video or sensor-data return candidate<br/>future sensor-data exchange; unresolved"]
+    CMP_COM_01["CMP-COM-01<br/>Relay payload module (black box)<br/>future payload [PROPOSED]"]
+    CMP_AVN_01 <-->|"IFC-INT-008<br/>payload management and health and status<br/>future / proposed"| CMP_COM_01
+    IX_008["IX-008<br/>Video or sensor-data return candidate<br/>future sensor-data exchange [TBD]"]
     IX_008 -.->|"realizing interface TBD - GAP-SOS-002"| CMP_COM_01
 ```
 
@@ -233,16 +233,16 @@ stateDiagram-v2
     state "MODE-003 Relay Degraded" as MODE_003
     state "MODE-004 Return / Recovery" as MODE_004
     [*] --> MODE_005
-    MODE_005 --> MODE_001: SCN-002 candidate transition
-    MODE_001 --> MODE_002: SCN-002 station established; candidate
+    MODE_005 --> MODE_001: SCN-002 transition
+    MODE_001 --> MODE_002: SCN-002 station established
     MODE_002 --> MODE_003: SCN-007 relay function degraded
-    MODE_003 --> MODE_004: SCN-007 recovery intent; candidate
+    MODE_003 --> MODE_004: SCN-007 recovery intent
     MODE_002 --> MODE_004: SCN-008 termination or REQ-FUN-005
-    MODE_004 --> MODE_005: SCN-008 recovered; candidate
+    MODE_004 --> MODE_005: SCN-008 recovered
     note right of MODE_003
       Payload function degraded
       Platform control may remain available
-      REQ-FUN-007 candidate; evidence deferred
+      REQ-FUN-007 [PROPOSED]; evidence [DEFERRED]
     end note
 ```
 
@@ -262,9 +262,9 @@ sequenceDiagram
     Operator->>Receiver: IX-001 / IFC-EXT-005 platform command intent
     Receiver->>Flight: IFC-INT-005 platform control input
     Nav-->>Flight: IFC-INT-009 navigation/timing information
-    Flight->>Propulsion: IFC-INT-004 candidate propulsion command
+    Flight->>Propulsion: IFC-INT-004 propulsion command
     Relay-->>Operator: IX-009 health/status (partial realization; GAP-SOS-003)
-    Note over Operator,Relay: SCN-002 candidate walkthrough; no protocol, timing, or procedure defined
+    Note over Operator,Relay: SCN-002 architecture walkthrough; no procedure defined
 ```
 
 ### 7. Bidirectional relay sequence
@@ -306,7 +306,7 @@ sequenceDiagram
     Relay-->>Operator: IX-009 health/status indication (partial)
     Operator->>Relay: IX-001 / IFC-EXT-005 independent platform command
     alt Payload lost; platform remains controllable
-        Note over Payload,Relay: MODE-003 Relay Degraded; CTL-004 / REQ-FUN-007 candidate
+        Note over Payload,Relay: MODE-003; CTL-004 / REQ-FUN-007 [PROPOSED]
         Relay-->>Operator: transition intent toward MODE-004 Return / Recovery
     else Platform control also impaired
         Note over Relay,Operator: HAZ-001 / GAP-HAZ-001 - no modeled consequence-management behavior
@@ -323,15 +323,15 @@ Dashed branches are future proposals without complete activity, interface, requi
 ```mermaid
 flowchart LR
     %% Configuration scope: CFG-REP / CFG-DOM current; CFG-DIG / CFG-SOS proposed branches
-    SCN_001["SCN-001<br/>System setup and initialization<br/>proposed"]
-    SCN_002["SCN-002<br/>Relay-UAS launch and positioning<br/>proposed"]
-    SCN_003["SCN-003<br/>Remote-UAS command through the relay<br/>proposed"]
-    SCN_004["SCN-004<br/>Remote-UAS telemetry return<br/>proposed"]
-    SCN_005["SCN-005<br/>UGV command and telemetry through the architecture<br/>proposed"]
-    SCN_006["SCN-006<br/>Video or sensor-data return<br/>proposed"]
-    SCN_007["SCN-007<br/>Relay degradation, loss, or recovery<br/>proposed"]
-    SCN_008["SCN-008<br/>Mission termination and data recovery<br/>proposed"]
-    SCN_001 -->|"candidate progression"| SCN_002
+    SCN_001["SCN-001<br/>System setup and initialization<br/>[PROPOSED]"]
+    SCN_002["SCN-002<br/>Relay-UAS launch and positioning<br/>[PROPOSED]"]
+    SCN_003["SCN-003<br/>Remote-UAS command through the relay<br/>[PROPOSED]"]
+    SCN_004["SCN-004<br/>Remote-UAS telemetry return<br/>[PROPOSED]"]
+    SCN_005["SCN-005<br/>UGV command and telemetry through the architecture<br/>[PROPOSED]"]
+    SCN_006["SCN-006<br/>Video or sensor-data return<br/>[PROPOSED]"]
+    SCN_007["SCN-007<br/>Relay degradation, loss, or recovery<br/>[PROPOSED]"]
+    SCN_008["SCN-008<br/>Mission termination and data recovery<br/>[PROPOSED]"]
+    SCN_001 -->|"progression"| SCN_002
     SCN_002 -->|"outbound thread"| SCN_003
     SCN_002 -->|"return thread"| SCN_004
     SCN_003 -->|"degraded"| SCN_007
@@ -354,62 +354,37 @@ Verification nodes are candidate or deferred methods. They are not executed evid
 ```mermaid
 flowchart LR
     %% Configuration scope: CFG-REP / CFG-DOM
-    HAZ_003["HAZ-003<br/>Battery thermal event<br/>candidate hazard"]
-    CTL_002["CTL-002<br/>Battery over-current protection and physical retention<br/>proposed control"]
-    HAZ_003 -->|"mitigated by; candidate"| CTL_002
-    REQ_SAF_001["REQ-SAF-001<br/>The battery installation shall provide over-current protection and…<br/>proposed requirement"]
-    CTL_002 -->|"implemented by; candidate"| REQ_SAF_001
-    VER_005["VER-005<br/>Interface-catalog inspection<br/>candidate or deferred method"]
-    REQ_SAF_001 -->|"verification allocation; not execution"| VER_005
-    GAP_VER_001["GAP-VER-001<br/>Most requirements have candidate or deferred verification methods b…<br/>missing execution evidence"]
-    VER_005 -.->|"no executed evidence"| GAP_VER_001
-    VER_006["VER-006<br/>Hazard-control-requirement cross-reference<br/>candidate or deferred method"]
-    REQ_SAF_001 -->|"verification allocation; not execution"| VER_006
-    VER_006 -.->|"no executed evidence"| GAP_VER_001
-    VER_008["VER-008<br/>Deferred physical verification method<br/>candidate or deferred method"]
-    REQ_SAF_001 -->|"verification allocation; not execution"| VER_008
-    VER_008 -.->|"no executed evidence"| GAP_VER_001
-    HAZ_004["HAZ-004<br/>Propeller contact injury<br/>candidate hazard"]
-    CTL_001["CTL-001<br/>Ground-safe motor arming inhibit and visible armed-state indication<br/>proposed control"]
-    HAZ_004 -->|"mitigated by; candidate"| CTL_001
-    REQ_FUN_006["REQ-FUN-006<br/>The system shall inhibit motor arming while in MODE-005 (Ground Saf…<br/>proposed requirement"]
-    CTL_001 -->|"implemented by; candidate"| REQ_FUN_006
-    VER_004["VER-004<br/>Operational-scenario walkthrough<br/>candidate or deferred method"]
-    REQ_FUN_006 -->|"verification allocation; not execution"| VER_004
-    VER_004 -.->|"no executed evidence"| GAP_VER_001
-    REQ_FUN_006 -->|"verification allocation; not execution"| VER_006
-    VER_006 -.->|"no executed evidence"| GAP_VER_001
-    REQ_SAF_002["REQ-SAF-002<br/>The system shall provide an operator-visible indication of armed st…<br/>proposed requirement"]
-    CTL_001 -->|"implemented by; candidate"| REQ_SAF_002
-    REQ_SAF_002 -->|"verification allocation; not execution"| VER_004
-    VER_004 -.->|"no executed evidence"| GAP_VER_001
-    REQ_SAF_002 -->|"verification allocation; not execution"| VER_006
-    VER_006 -.->|"no executed evidence"| GAP_VER_001
-    HAZ_005["HAZ-005<br/>Loss of relay function while airborne<br/>candidate hazard"]
-    CTL_004["CTL-004<br/>Maintain platform control after relay-payload loss<br/>proposed control"]
-    HAZ_005 -->|"mitigated by; candidate"| CTL_004
-    REQ_FUN_007["REQ-FUN-007<br/>The system shall remain controllable and recoverable following loss…<br/>proposed requirement"]
-    CTL_004 -->|"implemented by; candidate"| REQ_FUN_007
-    REQ_FUN_007 -->|"verification allocation; not execution"| VER_004
-    VER_004 -.->|"no executed evidence"| GAP_VER_001
-    REQ_FUN_007 -->|"verification allocation; not execution"| VER_006
-    VER_006 -.->|"no executed evidence"| GAP_VER_001
-    REQ_FUN_007 -->|"verification allocation; not execution"| VER_008
-    VER_008 -.->|"no executed evidence"| GAP_VER_001
-    HAZ_008["HAZ-008<br/>Payload separation in flight<br/>candidate hazard"]
-    CTL_005["CTL-005<br/>Payload retention under flight loads<br/>proposed control"]
-    HAZ_008 -->|"mitigated by; candidate"| CTL_005
-    REQ_IFC_004["REQ-IFC-004<br/>The payload mount shall retain the payload under all flight loads w…<br/>proposed requirement"]
-    CTL_005 -->|"implemented by; candidate"| REQ_IFC_004
-    REQ_IFC_004 -->|"verification allocation; not execution"| VER_005
-    VER_005 -.->|"no executed evidence"| GAP_VER_001
-    REQ_IFC_004 -->|"verification allocation; not execution"| VER_006
-    VER_006 -.->|"no executed evidence"| GAP_VER_001
-    REQ_IFC_004 -->|"verification allocation; not execution"| VER_008
-    VER_008 -.->|"no executed evidence"| GAP_VER_001
-    HAZ_001["HAZ-001<br/>Uncommanded descent / crash<br/>explicitly unmitigated"]
-    GAP_HAZ_001["GAP-HAZ-001<br/>HAZ-001 has no defined control or mitigating requirement.<br/>true architecture coverage gap"]
-    HAZ_001 -.->|"no defined control"| GAP_HAZ_001
+    HAZ_004["HAZ-004<br/>Propeller contact injury<br/>[PROPOSED]"]
+    CTL_001["CTL-001<br/>Ground-safe motor arming inhibit and visible armed-state indication<br/>[PROPOSED]"]
+    HAZ_004 -->|"mitigated by"| CTL_001
+    REQ_FUN_006["REQ-FUN-006<br/>Inhibit arming in Ground Safe<br/>[PROPOSED]"]
+    CTL_001 -->|"implemented by"| REQ_FUN_006
+    VER_004["VER-004<br/>Operational-scenario walkthrough<br/>[DEFERRED] or [UNVERIFIED]"]
+    REQ_FUN_006 -->|"verification allocation"| VER_004
+    GAP_VER_001["GAP-VER-001<br/>Execution evidence missing<br/>[UNVERIFIED]"]
+    VER_004 -.->|"execution evidence missing"| GAP_VER_001
+    VER_006["VER-006<br/>Hazard-control-requirement cross-reference<br/>[DEFERRED] or [UNVERIFIED]"]
+    REQ_FUN_006 -->|"verification allocation"| VER_006
+    VER_006 -.->|"execution evidence missing"| GAP_VER_001
+    REQ_SAF_002["REQ-SAF-002<br/>Show armed state to operator<br/>[PROPOSED]"]
+    CTL_001 -->|"implemented by"| REQ_SAF_002
+    REQ_SAF_002 -->|"verification allocation"| VER_004
+    VER_004 -.->|"execution evidence missing"| GAP_VER_001
+    REQ_SAF_002 -->|"verification allocation"| VER_006
+    VER_006 -.->|"execution evidence missing"| GAP_VER_001
+    HAZ_008["HAZ-008<br/>Payload separation in flight<br/>[PROPOSED]"]
+    CTL_005["CTL-005<br/>Payload retention under flight loads<br/>[PROPOSED]"]
+    HAZ_008 -->|"mitigated by"| CTL_005
+    REQ_IFC_004["REQ-IFC-004<br/>Retain payload under flight loads<br/>[PROPOSED]"]
+    CTL_005 -->|"implemented by"| REQ_IFC_004
+    VER_005["VER-005<br/>Interface-catalog inspection<br/>[DEFERRED] or [UNVERIFIED]"]
+    REQ_IFC_004 -->|"verification allocation"| VER_005
+    VER_005 -.->|"execution evidence missing"| GAP_VER_001
+    REQ_IFC_004 -->|"verification allocation"| VER_006
+    VER_006 -.->|"execution evidence missing"| GAP_VER_001
+    VER_008["VER-008<br/>Deferred physical verification method<br/>[DEFERRED] or [UNVERIFIED]"]
+    REQ_IFC_004 -->|"verification allocation"| VER_008
+    VER_008 -.->|"execution evidence missing"| GAP_VER_001
 ```
 
 ### 11. End-to-end architecture trace
@@ -421,36 +396,27 @@ The thread is readable end to end, but candidate relationships and evidence gaps
 ```mermaid
 flowchart LR
     %% Configuration scope: CFG-REP / CFG-DOM
-    NEED_001["NEED-001<br/>Extend command, telemetry, and permitted mission-data reach through…<br/>proposed"]
-    CAP_001["CAP-001<br/>Beyond-Line-of-Sight Control<br/>proposed"]
-    SCN_003["SCN-003<br/>Remote-UAS command through the relay<br/>proposed"]
-    OA_004["OA-004<br/>Relay outbound traffic<br/>proposed"]
-    IX_002["IX-002<br/>Remote-UAS command toward relay<br/>proposed"]
-    IX_003["IX-003<br/>Remote-UAS command from relay<br/>proposed"]
-    FUN_REL_01["FUN-REL-01<br/>Relay outbound traffic<br/>proposed"]
-    CMP_COM_01["CMP-COM-01<br/>Relay payload module (black box)<br/>proposed"]
-    IFC_EXT_001["IFC-EXT-001<br/>Ground-control outbound traffic to relay payload<br/>proposed"]
-    IFC_EXT_002["IFC-EXT-002<br/>Relay-payload outbound traffic to remote UAS<br/>proposed"]
-    REQ_FUN_001["REQ-FUN-001<br/>The system shall relay outbound traffic from a ground control node…<br/>proposed"]
-    VER_001["VER-001<br/>Requirement and architecture analysis<br/>proposed"]
-    VER_004["VER-004<br/>Operational-scenario walkthrough<br/>proposed"]
-    GAP_VER_001["GAP-VER-001<br/>Most requirements have candidate or deferred verification methods b…<br/>candidate"]
-    NEED_001 -->|"motivates; candidate"| CAP_001
-    CAP_001 -->|"exercised by; candidate"| SCN_003
-    SCN_003 -->|"uses; candidate"| OA_004
-    OA_004 -->|"information exchange; candidate"| IX_002
-    OA_004 -->|"information exchange; candidate"| IX_003
-    IX_002 -->|"supports; candidate"| FUN_REL_01
-    IX_003 -->|"supports; candidate"| FUN_REL_01
-    FUN_REL_01 -->|"allocated to; candidate"| CMP_COM_01
-    CMP_COM_01 -->|"external interface; candidate"| IFC_EXT_001
-    CMP_COM_01 -->|"external interface; candidate"| IFC_EXT_002
-    IFC_EXT_001 -->|"allocated requirement; candidate"| REQ_FUN_001
-    IFC_EXT_002 -->|"allocated requirement; candidate"| REQ_FUN_001
-    REQ_FUN_001 -->|"verification allocation; candidate"| VER_001
-    REQ_FUN_001 -->|"verification allocation; candidate"| VER_004
+    NEED_001["NEED-001<br/>Extend command, telemetry, and permitted mission-data reach through an airborne relay architecture<br/>[PROPOSED]"]
+    CAP_001["CAP-001<br/>Beyond-Line-of-Sight Control<br/>[PROPOSED]"]
+    SCN_003["SCN-003<br/>Remote-UAS command through the relay<br/>[PROPOSED]"]
+    OA_004["OA-004<br/>Relay outbound traffic<br/>[PROPOSED]"]
+    IX_002["IX-002<br/>Remote-UAS command toward relay<br/>[PROPOSED]"]
+    FUN_REL_01["FUN-REL-01<br/>Relay outbound traffic<br/>[PROPOSED]"]
+    CMP_COM_01["CMP-COM-01<br/>Relay payload module (black box)<br/>[PROPOSED]"]
+    IFC_EXT_001["IFC-EXT-001<br/>Ground-control outbound traffic to relay payload<br/>[PROPOSED]"]
+    REQ_FUN_001["REQ-FUN-001<br/>Relay outbound traffic<br/>[PROPOSED]"]
+    VER_001["VER-001<br/>Requirement and architecture analysis<br/>[PROPOSED]"]
+    GAP_VER_001["GAP-VER-001<br/>Execution evidence missing<br/>[UNRESOLVED]"]
+    NEED_001 -->|"motivates"| CAP_001
+    CAP_001 -->|"exercised by"| SCN_003
+    SCN_003 -->|"uses"| OA_004
+    OA_004 -->|"information exchange"| IX_002
+    IX_002 -->|"supports"| FUN_REL_01
+    FUN_REL_01 -->|"allocated to"| CMP_COM_01
+    CMP_COM_01 -->|"external interface"| IFC_EXT_001
+    IFC_EXT_001 -->|"allocated requirement"| REQ_FUN_001
+    REQ_FUN_001 -->|"verification allocation"| VER_001
     VER_001 -.->|"execution evidence unresolved"| GAP_VER_001
-    VER_004 -.->|"execution evidence unresolved"| GAP_VER_001
 ```
 
 ### 12. Evidence and approval governance
@@ -462,14 +428,14 @@ Evidence supports claims; it does not approve architecture. Proposed decisions r
 ```mermaid
 flowchart LR
     %% Configuration scope: Project governance; CFG-REC evidence semantics; all configurations remain not approved
-    SRC_INT_001["SRC-INT-001<br/>Low-Cost Ukrainian Repeater Drone Reverse-Engineering and System-In…<br/>registered source"]
+    SRC_INT_001["SRC-INT-001<br/>Recovered-article research report<br/>registered source"]
     EVD_002["EVD-002<br/>EVD-002<br/>registered evidence record"]
-    CLM_REC_001["CLM-REC-001<br/>Available recovered-article records identify the flight-controller…<br/>source-supported claim"]
+    CLM_REC_001["CLM-REC-001<br/>Recovered-article flight-controller identification record<br/>source-supported claim"]
     CFG_REC["CFG-REC<br/>Recovered Reference Article<br/>descriptive evidence configuration"]
-    CLM_REC_005["CLM-REC-005<br/>The current generic CMP and IFC architecture has not been demonstra…<br/>generic mapping not demonstrated"]
-    GAP_REC_001["GAP-REC-001<br/>The current generic relay-UAS decomposition is not demonstrated to…<br/>unresolved mapping gap"]
+    CLM_REC_005["CLM-REC-005<br/>Recovered-to-generic model reconciliation<br/>generic mapping not demonstrated"]
+    GAP_REC_001["GAP-REC-001<br/>Recovered-to-candidate mapping unresolved<br/>unresolved mapping gap"]
     DEC_002["DEC-002<br/>Select UAF terminology and version posture<br/>proposed owner decision"]
-    GAP_STD_001["GAP-STD-001<br/>UAF 1.3 is the current OMG formal version, while this repository st…<br/>unresolved standards decision"]
+    GAP_STD_001["GAP-STD-001<br/>UAF version decision unresolved<br/>unresolved standards decision"]
     BASELINE["Baseline Candidate - Not Approved<br/>model-valid may still be gapped"]
     SRC_INT_001 -->|"registered as"| EVD_002
     EVD_002 -->|"supports; does not approve"| CLM_REC_001
@@ -481,36 +447,9 @@ flowchart LR
     GAP_STD_001 -->|"gap remains visible"| BASELINE
 ```
 
-### 13. Requirement relationship example - Ground Safe arming
-
-Configuration scope: `CFG-REP / CFG-DOM`.
-
-A flowchart is used instead of `requirementDiagram` to stay within the most consistently rendered GitHub Mermaid subset when no pinned local parser is available.
-
-```mermaid
-flowchart LR
-    %% Configuration scope: CFG-REP / CFG-DOM
-    HAZ_004["HAZ-004<br/>Propeller contact injury<br/>proposed"]
-    CTL_001["CTL-001<br/>Ground-safe motor arming inhibit and visible armed-state indication<br/>proposed"]
-    REQ_FUN_006["REQ-FUN-006<br/>The system shall inhibit motor arming while in MODE-005 (Ground Saf…<br/>proposed"]
-    REQ_SAF_002["REQ-SAF-002<br/>The system shall provide an operator-visible indication of armed st…<br/>proposed"]
-    VER_004["VER-004<br/>Operational-scenario walkthrough<br/>proposed"]
-    VER_006["VER-006<br/>Hazard-control-requirement cross-reference<br/>proposed"]
-    GAP_VER_001["GAP-VER-001<br/>Most requirements have candidate or deferred verification methods b…<br/>candidate"]
-    HAZ_004 -->|"mitigated by; candidate"| CTL_001
-    CTL_001 -->|"satisfied by arming inhibit; candidate"| REQ_FUN_006
-    CTL_001 -->|"satisfied by visible indication; candidate"| REQ_SAF_002
-    REQ_FUN_006 -->|"verified by allocation only"| VER_006
-    REQ_SAF_002 -->|"verified by allocation only"| VER_006
-    REQ_FUN_006 -->|"scenario walkthrough allocation"| VER_004
-    REQ_SAF_002 -->|"scenario walkthrough allocation"| VER_004
-    VER_004 -.->|"no executed physical evidence"| GAP_VER_001
-    VER_006 -.->|"cross-reference only"| GAP_VER_001
-```
-
 ## Generated interface inventory
 
-This inventory is generated directly from `model/interfaces.yaml`. Empty
+This inventory is generated directly from `model/architecture.yaml`. Empty
 verification cells are explicit gaps, not evidence of completion.
 
 | ID | Endpoints | Direction | Flow class | Configurations | Maturity | Verification | Unknown attributes |
