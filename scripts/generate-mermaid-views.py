@@ -33,6 +33,12 @@ CATALOG_PATHS = {
 }
 
 SHORT_LABELS = {
+    "CFG-REC": "Reference evidence",
+    "CFG-REP": "Replica candidate",
+    "CFG-DOM": "Domestic candidate",
+    "CFG-DIG": "Digital extension",
+    "CFG-SOS": "C2 Ecosystem context",
+    "NEED-001": "Extend mission reach",
     "SRC-INT-001": "Recovered-article research report",
     "GAP-STD-001": "UAF version decision unresolved",
     "GAP-REC-001": "Recovered-to-candidate mapping unresolved",
@@ -200,9 +206,9 @@ def generated_header() -> list[str]:
 def configuration_view(catalogs: dict[str, dict[str, Any]], index: dict[str, dict[str, Any]]) -> list[str]:
     body: list[str] = []
     for config in catalogs["architecture"]["configurations"]:
-        extra = "reference evidence; [UNVERIFIED mapping]" if config["id"] == "CFG-REC" else "[PROPOSED]"
+        extra = "reference evidence - [UNVERIFIED mapping]" if config["id"] == "CFG-REC" else "[PROPOSED]"
         if config["id"] == "CFG-SOS":
-            extra = "outer system-of-systems context; [PROPOSED]"
+            extra = "outer system-of-systems context - [PROPOSED]"
         body.append("    " + node(index, config["id"], extra))
     for config in catalogs["architecture"]["configurations"]:
         for predecessor in config.get("predecessor_ids", []):
@@ -240,7 +246,7 @@ def boundary_view(index: dict[str, dict[str, Any]]) -> list[str]:
         '    OP_001 <-->|"IX-002 through IX-005 relay thread"| OP_002',
         '    OP_002 <-->|"mission traffic relationship"| OP_003',
         '    OP_007 <-->|"IX-010 / IFC-EXT-006 support"| OP_002',
-        '    OP_008 -.->|"external authority; criteria unresolved"| OP_002',
+        '    OP_008 -.->|"external authority - criteria unresolved"| OP_002',
         '    OP_001 -.->|"IX-006 / IX-007 proposed / TBD"| OP_004',
         '    OP_002 -.->|"relationship proposed / TBD"| OP_005',
         '    OP_002 -.->|"relationship proposed / TBD"| OP_006',
@@ -249,7 +255,7 @@ def boundary_view(index: dict[str, dict[str, Any]]) -> list[str]:
     return flow_diagram(
         "2",
         "Two-boundary context",
-        "CFG-SOS outer context; CFG-REP / CFG-DOM / CFG-DIG inner constituent",
+        "CFG-SOS outer context - CFG-REP / CFG-DOM / CFG-DIG inner constituent",
         body,
         "External constituents remain independently managed. Dashed relationships are proposed or TBD.",
     )
@@ -308,8 +314,8 @@ def resource_diagrams(catalogs: dict[str, dict[str, Any]], index: dict[str, dict
     power_ids = ["CMP-PWR-01", "CMP-PWR-02", "CMP-PWR-03", "CMP-PWR-04", "CMP-PRP-01", "CMP-PRP-02", "CMP-PRP-03", "CMP-AVN-01", "CMP-COM-01"]
     body = ["    " + node(index, item_id) for item_id in power_ids]
     body.extend([
-        '    CMP_PWR_01 -.->|"source association; IFC not allocated"| CMP_PWR_02',
-        '    CMP_PWR_04 -.->|"resource association; IFC not allocated"| CMP_PWR_02',
+        '    CMP_PWR_01 -.->|"source association - IFC not allocated"| CMP_PWR_02',
+        '    CMP_PWR_04 -.->|"resource association - IFC not allocated"| CMP_PWR_02',
         edge_for_interface(interfaces["IFC-INT-001"]),
         edge_for_interface(interfaces["IFC-INT-002"]),
         edge_for_interface(interfaces["IFC-INT-003"], label_suffix="platform-to-payload"),
@@ -327,7 +333,7 @@ def resource_diagrams(catalogs: dict[str, dict[str, Any]], index: dict[str, dict
         edge_for_interface(interfaces["IFC-INT-004"]),
         edge_for_interface(interfaces["IFC-INT-006"]),
         edge_for_interface(interfaces["IFC-INT-009"]),
-        '    CMP_AVN_03 -.->|"navigation resource; IFC unresolved"| CMP_AVN_01',
+        '    CMP_AVN_03 -.->|"navigation resource - IFC unresolved"| CMP_AVN_01',
     ])
     lines.extend(flow_diagram("4C", "Avionics and platform control connectivity", "CFG-REP / CFG-DOM", body))
 
@@ -339,7 +345,7 @@ def resource_diagrams(catalogs: dict[str, dict[str, Any]], index: dict[str, dict
         '    subgraph PAYLOAD["Relay-payload black-box envelope"]',
         "        " + node(index, "CMP-COM-01"),
         "        " + node(index, "CMP-COM-02", "physical-resource envelope"),
-        edge_for_interface(interfaces["IFC-INT-010"], indent="        ", label_suffix="payload-internal; no RF characteristics"),
+        edge_for_interface(interfaces["IFC-INT-010"], indent="        ", label_suffix="payload-internal - characteristics undefined"),
         "    end",
         edge_for_interface(interfaces["IFC-INT-003"], label_suffix="platform boundary crossing"),
         edge_for_interface(interfaces["IFC-INT-007"], label_suffix="platform boundary crossing"),
@@ -403,7 +409,8 @@ def mode_view(index: dict[str, dict[str, Any]]) -> list[str]:
         "    note right of MODE_003",
         "      Payload function degraded",
         "      Platform control may remain available",
-        "      REQ-FUN-007 [PROPOSED]; evidence [DEFERRED]",
+        "      REQ-FUN-007 [PROPOSED]",
+        "      Evidence [DEFERRED]",
         "    end note",
     ]
     return state_diagram(
@@ -427,8 +434,8 @@ def launch_sequence(index: dict[str, dict[str, Any]]) -> list[str]:
         "    Receiver->>Flight: IFC-INT-005 platform control input",
         "    Nav-->>Flight: IFC-INT-009 navigation/timing information",
         "    Flight->>Propulsion: IFC-INT-004 propulsion command",
-        "    Relay-->>Operator: IX-009 health/status (partial realization; GAP-SOS-003)",
-        "    Note over Operator,Relay: SCN-002 architecture walkthrough; no procedure defined",
+        "    Relay-->>Operator: IX-009 partial health/status - GAP-SOS-003",
+        "    Note over Operator,Relay: SCN-002 architecture walkthrough - no procedure defined",
     ]
     return sequence_diagram("6", "Launch and positioning sequence", "CFG-REP / CFG-DOM", body)
 
@@ -447,7 +454,7 @@ def relay_sequence(index: dict[str, dict[str, Any]]) -> list[str]:
         "        Remote-->>Payload: IX-004 / IFC-EXT-003 return telemetry",
         "        Payload-->>Ground: IX-005 / IFC-EXT-004 return telemetry",
         "    end",
-        "    Note over Ground,Remote: SCN-003 / SCN-004 logical relay only; external paths intentionally undefined",
+        "    Note over Ground,Remote: SCN-003 / SCN-004 logical relay only - external paths undefined",
     ]
     return sequence_diagram("7", "Bidirectional relay sequence", "CFG-REP / CFG-DOM", body)
 
@@ -461,8 +468,8 @@ def degradation_sequence(index: dict[str, dict[str, Any]]) -> list[str]:
         "    Payload--xGround: SCN-007 relay function loss or degradation",
         "    Relay-->>Operator: IX-009 health/status indication (partial)",
         "    Operator->>Relay: IX-001 / IFC-EXT-005 independent platform command",
-        "    alt Payload lost; platform remains controllable",
-        "        Note over Payload,Relay: MODE-003; CTL-004 / REQ-FUN-007 [PROPOSED]",
+        "    alt Payload lost and platform remains controllable",
+        "        Note over Payload,Relay: MODE-003 - CTL-004 / REQ-FUN-007 [PROPOSED]",
         "        Relay-->>Operator: transition intent toward MODE-004 Return / Recovery",
         "    else Platform control also impaired",
         "        Note over Relay,Operator: HAZ-001 / GAP-HAZ-001 - no modeled consequence-management behavior",
@@ -496,7 +503,7 @@ def lifecycle_view(index: dict[str, dict[str, Any]]) -> list[str]:
     return flow_diagram(
         "9",
         "Scenario lifecycle",
-        "CFG-REP / CFG-DOM current; CFG-DIG / CFG-SOS proposed branches",
+        "CFG-REP / CFG-DOM current - CFG-DIG / CFG-SOS proposed branches",
         body,
         "Dashed branches are future proposals without complete activity, interface, requirement, hazard, or verification allocation.",
     )
@@ -575,7 +582,7 @@ def governance_view(index: dict[str, dict[str, Any]]) -> list[str]:
         "    " + node(index, "GAP-STD-001", "unresolved standards decision"),
         '    BASELINE["Baseline Candidate - Not Approved<br/>model-valid may still be gapped"]',
         '    SRC_INT_001 -->|"registered as"| EVD_002',
-        '    EVD_002 -->|"supports; does not approve"| CLM_REC_001',
+        '    EVD_002 -->|"supports - does not approve"| CLM_REC_001',
         '    CLM_REC_001 -->|"applicable to evidence configuration"| CFG_REC',
         '    CLM_REC_005 -->|"prevents silent proposed-resource inheritance"| CFG_REC',
         '    CFG_REC -.->|"mapping unresolved"| GAP_REC_001',
@@ -586,7 +593,7 @@ def governance_view(index: dict[str, dict[str, Any]]) -> list[str]:
     return flow_diagram(
         "12",
         "Evidence and approval governance",
-        "Project governance; CFG-REC evidence semantics; all configurations remain not approved",
+        "Project governance - CFG-REC evidence semantics - all configurations remain not approved",
         body,
         "Evidence supports claims; it does not approve architecture. Proposed decisions require explicit owner action.",
     )
@@ -681,8 +688,8 @@ def validate_mermaid_syntax(markdown: str) -> int:
     executable = find_mmdc()
     if not executable:
         print(
-            f"MERMAID-PARSER: skipped because unavailable "
-            f"(pinned mmdc {PINNED_MERMAID_CLI} is not installed locally)"
+            f"MERMAID-PARSER: SKIPPED - pinned mmdc {PINNED_MERMAID_CLI} "
+            "is not installed locally"
         )
         return 0
     version = subprocess.run(
@@ -691,7 +698,7 @@ def validate_mermaid_syntax(markdown: str) -> int:
     reported = (version.stdout or version.stderr).strip()
     if PINNED_MERMAID_CLI not in reported:
         print(
-            f"MERMAID-PARSER: skipped because available mmdc version is {reported!r}; "
+            f"MERMAID-PARSER: SKIPPED - available mmdc version is {reported!r}, "
             f"expected pinned {PINNED_MERMAID_CLI}"
         )
         return 0
@@ -712,11 +719,14 @@ def validate_mermaid_syntax(markdown: str) -> int:
                 error = clean_label(result.stderr or result.stdout or "unknown parser error", 400)
                 failures.append(f"{title}: {error}")
     if failures:
-        print("MERMAID-PARSER: failed")
+        print("MERMAID-PARSER: FAILED - one or more generated diagrams did not render")
         for failure in failures:
             print(f"- {failure}")
         return 1
-    print(f"MERMAID-PARSER: passed with pinned mmdc {PINNED_MERMAID_CLI}")
+    print(
+        f"MERMAID-PARSER: PASSED - validated every generated diagram "
+        f"with pinned mmdc {PINNED_MERMAID_CLI}"
+    )
     return 0
 
 

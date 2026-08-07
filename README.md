@@ -39,7 +39,7 @@ difference should be treated as a reconciliation issue.
 ```mermaid
 flowchart LR
     %% Configuration scope: CFG-REC / CFG-REP / CFG-DOM / CFG-DIG / CFG-SOS
-    CFG_REC["CFG-REC<br/>Reference evidence"] -->|"informs; not exact inheritance"| CFG_REP["CFG-REP<br/>Replica candidate"]
+    CFG_REC["CFG-REC<br/>Reference evidence"] -->|"informs - not exact inheritance"| CFG_REP["CFG-REP<br/>Replica candidate"]
     CFG_REP --> CFG_DOM["CFG-DOM<br/>Domestic candidate"]
     CFG_REP --> CFG_DIG["CFG-DIG<br/>Digital extension"]
     CFG_DIG --> CFG_SOS["CFG-SOS<br/>C2 Ecosystem context"]

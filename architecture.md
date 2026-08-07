@@ -29,7 +29,7 @@ axis is `CFG-REP -> CFG-DIG -> CFG-SOS`.
 ```mermaid
 flowchart LR
     %% Configuration scope: CFG-REC / CFG-REP / CFG-DOM / CFG-DIG / CFG-SOS
-    CFG_REC["CFG-REC<br/>Reference evidence<br/>[UNVERIFIED mapping]"] -->|"informs; not exact inheritance"| CFG_REP["CFG-REP<br/>Replica architecture<br/>[PROPOSED]"]
+    CFG_REC["CFG-REC<br/>Reference evidence<br/>[UNVERIFIED mapping]"] -->|"informs - not exact inheritance"| CFG_REP["CFG-REP<br/>Replica architecture<br/>[PROPOSED]"]
     CFG_REP --> CFG_DOM["CFG-DOM<br/>Domestic candidate<br/>[PROPOSED]"]
     CFG_REP --> CFG_DIG["CFG-DIG<br/>Digital extension<br/>[PROPOSED]"]
     CFG_DIG --> CFG_SOS["CFG-SOS<br/>C2 Ecosystem context<br/>[PROPOSED]"]
@@ -52,7 +52,7 @@ The inner product boundary is the Relay UAS. The outer context is the C2 Ecosyst
 
 ```mermaid
 flowchart LR
-    %% Configuration scope: CFG-SOS context; CFG-REP / CFG-DOM / CFG-DIG inner constituent
+    %% Configuration scope: CFG-SOS context - CFG-REP / CFG-DOM / CFG-DIG inner constituent
     subgraph OUTER["C2 Ecosystem outer boundary [PROPOSED]"]
         OP_010["OP-010<br/>Operator"]
         OP_001["OP-001<br/>Ground control"]
@@ -89,7 +89,7 @@ intersection of those two capabilities with `CAP-004` low-cost attritability.
 
 ```mermaid
 flowchart LR
-    %% Configuration scope: CFG-REP / CFG-DOM current; CFG-SOS future scenarios
+    %% Configuration scope: CFG-REP / CFG-DOM current - CFG-SOS future scenarios
     NEED_001["NEED-001<br/>Extend mission reach"] --> CAP_000["CAP-000<br/>Extended-range employment"]
     CAP_000 --> CAP_001["CAP-001<br/>Beyond-line-of-sight control"]
     CAP_000 --> CAP_002["CAP-002<br/>Terrain-masked operation"]
@@ -222,7 +222,7 @@ sequenceDiagram
     Relay-->>Operator: IX-009 partial health/status
     Operator->>Relay: IX-001 independent platform command
     alt Platform remains controllable
-        Note over Payload,Relay: MODE-003; REQ-FUN-007 [PROPOSED]
+        Note over Payload,Relay: MODE-003 - REQ-FUN-007 [PROPOSED]
         Relay-->>Operator: transition toward MODE-004
     else Platform control also impaired
         Note over Relay,Operator: HAZ-001 / GAP-HAZ-001

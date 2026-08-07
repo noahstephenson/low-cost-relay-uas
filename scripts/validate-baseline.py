@@ -60,7 +60,7 @@ MODEL_OR_GAP_TOKEN_RE = re.compile(
 )
 GAP_RE = re.compile(r"^GAP-[A-Z0-9]+(?:-[A-Z0-9]+)*$")
 GAP_TOKEN_RE = re.compile(r"\bGAP-[A-Z0-9]+(?:-[A-Z0-9]+)*\b")
-MERMAID_HEADERS = {"flowchart", "sequenceDiagram", "stateDiagram-v2", "requirementDiagram"}
+MERMAID_HEADERS = {"flowchart", "sequenceDiagram", "stateDiagram-v2"}
 
 # Exact prefix counts from the pre-refactor authoritative catalogs. Together with
 # uniqueness and reference resolution, these guard the ID-preservation acceptance test.
@@ -352,10 +352,22 @@ def validate_mermaid_documents(definitions: set[str], gap_codes: set[str]) -> li
                 errors.append(f"{path.name}: Mermaid diagram {title!r} uses unsupported header {header}")
             if not any("%% Configuration scope:" in line for line in lines[:4]):
                 errors.append(f"{path.name}: Mermaid diagram {title!r} lacks configuration scope")
+            if ";" in block:
+                errors.append(
+                    f"{path.name}: Mermaid diagram {title!r} contains a raw semicolon; "
+                    "use a dash, comma, or line break"
+                )
             if "…" in block or "â€¦" in block:
                 errors.append(f"{path.name}: Mermaid diagram {title!r} contains a truncated label")
             if any(line.lstrip().startswith("click ") for line in lines):
                 errors.append(f"{path.name}: Mermaid diagram {title!r} contains a clickable link")
+            for line in lines:
+                stripped = line.strip()
+                if re.search(r"\bend\b", stripped) and stripped not in {"end", "end note"}:
+                    errors.append(
+                        f"{path.name}: Mermaid diagram {title!r} uses reserved lowercase 'end' "
+                        "outside a structural closing line"
+                    )
             for match in MODEL_OR_GAP_TOKEN_RE.finditer(block):
                 token = match.group(0)
                 if block[match.end():].startswith("-*"):

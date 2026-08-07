@@ -22,11 +22,11 @@ Derivation denotes an architecture relationship, not exact inheritance, equivale
 ```mermaid
 flowchart LR
     %% Configuration scope: CFG-REC / CFG-REP / CFG-DOM / CFG-DIG / CFG-SOS
-    CFG_REC["CFG-REC<br/>Recovered Reference Article<br/>reference evidence; [UNVERIFIED mapping]"]
-    CFG_REP["CFG-REP<br/>Safe Functional-Replica Architecture<br/>[PROPOSED]"]
-    CFG_DOM["CFG-DOM<br/>Domestic Low-Cost Relay-UAS Architecture<br/>[PROPOSED]"]
-    CFG_DIG["CFG-DIG<br/>Future Digital Multi-Platform Relay Architecture<br/>[PROPOSED]"]
-    CFG_SOS["CFG-SOS<br/>UAS-UGV-Radio C2 System-of-Systems Architecture<br/>outer system-of-systems context; [PROPOSED]"]
+    CFG_REC["CFG-REC<br/>Reference evidence<br/>reference evidence - [UNVERIFIED mapping]"]
+    CFG_REP["CFG-REP<br/>Replica candidate<br/>[PROPOSED]"]
+    CFG_DOM["CFG-DOM<br/>Domestic candidate<br/>[PROPOSED]"]
+    CFG_DIG["CFG-DIG<br/>Digital extension<br/>[PROPOSED]"]
+    CFG_SOS["CFG-SOS<br/>C2 Ecosystem context<br/>outer system-of-systems context - [PROPOSED]"]
     CFG_REC -->|"proposed functional derivation, not an exact clone<br/>derivation is not approval"| CFG_REP
     CFG_REP -->|"proposed substitution architecture<br/>derivation is not approval"| CFG_DOM
     CFG_REP -->|"future concept branch<br/>derivation is not approval"| CFG_DIG
@@ -35,13 +35,13 @@ flowchart LR
 
 ### 2. Two-boundary context
 
-Configuration scope: `CFG-SOS outer context; CFG-REP / CFG-DOM / CFG-DIG inner constituent`.
+Configuration scope: `CFG-SOS outer context - CFG-REP / CFG-DOM / CFG-DIG inner constituent`.
 
 External constituents remain independently managed. Dashed relationships are proposed or TBD.
 
 ```mermaid
 flowchart LR
-    %% Configuration scope: CFG-SOS outer context; CFG-REP / CFG-DOM / CFG-DIG inner constituent
+    %% Configuration scope: CFG-SOS outer context - CFG-REP / CFG-DOM / CFG-DIG inner constituent
     subgraph OUTER["C2 Ecosystem outer boundary - CFG-SOS proposed context"]
         OP_010["OP-010<br/>Operator<br/>independently managed human performer"]
         OP_001["OP-001<br/>Ground Control Node<br/>independently managed external system"]
@@ -60,7 +60,7 @@ flowchart LR
     OP_001 <-->|"IX-002 through IX-005 relay thread"| OP_002
     OP_002 <-->|"mission traffic relationship"| OP_003
     OP_007 <-->|"IX-010 / IFC-EXT-006 support"| OP_002
-    OP_008 -.->|"external authority; criteria unresolved"| OP_002
+    OP_008 -.->|"external authority - criteria unresolved"| OP_002
     OP_001 -.->|"IX-006 / IX-007 proposed / TBD"| OP_004
     OP_002 -.->|"relationship proposed / TBD"| OP_005
     OP_002 -.->|"relationship proposed / TBD"| OP_006
@@ -128,8 +128,8 @@ flowchart LR
     CMP_PRP_03["CMP-PRP-03<br/>Propeller"]
     CMP_AVN_01["CMP-AVN-01<br/>Flight controller"]
     CMP_COM_01["CMP-COM-01<br/>Relay payload module (black box)"]
-    CMP_PWR_01 -.->|"source association; IFC not allocated"| CMP_PWR_02
-    CMP_PWR_04 -.->|"resource association; IFC not allocated"| CMP_PWR_02
+    CMP_PWR_01 -.->|"source association - IFC not allocated"| CMP_PWR_02
+    CMP_PWR_04 -.->|"resource association - IFC not allocated"| CMP_PWR_02
     CMP_PWR_02 -->|"IFC-INT-001<br/>electrical power"| CMP_PRP_02
     CMP_PWR_03 -->|"IFC-INT-002<br/>electrical power"| CMP_AVN_01
     CMP_PWR_03 -->|"IFC-INT-003<br/>electrical power<br/>platform-to-payload"| CMP_COM_01
@@ -157,7 +157,7 @@ flowchart LR
     CMP_AVN_01 -->|"IFC-INT-004<br/>command and control"| CMP_PRP_02
     CMP_PWR_02 -->|"IFC-INT-006<br/>health and status"| CMP_AVN_01
     CMP_AVN_02 -->|"IFC-INT-009<br/>navigation and timing"| CMP_AVN_01
-    CMP_AVN_03 -.->|"navigation resource; IFC unresolved"| CMP_AVN_01
+    CMP_AVN_03 -.->|"navigation resource - IFC unresolved"| CMP_AVN_01
 ```
 
 ### 4D. Payload boundary and external traffic
@@ -176,7 +176,7 @@ flowchart LR
     subgraph PAYLOAD["Relay-payload black-box envelope"]
         CMP_COM_01["CMP-COM-01<br/>Relay payload module (black box)"]
         CMP_COM_02["CMP-COM-02<br/>Antenna physical-resource envelope<br/>physical-resource envelope"]
-        CMP_COM_01 <-->|"IFC-INT-010<br/>physical-resource coupling<br/>payload-internal; no RF characteristics"| CMP_COM_02
+        CMP_COM_01 <-->|"IFC-INT-010<br/>physical-resource coupling<br/>payload-internal - characteristics undefined"| CMP_COM_02
     end
     CMP_PWR_03 -->|"IFC-INT-003<br/>electrical power<br/>platform boundary crossing"| CMP_COM_01
     CMP_MNT_01 <-->|"IFC-INT-007<br/>mechanical mounting<br/>platform boundary crossing"| CMP_COM_01
@@ -242,7 +242,8 @@ stateDiagram-v2
     note right of MODE_003
       Payload function degraded
       Platform control may remain available
-      REQ-FUN-007 [PROPOSED]; evidence [DEFERRED]
+      REQ-FUN-007 [PROPOSED]
+      Evidence [DEFERRED]
     end note
 ```
 
@@ -263,8 +264,8 @@ sequenceDiagram
     Receiver->>Flight: IFC-INT-005 platform control input
     Nav-->>Flight: IFC-INT-009 navigation/timing information
     Flight->>Propulsion: IFC-INT-004 propulsion command
-    Relay-->>Operator: IX-009 health/status (partial realization; GAP-SOS-003)
-    Note over Operator,Relay: SCN-002 architecture walkthrough; no procedure defined
+    Relay-->>Operator: IX-009 partial health/status - GAP-SOS-003
+    Note over Operator,Relay: SCN-002 architecture walkthrough - no procedure defined
 ```
 
 ### 7. Bidirectional relay sequence
@@ -286,7 +287,7 @@ sequenceDiagram
         Remote-->>Payload: IX-004 / IFC-EXT-003 return telemetry
         Payload-->>Ground: IX-005 / IFC-EXT-004 return telemetry
     end
-    Note over Ground,Remote: SCN-003 / SCN-004 logical relay only; external paths intentionally undefined
+    Note over Ground,Remote: SCN-003 / SCN-004 logical relay only - external paths undefined
 ```
 
 ### 8. Degradation and recovery sequence
@@ -305,8 +306,8 @@ sequenceDiagram
     Payload--xGround: SCN-007 relay function loss or degradation
     Relay-->>Operator: IX-009 health/status indication (partial)
     Operator->>Relay: IX-001 / IFC-EXT-005 independent platform command
-    alt Payload lost; platform remains controllable
-        Note over Payload,Relay: MODE-003; CTL-004 / REQ-FUN-007 [PROPOSED]
+    alt Payload lost and platform remains controllable
+        Note over Payload,Relay: MODE-003 - CTL-004 / REQ-FUN-007 [PROPOSED]
         Relay-->>Operator: transition intent toward MODE-004 Return / Recovery
     else Platform control also impaired
         Note over Relay,Operator: HAZ-001 / GAP-HAZ-001 - no modeled consequence-management behavior
@@ -316,13 +317,13 @@ sequenceDiagram
 
 ### 9. Scenario lifecycle
 
-Configuration scope: `CFG-REP / CFG-DOM current; CFG-DIG / CFG-SOS proposed branches`.
+Configuration scope: `CFG-REP / CFG-DOM current - CFG-DIG / CFG-SOS proposed branches`.
 
 Dashed branches are future proposals without complete activity, interface, requirement, hazard, or verification allocation.
 
 ```mermaid
 flowchart LR
-    %% Configuration scope: CFG-REP / CFG-DOM current; CFG-DIG / CFG-SOS proposed branches
+    %% Configuration scope: CFG-REP / CFG-DOM current - CFG-DIG / CFG-SOS proposed branches
     SCN_001["SCN-001<br/>System setup and initialization<br/>[PROPOSED]"]
     SCN_002["SCN-002<br/>Relay-UAS launch and positioning<br/>[PROPOSED]"]
     SCN_003["SCN-003<br/>Remote-UAS command through the relay<br/>[PROPOSED]"]
@@ -396,7 +397,7 @@ The thread is readable end to end, but candidate relationships and evidence gaps
 ```mermaid
 flowchart LR
     %% Configuration scope: CFG-REP / CFG-DOM
-    NEED_001["NEED-001<br/>Extend command, telemetry, and permitted mission-data reach through an airborne relay architecture<br/>[PROPOSED]"]
+    NEED_001["NEED-001<br/>Extend mission reach<br/>[PROPOSED]"]
     CAP_001["CAP-001<br/>Beyond-Line-of-Sight Control<br/>[PROPOSED]"]
     SCN_003["SCN-003<br/>Remote-UAS command through the relay<br/>[PROPOSED]"]
     OA_004["OA-004<br/>Relay outbound traffic<br/>[PROPOSED]"]
@@ -421,24 +422,24 @@ flowchart LR
 
 ### 12. Evidence and approval governance
 
-Configuration scope: `Project governance; CFG-REC evidence semantics; all configurations remain not approved`.
+Configuration scope: `Project governance - CFG-REC evidence semantics - all configurations remain not approved`.
 
 Evidence supports claims; it does not approve architecture. Proposed decisions require explicit owner action.
 
 ```mermaid
 flowchart LR
-    %% Configuration scope: Project governance; CFG-REC evidence semantics; all configurations remain not approved
+    %% Configuration scope: Project governance - CFG-REC evidence semantics - all configurations remain not approved
     SRC_INT_001["SRC-INT-001<br/>Recovered-article research report<br/>registered source"]
     EVD_002["EVD-002<br/>EVD-002<br/>registered evidence record"]
     CLM_REC_001["CLM-REC-001<br/>Recovered-article flight-controller identification record<br/>source-supported claim"]
-    CFG_REC["CFG-REC<br/>Recovered Reference Article<br/>descriptive evidence configuration"]
+    CFG_REC["CFG-REC<br/>Reference evidence<br/>descriptive evidence configuration"]
     CLM_REC_005["CLM-REC-005<br/>Recovered-to-generic model reconciliation<br/>generic mapping not demonstrated"]
     GAP_REC_001["GAP-REC-001<br/>Recovered-to-candidate mapping unresolved<br/>unresolved mapping gap"]
     DEC_002["DEC-002<br/>Select UAF terminology and version posture<br/>proposed owner decision"]
     GAP_STD_001["GAP-STD-001<br/>UAF version decision unresolved<br/>unresolved standards decision"]
     BASELINE["Baseline Candidate - Not Approved<br/>model-valid may still be gapped"]
     SRC_INT_001 -->|"registered as"| EVD_002
-    EVD_002 -->|"supports; does not approve"| CLM_REC_001
+    EVD_002 -->|"supports - does not approve"| CLM_REC_001
     CLM_REC_001 -->|"applicable to evidence configuration"| CFG_REC
     CLM_REC_005 -->|"prevents silent proposed-resource inheritance"| CFG_REC
     CFG_REC -.->|"mapping unresolved"| GAP_REC_001
