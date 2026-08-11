@@ -9,6 +9,7 @@ candidate relationship.
 from __future__ import annotations
 
 import argparse
+import collections
 import json
 import re
 import shutil
@@ -41,9 +42,9 @@ SHORT_LABELS = {
     "NEED-001": "Extend mission reach",
     "SRC-INT-001": "Recovered-article research report",
     "GAP-STD-001": "UAF version decision unresolved",
-    "GAP-REC-001": "Recovered-to-candidate mapping unresolved",
+    "GAP-REC-001": "Role mapping complete - exact equivalence unresolved",
     "GAP-HAZ-001": "HAZ-001 has no defined control",
-    "GAP-VER-001": "Execution evidence missing",
+    "GAP-VER-001": "Physical and external evidence missing",
     "GAP-BUDGET-001": "Coupled targets and evidence unresolved",
     "GAP-IFC-001": "External conformance authority missing",
     "OA-007": "Prepare Relay UAS",
@@ -128,8 +129,13 @@ def status_of(index: dict[str, dict[str, Any]], item_id: str) -> str:
         if record.get("disposition") == "closed":
             return "[CLOSED]"
         return "[DEFERRED]" if record.get("disposition") == "deferred" else "[UNRESOLVED]"
-    status = record.get("decision_status") or record.get("status") or "unverified"
+    status = record.get("execution_status") or record.get("decision_status") or record.get("status") or "unverified"
     labels = {
+        "executed_pass": "[EXECUTED PASS]",
+        "executed_with_open_gaps": "[EXECUTED WITH OPEN GAPS]",
+        "failed": "[FAILED]",
+        "blocked": "[BLOCKED]",
+        "not_executed": "[NOT EXECUTED]",
         "proposed": "[PROPOSED]",
         "deferred": "[DEFERRED]",
         "unknown": "[UNRESOLVED]",
@@ -207,7 +213,7 @@ def generated_header() -> list[str]:
         "> unresolved labels do not imply approval or executed verification.",
         "",
         "The diagrams deliberately omit RF implementation values, build instructions,",
-        "operating procedures, and detailed recovered-item mapping. `CFG-REC` is shown",
+        "operating procedures, and recovered implementation detail. `CFG-REC` is shown",
         "only as a descriptive evidence configuration and does not inherit the proposed",
         "`CFG-REP`/`CFG-DOM` resource decomposition.",
         "",
@@ -219,7 +225,7 @@ def generated_header() -> list[str]:
 def configuration_view(catalogs: dict[str, dict[str, Any]], index: dict[str, dict[str, Any]]) -> list[str]:
     body: list[str] = []
     delta_labels = {
-        "CFG-REC": "evidence only - mapping unverified",
+        "CFG-REC": "evidence only - role mapping narrowed",
         "CFG-REP": "current proposed baseline",
         "CFG-DOM": "current - substitution criteria unresolved",
         "CFG-DIG": "future - adds IFC-INT-008 candidate",
@@ -406,6 +412,55 @@ def resource_diagrams(catalogs: dict[str, dict[str, Any]], index: dict[str, dict
         "CFG-DIG / CFG-SOS only",
         body,
         "`IFC-INT-008` is not part of the current `CFG-REP`/`CFG-DOM` two-interface payload boundary.",
+    ))
+    return lines
+
+
+def reconciliation_views(catalogs: dict[str, dict[str, Any]]) -> list[str]:
+    reconciliation = catalogs["architecture"]["configuration_reconciliation"]
+    component_counts = collections.Counter(
+        item["mapping_classification"]
+        for item in reconciliation["candidate_components_to_recovered"]
+    )
+    interface_counts = collections.Counter(
+        item["mapping_classification"]
+        for item in reconciliation["candidate_interfaces_to_recovered"]
+    )
+    lines = ["## Evidence correspondence views", ""]
+    body = [
+        '    REC_STRUCTURE["Recovered structure and hardware"] -->|"direct / class-level support"| CAND_STRUCTURE["CMP-AFR-01 through CMP-AFR-05"]',
+        '    REC_PROPULSION["Recovered propulsion resources"] -->|"direct role support"| CAND_PROPULSION["CMP-PRP-01 through CMP-PRP-03"]',
+        '    REC_POWER["Recovered power resources and harness"] -->|"direct / partial / unknown"| CAND_POWER["CMP-PWR-01 through CMP-PWR-04"]',
+        '    REC_AVIONICS["Recovered control and navigation resources"] -->|"direct / partial support"| CAND_AVIONICS["CMP-AVN-01 through CMP-AVN-04"]',
+        '    REC_PAYLOAD["Recovered payload modules and antennas"] -->|"partial / inferred correspondence"| CAND_PAYLOAD["CMP-COM-01 / CMP-COM-02"]',
+        '    REC_MOUNTING["Recovered payload retention"] -->|"partial role support"| CAND_MOUNTING["CMP-MNT-01"]',
+    ]
+    lines.extend(flow_diagram(
+        "4G",
+        "Recovered evidence to candidate role correspondence",
+        "CFG-REC informs CFG-REP / CFG-DOM - no exact inheritance",
+        body,
+        "This is a grouped view of the controlled record-level mapping. Five recovered records remain unmatched and one remains unknown; no contradiction was found.",
+    ))
+
+    def count(classification: str, values: collections.Counter[str]) -> int:
+        return values.get(classification, 0)
+
+    body = [
+        '    COVERAGE["Two-way candidate coverage<br/>19 components / 17 interfaces"]',
+        f'    COVERAGE --> DIRECT["Direct source support<br/>components {count("DIRECT_SOURCE_SUPPORT", component_counts)} / interfaces {count("DIRECT_SOURCE_SUPPORT", interface_counts)}"]',
+        f'    COVERAGE --> INDIRECT["Indirect source support<br/>components {count("INDIRECT_SOURCE_SUPPORT", component_counts)} / interfaces {count("INDIRECT_SOURCE_SUPPORT", interface_counts)}"]',
+        f'    COVERAGE --> INFERENCE["Engineering inference<br/>components {count("ENGINEERING_INFERENCE", component_counts)} / interfaces {count("ENGINEERING_INFERENCE", interface_counts)}"]',
+        f'    COVERAGE --> PROPOSED["Proposed architecture only<br/>components {count("PROPOSED_ARCHITECTURE_ONLY", component_counts)} / interfaces {count("PROPOSED_ARCHITECTURE_ONLY", interface_counts)}"]',
+        f'    COVERAGE --> NONE["No recovered evidence<br/>components {count("NO_RECOVERED_EVIDENCE", component_counts)} / interfaces {count("NO_RECOVERED_EVIDENCE", interface_counts)}"]',
+        f'    COVERAGE --> NA["Not applicable<br/>components {count("NOT_APPLICABLE", component_counts)} / interfaces {count("NOT_APPLICABLE", interface_counts)}"]',
+    ]
+    lines.extend(flow_diagram(
+        "4H",
+        "Candidate architecture evidence coverage",
+        "CFG-REP / CFG-DOM current - CFG-DIG future interface classified separately",
+        body,
+        "Coverage classification is evidence posture, not approval, identity, or requirement verification.",
     ))
     return lines
 
@@ -601,43 +656,45 @@ def hazard_view(catalogs: dict[str, dict[str, Any]], index: dict[str, dict[str, 
             emit(requirement_id, "[PROPOSED]")
             body.append(f'    {mermaid_key(control["id"])} -->|"implemented by"| {mermaid_key(requirement_id)}')
             for verification_id in requirements[requirement_id].get("verification_ids", []):
-                emit(verification_id, "[DEFERRED] or [UNVERIFIED]")
+                emit(verification_id, status_of(index, verification_id))
                 body.append(f'    {mermaid_key(requirement_id)} -->|"verification allocation"| {mermaid_key(verification_id)}')
-                emit("GAP-VER-001", "[UNVERIFIED]")
-                body.append(f'    {mermaid_key(verification_id)} -.->|"execution evidence missing"| GAP_VER_001')
+                emit("GAP-VER-001", "[OPEN PHYSICAL / EXTERNAL EVIDENCE]")
+                if index[verification_id].get("execution_status") in {"executed_pass", "executed_with_open_gaps"}:
+                    body.append(f'    {mermaid_key(verification_id)} -.->|"model review complete - physical evidence absent"| GAP_VER_001')
+                else:
+                    body.append(f'    {mermaid_key(verification_id)} -.->|"execution unavailable"| GAP_VER_001')
     return flow_diagram(
         "10",
         "Hazard-control-requirement-verification",
         "CFG-REP / CFG-DOM",
         body,
-        "Verification nodes are candidate or deferred methods. They are not executed evidence and provide no approval or safety credit.",
+        "Executed model reviews establish trace consistency only. Deferred physical methods remain unexecuted, and no review provides approval or safety credit.",
     )
 
 
 def verification_readiness_view(index: dict[str, dict[str, Any]]) -> list[str]:
     body = [
-        '    MODEL_NOW["MODEL-VERIFIABLE-NOW<br/>REQ-IFC-003 / REQ-CON-003"]',
-        '    ANALYSIS_TBD["ANALYSIS-BLOCKED-BY-TBD<br/>REQ-FUN-003 / REQ-PER-002<br/>GAP-BUDGET-001"]',
+        '    EXECUTED["EXECUTED MODEL REVIEW<br/>VER-001 through VER-007<br/>EVD-008 through EVD-011"]',
+        '    PASS["EXECUTED PASS<br/>VER-002 / VER-007"]',
+        '    OPEN["EXECUTED WITH OPEN GAPS<br/>VER-001 / VER-003 through VER-006"]',
         '    PHYSICAL["PHYSICAL-EVIDENCE-REQUIRED<br/>REQ-FUN-006 / REQ-FUN-008<br/>GAP-VER-001"]',
         '    EXTERNAL["EXTERNAL-AUTHORITY-REQUIRED<br/>REQ-FUN-001 / REQ-FUN-004<br/>GAP-IFC-001"]',
         '    DEFERRED["INTENTIONALLY-DEFERRED<br/>REQ-DEF-001 / REQ-DEF-004"]',
-        "    " + node(index, "VER-002", "produces EVD-001 model evidence"),
-        "    " + node(index, "VER-001", "analysis method"),
         "    " + node(index, "VER-008", "future physical evidence"),
         "    " + node(index, "VER-009", "external authority required"),
         "    " + node(index, "TS-009", "formal deferral"),
-        '    MODEL_NOW -->|"executable now"| VER_002',
-        '    ANALYSIS_TBD -.->|"criteria unresolved"| VER_001',
+        '    EXECUTED -->|"no structural failure"| PASS',
+        '    EXECUTED -->|"known gaps retained"| OPEN',
         '    PHYSICAL -.->|"no execution evidence"| VER_008',
         '    EXTERNAL -.->|"authority and specification absent"| VER_009',
         '    DEFERRED -.->|"outside current scope"| TS_009',
     ]
     return flow_diagram(
         "10A",
-        "Verification readiness",
+        "Verification execution and remaining readiness",
         "CFG-REP / CFG-DOM with project-scope deferrals",
         body,
-        "Readiness classifies the next admissible verification step. It does not claim requirement satisfaction or physical evidence.",
+        "VER-001 through VER-007 have current model-level evidence, and the project owner accepted that internal verification work package in EVD-012. VER-008 remains deferred and VER-009 remains blocked; the acceptance is not physical verification, external conformance, safety approval, or technical-baseline approval.",
     )
 
 
@@ -676,16 +733,16 @@ def governance_view(index: dict[str, dict[str, Any]]) -> list[str]:
         "    " + node(index, "EVD-002", "registered evidence record"),
         "    " + node(index, "CLM-REC-001", "source-supported claim"),
         "    " + node(index, "CFG-REC", "descriptive evidence configuration"),
-        "    " + node(index, "CLM-REC-005", "generic mapping not demonstrated"),
-        "    " + node(index, "GAP-REC-001", "unresolved mapping gap"),
+        "    " + node(index, "CLM-REC-005", "controlled role mapping demonstrated"),
+        "    " + node(index, "GAP-REC-001", "narrowed - exact equivalence unresolved"),
         "    " + node(index, "DEC-002", "proposed owner decision"),
         "    " + node(index, "GAP-STD-001", "unresolved standards decision"),
         '    BASELINE["Baseline Candidate - Not Approved<br/>model-valid may still be gapped"]',
         '    SRC_INT_001 -->|"registered as"| EVD_002',
         '    EVD_002 -->|"supports - does not approve"| CLM_REC_001',
         '    CLM_REC_001 -->|"applicable to evidence configuration"| CFG_REC',
-        '    CLM_REC_005 -->|"prevents silent proposed-resource inheritance"| CFG_REC',
-        '    CFG_REC -.->|"mapping unresolved"| GAP_REC_001',
+        '    CLM_REC_005 -->|"records two-way role correspondence"| CFG_REC',
+        '    CFG_REC -.->|"complete reconstruction unresolved"| GAP_REC_001',
         '    DEC_002 -.->|"owner review required"| GAP_STD_001',
         '    GAP_REC_001 -->|"gap remains visible"| BASELINE',
         '    GAP_STD_001 -->|"gap remains visible"| BASELINE',
@@ -700,14 +757,18 @@ def governance_view(index: dict[str, dict[str, Any]]) -> list[str]:
 
 
 def interface_inventory(catalogs: dict[str, dict[str, Any]]) -> list[str]:
+    evidence_by_interface = {
+        item["candidate_id"]: item["mapping_classification"]
+        for item in catalogs["architecture"]["configuration_reconciliation"]["candidate_interfaces_to_recovered"]
+    }
     lines = [
         "## Generated interface inventory",
         "",
         "This inventory is generated directly from `model/architecture.yaml`. Model-review",
         "allocation is distinct from real-world external conformance and execution evidence.",
         "",
-        "| ID | Endpoints | Direction | Flow class | Configurations | Maturity | Model review | External conformance | Unknown attributes |",
-        "|---|---|---|---|---|---|---|---|---|",
+        "| ID | Endpoints | Direction | Flow class | Configurations | Recovered evidence | Maturity | Model review | External conformance | Unknown attributes |",
+        "|---|---|---|---|---|---|---|---|---|---|",
     ]
     for interface in catalogs["architecture"]["interfaces"]:
         verification = ", ".join(interface.get("verification_ids", [])) or "None - explicit gap"
@@ -723,6 +784,7 @@ def interface_inventory(catalogs: dict[str, dict[str, Any]]) -> list[str]:
             interface["direction"],
             interface["flow_class"],
             ", ".join(interface["applicable_configurations"]),
+            evidence_by_interface[interface["id"]],
             maturity,
             model_review,
             external_conformance,
@@ -746,6 +808,7 @@ def render(catalogs: dict[str, dict[str, Any]]) -> str:
     lines.extend(boundary_view(index))
     lines.extend(operational_connectivity_view(catalogs, index))
     lines.extend(resource_diagrams(catalogs, index))
+    lines.extend(reconciliation_views(catalogs))
     lines.extend(["## Behavioral views", ""])
     lines.extend(mode_view(index))
     lines.extend(launch_sequence(index))

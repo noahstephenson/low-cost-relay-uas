@@ -51,6 +51,78 @@
       "notes": "Authorizes proposed model maturation and human-review recommendations. It does not approve new architecture elements, safety controls, interfaces, requirements, or the baseline."
     },
     {
+      "id": "SRC-DEC-003",
+      "title": "Project-owner controlled CFG-REC reconciliation work-package instruction",
+      "source_type": "human decision record",
+      "kind": "human_input",
+      "description": "Direct project-owner instruction to verify registered recovered-source integrity and perform controlled two-way architecture-role reconciliation without redesign or technical approval.",
+      "authority_state": "human_approved",
+      "approval_state": "approved",
+      "confidence": 1.0,
+      "location": "Project-owner instruction supplied to Codex on 2026-08-08",
+      "owner": "project owner",
+      "date": "2026-08-08",
+      "revision": "controlled CFG-REC evidence-to-architecture reconciliation work package",
+      "accessed_date": "2026-08-08",
+      "reliability": "high for reconciliation scope, exclusions, and process authority",
+      "applicable_configurations": [
+        "CFG-REC",
+        "CFG-REP",
+        "CFG-DOM"
+      ],
+      "notes": "Authorizes evidence review and proposed owner-review findings only. It does not approve a configuration, architecture change, source checksum update, or technical claim."
+    },
+    {
+      "id": "SRC-DEC-004",
+      "title": "Project-owner internal-architecture-verification work-package instruction",
+      "source_type": "human decision record",
+      "kind": "human_input",
+      "description": "Direct project-owner instruction to execute current-baseline model reviews, capture model-level evidence, preserve physical and external verification boundaries, and withhold technical approval.",
+      "authority_state": "human_approved",
+      "approval_state": "approved",
+      "confidence": 1.0,
+      "location": "Project-owner instruction supplied to Codex on 2026-08-10",
+      "owner": "project owner",
+      "date": "2026-08-10",
+      "revision": "formal internal architecture verification and evidence baseline work package",
+      "accessed_date": "2026-08-10",
+      "reliability": "high for verification scope, exclusions, and process authority",
+      "applicable_configurations": [
+        "CFG-REC",
+        "CFG-REP",
+        "CFG-DOM",
+        "CFG-DIG",
+        "CFG-SOS"
+      ],
+      "applicability_scope": "authorizes model-level review and objective consistency correction only; not technical, physical, safety, conformance, or configuration approval",
+      "notes": "Authorizes execution of VER-001 through VER-007 and evidence capture. It explicitly leaves VER-008 deferred, VER-009 blocked, owner decisions unresolved, and the baseline not approved."
+    },
+    {
+      "id": "SRC-DEC-005",
+      "title": "Project-owner internal architecture verification work-package acceptance",
+      "source_type": "human decision record",
+      "kind": "human_input",
+      "description": "Direct project-owner acceptance of the 0.7.0-baseline-candidate internal architecture verification work package and its model-level evidence, with explicit non-approval boundaries.",
+      "authority_state": "human_approved",
+      "approval_state": "approved",
+      "confidence": 1.0,
+      "location": "Project-owner disposition supplied to Codex on 2026-08-11",
+      "owner": "project owner",
+      "date": "2026-08-11",
+      "revision": "internal architecture verification work-package acceptance",
+      "accessed_date": "2026-08-11",
+      "reliability": "high for acceptance scope and approval boundaries",
+      "applicable_configurations": [
+        "CFG-REC",
+        "CFG-REP",
+        "CFG-DOM",
+        "CFG-DIG",
+        "CFG-SOS"
+      ],
+      "applicability_scope": "accepts VER-001 through VER-007 execution, EVD-008 through EVD-011, the SRC-INT-001 through SRC-INT-003 lineage clarification, the narrowed GAP-VER-001 disposition, preservation of GAP-IFC-001, GAP-HAZ-001, GAP-BUDGET-001, GAP-TRC-001 and future-scope gaps, and 0.7.0-baseline-candidate as the current working internal verification baseline only",
+      "notes": "APPROVED - Internal Architecture Verification Work Package. This acceptance does not approve the technical baseline, physical verification, safety, external-interface conformance, or unresolved DEC-002 through DEC-005. The baseline remains baseline_candidate_not_approved."
+    },
+    {
       "id": "SRC-REPO-001",
       "title": "System model manifest",
       "source_type": "repository document",
@@ -255,7 +327,7 @@
       "owner": "project owner",
       "date": "unknown",
       "revision": "local uncontrolled copy; SHA-256 EF32AF40F1AE48CA631249B76EE85B6F726FCB4BCFE3796FD388D2C3DA3033BC",
-      "accessed_date": "2026-08-06",
+      "accessed_date": "2026-08-08",
       "reliability": "high for documented observations; moderate for engineering inferences",
       "applicable_configurations": [
         "CFG-REC",
@@ -263,7 +335,15 @@
         "CFG-DOM",
         "CFG-DIG"
       ],
-      "notes": "Records component observations and engineering interpretations. Build-oriented and RF-specific material is outside this repository baseline and is not imported."
+      "applicability_scope": "recovered-reference lineage may inform candidate architecture reasoning; it does not establish candidate existence, equivalence, inheritance, or approval",
+      "notes": "Records component observations and engineering interpretations. Build-oriented and RF-specific material is outside this repository baseline and is not imported.",
+      "integrity_check": {
+        "checked_at": "2026-08-08",
+        "expected_sha256": "EF32AF40F1AE48CA631249B76EE85B6F726FCB4BCFE3796FD388D2C3DA3033BC",
+        "actual_sha256": "EF32AF40F1AE48CA631249B76EE85B6F726FCB4BCFE3796FD388D2C3DA3033BC",
+        "status": "MATCH",
+        "treatment": "Used as principal technical evidence for architecture-relevant observations and labeled inference."
+      }
     },
     {
       "id": "SRC-INT-002",
@@ -278,7 +358,7 @@
       "owner": "project owner",
       "date": "unknown",
       "revision": "local uncontrolled copy; SHA-256 577F5FD4B6662E7982CDB73663A2534C829627E5ABFC3FEE3FB68D6837271BFA",
-      "accessed_date": "2026-08-06",
+      "accessed_date": "2026-08-08",
       "reliability": "high for marked-component records; variable for candidate substitutions",
       "applicable_configurations": [
         "CFG-REC",
@@ -286,7 +366,15 @@
         "CFG-DOM",
         "CFG-DIG"
       ],
-      "notes": "Candidate substitutions and build approaches are source content, not approved baseline decisions."
+      "applicability_scope": "recovered-reference lineage may inform candidate architecture reasoning; it does not establish candidate existence, equivalence, inheritance, or approval",
+      "notes": "Candidate substitutions and build approaches are source content, not approved baseline decisions.",
+      "integrity_check": {
+        "checked_at": "2026-08-08",
+        "expected_sha256": "577F5FD4B6662E7982CDB73663A2534C829627E5ABFC3FEE3FB68D6837271BFA",
+        "actual_sha256": "577F5FD4B6662E7982CDB73663A2534C829627E5ABFC3FEE3FB68D6837271BFA",
+        "status": "MATCH",
+        "treatment": "Used only for recovered item identity, class, quantity, unresolved status, and cross-source comparison; candidate substitutions excluded."
+      }
     },
     {
       "id": "SRC-INT-003",
@@ -301,7 +389,7 @@
       "owner": "project owner",
       "date": "unknown",
       "revision": "local uncontrolled copy; SHA-256 4D28858FD484E94B086ADBC186452B1BD3F4222E50BFF6779C89661298570EF1",
-      "accessed_date": "2026-08-06",
+      "accessed_date": "2026-08-08",
       "reliability": "high for documented marked components; moderate for functional interpretations",
       "applicable_configurations": [
         "CFG-REC",
@@ -309,7 +397,15 @@
         "CFG-DOM",
         "CFG-DIG"
       ],
-      "notes": "Contains embedded teardown imagery and identification-confidence labels. Original standalone image files are not present in this repository."
+      "applicability_scope": "recovered-reference lineage may inform candidate architecture reasoning; it does not establish candidate existence, equivalence, inheritance, or approval",
+      "notes": "Contains embedded teardown imagery and identification-confidence labels. Original standalone image files are not present in this repository.",
+      "integrity_check": {
+        "checked_at": "2026-08-08",
+        "expected_sha256": "4D28858FD484E94B086ADBC186452B1BD3F4222E50BFF6779C89661298570EF1",
+        "actual_sha256": "10B02FBD811DD98E58DF814ABA4BF70EB46E5C1CDC5972B089C25D7E65952747",
+        "status": "MISMATCH",
+        "treatment": "Current local file inspected structurally for change awareness only; not treated as the registered source revision and not used to strengthen technical claims."
+      }
     },
     {
       "id": "SRC-EXT-001",

@@ -950,13 +950,13 @@
     {"requirement_id": "REQ-PER-005", "quality_result": "pass", "note": "Transport and launch clauses express one single-operator portability objective.", "verification_readiness": "physical_evidence_required"},
     {"requirement_id": "REQ-IFC-001", "quality_result": "pass", "note": "Necessary payload-modularity constraint; standard selection remains open under TS-006.", "verification_readiness": "analysis_blocked_by_tbd"},
     {"requirement_id": "REQ-IFC-002", "quality_result": "pass", "note": "Implementation-neutral power-envelope requirement; allocation remains within the two-crossing boundary.", "verification_readiness": "analysis_blocked_by_tbd"},
-    {"requirement_id": "REQ-IFC-003", "quality_result": "pass", "note": "Model-verifiable boundary constraint with unchanged intent and exact crossing IDs.", "verification_readiness": "model_verifiable_now"},
+    {"requirement_id": "REQ-IFC-003", "quality_result": "pass", "note": "Model-verifiable boundary constraint with unchanged intent and exact crossing IDs.", "verification_readiness": "model_verifiable_now", "model_review_result": "pass", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": ["EVD-009", "EVD-010"]},
     {"requirement_id": "REQ-IFC-004", "quality_result": "pass_with_open_tbd", "note": "Necessary payload-retention safety requirement; physical margin remains unselected.", "verification_readiness": "analysis_blocked_by_tbd", "tbd_governance": {"category": "design_tbd", "owner_ids": ["TS-006"], "dependency": "Payload envelope, mount concept, and flight-load basis", "reason": "No retention margin or load basis has been selected.", "verification_implication": "Physical retention verification cannot establish compliance."}},
     {"requirement_id": "REQ-SAF-001", "quality_result": "pass", "note": "Compound battery-installation control is retained pending physical-design decomposition.", "verification_readiness": "physical_evidence_required"},
     {"requirement_id": "REQ-SAF-002", "quality_result": "pass", "note": "Single operator-visible armed-state behavior with direct CTL-001 trace.", "verification_readiness": "physical_evidence_required"},
     {"requirement_id": "REQ-CON-001", "quality_result": "cross_cutting_constraint", "note": "Selection rule applies across resource trade studies and does not require a synthetic component allocation.", "verification_readiness": "analysis_blocked_by_tbd"},
     {"requirement_id": "REQ-CON-002", "quality_result": "pass", "note": "Specific but implementation-neutral selection constraint allocated to the flight controller.", "verification_readiness": "analysis_blocked_by_tbd"},
-    {"requirement_id": "REQ-CON-003", "quality_result": "scope_control", "note": "Project-level prohibition is model-verifiable and is not attributed to CFG-REC.", "verification_readiness": "model_verifiable_now"},
+    {"requirement_id": "REQ-CON-003", "quality_result": "scope_control", "note": "Project-level prohibition is model-verifiable and is not attributed to CFG-REC.", "verification_readiness": "model_verifiable_now", "model_review_result": "pass", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": ["EVD-009", "EVD-011"]},
     {"requirement_id": "REQ-CON-004", "quality_result": "pass", "note": "Necessary station-keeping design constraint; solution remains open under TS-007.", "verification_readiness": "analysis_blocked_by_tbd"},
     {"requirement_id": "REQ-DEF-001", "quality_result": "deferred_topic", "note": "Recorded scope boundary rather than a requirement claimed satisfied.", "verification_readiness": "intentionally_deferred"},
     {"requirement_id": "REQ-DEF-002", "quality_result": "deferred_topic", "note": "Recorded scope boundary rather than a requirement claimed satisfied.", "verification_readiness": "intentionally_deferred"},
@@ -1263,6 +1263,19 @@
       ],
       "source_ids": [
         "SRC-REPO-004"
+      ],
+      "execution_status": "executed_with_open_gaps",
+      "execution_date": "2026-08-10",
+      "reviewed_model_version": "0.7.0-baseline-candidate",
+      "evidence_ids": [
+        "EVD-009"
+      ],
+      "result_summary": "All 28 requirements were reviewed for architecture-level quality and allocation. REQ-IFC-003 and REQ-CON-003 passed their admissible model-level checks; the other 26 retain explicit TBD, physical-evidence, external-authority, or intentional-deferral limitations.",
+      "residual_gap_ids": [
+        "GAP-BUDGET-001",
+        "GAP-IFC-001",
+        "GAP-TRC-001",
+        "GAP-VER-001"
       ]
     },
     {
@@ -1284,7 +1297,15 @@
       "applicability_scope": "model-governance audit; not physical verification of any configuration",
       "source_ids": [
         "SRC-DEC-001"
-      ]
+      ],
+      "execution_status": "executed_pass",
+      "execution_date": "2026-08-10",
+      "reviewed_model_version": "0.7.0-baseline-candidate",
+      "evidence_ids": [
+        "EVD-008"
+      ],
+      "result_summary": "The current validator passed unique-ID, reference, traceability, configuration, boundary, evidence, generated-view, Mermaid-guard, and prohibited-detail checks against the reviewed baseline.",
+      "residual_gap_ids": []
     },
     {
       "id": "VER-003",
@@ -1305,6 +1326,18 @@
       "applicability_scope": "evidence-record inspection; for CFG-REC this does not verify the physical article",
       "source_ids": [
         "SRC-DEC-001"
+      ],
+      "execution_status": "executed_with_open_gaps",
+      "execution_date": "2026-08-10",
+      "reviewed_model_version": "0.7.0-baseline-candidate",
+      "evidence_ids": [
+        "EVD-011"
+      ],
+      "result_summary": "All registered sources, evidence records, and claims were inspected for reference integrity, evidence semantics, historical status, and freshness. Historical evidence was preserved and the recovered-source candidate applicability scope was clarified.",
+      "residual_gap_ids": [
+        "GAP-CFG-001",
+        "GAP-REC-001",
+        "GAP-SRC-001"
       ]
     },
     {
@@ -1324,6 +1357,21 @@
       ],
       "source_ids": [
         "SRC-DEC-001"
+      ],
+      "execution_status": "executed_with_open_gaps",
+      "execution_date": "2026-08-10",
+      "reviewed_model_version": "0.7.0-baseline-candidate",
+      "evidence_ids": [
+        "EVD-009"
+      ],
+      "result_summary": "SCN-001, SCN-002, SCN-003, SCN-004, SCN-007, and SCN-008 were walked through at architecture level. SCN-005 and SCN-006 were confirmed as future-only threads without expanding them.",
+      "residual_gap_ids": [
+        "GAP-BUDGET-001",
+        "GAP-HAZ-001",
+        "GAP-IFC-001",
+        "GAP-SOS-001",
+        "GAP-SOS-002",
+        "GAP-VER-001"
       ]
     },
     {
@@ -1343,6 +1391,17 @@
       ],
       "source_ids": [
         "SRC-DEC-001"
+      ],
+      "execution_status": "executed_with_open_gaps",
+      "execution_date": "2026-08-10",
+      "reviewed_model_version": "0.7.0-baseline-candidate",
+      "evidence_ids": [
+        "EVD-010"
+      ],
+      "result_summary": "All 17 interface records passed architecture-definition inspection. The seven external interfaces remain blocked from conformance verification because authority, specifications, and execution evidence are absent.",
+      "residual_gap_ids": [
+        "GAP-IFC-001",
+        "GAP-VER-001"
       ]
     },
     {
@@ -1360,6 +1419,18 @@
       ],
       "source_ids": [
         "SRC-DEC-001"
+      ],
+      "execution_status": "executed_with_open_gaps",
+      "execution_date": "2026-08-10",
+      "reviewed_model_version": "0.7.0-baseline-candidate",
+      "evidence_ids": [
+        "EVD-011"
+      ],
+      "result_summary": "All 12 hazard records and five controls were cross-referenced at architecture level. Seven active hazards have candidate control or direct-requirement paths; HAZ-001 remains explicitly unmitigated, HAZ-009 remains inactive, and external hazards remain deferred.",
+      "residual_gap_ids": [
+        "GAP-CFG-002",
+        "GAP-HAZ-001",
+        "GAP-VER-001"
       ]
     },
     {
@@ -1381,7 +1452,15 @@
       "applicability_scope": "model-governance review; not physical verification of CFG-REC",
       "source_ids": [
         "SRC-DEC-001"
-      ]
+      ],
+      "execution_status": "executed_pass",
+      "execution_date": "2026-08-10",
+      "reviewed_model_version": "0.7.0-baseline-candidate",
+      "evidence_ids": [
+        "EVD-010"
+      ],
+      "result_summary": "All model families passed configuration-applicability review after clarifying recovered-source lineage semantics. No CFG-REC inheritance, future/current leakage, or selected CFG-DOM substitution was found.",
+      "residual_gap_ids": []
     },
     {
       "id": "VER-008",
@@ -1398,6 +1477,15 @@
       ],
       "source_ids": [
         "SRC-REPO-004"
+      ],
+      "execution_status": "deferred",
+      "execution_date": null,
+      "reviewed_model_version": null,
+      "evidence_ids": [],
+      "result_summary": "Not executed. Physical inspection, demonstration, and test evidence remain unavailable and cannot be replaced by model-review evidence.",
+      "residual_gap_ids": [
+        "GAP-BUDGET-001",
+        "GAP-VER-001"
       ]
     },
     {
@@ -1418,6 +1506,15 @@
       "applicability_scope": "external interface conformance only; does not verify implementation or approve an interface",
       "source_ids": [
         "SRC-DEC-002"
+      ],
+      "execution_status": "blocked",
+      "execution_date": null,
+      "reviewed_model_version": null,
+      "evidence_ids": [],
+      "result_summary": "Not executed. External interface authority, authoritative specifications, and conformance execution evidence are absent.",
+      "residual_gap_ids": [
+        "GAP-IFC-001",
+        "GAP-VER-001"
       ]
     }
   ],
@@ -1632,7 +1729,13 @@
       "source_ids": [
         "SRC-DEC-001",
         "SRC-EXT-003"
-      ]
+      ],
+      "verification_review": {
+        "evidence_ids": ["EVD-008", "EVD-010"],
+        "consistency_result": "current architecture remains internally consistent while the terminology/version choice stays unresolved",
+        "recommendation": "Retain the existing owner options and make no conformance claim.",
+        "remaining_unresolved": "Owner selection among intentional retention, version-neutral wording, or later migration."
+      }
     },
     {
       "id": "DEC-003",
@@ -1656,7 +1759,13 @@
       "source_ids": [
         "SRC-DEC-002",
         "SRC-REPO-006"
-      ]
+      ],
+      "verification_review": {
+        "evidence_ids": ["EVD-011"],
+        "consistency_result": "HAZ-001 is consistently visible, explicitly unmitigated, and governed by GAP-HAZ-001 rather than hidden",
+        "recommendation": "Retain the existing owner options; add no control or requirement until the safety objective is selected.",
+        "remaining_unresolved": "The architecture-level recovery or containment objective and any designated safety authority."
+      }
     },
     {
       "id": "DEC-004",
@@ -1679,7 +1788,13 @@
       "recommendation": "Accept the proposed logical thread because current setup and recovery scenarios already depend on mode and platform-status awareness.",
       "source_ids": [
         "SRC-DEC-002"
-      ]
+      ],
+      "verification_review": {
+        "evidence_ids": ["EVD-009", "EVD-010"],
+        "consistency_result": "The proposed health/status thread is internally traceable across scenarios, functions, resources, interface, and requirement",
+        "recommendation": "The current proposed option remains internally coherent, but owner acceptance is still required.",
+        "remaining_unresolved": "Minimum status content, implementation, physical behavior, endpoint authority, and external conformance."
+      }
     },
     {
       "id": "DEC-005",
@@ -1703,7 +1818,13 @@
       "source_ids": [
         "SRC-DEC-002",
         "SRC-REPO-005"
-      ]
+      ],
+      "verification_review": {
+        "evidence_ids": ["EVD-009"],
+        "consistency_result": "CAP-004 remains internally consistent as a cross-cutting constraint with requirement and trade-study allocations rather than a synthetic mission activity",
+        "recommendation": "The cross-cutting option remains the most coherent interpretation; owner confirmation is still required.",
+        "remaining_unresolved": "Owner confirmation and all numeric affordability, mass, endurance, and payload targets."
+      }
     }
   ]
 }

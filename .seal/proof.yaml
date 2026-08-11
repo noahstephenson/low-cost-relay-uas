@@ -11,12 +11,16 @@
       "source_refs": [
         "SRC-DEC-001",
         "SRC-DEC-002",
+        "SRC-DEC-005",
         "SRC-REPO-001",
         "SRC-REPO-002"
       ],
       "evidence_refs": [
         "EVD-003",
-        "EVD-004"
+        "EVD-004",
+        "EVD-008",
+        "EVD-011",
+        "EVD-012"
       ],
       "gap_refs": [],
       "counterevidence_refs": [],
@@ -25,8 +29,8 @@
       ],
       "freshness": {
         "status": "current",
-        "checked_at": "2026-08-06",
-        "basis": "Project-owner instruction and repository inspection"
+        "checked_at": "2026-08-11",
+        "basis": "0.7.0 internal architecture verification and project-owner work-package acceptance"
       },
       "confidence": 0.99,
       "authority_state": "human_approved",
@@ -68,7 +72,8 @@
       ],
       "evidence_refs": [
         "EVD-003",
-        "EVD-004"
+        "EVD-004",
+        "EVD-010"
       ],
       "gap_refs": [
         "GAP-REC-001"
@@ -79,8 +84,8 @@
       ],
       "freshness": {
         "status": "current",
-        "checked_at": "2026-08-06",
-        "basis": "Current baseline work package"
+        "checked_at": "2026-08-10",
+        "basis": "0.7.0 internal architecture verification"
       },
       "confidence": 0.9,
       "authority_state": "inferred",
@@ -117,7 +122,8 @@
       ],
       "evidence_refs": [
         "EVD-003",
-        "EVD-004"
+        "EVD-004",
+        "EVD-010"
       ],
       "gap_refs": [
         "GAP-SOS-001"
@@ -128,8 +134,8 @@
       ],
       "freshness": {
         "status": "current",
-        "checked_at": "2026-08-06",
-        "basis": "Repository and work-package review"
+        "checked_at": "2026-08-10",
+        "basis": "0.7.0 internal architecture verification"
       },
       "confidence": 0.85,
       "authority_state": "inferred",
@@ -167,7 +173,9 @@
       ],
       "evidence_refs": [
         "EVD-003",
-        "EVD-004"
+        "EVD-004",
+        "EVD-009",
+        "EVD-010"
       ],
       "gap_refs": [
         "GAP-REC-001"
@@ -178,8 +186,8 @@
       ],
       "freshness": {
         "status": "current",
-        "checked_at": "2026-08-06",
-        "basis": "Repository inspection"
+        "checked_at": "2026-08-10",
+        "basis": "0.7.0 internal architecture verification"
       },
       "confidence": 0.95,
       "authority_state": "repo_observed",
@@ -212,7 +220,8 @@
         "SRC-REPO-004"
       ],
       "evidence_refs": [
-        "EVD-004"
+        "EVD-004",
+        "EVD-010"
       ],
       "gap_refs": [
         "GAP-REC-001"
@@ -223,8 +232,8 @@
       ],
       "freshness": {
         "status": "current",
-        "checked_at": "2026-08-06",
-        "basis": "Repository inspection"
+        "checked_at": "2026-08-10",
+        "basis": "0.7.0 internal architecture verification"
       },
       "confidence": 0.95,
       "authority_state": "repo_observed",
@@ -260,7 +269,9 @@
         "SRC-REPO-003"
       ],
       "evidence_refs": [
-        "EVD-004"
+        "EVD-004",
+        "EVD-009",
+        "EVD-010"
       ],
       "gap_refs": [
         "GAP-IFC-001"
@@ -271,8 +282,8 @@
       ],
       "freshness": {
         "status": "current",
-        "checked_at": "2026-08-06",
-        "basis": "Repository inspection"
+        "checked_at": "2026-08-10",
+        "basis": "0.7.0 internal architecture verification"
       },
       "confidence": 0.95,
       "authority_state": "repo_observed",
@@ -315,12 +326,13 @@
       ],
       "counterevidence_refs": [],
       "limitations": [
-        "The claim is about the available records; the article was not independently inspected for this baseline."
+        "The claim is about observations documented in matched source records; this repository did not independently inspect the recovered article during this reconciliation.",
+        "The current local SRC-INT-003 file has a checksum mismatch and was not used to strengthen this claim."
       ],
       "freshness": {
         "status": "current",
-        "checked_at": "2026-08-06",
-        "basis": "Local source artifact snapshot"
+        "checked_at": "2026-08-08",
+        "basis": "Controlled source-integrity and architecture-role reconciliation"
       },
       "confidence": 0.9,
       "authority_state": "externally_sourced",
@@ -358,12 +370,13 @@
       ],
       "counterevidence_refs": [],
       "limitations": [
-        "The claim is about the available records; the article was not independently inspected for this baseline."
+        "The claim is about observations documented in matched source records; this repository did not independently inspect the recovered article during this reconciliation.",
+        "The current local SRC-INT-003 file has a checksum mismatch and was not used to strengthen this claim."
       ],
       "freshness": {
         "status": "current",
-        "checked_at": "2026-08-06",
-        "basis": "Local source artifact snapshot"
+        "checked_at": "2026-08-08",
+        "basis": "Controlled source-integrity and architecture-role reconciliation"
       },
       "confidence": 0.9,
       "authority_state": "externally_sourced",
@@ -394,7 +407,9 @@
         "SRC-INT-003"
       ],
       "evidence_refs": [
-        "EVD-002"
+        "EVD-002",
+        "EVD-006",
+        "EVD-007"
       ],
       "gap_refs": [
         "GAP-SRC-001",
@@ -406,8 +421,8 @@
       ],
       "freshness": {
         "status": "current",
-        "checked_at": "2026-08-06",
-        "basis": "Local source artifact snapshot"
+        "checked_at": "2026-08-08",
+        "basis": "Controlled source-integrity and architecture-role reconciliation"
       },
       "confidence": 0.7,
       "authority_state": "inferred",
@@ -422,7 +437,7 @@
         "CFG-REC",
         "CMP-COM-01"
       ],
-      "rationale": "The functional interpretation is supported by physical arrangement and source-record wiring observations but is not established by complete module identification.",
+      "rationale": "The matched PDF and workbook support physical module and connection classes, while the relay function and traffic direction remain engineering inference rather than complete module identification.",
       "contradicts": [],
       "supersedes": []
     },
@@ -439,7 +454,9 @@
         "SRC-GAP-001"
       ],
       "evidence_refs": [
-        "EVD-002"
+        "EVD-002",
+        "EVD-006",
+        "EVD-007"
       ],
       "gap_refs": [
         "GAP-SRC-001",
@@ -451,8 +468,8 @@
       ],
       "freshness": {
         "status": "current",
-        "checked_at": "2026-08-06",
-        "basis": "Local source artifact snapshot"
+        "checked_at": "2026-08-08",
+        "basis": "Controlled source-integrity and architecture-role reconciliation"
       },
       "confidence": 0.95,
       "authority_state": "unknown",
@@ -472,14 +489,14 @@
         "CMP-COM-01",
         "CMP-COM-02"
       ],
-      "rationale": "All three source records preserve these values or identities as unresolved.",
+      "rationale": "The matched PDF and workbook preserve these values or identities as unresolved; the changed local DOCX was not used to close them.",
       "contradicts": [],
       "supersedes": []
     },
     {
       "id": "CLM-REC-005",
       "subject": "Recovered-to-generic model reconciliation",
-      "statement": "The current generic CMP and IFC architecture has not been demonstrated to be an as-built representation of CFG-REC.",
+      "statement": "A controlled two-way role-level mapping now relates CFG-REC evidence to the generic CMP and IFC architecture, but it does not establish exact as-built equivalence, candidate implementation identity, or approval to clone CFG-REC.",
       "type": "architecture",
       "status": "proven",
       "source_refs": [
@@ -490,19 +507,22 @@
       ],
       "evidence_refs": [
         "EVD-002",
-        "EVD-004"
+        "EVD-004",
+        "EVD-006",
+        "EVD-007"
       ],
       "gap_refs": [
         "GAP-REC-001"
       ],
       "counterevidence_refs": [],
       "limitations": [
-        "This proves absence of demonstrated mapping in the reviewed sources, not that no mapping is possible."
+        "Role-level correspondence is complete for the inventoried matched-source records and all current candidate components and interfaces, but physical reconstruction remains incomplete.",
+        "The current local SRC-INT-003 file has a checksum mismatch and was excluded from claim-strengthening evidence."
       ],
       "freshness": {
         "status": "current",
-        "checked_at": "2026-08-06",
-        "basis": "Repository-to-source comparison"
+        "checked_at": "2026-08-08",
+        "basis": "Controlled source-integrity and architecture-role reconciliation"
       },
       "confidence": 0.9,
       "authority_state": "inferred",
@@ -520,7 +540,7 @@
         "CFG-REP",
         "CFG-DOM"
       ],
-      "rationale": "The repository intentionally uses a symmetric generic decomposition, while the recovered records retain article-specific identifiers and unresolved corner mapping.",
+      "rationale": "The reconciliation distinguishes direct, partial, class-level, inferred, unmatched, unknown, and candidate-only relationships while preserving CFG-REC as evidence rather than candidate decomposition.",
       "contradicts": [],
       "supersedes": []
     },
@@ -535,7 +555,8 @@
         "SRC-REPO-005"
       ],
       "evidence_refs": [
-        "EVD-004"
+        "EVD-004",
+        "EVD-009"
       ],
       "gap_refs": [
         "GAP-VER-001"
@@ -546,8 +567,8 @@
       ],
       "freshness": {
         "status": "current",
-        "checked_at": "2026-08-06",
-        "basis": "Repository inspection"
+        "checked_at": "2026-08-10",
+        "basis": "0.7.0 internal architecture verification"
       },
       "confidence": 0.9,
       "authority_state": "repo_observed",
@@ -580,7 +601,8 @@
         "SRC-REPO-006"
       ],
       "evidence_refs": [
-        "EVD-004"
+        "EVD-004",
+        "EVD-011"
       ],
       "gap_refs": [
         "GAP-VER-001"
@@ -591,8 +613,8 @@
       ],
       "freshness": {
         "status": "current",
-        "checked_at": "2026-08-06",
-        "basis": "Repository inspection"
+        "checked_at": "2026-08-10",
+        "basis": "0.7.0 internal architecture verification"
       },
       "confidence": 0.85,
       "authority_state": "inferred",
@@ -628,7 +650,8 @@
       ],
       "evidence_refs": [
         "EVD-003",
-        "EVD-004"
+        "EVD-004",
+        "EVD-010"
       ],
       "gap_refs": [
         "GAP-SOS-001"
@@ -639,8 +662,8 @@
       ],
       "freshness": {
         "status": "current",
-        "checked_at": "2026-08-06",
-        "basis": "Repository and work-package review"
+        "checked_at": "2026-08-10",
+        "basis": "0.7.0 internal architecture verification"
       },
       "confidence": 0.95,
       "authority_state": "repo_observed",
@@ -663,6 +686,22 @@
       "contradicts": [],
       "supersedes": []
     }
+  ],
+  "claim_freshness_review": [
+    {"claim_id": "CLM-SCP-001", "classification": "CURRENT_MODEL_CLAIM_REVIEWED", "review_date": "2026-08-11", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": ["EVD-008", "EVD-011", "EVD-012"]},
+    {"claim_id": "CLM-BND-001", "classification": "CURRENT_MODEL_CLAIM_REVIEWED", "review_date": "2026-08-10", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": ["EVD-010"]},
+    {"claim_id": "CLM-BND-002", "classification": "CURRENT_MODEL_CLAIM_REVIEWED", "review_date": "2026-08-10", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": ["EVD-010"]},
+    {"claim_id": "CLM-ARC-001", "classification": "CURRENT_MODEL_CLAIM_REVIEWED", "review_date": "2026-08-10", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": ["EVD-009", "EVD-010"]},
+    {"claim_id": "CLM-ARC-002", "classification": "CURRENT_MODEL_CLAIM_REVIEWED", "review_date": "2026-08-10", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": ["EVD-010"]},
+    {"claim_id": "CLM-ARC-003", "classification": "CURRENT_MODEL_CLAIM_REVIEWED", "review_date": "2026-08-10", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": ["EVD-009", "EVD-010"]},
+    {"claim_id": "CLM-REC-001", "classification": "UNCHANGED_SOURCE_CLAIM", "review_date": "2026-08-10", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": []},
+    {"claim_id": "CLM-REC-002", "classification": "UNCHANGED_SOURCE_CLAIM", "review_date": "2026-08-10", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": []},
+    {"claim_id": "CLM-REC-003", "classification": "UNCHANGED_SOURCE_CLAIM", "review_date": "2026-08-10", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": []},
+    {"claim_id": "CLM-REC-004", "classification": "UNCHANGED_SOURCE_CLAIM", "review_date": "2026-08-10", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": []},
+    {"claim_id": "CLM-REC-005", "classification": "UNCHANGED_SOURCE_CLAIM", "review_date": "2026-08-10", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": []},
+    {"claim_id": "CLM-CAP-001", "classification": "CURRENT_MODEL_CLAIM_REVIEWED", "review_date": "2026-08-10", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": ["EVD-009"]},
+    {"claim_id": "CLM-HAZ-001", "classification": "CURRENT_MODEL_CLAIM_REVIEWED", "review_date": "2026-08-10", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": ["EVD-011"]},
+    {"claim_id": "CLM-SOS-001", "classification": "CURRENT_MODEL_CLAIM_REVIEWED", "review_date": "2026-08-10", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": ["EVD-010"]}
   ],
   "evidence": [
     {
@@ -825,6 +864,388 @@
       ],
       "evidence_basis": "internal_document",
       "decision_status": "not_applicable"
+    },
+    {
+      "id": "EVD-005",
+      "type": "source_integrity_review",
+      "method": "Locate the three registered recovered-reference artifacts, recompute SHA-256 values, and compare each value with the checksum preserved in the source registry.",
+      "source": {
+        "kind": "command_execution",
+        "summary": "Recovered-reference source integrity review on 2026-08-08"
+      },
+      "result": "SRC-INT-001 and SRC-INT-002 matched their registered checksums. The current local SRC-INT-003 file was present but did not match and was excluded from claim-strengthening use.",
+      "supports": [
+        "CLM-REC-005"
+      ],
+      "refutes": [],
+      "captured_at": "2026-08-08",
+      "artifact_path": ".seal/sources.yaml",
+      "limitations": [
+        "Checksum matching establishes local revision identity only; it does not establish authorship, chain of custody, or technical correctness.",
+        "The mismatched DOCX was inspected for change awareness but was not treated as the registered source revision."
+      ],
+      "source_refs": [
+        "SRC-DEC-003",
+        "SRC-INT-001",
+        "SRC-INT-002",
+        "SRC-INT-003"
+      ],
+      "authority_state": "execution_evidence",
+      "approval_state": "not_required",
+      "confidence": 1.0,
+      "applicable_configurations": [
+        "CFG-REC",
+        "CFG-REP",
+        "CFG-DOM"
+      ],
+      "evidence_basis": "internal_document",
+      "decision_status": "not_applicable"
+    },
+    {
+      "id": "EVD-006",
+      "type": "model_review",
+      "method": "Review all pages of the matched PDF, all populated workbook rows, and the registered-source limitations; normalize architecture-relevant recovered items and connections; classify each forward correspondence without importing implementation details.",
+      "source": {
+        "kind": "model_review",
+        "summary": "CFG-REC recovered-to-candidate architecture-role reconciliation"
+      },
+      "result": "Twenty-four recovered items and ten architecture-relevant connections received controlled direct, partial, class-level, inferred, unmatched, or unknown dispositions in model/architecture.yaml.",
+      "supports": [
+        "CLM-REC-001",
+        "CLM-REC-002",
+        "CLM-REC-003",
+        "CLM-REC-004",
+        "CLM-REC-005"
+      ],
+      "refutes": [],
+      "captured_at": "2026-08-08",
+      "artifact_path": "model/architecture.yaml",
+      "limitations": [
+        "This is architecture model-review evidence, not independent physical inspection or physical verification.",
+        "The mismatched DOCX and missing standalone photograph, measurement, and inspection set were not used to close physical unknowns."
+      ],
+      "source_refs": [
+        "SRC-DEC-003",
+        "SRC-INT-001",
+        "SRC-INT-002",
+        "SRC-GAP-001"
+      ],
+      "authority_state": "repo_observed",
+      "approval_state": "not_required",
+      "confidence": 0.9,
+      "applicable_configurations": [
+        "CFG-REC",
+        "CFG-REP",
+        "CFG-DOM"
+      ],
+      "evidence_basis": "internal_document",
+      "decision_status": "not_applicable"
+    },
+    {
+      "id": "EVD-007",
+      "type": "model_review",
+      "method": "Audit every current CFG-REP / CFG-DOM component and interface against the matched recovered-source package, preserving candidate-only and no-evidence classifications rather than forcing equivalence.",
+      "source": {
+        "kind": "model_review",
+        "summary": "Candidate architecture recovered-evidence coverage review"
+      },
+      "result": "All nineteen current candidate components and all seventeen interfaces received explicit recovered-evidence coverage classifications; no contradiction was identified and two potential candidate changes were retained for owner review.",
+      "supports": [
+        "CLM-REC-003",
+        "CLM-REC-004",
+        "CLM-REC-005"
+      ],
+      "refutes": [],
+      "captured_at": "2026-08-08",
+      "artifact_path": "model/architecture.yaml",
+      "limitations": [
+        "Coverage classification is evidence governance, not proof that candidate requirements or interfaces were present in CFG-REC.",
+        "No candidate architecture change or technical configuration was approved by this review."
+      ],
+      "source_refs": [
+        "SRC-DEC-003",
+        "SRC-INT-001",
+        "SRC-INT-002",
+        "SRC-REPO-003"
+      ],
+      "authority_state": "repo_observed",
+      "approval_state": "not_required",
+      "confidence": 0.9,
+      "applicable_configurations": [
+        "CFG-REP",
+        "CFG-DOM"
+      ],
+      "evidence_basis": "internal_document",
+      "decision_status": "not_applicable"
+    },
+    {
+      "id": "EVD-008",
+      "type": "model_validation_execution",
+      "method": "Execute scripts/validate-baseline.py against the frozen pre-edit baseline and the final reviewed baseline; inspect unique IDs, references, traceability, configuration guards, boundary rules, evidence links, generated freshness, Mermaid guards, and implementation-detail guards.",
+      "source": {
+        "kind": "command_execution",
+        "summary": "Current-baseline automated structural validation"
+      },
+      "result": "The frozen 0.6.0 baseline passed before editing. After evidence capture and the one objective source-applicability clarification, the 0.7.0 baseline passed consolidated catalog, reference, traceability, approval, configuration, payload-boundary, generated-view, Mermaid-guard, and prohibited-detail checks.",
+      "supports": [
+        "CLM-SCP-001"
+      ],
+      "refutes": [],
+      "verification_ids": [
+        "VER-002"
+      ],
+      "object_refs": [
+        "CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS",
+        "GAP-VER-001"
+      ],
+      "reviewed_model_version": "0.7.0-baseline-candidate",
+      "captured_at": "2026-08-10",
+      "artifact_path": "scripts/validate-baseline.py",
+      "limitations": [
+        "This is structural model evidence only; it does not prove physical behavior, performance, safety, external compatibility, or technical approval.",
+        "Pinned Mermaid CLI parsing remains separately reported as PASSED, SKIPPED, or FAILED and is never inferred from structural validation."
+      ],
+      "source_refs": [
+        "SRC-DEC-004",
+        "SRC-REPO-001"
+      ],
+      "authority_state": "execution_evidence",
+      "approval_state": "not_required",
+      "confidence": 0.98,
+      "applicable_configurations": [
+        "CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"
+      ],
+      "applicability_scope": "model-governance evidence only",
+      "evidence_level": "model_level_only",
+      "evidence_basis": "internal_document",
+      "decision_status": "not_applicable"
+    },
+    {
+      "id": "EVD-009",
+      "type": "model_review",
+      "method": "Re-review all 28 requirement records and their quality-audit entries, then walk SCN-001, SCN-002, SCN-003, SCN-004, SCN-007, and SCN-008 through the current architecture while confirming SCN-005 and SCN-006 remain future-only.",
+      "source": {
+        "kind": "model_review",
+        "summary": "Requirements, architecture, and operational-scenario review"
+      },
+      "result": "Two genuinely model-verifiable requirements passed their model-level checks; the other 26 passed architecture-quality review with explicit open limitations. All six current scenarios were internally traceable with known gaps, and both future scenarios remained correctly separated.",
+      "review_details": {
+        "requirements_reviewed": 28,
+        "model_level_pass": 2,
+        "pass_with_open_gaps": 26,
+        "readiness_counts": {
+          "model_verifiable_now": 2,
+          "analysis_blocked_by_tbd": 12,
+          "physical_evidence_required": 6,
+          "external_authority_required": 5,
+          "intentionally_deferred": 3
+        },
+        "scenario_results": [
+          {"scenario_id": "SCN-001", "result": "PASS_WITH_OPEN_GAPS", "main_trace": "OA-007 to FUN-CFG-01 / FUN-HLT-01 to MODE-005", "residual_gap_ids": ["GAP-VER-001"]},
+          {"scenario_id": "SCN-002", "result": "PASS_WITH_OPEN_GAPS", "main_trace": "OA-001 / OA-002 / OA-003 to flight, command, navigation, and health functions to MODE-001 / MODE-002", "residual_gap_ids": ["GAP-HAZ-001", "GAP-IFC-001", "GAP-BUDGET-001", "GAP-VER-001"]},
+          {"scenario_id": "SCN-003", "result": "PASS_WITH_OPEN_GAPS", "main_trace": "OA-004 to IX-002 / IX-003 to FUN-REL-01", "residual_gap_ids": ["GAP-IFC-001", "GAP-VER-001"]},
+          {"scenario_id": "SCN-004", "result": "PASS_WITH_OPEN_GAPS", "main_trace": "OA-005 to IX-004 / IX-005 to FUN-REL-02", "residual_gap_ids": ["GAP-IFC-001", "GAP-VER-001"]},
+          {"scenario_id": "SCN-007", "result": "PASS_WITH_OPEN_GAPS", "main_trace": "MODE-003 to FUN-HLT-01 / FUN-FLT-04 to HAZ-005 / CTL-004 to REQ-FUN-007 / REQ-FUN-008", "residual_gap_ids": ["GAP-HAZ-001", "GAP-IFC-001", "GAP-VER-001"]},
+          {"scenario_id": "SCN-008", "result": "PASS_WITH_OPEN_GAPS", "main_trace": "OA-006 to MODE-004 / MODE-005 to command, recovery, and health functions", "residual_gap_ids": ["GAP-HAZ-001", "GAP-IFC-001", "GAP-VER-001"]},
+          {"scenario_id": "SCN-005", "result": "PASS_FUTURE_SCOPE_ONLY", "main_trace": "CFG-SOS future thread retained without current allocation", "residual_gap_ids": ["GAP-SOS-001"]},
+          {"scenario_id": "SCN-006", "result": "PASS_FUTURE_SCOPE_ONLY", "main_trace": "CFG-DIG / CFG-SOS future thread retained without current allocation", "residual_gap_ids": ["GAP-SOS-002"]}
+        ]
+      },
+      "supports": [
+        "CLM-ARC-001", "CLM-ARC-003", "CLM-CAP-001"
+      ],
+      "refutes": [],
+      "verification_ids": [
+        "VER-001", "VER-004"
+      ],
+      "object_refs": [
+        "REQ-FUN-001", "REQ-FUN-002", "REQ-FUN-003", "REQ-FUN-004", "REQ-FUN-005", "REQ-FUN-006", "REQ-FUN-007", "REQ-FUN-008",
+        "REQ-PER-001", "REQ-PER-002", "REQ-PER-003", "REQ-PER-004", "REQ-PER-005",
+        "REQ-IFC-001", "REQ-IFC-002", "REQ-IFC-003", "REQ-IFC-004", "REQ-SAF-001", "REQ-SAF-002",
+        "REQ-CON-001", "REQ-CON-002", "REQ-CON-003", "REQ-CON-004",
+        "REQ-DEF-001", "REQ-DEF-002", "REQ-DEF-003", "REQ-DEF-004", "REQ-DEF-005",
+        "SCN-001", "SCN-002", "SCN-003", "SCN-004", "SCN-005", "SCN-006", "SCN-007", "SCN-008"
+      ],
+      "reviewed_model_version": "0.7.0-baseline-candidate",
+      "captured_at": "2026-08-10",
+      "artifact_path": "model/assurance.yaml",
+      "limitations": [
+        "The review establishes requirement and scenario coherence only; it does not establish physical satisfaction, performance, safety, external compatibility, or operational readiness.",
+        "The five REQ-DEF records are intentional scope/deferral records and were not reworded as satisfied technical obligations."
+      ],
+      "source_refs": [
+        "SRC-DEC-004", "SRC-REPO-002", "SRC-REPO-003", "SRC-REPO-004", "SRC-REPO-005"
+      ],
+      "authority_state": "execution_evidence",
+      "approval_state": "not_required",
+      "confidence": 0.95,
+      "applicable_configurations": [
+        "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"
+      ],
+      "evidence_level": "model_level_only",
+      "evidence_basis": "internal_document",
+      "decision_status": "not_applicable"
+    },
+    {
+      "id": "EVD-010",
+      "type": "model_review",
+      "method": "Inspect all 17 interface records and audit configuration applicability across every structured model family, including payload crossings, payload-internal coupling, future-only interfaces, platform-command separation, and external-conformance disposition.",
+      "source": {
+        "kind": "model_review",
+        "summary": "Interface and configuration-applicability inspection"
+      },
+      "result": "All 17 interfaces passed architecture-definition inspection; all seven external interfaces remain blocked from conformance verification. Configuration separation passed with no CFG-REC inheritance or future/current leakage after clarifying recovered-source lineage semantics.",
+      "review_details": {
+        "interfaces_reviewed": 17,
+        "architecture_definition_complete": 17,
+        "external_authority_blocked": 7,
+        "configuration_records_reviewed": 5,
+        "payload_crossings": ["IFC-INT-003", "IFC-INT-007"],
+        "payload_internal_interface": "IFC-INT-010",
+        "future_only_interface": "IFC-INT-008",
+        "configuration_leakage_found": 0
+      },
+      "objective_corrections": [
+        {
+          "affected_ids": ["SRC-INT-001", "SRC-INT-002", "SRC-INT-003"],
+          "problem": "Recovered-reference sources listed candidate configurations without an explicit source-record scope distinguishing lineage from physical equivalence or approval.",
+          "verification_ids": ["VER-003", "VER-007"],
+          "old_state": "Candidate applicability was present, while the lineage-only meaning was governed elsewhere in the model.",
+          "new_state": "Each recovered-source record now states that lineage may inform candidate reasoning but does not establish candidate existence, equivalence, inheritance, or approval.",
+          "objective_basis": "The correction makes existing configuration semantics explicit and removes an evidence-governance ambiguity without changing any architecture element.",
+          "architecture_intent_changed": false
+        }
+      ],
+      "supports": [
+        "CLM-BND-001", "CLM-BND-002", "CLM-ARC-001", "CLM-ARC-002", "CLM-ARC-003", "CLM-SOS-001"
+      ],
+      "refutes": [],
+      "verification_ids": [
+        "VER-005", "VER-007"
+      ],
+      "object_refs": [
+        "CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS",
+        "IFC-INT-001", "IFC-INT-002", "IFC-INT-003", "IFC-INT-004", "IFC-INT-005", "IFC-INT-006", "IFC-INT-007", "IFC-INT-008", "IFC-INT-009", "IFC-INT-010",
+        "IFC-EXT-001", "IFC-EXT-002", "IFC-EXT-003", "IFC-EXT-004", "IFC-EXT-005", "IFC-EXT-006", "IFC-EXT-007"
+      ],
+      "reviewed_model_version": "0.7.0-baseline-candidate",
+      "captured_at": "2026-08-10",
+      "artifact_path": "model/architecture.yaml",
+      "limitations": [
+        "Architecture-definition completeness does not establish physical implementation or endpoint compatibility.",
+        "No unknown interface attribute was filled and no future configuration was expanded."
+      ],
+      "source_refs": [
+        "SRC-DEC-004", "SRC-REPO-001", "SRC-REPO-003"
+      ],
+      "authority_state": "execution_evidence",
+      "approval_state": "not_required",
+      "confidence": 0.98,
+      "applicable_configurations": [
+        "CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"
+      ],
+      "applicability_scope": "model-level interface and configuration governance only",
+      "evidence_level": "model_level_only",
+      "evidence_basis": "internal_document",
+      "decision_status": "not_applicable"
+    },
+    {
+      "id": "EVD-011",
+      "type": "model_review",
+      "method": "Inspect all registered source, evidence, and claim records for reference resolution, evidence semantics, historical status, and freshness; cross-reference all 12 hazards and five controls against requirements, verification, gaps, and lifecycle disposition.",
+      "source": {
+        "kind": "model_review",
+        "summary": "Source/evidence governance and hazard-control review"
+      },
+      "result": "Source, evidence, and claim governance remained internally consistent with historical records preserved. Seven active hazards retain candidate control or direct-requirement paths, HAZ-001 remains explicitly unmitigated, HAZ-009 remains inactive, and three external hazards remain deferred without safety credit.",
+      "review_details": {
+        "sources_reviewed": 20,
+        "historical_evidence_preserved": ["EVD-001", "EVD-002", "EVD-003", "EVD-004"],
+        "claims_reviewed": 14,
+        "current_model_claims_refreshed": 9,
+        "unchanged_recovered_source_claims": 5,
+        "hazards_reviewed": 12,
+        "active_hazards": 8,
+        "candidate_controls": 5,
+        "complete_or_direct_candidate_paths": 7,
+        "explicitly_unmitigated": ["HAZ-001"],
+        "inactive": ["HAZ-009"],
+        "external_deferred": ["HAZ-EXT-001", "HAZ-EXT-002", "HAZ-EXT-003"]
+      },
+      "supports": [
+        "CLM-SCP-001", "CLM-HAZ-001"
+      ],
+      "refutes": [],
+      "verification_ids": [
+        "VER-003", "VER-006"
+      ],
+      "object_refs": [
+        "CLM-SCP-001", "CLM-BND-001", "CLM-BND-002", "CLM-ARC-001", "CLM-ARC-002", "CLM-ARC-003", "CLM-REC-001", "CLM-REC-002", "CLM-REC-003", "CLM-REC-004", "CLM-REC-005", "CLM-CAP-001", "CLM-HAZ-001", "CLM-SOS-001",
+        "HAZ-001", "HAZ-002", "HAZ-003", "HAZ-004", "HAZ-005", "HAZ-006", "HAZ-007", "HAZ-008", "HAZ-009", "HAZ-EXT-001", "HAZ-EXT-002", "HAZ-EXT-003",
+        "CTL-001", "CTL-002", "CTL-003", "CTL-004", "CTL-005"
+      ],
+      "reviewed_model_version": "0.7.0-baseline-candidate",
+      "captured_at": "2026-08-10",
+      "artifact_path": ".seal/proof.yaml",
+      "limitations": [
+        "This review assigns no safety credit and does not establish physical control effectiveness.",
+        "Recovered-source claims were not refreshed because the detailed source package was not reopened in this work package."
+      ],
+      "source_refs": [
+        "SRC-DEC-004", "SRC-REPO-001", "SRC-REPO-006"
+      ],
+      "authority_state": "execution_evidence",
+      "approval_state": "not_required",
+      "confidence": 0.97,
+      "applicable_configurations": [
+        "CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"
+      ],
+      "applicability_scope": "model-governance and hazard-trace evidence only; no physical or safety verification",
+      "evidence_level": "model_level_only",
+      "evidence_basis": "internal_document",
+      "decision_status": "not_applicable"
+    },
+    {
+      "id": "EVD-012",
+      "type": "human_approval",
+      "method": "Record the project owner's follow-up disposition against the completed internal architecture verification work package and preserve every stated approval boundary.",
+      "source": {
+        "kind": "human_input",
+        "summary": "Project-owner acceptance of the internal architecture verification work package",
+        "source_ref": "SRC-DEC-005"
+      },
+      "result": "APPROVED - Internal Architecture Verification Work Package. The model-level verification activities and evidence recorded for version 0.7.0-baseline-candidate are accepted as the current working verification baseline. This approval accepts the verification work and its evidence records only. It does not constitute technical baseline approval, physical verification, safety approval, external-interface conformance, or approval of unresolved DEC-* records.",
+      "supports": [
+        "CLM-SCP-001"
+      ],
+      "refutes": [],
+      "object_refs": [
+        "VER-001", "VER-002", "VER-003", "VER-004", "VER-005", "VER-006", "VER-007",
+        "EVD-008", "EVD-009", "EVD-010", "EVD-011",
+        "SRC-INT-001", "SRC-INT-002", "SRC-INT-003",
+        "GAP-VER-001", "GAP-IFC-001", "GAP-HAZ-001", "GAP-BUDGET-001", "GAP-TRC-001", "GAP-SOS-001", "GAP-SOS-002",
+        "DEC-002", "DEC-003", "DEC-004", "DEC-005"
+      ],
+      "captured_at": "2026-08-11",
+      "artifact_path": ".seal/proof.yaml",
+      "limitations": [
+        "The technical baseline remains not approved.",
+        "No physical verification, safety approval, or external-interface conformance is granted.",
+        "DEC-002 through DEC-005 remain proposed."
+      ],
+      "source_refs": [
+        "SRC-DEC-005"
+      ],
+      "authority_state": "human_approved",
+      "approval_state": "approved",
+      "confidence": 1.0,
+      "applicable_configurations": [
+        "CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"
+      ],
+      "applicability_scope": "internal verification work-package acceptance only; not technical-baseline, physical-verification, safety, external-conformance, or unresolved-decision approval",
+      "evidence_level": "work_package_acceptance_only",
+      "evidence_basis": "internal_document",
+      "decision_status": "approved"
     }
   ]
 }

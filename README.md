@@ -71,8 +71,11 @@ otherwise.
 ## Current candidate at a glance
 
 - `CFG-REP` and `CFG-DOM` are the current proposed Relay-UAS architecture; `CFG-DOM` has no selected substitutions yet.
+- A controlled two-way role mapping now reconciles `CFG-REC` with every current candidate component and interface. The registered PDF and workbook match their checksums; the current DOCX does not and was excluded from claim strengthening. This mapping is not an equivalence or approval claim.
 - `SCN-001 -> OA-007` represents preparation and readiness in `MODE-005` without defining a procedure.
 - `IX-009 -> FUN-HLT-01 -> IFC-EXT-007 -> REQ-FUN-008` is the proposed health/status return for setup and recovery decisions.
+- The project owner accepted the `0.7.0-baseline-candidate` internal architecture verification work package as the current working verification baseline (`SRC-DEC-005`, `EVD-012`). This is work-package acceptance only; the technical baseline remains not approved.
+- Internal model reviews `VER-001` through `VER-007` are executed; physical `VER-008` and external-conformance `VER-009` remain unexecuted.
 - External interfaces are model-reviewable now, but real conformance still requires external authority and evidence.
 - The largest open questions are `HAZ-001`, the coupled mass/cost/power/endurance targets, external conformance, physical evidence, and unsupported `CAP-003`.
 
@@ -101,7 +104,7 @@ to retain the explicit health/status thread (`DEC-004`), and whether to confirm
 - RF implementation parameters or detailed network behavior.
 - Hardware selection, fabrication, assembly, integration, flight test, or operations instructions.
 - Weapons or munitions content.
-- Detailed recovered-component mapping.
+- Exact recovered-component replication or implementation-level physical reconstruction.
 - Cameo/MagicDraw reconciliation in this work package.
 - Claims of MOSA compliance, interoperability, resilience, security, airworthiness,
   safety, operational readiness, or UAF conformance.

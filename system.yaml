@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "model_version": "0.5.0-baseline-candidate",
+  "model_version": "0.7.0-baseline-candidate",
   "title": "Low-Cost Attritable Communications Relay UAS",
   "domain": "defense",
   "tier": "exploratory",
@@ -13,6 +13,19 @@
     "approval_authority": "project owner",
     "approval_decision_id": null,
     "candidate_date": "2026-08-06"
+  },
+  "internal_verification_baseline": {
+    "model_version": "0.7.0-baseline-candidate",
+    "work_package_status": "approved",
+    "approval_scope": "model-level verification work and evidence records only",
+    "approval_date": "2026-08-11",
+    "source_refs": ["SRC-DEC-005"],
+    "evidence_refs": ["EVD-012"],
+    "technical_baseline_approval": "not_approved",
+    "physical_verification": "not_established",
+    "safety_approval": "not_approved",
+    "external_interface_conformance": "not_established",
+    "unresolved_decisions": ["DEC-002", "DEC-003", "DEC-004", "DEC-005"]
   },
   "authority": {
     "rule": "system.yaml is the manifest. The structured catalogs referenced by it are authoritative model data. Markdown documents and generated reports are views of that model."
@@ -148,6 +161,20 @@
       "external_authority_required",
       "intentionally_deferred"
     ],
+    "verification_execution_status": [
+      "not_executed",
+      "executed_pass",
+      "executed_with_open_gaps",
+      "failed",
+      "blocked",
+      "deferred"
+    ],
+    "claim_freshness_review": [
+      "UNCHANGED_SOURCE_CLAIM",
+      "CURRENT_MODEL_CLAIM_REVIEWED",
+      "REQUIRES_REFRESH",
+      "DEFERRED"
+    ],
     "gap_audit_classification": [
       "A_closeable_by_model_work",
       "B_project_owner_decision",
@@ -155,6 +182,32 @@
       "D_intentional_deferral",
       "E_future_configuration",
       "F_false_positive_model_health_gap"
+    ],
+    "recovered_to_candidate_mapping": [
+      "DIRECT_ROLE_CORRESPONDENCE",
+      "PARTIAL_ROLE_CORRESPONDENCE",
+      "CLASS_LEVEL_CORRESPONDENCE",
+      "ENGINEERING_INFERENCE",
+      "UNMATCHED_RECOVERED_ITEM",
+      "CONTRADICTORY",
+      "UNKNOWN",
+      "NOT_APPLICABLE"
+    ],
+    "candidate_to_recovered_mapping": [
+      "DIRECT_SOURCE_SUPPORT",
+      "INDIRECT_SOURCE_SUPPORT",
+      "ENGINEERING_INFERENCE",
+      "PROPOSED_ARCHITECTURE_ONLY",
+      "NO_RECOVERED_EVIDENCE",
+      "CONTRADICTED",
+      "NOT_APPLICABLE"
+    ],
+    "cross_source_support": [
+      "CORROBORATED",
+      "SINGLE_SOURCE",
+      "SOURCE_DISAGREEMENT",
+      "INFERENCE_ONLY",
+      "UNKNOWN"
     ]
   },
   "catalogs": {

@@ -29,7 +29,7 @@ axis is `CFG-REP -> CFG-DIG -> CFG-SOS`.
 ```mermaid
 flowchart LR
     %% Configuration scope: CFG-REC / CFG-REP / CFG-DOM / CFG-DIG / CFG-SOS
-    CFG_REC["CFG-REC<br/>Reference evidence only<br/>mapping unverified"] -->|"informs - not exact inheritance"| CFG_REP["CFG-REP<br/>Current proposed baseline"]
+    CFG_REC["CFG-REC<br/>Reference evidence only<br/>role mapping complete - not exact"] -->|"informs - not exact inheritance"| CFG_REP["CFG-REP<br/>Current proposed baseline"]
     CFG_REP --> CFG_DOM["CFG-DOM<br/>Current candidate<br/>substitution criteria unresolved"]
     CFG_REP --> CFG_DIG["CFG-DIG<br/>Future extension<br/>adds IFC-INT-008 candidate"]
     CFG_DIG --> CFG_SOS["CFG-SOS<br/>Future outer context<br/>not current implementation"]
@@ -47,6 +47,44 @@ domestic-content criterion has been selected.
 **Future extensions — `CFG-DIG` / `CFG-SOS`.** These add a proposed digital payload
 management path and broader independently managed performers. They do not silently
 modify the current candidate.
+
+## Recovered Reference vs Candidate Architecture
+
+The controlled reconciliation contains 24 recovered-item records and 10 recovered-
+connection records, plus reverse coverage for all 19 current candidate components
+and all 17 interfaces. It records role correspondence, limitations, confidence, and
+configuration scope. It does not claim identical hardware, exact recovered
+connectivity, candidate approval, or inheritance from `CFG-REC`.
+
+The registered PDF and workbook passed checksum verification and were reviewed in
+full for architecture-relevant content. The current local DOCX does not match its
+registered checksum; it was inspected only for change awareness and was not used to
+strengthen technical claims. In this model, `physically_observed` means documented as
+an observation in an integrity-accepted registered record, not direct inspection by
+the model author or automation.
+
+```mermaid
+flowchart LR
+    %% Configuration scope: CFG-REC informs CFG-REP / CFG-DOM - no exact inheritance
+    REC_STRUCTURE["Recovered structure and retention"] -->|"direct / class-level / partial"| CAND_STRUCTURE["CMP-AFR-01 through CMP-AFR-05<br/>CMP-MNT-01"]
+    REC_PROPULSION["Recovered propulsion resources"] -->|"direct role support"| CAND_PROPULSION["CMP-PRP-01 through CMP-PRP-03"]
+    REC_POWER["Recovered power resources and harness"] -->|"direct / partial / unknown"| CAND_POWER["CMP-PWR-01 through CMP-PWR-04"]
+    REC_AVIONICS["Recovered control and navigation resources"] -->|"direct / partial"| CAND_AVIONICS["CMP-AVN-01 through CMP-AVN-04"]
+    REC_PAYLOAD["Recovered payload modules and antennas"] -->|"partial / inferred"| CAND_PAYLOAD["CMP-COM-01 / CMP-COM-02"]
+    REC_PAYLOAD -.->|"unmatched and incomplete evidence remain"| GAPS["GAP-REC-001 / GAP-SRC-001"]
+```
+
+The recovered package supports a physically distinct payload, a power relationship,
+retention, and payload-internal antenna coupling, but it does not prove that the
+candidate's two modeled platform-to-payload crossings are the only recovered
+crossings. It indirectly supports a separate carrier-command resource, while the
+complete command path remains ambiguous. It does not establish the proposed end-to-
+end health/status return or maintenance/configuration interface.
+
+Two candidate changes remain owner-review questions, not automatic model changes:
+
+- `REC-CHG-001`: consider an implementation-neutral interface from `CMP-PWR-01` to `CMP-PWR-02`; all electrical attributes would remain unknown.
+- `REC-CHG-002`: keep the candidate unchanged unless the operator concept establishes a need for a separate carrier-view feedback resource and path.
 
 ## 3. System Boundaries
 
@@ -290,9 +328,9 @@ flowchart LR
     HAZ_004["HAZ-004<br/>Propeller contact"] --> CTL_001["CTL-001<br/>Ground-safe arming control"]
     CTL_001 --> REQ_FUN_006["REQ-FUN-006<br/>Arming inhibit"]
     CTL_001 --> REQ_SAF_002["REQ-SAF-002<br/>Visible armed state"]
-    REQ_FUN_006 --> VER_006["VER-006<br/>Cross-reference review [UNVERIFIED]"]
+    REQ_FUN_006 --> VER_006["VER-006<br/>Cross-reference review<br/>EXECUTED WITH OPEN GAPS"]
     REQ_SAF_002 --> VER_006
-    VER_006 -.-> GAP_VER_001["GAP-VER-001<br/>Execution evidence missing"]
+    VER_006 -.-> GAP_VER_001["GAP-VER-001<br/>Physical / external evidence missing"]
     HAZ_008["HAZ-008<br/>Payload separation"] --> CTL_005["CTL-005<br/>Payload retention"]
     CTL_005 --> REQ_IFC_004["REQ-IFC-004<br/>Retain payload"]
     REQ_IFC_004 --> VER_008["VER-008<br/>Physical verification [DEFERRED]"]
@@ -309,20 +347,28 @@ enforceable requirement. No flight-termination or geofence function is modeled, 
 
 ## 10. Verification Approach
 
-`VER-*` entries allocate analysis, review, inspection, demonstration, or deferred
-physical methods. Allocation is not execution. `EVD-*` records describe available
-repository, source, decision, and validation evidence; none demonstrates physical
-performance or safety.
+The project owner accepted the internal architecture verification work package for
+`0.7.0-baseline-candidate` as the current working verification baseline
+(`SRC-DEC-005`, `EVD-012`). This disposition accepts the work and its evidence only;
+it does not approve the technical baseline, physical verification, safety,
+external-interface conformance, or `DEC-002` through `DEC-005`.
 
-The near-term admissible work is model review, trace inspection, and source/evidence
-governance. Hardware-dependent evidence remains deferred and must not be inferred
-from a passing repository validator.
+`VER-*` entries distinguish method readiness from execution. `VER-001` through
+`VER-007` have now been executed against the `0.7.0` baseline for requirements,
+traceability, source/evidence governance, scenarios, interfaces, hazard/control
+relationships, and configuration applicability. These reviews establish model
+consistency only. They do not demonstrate physical performance, safety, external
+compatibility, or approval.
+
+`VER-008` remains unexecuted and dependent on future physical evidence. `VER-009`
+remains blocked by absent external authority, specifications, and conformance
+evidence. A passing repository validator cannot substitute for either activity.
 
 ```mermaid
 flowchart LR
     %% Configuration scope: CFG-REP / CFG-DOM with project-scope deferrals
-    MODEL_NOW["MODEL-VERIFIABLE-NOW<br/>REQ-IFC-003 / REQ-CON-003"] --> VER_002["VER-002<br/>Structured audit<br/>EVD-001"]
-    ANALYSIS_TBD["ANALYSIS-BLOCKED-BY-TBD<br/>REQ-FUN-003 / REQ-PER-002"] -.-> VER_001["VER-001<br/>Architecture analysis"]
+    EXECUTED["EXECUTED MODEL REVIEW<br/>VER-001 through VER-007<br/>EVD-008 through EVD-011"] --> PASS["EXECUTED PASS<br/>VER-002 / VER-007"]
+    EXECUTED --> OPEN["EXECUTED WITH OPEN GAPS<br/>VER-001 / VER-003 through VER-006"]
     PHYSICAL["PHYSICAL-EVIDENCE-REQUIRED<br/>REQ-FUN-006 / REQ-FUN-008"] -.-> VER_008["VER-008<br/>Deferred physical method"]
     EXTERNAL["EXTERNAL-AUTHORITY-REQUIRED<br/>REQ-FUN-001 / REQ-FUN-004"] -.-> VER_009["VER-009<br/>External conformance"]
     DEFERRED["INTENTIONALLY-DEFERRED<br/>REQ-DEF-001 / REQ-DEF-004"] -.-> TS_009["TS-009<br/>Formal deferral"]
@@ -343,8 +389,8 @@ baseline report presents gap-oriented summaries rather than another matrix copy.
 
 ## 12. Open Architecture Gaps
 
-The principal retained gaps are recovered-to-candidate mapping and missing source
-evidence; unsupported `CAP-003`; unmitigated `HAZ-001`; external-interface
+The principal retained gaps are exact recovered-to-candidate equivalence and missing
+or integrity-mismatched source evidence; unsupported `CAP-003`; unmitigated `HAZ-001`; external-interface
 conformance authority; future UGV and sensor/video integration; unresolved
 mass/cost/power/endurance targets; physical evidence; and the UAF-version decision.
 
@@ -357,6 +403,11 @@ Cameo reconciliation is deferred future work outside this package and is not a
 principal active deficiency. No Cameo content was used to close any gap.
 
 ## 13. Project-owner decisions required
+
+The reconciliation also presents `REC-CHG-001` and `REC-CHG-002` for owner review.
+They are architecture-change candidates recorded in `model/architecture.yaml`, not
+approved `DEC-*` records. No candidate component or interface was changed by this
+work package.
 
 ### DEC-003 - HAZ-001 safety objective
 

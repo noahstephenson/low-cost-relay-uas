@@ -82,6 +82,8 @@ REFERENCE_KEYS = {
     "object_refs", "supports", "refutes", "source_ids", "affected_ids", "control_refs", "owner_ids",
     "dependency_ids", "internal_model_verification_ids",
     "external_conformance_verification_ids",
+    "candidate_target_ids",
+    "residual_gap_ids",
 }
 SINGULAR_REFERENCE_KEYS = {
     "claim_id", "decision_id", "gap_id", "endpoint_a", "endpoint_b", "from", "to",
@@ -196,6 +198,14 @@ def render_baseline(catalogs: dict[str, dict[str, Any]]) -> str:
         f"- Approval: `{system['baseline']['approval_state']}`",
         "- Model-valid means structurally consistent; it does not mean safe, verified, or ready.",
         "",
+        "## Internal verification work-package disposition",
+        "",
+        f"- Work package: `{system['internal_verification_baseline']['work_package_status']}` for `{system['internal_verification_baseline']['model_version']}`.",
+        f"- Accepted scope: {system['internal_verification_baseline']['approval_scope']}.",
+        f"- Authority record: `{system['internal_verification_baseline']['source_refs'][0]}`; acceptance evidence: `{system['internal_verification_baseline']['evidence_refs'][0]}`.",
+        "- Technical baseline: `not_approved`; physical verification and external-interface conformance: `not_established`; safety approval: `not_approved`.",
+        f"- Unresolved decisions remain proposed: {', '.join(f'`{item}`' for item in system['internal_verification_baseline']['unresolved_decisions'])}.",
+        "",
         "## Configuration summary",
         "",
         "| ID | Role | Maturity | Relationship | Approval |",
@@ -206,6 +216,43 @@ def render_baseline(catalogs: dict[str, dict[str, Any]]) -> str:
             f"| {config['id']} | {pipe(config['purpose'])} | {pipe(config['maturity'])} | "
             f"{pipe(config['derivation_relationship'])} | {pipe(config['approval_status'])} |"
         )
+
+    reconciliation = architecture["configuration_reconciliation"]
+    forward = reconciliation["recovered_to_candidate"]
+    recovered_items = [item for item in forward if item["record_id"].startswith("REC-MAP-")]
+    recovered_connections = [item for item in forward if item["record_id"].startswith("REC-CON-")]
+    forward_counts = collections.Counter(item["mapping_classification"] for item in forward)
+    component_counts = collections.Counter(
+        item["mapping_classification"]
+        for item in reconciliation["candidate_components_to_recovered"]
+    )
+    interface_counts = collections.Counter(
+        item["mapping_classification"]
+        for item in reconciliation["candidate_interfaces_to_recovered"]
+    )
+    lines.extend([
+        "",
+        "## Recovered-evidence reconciliation",
+        "",
+        "`CFG-REC` is descriptive evidence. The two-way mapping records role-level correspondence; it does not assert exact recovered-to-candidate equivalence, candidate identity, inheritance, or approval.",
+        "",
+        "| Registered source | Integrity | Treatment |",
+        "|---|---|---|",
+    ])
+    for item in reconciliation["source_integrity"]:
+        lines.append(
+            f"| {item['source_id']} | {item['status']} | {pipe(item['treatment'])} |"
+        )
+    lines.extend([
+        "",
+        f"- Forward inventory: {len(recovered_items)} recovered items and {len(recovered_connections)} recovered connections ({len(forward)} total records).",
+        f"- Forward classifications: {', '.join(f'{key}: {value}' for key, value in sorted(forward_counts.items()))}.",
+        f"- Candidate component coverage: {len(reconciliation['candidate_components_to_recovered'])} of {len(architecture['components'])}; {', '.join(f'{key}: {value}' for key, value in sorted(component_counts.items()))}.",
+        f"- Candidate interface coverage: {len(reconciliation['candidate_interfaces_to_recovered'])} of {len(architecture['interfaces'])}; {', '.join(f'{key}: {value}' for key, value in sorted(interface_counts.items()))}.",
+        "- Contradictions: 0. Unmatched recovered records: 5. Unknown recovered records: 1.",
+        "- `GAP-REC-001` is narrowed, not closed: the role mapping exists, while complete physical reconstruction and exact equivalence remain unsupported.",
+        "- In this repository, `physically_observed` means documented as an observation in an integrity-accepted registered record; it does not claim direct inspection by the model author or automation.",
+    ])
 
     claim_status = collections.Counter(item.get("status", "unknown") for item in proof["claims"])
     evidence_basis = collections.Counter(item.get("evidence_basis", "unknown") for item in proof["claims"])
@@ -229,10 +276,16 @@ def render_baseline(catalogs: dict[str, dict[str, Any]]) -> str:
             f"| {claim['id']} | {pipe(claim['subject'])} | {pipe(claim['status'])} | "
             f"{pipe(claim['confidence'])} | {pipe(claim.get('gap_refs'))} |"
         )
-    lines.extend(["", "</details>", "", "## Active decisions", ""])
+    lines.extend([
+        "", "</details>", "", "## Active decisions", "",
+        "| Decision | Status | Current model-review evidence | Internal-consistency finding |",
+        "|---|---|---|---|",
+    ])
     for decision in assurance["decisions"]:
+        review = decision.get("verification_review", {})
         lines.append(
-            f"- `{decision['id']}` - {decision['name']} - **{decision['decision_status']}**."
+            f"| {decision['id']} - {pipe(decision['name'])} | {decision['decision_status']} | "
+            f"{pipe(review.get('evidence_ids'))} | {pipe(review.get('consistency_result'))} |"
         )
 
     active_gaps = [
@@ -262,13 +315,58 @@ def render_baseline(catalogs: dict[str, dict[str, Any]]) -> str:
         item.get("verification_readiness", "unspecified")
         for item in assurance["requirement_quality_audit"]
     )
+    execution_labels = {
+        "executed_pass": "PASS",
+        "executed_with_open_gaps": "PASS_WITH_OPEN_GAPS",
+        "failed": "FAIL",
+        "blocked": "BLOCKED",
+        "deferred": "NOT_EXECUTED",
+        "not_executed": "NOT_EXECUTED",
+    }
     lines.extend([
         "",
-        "## Verification status",
+        "## Verification execution matrix",
         "",
-        f"- Requirement readiness: {', '.join(f'{key}: {value}' for key, value in sorted(verification_status.items()))}.",
-        "- `VER-*` records are methods or planned activities unless an `EVD-*` execution record says otherwise.",
-        "- Physical verification evidence remains absent or deferred (`GAP-VER-001`).",
+        "| VER ID | Method | Readiness | Execution | Evidence | Result | Residual gaps |",
+        "|---|---|---|---|---|---|---|",
+    ])
+    for verification in assurance["verifications"]:
+        execution = verification["execution_status"]
+        lines.append(
+            f"| {verification['id']} | {pipe(verification['method'])} | {verification['readiness']} | "
+            f"{execution} | {pipe(verification['evidence_ids'])} | {execution_labels[execution]} | "
+            f"{pipe(verification['residual_gap_ids'])} |"
+        )
+    lines.extend([
+        "",
+        "### Requirement-level review summary",
+        "",
+        "- Requirements reviewed: 28; model-level review passed: 2 (`REQ-IFC-003`, `REQ-CON-003`); architecture review passed with open limitations: 26.",
+        f"- Readiness: {', '.join(f'{key}: {value}' for key, value in sorted(verification_status.items()))}.",
+        "- `REQ-DEF-*` records remain explicit scope/deferral records rather than requirements claimed satisfied.",
+        "- `EVD-001` through `EVD-004` remain historical. `EVD-008` through `EVD-011` record the current model-level execution events.",
+        "- Internal review does not establish physical requirement satisfaction, external conformance, safety, or technical approval (`GAP-VER-001`).",
+    ])
+    objective_corrections = [
+        (evidence["id"], correction)
+        for evidence in proof["evidence"]
+        for correction in evidence.get("objective_corrections", [])
+    ]
+    lines.extend([
+        "",
+        "### Objective corrections from verification",
+        "",
+        "| Evidence | Affected IDs | Problem | Correction | Architecture intent changed? |",
+        "|---|---|---|---|---|",
+    ])
+    for evidence_id, correction in objective_corrections:
+        lines.append(
+            f"| {evidence_id} | {pipe(correction['affected_ids'])} | {pipe(correction['problem'])} | "
+            f"{pipe(correction['new_state'])} | {str(correction['architecture_intent_changed']).lower()} |"
+        )
+    if not objective_corrections:
+        lines.append("| - | - | No objective correction was required. | - | false |")
+    lines.extend([
         "",
         "## Concise traceability summary",
         "",
@@ -362,8 +460,8 @@ def validate_mermaid_documents(definitions: set[str], gap_codes: set[str]) -> li
         errors.extend(f"{path.relative_to(ROOT)}: {item}" for item in fence_errors)
         if path == ROOT / "README.md" and len(blocks) != 1:
             errors.append(f"README.md must contain exactly one Mermaid diagram, found {len(blocks)}")
-        if path == ROOT / "architecture.md" and not 8 <= len(blocks) <= 12:
-            errors.append(f"architecture.md must contain 8-12 Mermaid diagrams, found {len(blocks)}")
+        if path == ROOT / "architecture.md" and not 8 <= len(blocks) <= 13:
+            errors.append(f"architecture.md must contain 8-13 Mermaid diagrams, found {len(blocks)}")
         if path == ATLAS_REPORT and not 14 <= len(blocks) <= 22:
             errors.append(f"architecture atlas must contain 14-22 Mermaid diagrams, found {len(blocks)}")
         for title, block in blocks:
@@ -508,11 +606,135 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
     if system.get("human_readable_views") != ["README.md", "architecture.md", "trade-studies.md"]:
         errors.append("system.yaml must name exactly the three primary human-readable documents")
 
-    if system.get("status") == "approved" or system.get("baseline", {}).get("approval_state") == "approved":
-        errors.append("baseline is incorrectly marked approved")
+    if system.get("status") != "baseline_candidate_not_approved":
+        errors.append("baseline status must remain baseline_candidate_not_approved")
+    if system.get("baseline", {}).get("approval_state") != "not_approved":
+        errors.append("technical baseline approval must remain not_approved")
+    if sources.get("baseline_status") != "candidate_not_approved" or proof.get("baseline_status") != "candidate_not_approved":
+        errors.append("source and proof catalogs must preserve candidate_not_approved status")
     for config in architecture["configurations"]:
         if config.get("approval_status") == "approved":
             errors.append(f"{config['id']} is incorrectly marked approved")
+
+    internal_verification = system.get("internal_verification_baseline", {})
+    expected_internal_verification = {
+        "model_version": system["model_version"],
+        "work_package_status": "approved",
+        "approval_scope": "model-level verification work and evidence records only",
+        "approval_date": "2026-08-11",
+        "source_refs": ["SRC-DEC-005"],
+        "evidence_refs": ["EVD-012"],
+        "technical_baseline_approval": "not_approved",
+        "physical_verification": "not_established",
+        "safety_approval": "not_approved",
+        "external_interface_conformance": "not_established",
+        "unresolved_decisions": ["DEC-002", "DEC-003", "DEC-004", "DEC-005"],
+    }
+    if internal_verification != expected_internal_verification:
+        errors.append("internal verification work-package disposition or approval boundary changed")
+
+    reconciliation = architecture.get("configuration_reconciliation")
+    if not isinstance(reconciliation, dict):
+        errors.append("architecture lacks configuration_reconciliation")
+        reconciliation = {}
+    forward_values = set(system["enumerations"]["recovered_to_candidate_mapping"])
+    reverse_values = set(system["enumerations"]["candidate_to_recovered_mapping"])
+    cross_source_values = set(system["enumerations"]["cross_source_support"])
+    common_mapping_fields = {
+        "source_item_description", "source_refs", "evidence_refs", "evidence_basis",
+        "mapping_classification", "candidate_target_ids", "confidence", "limitation",
+        "applicable_configurations",
+    }
+    mapping_groups = (
+        ("recovered_to_candidate", forward_values, True),
+        ("candidate_components_to_recovered", reverse_values, False),
+        ("candidate_interfaces_to_recovered", reverse_values, False),
+    )
+    all_definition_records = {record.get("id"): record for _, record in records if record.get("id")}
+    mapping_record_ids: set[str] = set()
+    for group_name, allowed_values, is_forward in mapping_groups:
+        group = reconciliation.get(group_name, [])
+        if not isinstance(group, list):
+            errors.append(f"configuration_reconciliation.{group_name} must be a list")
+            continue
+        for index, record in enumerate(group):
+            label = record.get("record_id") or record.get("candidate_id") or f"{group_name}[{index}]"
+            missing = common_mapping_fields - record.keys()
+            if missing:
+                errors.append(f"{label} lacks reconciliation fields: {', '.join(sorted(missing))}")
+            if is_forward:
+                record_id = record.get("record_id")
+                if not isinstance(record_id, str) or not re.fullmatch(r"REC-(?:MAP|CON)-\d{3}", record_id):
+                    errors.append(f"{label} has invalid reconciliation record ID")
+                elif record_id in mapping_record_ids:
+                    errors.append(f"duplicate reconciliation record ID {record_id}")
+                else:
+                    mapping_record_ids.add(record_id)
+                if record.get("cross_source_support") not in cross_source_values:
+                    errors.append(f"{label} has invalid cross-source support")
+                if "CFG-REC" not in record.get("applicable_configurations", []):
+                    errors.append(f"{label} lacks CFG-REC scope")
+            if record.get("mapping_classification") not in allowed_values:
+                errors.append(f"{label} has invalid mapping classification")
+            if record.get("evidence_basis") not in evidence_values:
+                errors.append(f"{label} has invalid reconciliation evidence basis")
+            confidence = record.get("confidence")
+            if not isinstance(confidence, (int, float)) or not 0 <= confidence <= 1:
+                errors.append(f"{label} has invalid confidence")
+            if not isinstance(record.get("source_item_description"), str) or not record.get("source_item_description"):
+                errors.append(f"{label} lacks a source item description")
+            if not isinstance(record.get("limitation"), str) or not record.get("limitation"):
+                errors.append(f"{label} lacks a limitation")
+            targets = record.get("candidate_target_ids", [])
+            if not targets and not record.get("unmatched_status"):
+                errors.append(f"{label} lacks a candidate target or explicit unmatched status")
+            for target in targets:
+                if target not in definitions:
+                    errors.append(f"{label} has undefined candidate target {target}")
+                if is_forward:
+                    target_record = all_definition_records.get(target, {})
+                    target_configs = set(target_record.get("applicable_configurations", []))
+                    if target_configs and target_configs.issubset({"CFG-DIG", "CFG-SOS"}):
+                        errors.append(f"{label} falsely presents future-only {target} as recovered evidence")
+            if record.get("decision_status") == "approved" or record.get("approval_status") == "approved":
+                errors.append(f"{label} incorrectly approves a reconciliation result")
+            if record.get("mapping_classification") in {"CONTRADICTORY", "CONTRADICTED"}:
+                if not record.get("gap_refs") and not record.get("owner_review_status"):
+                    errors.append(f"{label} has an unmanaged contradiction")
+
+    expected_components = {
+        item["id"] for item in architecture["components"]
+        if set(item.get("applicable_configurations", [])).intersection({"CFG-REP", "CFG-DOM"})
+    }
+    reverse_component_ids = [
+        item.get("candidate_id")
+        for item in reconciliation.get("candidate_components_to_recovered", [])
+    ]
+    if set(reverse_component_ids) != expected_components or len(reverse_component_ids) != len(set(reverse_component_ids)):
+        errors.append("candidate component reconciliation must cover every current component exactly once")
+    interface_ids = {item["id"] for item in architecture["interfaces"]}
+    reverse_interface_ids = [
+        item.get("candidate_id")
+        for item in reconciliation.get("candidate_interfaces_to_recovered", [])
+    ]
+    if set(reverse_interface_ids) != interface_ids or len(reverse_interface_ids) != len(set(reverse_interface_ids)):
+        errors.append("candidate interface reconciliation must cover every interface exactly once")
+    integrity_by_source = {
+        item.get("source_id"): item for item in reconciliation.get("source_integrity", [])
+    }
+    expected_integrity = {
+        "SRC-INT-001": ("EF32AF40F1AE48CA631249B76EE85B6F726FCB4BCFE3796FD388D2C3DA3033BC", "MATCH"),
+        "SRC-INT-002": ("577F5FD4B6662E7982CDB73663A2534C829627E5ABFC3FEE3FB68D6837271BFA", "MATCH"),
+        "SRC-INT-003": ("4D28858FD484E94B086ADBC186452B1BD3F4222E50BFF6779C89661298570EF1", "MISMATCH"),
+    }
+    if set(integrity_by_source) != set(expected_integrity):
+        errors.append("source integrity reconciliation must cover exactly SRC-INT-001 through SRC-INT-003")
+    for source_id, (expected_hash, expected_status) in expected_integrity.items():
+        record = integrity_by_source.get(source_id, {})
+        if record.get("expected_sha256") != expected_hash or record.get("status") != expected_status:
+            errors.append(f"{source_id} integrity disposition changed without source registration")
+        if not record.get("actual_sha256") or not record.get("treatment"):
+            errors.append(f"{source_id} lacks actual checksum or treatment")
 
     for path, record in records:
         item_id = record.get("id", path)
@@ -545,6 +767,23 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
         source = next(item for item in sources["sources"] if item["id"] == source_id)
         if source.get("applicability_scope") != "project_methodology" or source["applicable_configurations"]:
             errors.append(f"{source_id} must be project-level methodology with no CFG-* applicability")
+    for source_id in ("SRC-INT-001", "SRC-INT-002", "SRC-INT-003"):
+        source = next(item for item in sources["sources"] if item["id"] == source_id)
+        scope = source.get("applicability_scope", "").lower()
+        if "lineage" not in scope or "does not establish" not in scope:
+            errors.append(f"{source_id} does not distinguish candidate lineage from physical equivalence")
+    source_by_id = {item["id"]: item for item in sources["sources"]}
+    acceptance_source = source_by_id.get("SRC-DEC-005", {})
+    acceptance_source_text = " ".join(
+        str(acceptance_source.get(field, ""))
+        for field in ("description", "applicability_scope", "notes")
+    ).lower()
+    for boundary in (
+        "technical baseline", "physical", "safety", "external-interface conformance",
+        "dec-002 through dec-005", "baseline_candidate_not_approved",
+    ):
+        if boundary not in acceptance_source_text:
+            errors.append(f"SRC-DEC-005 does not preserve the {boundary} acceptance boundary")
 
     claim_ids = {item["id"] for item in proof["claims"]}
     for claim in proof["claims"]:
@@ -561,6 +800,26 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
         for supported in evidence.get("supports", []):
             if supported not in claim_ids:
                 errors.append(f"{evidence['id']} supports undefined claim {supported}")
+    freshness_values = set(system["enumerations"]["claim_freshness_review"])
+    freshness_reviews = proof.get("claim_freshness_review", [])
+    freshness_claim_ids = [item.get("claim_id") for item in freshness_reviews]
+    if set(freshness_claim_ids) != claim_ids or len(freshness_claim_ids) != len(set(freshness_claim_ids)):
+        errors.append("claim freshness review must cover every claim exactly once")
+    claim_by_id = {item["id"]: item for item in proof["claims"]}
+    for review in freshness_reviews:
+        claim_id = review.get("claim_id")
+        classification = review.get("classification")
+        if classification not in freshness_values:
+            errors.append(f"{claim_id} has invalid freshness-review classification")
+        if review.get("reviewed_model_version") != system["model_version"]:
+            errors.append(f"{claim_id} freshness review does not identify the current model version")
+        if classification == "CURRENT_MODEL_CLAIM_REVIEWED":
+            if not review.get("evidence_ids"):
+                errors.append(f"{claim_id} current-model freshness review lacks evidence")
+            if claim_by_id.get(claim_id, {}).get("freshness", {}).get("checked_at") != review.get("review_date"):
+                errors.append(f"{claim_id} current-model freshness date is inconsistent")
+        if classification == "UNCHANGED_SOURCE_CLAIM" and review.get("evidence_ids"):
+            errors.append(f"{claim_id} unchanged-source review incorrectly adds current evidence")
 
     endpoint_types = {"CMP", "OP"}
     for interface in architecture["interfaces"]:
@@ -629,11 +888,84 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
         }:
             errors.append(f"{requirement['id']} lacks downward allocation or a semantic exception")
 
+    execution_values = set(system["enumerations"]["verification_execution_status"])
+    evidence_by_id = {item["id"]: item for item in proof["evidence"]}
+    verification_by_id = {item["id"]: item for item in assurance["verifications"]}
+    acceptance_evidence = evidence_by_id.get("EVD-012", {})
+    if acceptance_evidence.get("source_refs") != ["SRC-DEC-005"]:
+        errors.append("EVD-012 must derive only from SRC-DEC-005")
+    if acceptance_evidence.get("evidence_level") != "work_package_acceptance_only":
+        errors.append("EVD-012 must remain work-package acceptance evidence only")
+    if acceptance_evidence.get("verification_ids"):
+        errors.append("EVD-012 must not be presented as verification execution evidence")
+    expected_preserved_gaps = {
+        "GAP-VER-001", "GAP-IFC-001", "GAP-HAZ-001", "GAP-BUDGET-001",
+        "GAP-TRC-001", "GAP-SOS-001", "GAP-SOS-002",
+    }
+    if not expected_preserved_gaps.issubset(set(acceptance_evidence.get("object_refs", []))):
+        errors.append("EVD-012 does not reference every explicitly preserved verification or future-scope gap")
+    acceptance_text = " ".join(
+        [str(acceptance_evidence.get("result", ""))]
+        + [str(item) for item in acceptance_evidence.get("limitations", [])]
+        + [str(acceptance_evidence.get("applicability_scope", ""))]
+    ).lower()
+    for boundary in (
+        "technical baseline", "physical verification", "safety approval",
+        "external-interface conformance", "dec-002 through dec-005 remain proposed",
+    ):
+        if boundary not in acceptance_text:
+            errors.append(f"EVD-012 does not preserve the {boundary} acceptance boundary")
     for verification in assurance["verifications"]:
         if verification.get("readiness") not in readiness_values:
             errors.append(f"{verification['id']} lacks controlled readiness")
         if not verification.get("readiness_note"):
             errors.append(f"{verification['id']} lacks readiness rationale")
+        for field in (
+            "execution_status", "execution_date", "reviewed_model_version",
+            "evidence_ids", "result_summary", "residual_gap_ids",
+        ):
+            if field not in verification:
+                errors.append(f"{verification['id']} lacks execution field {field}")
+        execution_status = verification.get("execution_status")
+        if execution_status not in execution_values:
+            errors.append(f"{verification['id']} has invalid execution status")
+        if execution_status in {"executed_pass", "executed_with_open_gaps"}:
+            if not verification.get("execution_date") or verification.get("reviewed_model_version") != system["model_version"]:
+                errors.append(f"{verification['id']} executed review lacks current date/version metadata")
+            if not verification.get("evidence_ids"):
+                errors.append(f"{verification['id']} executed review lacks evidence")
+            for evidence_id in verification.get("evidence_ids", []):
+                evidence = evidence_by_id.get(evidence_id, {})
+                if verification["id"] not in evidence.get("verification_ids", []):
+                    errors.append(f"{verification['id']} evidence {evidence_id} does not record its execution")
+                if evidence.get("reviewed_model_version") != system["model_version"]:
+                    errors.append(f"{verification['id']} evidence {evidence_id} targets another model version")
+                if execution_status == "executed_pass" and "fail" in evidence.get("result", "").lower():
+                    errors.append(f"{verification['id']} is executed_pass but {evidence_id} reports failure")
+        elif verification.get("evidence_ids"):
+            errors.append(f"{verification['id']} is not executed but cites execution evidence")
+    for verification_id in ("VER-001", "VER-002", "VER-003", "VER-004", "VER-005", "VER-006", "VER-007"):
+        if verification_by_id[verification_id].get("execution_status") not in {"executed_pass", "executed_with_open_gaps"}:
+            errors.append(f"{verification_id} lacks an executed current-model disposition")
+    if verification_by_id["VER-008"].get("execution_status") != "deferred" or verification_by_id["VER-008"].get("evidence_ids"):
+        errors.append("VER-008 must remain deferred without model-only execution evidence")
+    if verification_by_id["VER-009"].get("execution_status") != "blocked" or verification_by_id["VER-009"].get("evidence_ids"):
+        errors.append("VER-009 must remain blocked without external-authority execution evidence")
+    for evidence in proof["evidence"]:
+        if evidence.get("verification_ids"):
+            if evidence.get("reviewed_model_version") != system["model_version"]:
+                errors.append(f"{evidence['id']} execution evidence lacks current reviewed model version")
+            if evidence.get("evidence_level") != "model_level_only":
+                errors.append(f"{evidence['id']} is not explicitly model-level evidence only")
+    physical_requirement_ids = {
+        item["requirement_id"] for item in quality_audits
+        if item.get("verification_readiness") == "physical_evidence_required"
+    }
+    for requirement in assurance["requirements"]:
+        if requirement["id"] in physical_requirement_ids and any(
+            requirement.get(field) is True for field in ("verified", "satisfied", "compliant")
+        ):
+            errors.append(f"{requirement['id']} is falsely marked satisfied by model-level evidence")
 
     for hazard in assurance["hazards"]:
         if not hazard.get("control_disposition"):
@@ -745,7 +1077,11 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
     if req_ifc_003.get("text") != expected_requirement:
         errors.append("REQ-IFC-003 wording changed")
 
-    std_decision = next(item for item in assurance["decisions"] if item["id"] == "DEC-002")
+    decision_by_id = {item["id"]: item for item in assurance["decisions"]}
+    for decision_id in ("DEC-002", "DEC-003", "DEC-004", "DEC-005"):
+        if decision_by_id.get(decision_id, {}).get("decision_status") != "proposed":
+            errors.append(f"{decision_id} must remain proposed after work-package acceptance")
+    std_decision = decision_by_id["DEC-002"]
     if std_decision.get("decision_status") != "proposed" or "GAP-STD-001" not in gap_codes:
         errors.append("DEC-002 / GAP-STD-001 standards decision must remain unresolved")
     if not any("UAF 1.2" in item for item in system.get("standards", [])):

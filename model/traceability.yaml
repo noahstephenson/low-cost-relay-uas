@@ -651,7 +651,18 @@
     {"from": "IFC-EXT-006", "relation": "model_reviewed_by", "to": "VER-005", "status": "candidate", "gap": null},
     {"from": "IFC-EXT-006", "relation": "conformance_verified_by", "to": "VER-009", "status": "unresolved", "gap": "GAP-IFC-001"},
     {"from": "IFC-EXT-007", "relation": "model_reviewed_by", "to": "VER-005", "status": "candidate", "gap": null},
-    {"from": "IFC-EXT-007", "relation": "conformance_verified_by", "to": "VER-009", "status": "unresolved", "gap": "GAP-IFC-001"}
+    {"from": "IFC-EXT-007", "relation": "conformance_verified_by", "to": "VER-009", "status": "unresolved", "gap": "GAP-IFC-001"},
+    {"from": "CFG-REC", "relation": "informs_at_role_level", "to": "CFG-REP", "status": "established", "gap": "GAP-REC-001"},
+    {"from": "EVD-006", "relation": "supports", "to": "CLM-REC-005", "status": "established", "gap": "GAP-REC-001"},
+    {"from": "EVD-007", "relation": "supports", "to": "CLM-REC-005", "status": "established", "gap": "GAP-REC-001"},
+    {"from": "EVD-008", "relation": "records_execution_of", "to": "VER-002", "status": "established", "gap": null},
+    {"from": "EVD-009", "relation": "records_execution_of", "to": "VER-001", "status": "established", "gap": "GAP-VER-001"},
+    {"from": "EVD-009", "relation": "records_execution_of", "to": "VER-004", "status": "established", "gap": "GAP-VER-001"},
+    {"from": "EVD-010", "relation": "records_execution_of", "to": "VER-005", "status": "established", "gap": "GAP-IFC-001"},
+    {"from": "EVD-010", "relation": "records_execution_of", "to": "VER-007", "status": "established", "gap": null},
+    {"from": "EVD-011", "relation": "records_execution_of", "to": "VER-003", "status": "established", "gap": "GAP-SRC-001"},
+    {"from": "EVD-011", "relation": "records_execution_of", "to": "VER-006", "status": "established", "gap": "GAP-HAZ-001"},
+    {"from": "EVD-012", "relation": "supports", "to": "CLM-SCP-001", "status": "established", "gap": null}
   ],
   "gaps": [
     {
@@ -675,30 +686,34 @@
     {
       "code": "GAP-REC-001",
       "category": "configuration mapping",
-      "statement": "The current generic relay-UAS decomposition is not demonstrated to be an as-built model of CFG-REC.",
+      "statement": "A controlled two-way architecture-role mapping now exists, but source limitations prevent complete recovered-article reconstruction or exact equivalence with CFG-REP / CFG-DOM.",
       "affected_ids": [
         "CFG-REC",
         "CFG-REP",
         "CFG-DOM",
-        "CLM-REC-005"
+        "CLM-REC-005",
+        "EVD-006",
+        "EVD-007"
       ],
       "disposition": "unresolved",
-      "severity": "major",
-      "next_action": "Under a separately authorized recovered-reference work package, perform source-by-source mapping between CFG-REC evidence and candidate CMP/IFC elements without assuming equivalence.",
-      "audit_classification": "D_intentional_deferral",
-      "work_package_outcome": "INTENTIONAL DEFERRAL"
+      "severity": "moderate",
+      "next_action": "Restore or register an authoritative DOCX revision, supply missing original evidence if available, and obtain owner review of REC-CHG-001 / REC-CHG-002 before any candidate architecture change.",
+      "audit_classification": "C_physical_or_external_evidence",
+      "work_package_outcome": "NARROWED"
     },
     {
       "code": "GAP-SRC-001",
       "category": "missing evidence",
-      "statement": "Original standalone teardown photographs, measurements, and inspection records are not present in the repository.",
+      "statement": "Original standalone teardown photographs, measurements, and inspection records remain unavailable, and the current local SRC-INT-003 file does not match its registered checksum.",
       "affected_ids": [
         "CFG-REC",
-        "SRC-GAP-001"
+        "SRC-GAP-001",
+        "SRC-INT-003",
+        "EVD-005"
       ],
       "disposition": "unresolved",
       "severity": "major",
-      "next_action": "Project owner supplies and registers the original photograph, measurement, and inspection set if available; otherwise retain document-reported observations at their current evidence level.",
+      "next_action": "Project owner supplies and registers the original evidence set and either restores the registered SRC-INT-003 revision or explicitly registers the changed DOCX as a new source revision; otherwise retain document-reported observations at their current evidence level.",
       "audit_classification": "C_physical_or_external_evidence",
       "work_package_outcome": "PHYSICAL EVIDENCE REQUIRED"
     },
@@ -917,19 +932,25 @@
     {
       "code": "GAP-VER-001",
       "category": "verification evidence",
-      "statement": "Verification readiness is now classified for every requirement; model reviews are executable, while physical-performance and external-conformance evidence remain unavailable.",
+      "statement": "VER-001 through VER-007 internal architecture and model reviews have been executed and recorded for the current baseline. Physical behavior, performance evidence, and external conformance evidence remain unavailable; VER-008 is deferred and VER-009 is blocked.",
       "affected_ids": [
         "VER-001",
+        "VER-002",
+        "VER-003",
         "VER-004",
         "VER-005",
         "VER-006",
         "VER-007",
         "VER-008",
-        "VER-009"
+        "VER-009",
+        "EVD-008",
+        "EVD-009",
+        "EVD-010",
+        "EVD-011"
       ],
       "disposition": "expected_at_current_maturity",
       "severity": "major",
-      "next_action": "Execute and capture the model-review methods as EVD records; designated future physical and external authorities must supply all performance, behavior, and conformance evidence.",
+      "next_action": "Preserve the completed internal review evidence. Designated future physical and external authorities must supply performance, behavior, safety-relevant physical, and interface-conformance evidence before VER-008 or VER-009 can execute.",
       "audit_classification": "C_physical_or_external_evidence",
       "work_package_outcome": "NARROWED"
     }
