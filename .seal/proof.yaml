@@ -20,7 +20,8 @@
         "EVD-004",
         "EVD-008",
         "EVD-011",
-        "EVD-012"
+        "EVD-012",
+        "EVD-013"
       ],
       "gap_refs": [],
       "counterevidence_refs": [],
@@ -30,7 +31,7 @@
       "freshness": {
         "status": "current",
         "checked_at": "2026-08-11",
-        "basis": "0.7.0 internal architecture verification and project-owner work-package acceptance"
+        "basis": "Accepted 0.7.0 internal-verification baseline plus current 0.8.0 model-level review EVD-013"
       },
       "confidence": 0.99,
       "authority_state": "human_approved",
@@ -73,7 +74,8 @@
       "evidence_refs": [
         "EVD-003",
         "EVD-004",
-        "EVD-010"
+        "EVD-010",
+        "EVD-013"
       ],
       "gap_refs": [
         "GAP-REC-001"
@@ -84,8 +86,8 @@
       ],
       "freshness": {
         "status": "current",
-        "checked_at": "2026-08-10",
-        "basis": "0.7.0 internal architecture verification"
+        "checked_at": "2026-08-11",
+        "basis": "0.8.0 current-model review EVD-013"
       },
       "confidence": 0.9,
       "authority_state": "inferred",
@@ -123,7 +125,8 @@
       "evidence_refs": [
         "EVD-003",
         "EVD-004",
-        "EVD-010"
+        "EVD-010",
+        "EVD-013"
       ],
       "gap_refs": [
         "GAP-SOS-001"
@@ -134,8 +137,8 @@
       ],
       "freshness": {
         "status": "current",
-        "checked_at": "2026-08-10",
-        "basis": "0.7.0 internal architecture verification"
+        "checked_at": "2026-08-11",
+        "basis": "0.8.0 current-model review EVD-013"
       },
       "confidence": 0.85,
       "authority_state": "inferred",
@@ -175,7 +178,8 @@
         "EVD-003",
         "EVD-004",
         "EVD-009",
-        "EVD-010"
+        "EVD-010",
+        "EVD-013"
       ],
       "gap_refs": [
         "GAP-REC-001"
@@ -186,8 +190,8 @@
       ],
       "freshness": {
         "status": "current",
-        "checked_at": "2026-08-10",
-        "basis": "0.7.0 internal architecture verification"
+        "checked_at": "2026-08-11",
+        "basis": "0.8.0 current-model review EVD-013"
       },
       "confidence": 0.95,
       "authority_state": "repo_observed",
@@ -221,7 +225,8 @@
       ],
       "evidence_refs": [
         "EVD-004",
-        "EVD-010"
+        "EVD-010",
+        "EVD-013"
       ],
       "gap_refs": [
         "GAP-REC-001"
@@ -232,8 +237,8 @@
       ],
       "freshness": {
         "status": "current",
-        "checked_at": "2026-08-10",
-        "basis": "0.7.0 internal architecture verification"
+        "checked_at": "2026-08-11",
+        "basis": "0.8.0 current-model review EVD-013"
       },
       "confidence": 0.95,
       "authority_state": "repo_observed",
@@ -271,7 +276,8 @@
       "evidence_refs": [
         "EVD-004",
         "EVD-009",
-        "EVD-010"
+        "EVD-010",
+        "EVD-013"
       ],
       "gap_refs": [
         "GAP-IFC-001"
@@ -282,8 +288,8 @@
       ],
       "freshness": {
         "status": "current",
-        "checked_at": "2026-08-10",
-        "basis": "0.7.0 internal architecture verification"
+        "checked_at": "2026-08-11",
+        "basis": "0.8.0 current-model review EVD-013"
       },
       "confidence": 0.95,
       "authority_state": "repo_observed",
@@ -556,7 +562,8 @@
       ],
       "evidence_refs": [
         "EVD-004",
-        "EVD-009"
+        "EVD-009",
+        "EVD-013"
       ],
       "gap_refs": [
         "GAP-VER-001"
@@ -567,8 +574,8 @@
       ],
       "freshness": {
         "status": "current",
-        "checked_at": "2026-08-10",
-        "basis": "0.7.0 internal architecture verification"
+        "checked_at": "2026-08-11",
+        "basis": "0.8.0 current-model review EVD-013"
       },
       "confidence": 0.9,
       "authority_state": "repo_observed",
@@ -602,7 +609,8 @@
       ],
       "evidence_refs": [
         "EVD-004",
-        "EVD-011"
+        "EVD-011",
+        "EVD-013"
       ],
       "gap_refs": [
         "GAP-VER-001"
@@ -613,8 +621,8 @@
       ],
       "freshness": {
         "status": "current",
-        "checked_at": "2026-08-10",
-        "basis": "0.7.0 internal architecture verification"
+        "checked_at": "2026-08-11",
+        "basis": "0.8.0 current-model review EVD-013"
       },
       "confidence": 0.85,
       "authority_state": "inferred",
@@ -651,7 +659,8 @@
       "evidence_refs": [
         "EVD-003",
         "EVD-004",
-        "EVD-010"
+        "EVD-010",
+        "EVD-013"
       ],
       "gap_refs": [
         "GAP-SOS-001"
@@ -662,8 +671,8 @@
       ],
       "freshness": {
         "status": "current",
-        "checked_at": "2026-08-10",
-        "basis": "0.7.0 internal architecture verification"
+        "checked_at": "2026-08-11",
+        "basis": "0.8.0 current-model review EVD-013"
       },
       "confidence": 0.95,
       "authority_state": "repo_observed",
@@ -688,20 +697,20 @@
     }
   ],
   "claim_freshness_review": [
-    {"claim_id": "CLM-SCP-001", "classification": "CURRENT_MODEL_CLAIM_REVIEWED", "review_date": "2026-08-11", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": ["EVD-008", "EVD-011", "EVD-012"]},
-    {"claim_id": "CLM-BND-001", "classification": "CURRENT_MODEL_CLAIM_REVIEWED", "review_date": "2026-08-10", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": ["EVD-010"]},
-    {"claim_id": "CLM-BND-002", "classification": "CURRENT_MODEL_CLAIM_REVIEWED", "review_date": "2026-08-10", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": ["EVD-010"]},
-    {"claim_id": "CLM-ARC-001", "classification": "CURRENT_MODEL_CLAIM_REVIEWED", "review_date": "2026-08-10", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": ["EVD-009", "EVD-010"]},
-    {"claim_id": "CLM-ARC-002", "classification": "CURRENT_MODEL_CLAIM_REVIEWED", "review_date": "2026-08-10", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": ["EVD-010"]},
-    {"claim_id": "CLM-ARC-003", "classification": "CURRENT_MODEL_CLAIM_REVIEWED", "review_date": "2026-08-10", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": ["EVD-009", "EVD-010"]},
-    {"claim_id": "CLM-REC-001", "classification": "UNCHANGED_SOURCE_CLAIM", "review_date": "2026-08-10", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": []},
-    {"claim_id": "CLM-REC-002", "classification": "UNCHANGED_SOURCE_CLAIM", "review_date": "2026-08-10", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": []},
-    {"claim_id": "CLM-REC-003", "classification": "UNCHANGED_SOURCE_CLAIM", "review_date": "2026-08-10", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": []},
-    {"claim_id": "CLM-REC-004", "classification": "UNCHANGED_SOURCE_CLAIM", "review_date": "2026-08-10", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": []},
-    {"claim_id": "CLM-REC-005", "classification": "UNCHANGED_SOURCE_CLAIM", "review_date": "2026-08-10", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": []},
-    {"claim_id": "CLM-CAP-001", "classification": "CURRENT_MODEL_CLAIM_REVIEWED", "review_date": "2026-08-10", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": ["EVD-009"]},
-    {"claim_id": "CLM-HAZ-001", "classification": "CURRENT_MODEL_CLAIM_REVIEWED", "review_date": "2026-08-10", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": ["EVD-011"]},
-    {"claim_id": "CLM-SOS-001", "classification": "CURRENT_MODEL_CLAIM_REVIEWED", "review_date": "2026-08-10", "reviewed_model_version": "0.7.0-baseline-candidate", "evidence_ids": ["EVD-010"]}
+    {"claim_id": "CLM-SCP-001", "classification": "CURRENT_MODEL_CLAIM_REVIEWED", "review_date": "2026-08-11", "reviewed_model_version": "0.8.0-baseline-candidate", "evidence_ids": ["EVD-013"]},
+    {"claim_id": "CLM-BND-001", "classification": "CURRENT_MODEL_CLAIM_REVIEWED", "review_date": "2026-08-11", "reviewed_model_version": "0.8.0-baseline-candidate", "evidence_ids": ["EVD-013"]},
+    {"claim_id": "CLM-BND-002", "classification": "CURRENT_MODEL_CLAIM_REVIEWED", "review_date": "2026-08-11", "reviewed_model_version": "0.8.0-baseline-candidate", "evidence_ids": ["EVD-013"]},
+    {"claim_id": "CLM-ARC-001", "classification": "CURRENT_MODEL_CLAIM_REVIEWED", "review_date": "2026-08-11", "reviewed_model_version": "0.8.0-baseline-candidate", "evidence_ids": ["EVD-013"]},
+    {"claim_id": "CLM-ARC-002", "classification": "CURRENT_MODEL_CLAIM_REVIEWED", "review_date": "2026-08-11", "reviewed_model_version": "0.8.0-baseline-candidate", "evidence_ids": ["EVD-013"]},
+    {"claim_id": "CLM-ARC-003", "classification": "CURRENT_MODEL_CLAIM_REVIEWED", "review_date": "2026-08-11", "reviewed_model_version": "0.8.0-baseline-candidate", "evidence_ids": ["EVD-013"]},
+    {"claim_id": "CLM-REC-001", "classification": "UNCHANGED_SOURCE_CLAIM", "review_date": "2026-08-11", "reviewed_model_version": "0.8.0-baseline-candidate", "evidence_ids": []},
+    {"claim_id": "CLM-REC-002", "classification": "UNCHANGED_SOURCE_CLAIM", "review_date": "2026-08-11", "reviewed_model_version": "0.8.0-baseline-candidate", "evidence_ids": []},
+    {"claim_id": "CLM-REC-003", "classification": "UNCHANGED_SOURCE_CLAIM", "review_date": "2026-08-11", "reviewed_model_version": "0.8.0-baseline-candidate", "evidence_ids": []},
+    {"claim_id": "CLM-REC-004", "classification": "UNCHANGED_SOURCE_CLAIM", "review_date": "2026-08-11", "reviewed_model_version": "0.8.0-baseline-candidate", "evidence_ids": []},
+    {"claim_id": "CLM-REC-005", "classification": "UNCHANGED_SOURCE_CLAIM", "review_date": "2026-08-11", "reviewed_model_version": "0.8.0-baseline-candidate", "evidence_ids": []},
+    {"claim_id": "CLM-CAP-001", "classification": "CURRENT_MODEL_CLAIM_REVIEWED", "review_date": "2026-08-11", "reviewed_model_version": "0.8.0-baseline-candidate", "evidence_ids": ["EVD-013"]},
+    {"claim_id": "CLM-HAZ-001", "classification": "CURRENT_MODEL_CLAIM_REVIEWED", "review_date": "2026-08-11", "reviewed_model_version": "0.8.0-baseline-candidate", "evidence_ids": ["EVD-013"]},
+    {"claim_id": "CLM-SOS-001", "classification": "CURRENT_MODEL_CLAIM_REVIEWED", "review_date": "2026-08-11", "reviewed_model_version": "0.8.0-baseline-candidate", "evidence_ids": ["EVD-013"]}
   ],
   "evidence": [
     {
@@ -1246,6 +1255,83 @@
       "evidence_level": "work_package_acceptance_only",
       "evidence_basis": "internal_document",
       "decision_status": "approved"
+    },
+    {
+      "id": "EVD-013",
+      "type": "model_validation_execution",
+      "method": "Audit the full repository as a first-time systems engineer, inspect every CFG-REP / CFG-DOM component, function, exchange, interface, scenario, generated semantic edge, mode transition, and scenario transition, then execute the complete validator and generated-view checks against the resulting model.",
+      "source": {
+        "kind": "model_review_and_command_execution",
+        "summary": "Current-model completeness, readability, and structural validation review"
+      },
+      "result": "The 0.8.0 model passed the current-architecture completeness audit and automated validation. All 19 current components have explicit roles and model participation, all 11 current functions are allocated with purpose and trace rationale, all current information exchanges are realized, all 22 interfaces are architecture-definition complete, and semantic resource/mode/scenario/dependency relationships used by generated views originate in structured model data. Seven external interfaces remain dependent on external authority and physical verification remains unperformed.",
+      "review_details": {
+        "components_reviewed": 19,
+        "functions_reviewed": 11,
+        "information_exchanges_reviewed": 10,
+        "interfaces_reviewed": 22,
+        "architecture_definition_complete": 22,
+        "external_authority_blocked": 7,
+        "resource_relationships_reviewed": 6,
+        "mode_transitions_reviewed": 6,
+        "scenario_transitions_reviewed": 10,
+        "accidental_model_local_gaps_remaining": 0,
+        "payload_crossings": ["IFC-INT-003", "IFC-INT-007"],
+        "payload_internal_interface": "IFC-INT-010",
+        "future_only_interface": "IFC-INT-008",
+        "configuration_leakage_found": 0
+      },
+      "objective_corrections": [
+        {
+          "affected_ids": ["IFC-INT-011", "IFC-INT-012", "IFC-INT-013", "IFC-INT-014", "IFC-INT-015"],
+          "problem": "Five necessary current-architecture energy, navigation, and propulsion relationships were absent from the interface catalog or appeared only as renderer associations.",
+          "verification_ids": ["VER-001", "VER-002", "VER-005", "VER-007"],
+          "old_state": "The intended relationships were implicit, incomplete, or renderer-defined.",
+          "new_state": "Five implementation-neutral interfaces now state endpoints, purpose, behavior, unknowns, applicability, provenance, and verification allocation without selecting technical values.",
+          "objective_basis": "The correction formalizes existing architecture intent needed to understand the candidate and does not select a physical implementation.",
+          "architecture_intent_changed": false
+        },
+        {
+          "affected_ids": ["CMP-AFR-01", "CMP-AFR-02", "CMP-AFR-03", "CMP-AFR-04", "CMP-AFR-05", "CMP-MNT-01", "CMP-PWR-04", "MODE-001", "MODE-002", "MODE-003", "MODE-004", "MODE-005"],
+          "problem": "Structural decomposition, passive connector participation, operating-mode transitions, and scenario-lifecycle transitions conveyed engineering meaning only in rendering code.",
+          "verification_ids": ["VER-002", "VER-004", "VER-005", "VER-007"],
+          "old_state": "Generated views carried semantics not represented as authoritative structured relationships.",
+          "new_state": "Resource relationships, mode transitions, and scenario transitions are structured model data and the renderer consumes those records.",
+          "objective_basis": "The correction moves existing semantics to the authoritative model and leaves presentation-only layout choices in the renderer.",
+          "architecture_intent_changed": false
+        }
+      ],
+      "supports": [
+        "CLM-SCP-001", "CLM-BND-001", "CLM-BND-002", "CLM-ARC-001", "CLM-ARC-002", "CLM-ARC-003", "CLM-CAP-001", "CLM-HAZ-001", "CLM-SOS-001"
+      ],
+      "refutes": [],
+      "verification_ids": [
+        "VER-001", "VER-002", "VER-003", "VER-004", "VER-005", "VER-006", "VER-007"
+      ],
+      "object_refs": [
+        "CFG-REP", "CFG-DOM", "FUN-FLT-01", "FUN-FLT-02", "FUN-FLT-03", "FUN-FLT-04", "FUN-REL-01", "FUN-REL-02", "FUN-PWR-01", "FUN-PWR-02", "FUN-CMD-01", "FUN-CFG-01", "FUN-HLT-01", "IFC-INT-011", "IFC-INT-012", "IFC-INT-013", "IFC-INT-014", "IFC-INT-015", "DEC-002", "DEC-003", "DEC-004", "DEC-005", "GAP-VER-001", "GAP-IFC-001", "GAP-HAZ-001", "GAP-BUDGET-001", "GAP-TRC-001", "GAP-SOS-001", "GAP-SOS-002"
+      ],
+      "reviewed_model_version": "0.8.0-baseline-candidate",
+      "captured_at": "2026-08-11",
+      "artifact_path": "scripts/validate-baseline.py",
+      "limitations": [
+        "This evidence establishes model structure, internal consistency, and generated-view provenance only; it does not establish physical behavior, performance, safety, airworthiness, readiness, or external compatibility.",
+        "The accepted 0.7.0 internal-verification work package remains the last project-owner-accepted verification baseline. This 0.8.0 review is executed but not owner-accepted and does not approve DEC-002 through DEC-005.",
+        "Unknown interface attributes, design targets, recovered-system uncertainties, and deferred/future scope remain unresolved where evidence or authority is absent."
+      ],
+      "source_refs": [
+        "SRC-DEC-006", "SRC-REPO-001", "SRC-REPO-002", "SRC-REPO-003", "SRC-REPO-004", "SRC-REPO-005", "SRC-REPO-006"
+      ],
+      "authority_state": "execution_evidence",
+      "approval_state": "not_required",
+      "confidence": 0.98,
+      "applicable_configurations": [
+        "CFG-REP", "CFG-DOM"
+      ],
+      "applicability_scope": "current-model architecture completeness and model-governance evidence only; not technical-baseline, physical-verification, safety, airworthiness, readiness, or external-conformance approval",
+      "evidence_level": "model_level_only",
+      "evidence_basis": "internal_document",
+      "decision_status": "not_applicable"
     }
   ]
 }

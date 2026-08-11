@@ -84,10 +84,11 @@ REFERENCE_KEYS = {
     "external_conformance_verification_ids",
     "candidate_target_ids",
     "residual_gap_ids",
+    "trigger_refs", "interface_refs",
 }
 SINGULAR_REFERENCE_KEYS = {
     "claim_id", "decision_id", "gap_id", "endpoint_a", "endpoint_b", "from", "to",
-    "requirement_id", "subject_id",
+    "requirement_id", "subject_id", "initial_mode",
 }
 REFERENCE_SENTINELS = {"TBD", "All", "External", "None"}
 
@@ -206,6 +207,13 @@ def render_baseline(catalogs: dict[str, dict[str, Any]]) -> str:
         "- Technical baseline: `not_approved`; physical verification and external-interface conformance: `not_established`; safety approval: `not_approved`.",
         f"- Unresolved decisions remain proposed: {', '.join(f'`{item}`' for item in system['internal_verification_baseline']['unresolved_decisions'])}.",
         "",
+        "## Current model-review status",
+        "",
+        f"- Current semantic model: `{system['current_model_review']['model_version']}`.",
+        f"- Current review: `{system['current_model_review']['review_status']}` in `{system['current_model_review']['evidence_refs'][0]}` under `{system['current_model_review']['source_refs'][0]}`.",
+        "- The accepted 0.7.0 work package remains preserved; the 0.8.0 model-level review is not owner acceptance or technical-baseline approval.",
+        "- Physical verification, safety approval, and external-interface conformance remain not established.",
+        "",
         "## Configuration summary",
         "",
         "| ID | Role | Maturity | Relationship | Approval |",
@@ -311,6 +319,45 @@ def render_baseline(catalogs: dict[str, dict[str, Any]]) -> str:
             f"{pipe(gap['affected_ids'])} |"
         )
 
+    practical_gap_groups = [
+        (
+            "Can be improved through model work now",
+            {"A_closeable_by_model_work"},
+            "No accidental model-local completeness gap remains after this pass.",
+        ),
+        (
+            "Requires project-owner decision",
+            {"B_project_owner_decision"},
+            "No owner decision is currently recorded.",
+        ),
+        (
+            "Requires physical or external evidence",
+            {"C_physical_or_external_evidence"},
+            "No physical or external-evidence dependency is currently recorded.",
+        ),
+        (
+            "Intentionally deferred or future configuration",
+            {"D_intentional_deferral", "E_future_configuration"},
+            "No deferred or future item is currently recorded.",
+        ),
+    ]
+    lines.extend(["", "## Remaining work by dependency", ""])
+    for heading, classifications, empty_text in practical_gap_groups:
+        grouped = [
+            gap for gap in traceability["gaps"]
+            if gap.get("audit_classification") in classifications
+            and gap.get("disposition") != "closed"
+        ]
+        lines.extend([f"### {heading}", ""])
+        if not grouped:
+            lines.append(f"- {empty_text}")
+        else:
+            for gap in grouped:
+                lines.append(
+                    f"- `{gap['code']}` - **{gap['work_package_outcome']}**: {gap['next_action']}"
+                )
+        lines.append("")
+
     verification_status = collections.Counter(
         item.get("verification_readiness", "unspecified")
         for item in assurance["requirement_quality_audit"]
@@ -341,10 +388,10 @@ def render_baseline(catalogs: dict[str, dict[str, Any]]) -> str:
         "",
         "### Requirement-level review summary",
         "",
-        "- Requirements reviewed: 28; model-level review passed: 2 (`REQ-IFC-003`, `REQ-CON-003`); architecture review passed with open limitations: 26.",
+        f"- Requirements reviewed: {len(assurance['requirements'])}; model-level review passed: 2 (`REQ-IFC-003`, `REQ-CON-003`); architecture review passed with open limitations: {len(assurance['requirements']) - 2}.",
         f"- Readiness: {', '.join(f'{key}: {value}' for key, value in sorted(verification_status.items()))}.",
         "- `REQ-DEF-*` records remain explicit scope/deferral records rather than requirements claimed satisfied.",
-        "- `EVD-001` through `EVD-004` remain historical. `EVD-008` through `EVD-011` record the current model-level execution events.",
+        "- `EVD-001` through `EVD-004` remain historical. `EVD-008` through `EVD-012` preserve the accepted 0.7.0 review and acceptance trail; `EVD-013` records the current 0.8.0 model-level review without owner acceptance.",
         "- Internal review does not establish physical requirement satisfaction, external conformance, safety, or technical approval (`GAP-VER-001`).",
     ])
     objective_corrections = [
@@ -608,6 +655,8 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
 
     if system.get("status") != "baseline_candidate_not_approved":
         errors.append("baseline status must remain baseline_candidate_not_approved")
+    if system.get("model_version") != "0.8.0-baseline-candidate":
+        errors.append("model version must match the current 0.8.0 semantic baseline")
     if system.get("baseline", {}).get("approval_state") != "not_approved":
         errors.append("technical baseline approval must remain not_approved")
     if sources.get("baseline_status") != "candidate_not_approved" or proof.get("baseline_status") != "candidate_not_approved":
@@ -618,7 +667,7 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
 
     internal_verification = system.get("internal_verification_baseline", {})
     expected_internal_verification = {
-        "model_version": system["model_version"],
+        "model_version": "0.7.0-baseline-candidate",
         "work_package_status": "approved",
         "approval_scope": "model-level verification work and evidence records only",
         "approval_date": "2026-08-11",
@@ -632,6 +681,24 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
     }
     if internal_verification != expected_internal_verification:
         errors.append("internal verification work-package disposition or approval boundary changed")
+    expected_current_review = {
+        "model_version": system["model_version"],
+        "review_status": "executed_not_owner_accepted",
+        "review_date": "2026-08-11",
+        "source_refs": ["SRC-DEC-006"],
+        "evidence_refs": ["EVD-013"],
+        "relationship_to_accepted_baseline": (
+            "The accepted 0.7.0 internal-verification baseline remains preserved. "
+            "EVD-013 records the fresh model-level review of 0.8.0 changes but is not "
+            "project-owner acceptance or technical-baseline approval."
+        ),
+        "technical_baseline_approval": "not_approved",
+        "physical_verification": "not_established",
+        "safety_approval": "not_approved",
+        "external_interface_conformance": "not_established",
+    }
+    if system.get("current_model_review") != expected_current_review:
+        errors.append("current-model review record or its non-approval boundary changed")
 
     reconciliation = architecture.get("configuration_reconciliation")
     if not isinstance(reconciliation, dict):
@@ -784,6 +851,17 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
     ):
         if boundary not in acceptance_source_text:
             errors.append(f"SRC-DEC-005 does not preserve the {boundary} acceptance boundary")
+    completion_source = source_by_id.get("SRC-DEC-006", {})
+    completion_source_text = " ".join(
+        str(completion_source.get(field, ""))
+        for field in ("description", "applicability_scope", "notes")
+    ).lower()
+    for boundary in (
+        "model-local architecture completeness", "without selecting technical values",
+        "dec", "ver-008", "ver-009", "ts-009", "baseline_candidate_not_approved",
+    ):
+        if boundary not in completion_source_text:
+            errors.append(f"SRC-DEC-006 does not preserve the {boundary} work-package boundary")
 
     claim_ids = {item["id"] for item in proof["claims"]}
     for claim in proof["claims"]:
@@ -835,6 +913,108 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
     function_ids = {item["id"] for item in architecture["functions"]}
     mode_ids = {item["id"] for item in architecture["modes"]}
     current_configs = {"CFG-REP", "CFG-DOM"}
+    required_interface_fields = {
+        "endpoint_a", "endpoint_b", "direction", "flow_class", "interface_type", "owner",
+        "applicable_configurations", "operational_scenarios", "normal_behavior",
+        "failure_behavior", "security_concerns", "safety_concerns", "verification_ids",
+        "source_ids", "claim_ids", "evidence_basis", "decision_status", "unknown_attributes",
+    }
+    for interface in architecture["interfaces"]:
+        if current_configs.intersection(interface.get("applicable_configurations", [])):
+            missing = required_interface_fields - interface.keys()
+            if missing:
+                errors.append(
+                    f"current interface {interface['id']} lacks fields: {', '.join(sorted(missing))}"
+                )
+            for field in (
+                "operational_scenarios", "normal_behavior", "failure_behavior",
+                "verification_ids", "source_ids", "unknown_attributes",
+            ):
+                if not interface.get(field):
+                    errors.append(f"current interface {interface['id']} lacks meaningful {field}")
+            if "VER-005" not in interface.get("verification_ids", []):
+                errors.append(f"current interface {interface['id']} lacks interface-catalog review allocation")
+
+    resource_relationships = architecture.get("resource_relationships", [])
+    if not isinstance(resource_relationships, list):
+        errors.append("architecture.resource_relationships must be a list")
+        resource_relationships = []
+    resource_relationship_keys: set[tuple[str, str, str]] = set()
+    resource_relationship_fields = {
+        "from", "relation", "to", "label", "purpose", "relationship_type", "status",
+        "evidence_basis", "decision_status", "applicable_configurations", "source_ids",
+        "verification_ids", "view_groups",
+    }
+    for index_number, relationship in enumerate(resource_relationships):
+        label = f"architecture.resource_relationships[{index_number}]"
+        missing = resource_relationship_fields - relationship.keys()
+        if missing:
+            errors.append(f"{label} lacks fields: {', '.join(sorted(missing))}")
+        key = (
+            relationship.get("from", ""), relationship.get("relation", ""),
+            relationship.get("to", ""),
+        )
+        if key in resource_relationship_keys:
+            errors.append(f"duplicate resource relationship {key}")
+        resource_relationship_keys.add(key)
+        if relationship.get("from") not in definitions or relationship.get("to") not in definitions:
+            errors.append(f"{label} has undefined endpoints")
+        if relationship.get("relationship_type") not in {"structural", "interface_participation"}:
+            errors.append(f"{label} has unsupported relationship type")
+        if relationship.get("status") not in set(system["enumerations"]["relationship_status"]):
+            errors.append(f"{label} has invalid status")
+        if relationship.get("evidence_basis") not in evidence_values:
+            errors.append(f"{label} has invalid evidence basis")
+        if relationship.get("decision_status") not in decision_values:
+            errors.append(f"{label} has invalid decision status")
+        if not current_configs.intersection(relationship.get("applicable_configurations", [])):
+            errors.append(f"{label} does not apply to the current architecture")
+
+    initial_mode = architecture.get("initial_mode")
+    if initial_mode not in mode_ids:
+        errors.append("architecture initial_mode is undefined")
+    mode_transition_keys: set[tuple[str, str]] = set()
+    for transition in architecture.get("mode_transitions", []):
+        key = (transition.get("from", ""), transition.get("to", ""))
+        if key in mode_transition_keys:
+            errors.append(f"duplicate mode transition {key}")
+        mode_transition_keys.add(key)
+        if key[0] not in mode_ids or key[1] not in mode_ids:
+            errors.append(f"mode transition {key} has undefined endpoint")
+        for field in (
+            "label", "trigger_refs", "status", "evidence_basis", "decision_status",
+            "applicable_configurations", "source_ids", "verification_ids",
+        ):
+            if not transition.get(field):
+                errors.append(f"mode transition {key} lacks {field}")
+        if not current_configs.intersection(transition.get("applicable_configurations", [])):
+            errors.append(f"mode transition {key} leaks outside the current architecture")
+    if len(mode_transition_keys) != 6:
+        errors.append(f"current mode-transition set must contain 6 explicit records, found {len(mode_transition_keys)}")
+
+    scenario_ids = {item["id"] for item in architecture["scenarios"]}
+    scenario_transition_keys: set[tuple[str, str]] = set()
+    for transition in architecture.get("scenario_transitions", []):
+        key = (transition.get("from", ""), transition.get("to", ""))
+        if key in scenario_transition_keys:
+            errors.append(f"duplicate scenario transition {key}")
+        scenario_transition_keys.add(key)
+        if key[0] not in scenario_ids or key[1] not in scenario_ids:
+            errors.append(f"scenario transition {key} has undefined endpoint")
+        if transition.get("transition_type") not in {"current", "future"}:
+            errors.append(f"scenario transition {key} lacks controlled transition_type")
+        if transition.get("transition_type") == "future":
+            if current_configs.intersection(transition.get("applicable_configurations", [])):
+                errors.append(f"future scenario transition {key} leaks into current configurations")
+            if not transition.get("gap_refs"):
+                errors.append(f"future scenario transition {key} lacks a controlled gap")
+        elif not current_configs.intersection(transition.get("applicable_configurations", [])):
+            errors.append(f"current scenario transition {key} lacks current applicability")
+    if len(scenario_transition_keys) != 10:
+        errors.append(
+            f"scenario-transition set must contain 10 explicit current/future records, found {len(scenario_transition_keys)}"
+        )
+
     for scenario in architecture["scenarios"]:
         if not scenario.get("performers") or any(item not in performer_ids for item in scenario["performers"]):
             errors.append(f"{scenario['id']} has unresolved performers")
@@ -915,6 +1095,23 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
     ):
         if boundary not in acceptance_text:
             errors.append(f"EVD-012 does not preserve the {boundary} acceptance boundary")
+    current_review_evidence = evidence_by_id.get("EVD-013", {})
+    if current_review_evidence.get("source_refs", [None])[0] != "SRC-DEC-006":
+        errors.append("EVD-013 must derive from SRC-DEC-006")
+    if current_review_evidence.get("reviewed_model_version") != system["model_version"]:
+        errors.append("EVD-013 must identify the current model version")
+    if current_review_evidence.get("evidence_level") != "model_level_only":
+        errors.append("EVD-013 must remain model-level evidence only")
+    if set(current_review_evidence.get("verification_ids", [])) != {
+        "VER-001", "VER-002", "VER-003", "VER-004", "VER-005", "VER-006", "VER-007"
+    }:
+        errors.append("EVD-013 must record the full current internal model-review cycle")
+    review_limitations = " ".join(current_review_evidence.get("limitations", [])).lower()
+    for boundary in (
+        "not owner-accepted", "does not establish physical", "does not approve dec-002 through dec-005",
+    ):
+        if boundary not in review_limitations:
+            errors.append(f"EVD-013 does not preserve the {boundary} boundary")
     for verification in assurance["verifications"]:
         if verification.get("readiness") not in readiness_values:
             errors.append(f"{verification['id']} lacks controlled readiness")
@@ -951,12 +1148,12 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
         errors.append("VER-008 must remain deferred without model-only execution evidence")
     if verification_by_id["VER-009"].get("execution_status") != "blocked" or verification_by_id["VER-009"].get("evidence_ids"):
         errors.append("VER-009 must remain blocked without external-authority execution evidence")
-    for evidence in proof["evidence"]:
-        if evidence.get("verification_ids"):
-            if evidence.get("reviewed_model_version") != system["model_version"]:
-                errors.append(f"{evidence['id']} execution evidence lacks current reviewed model version")
-            if evidence.get("evidence_level") != "model_level_only":
-                errors.append(f"{evidence['id']} is not explicitly model-level evidence only")
+    for evidence_id in ("EVD-008", "EVD-009", "EVD-010", "EVD-011"):
+        evidence = evidence_by_id[evidence_id]
+        if evidence.get("reviewed_model_version") != "0.7.0-baseline-candidate":
+            errors.append(f"{evidence_id} no longer preserves the accepted 0.7.0 execution trail")
+        if evidence.get("evidence_level") != "model_level_only":
+            errors.append(f"{evidence_id} is not explicitly model-level evidence only")
     physical_requirement_ids = {
         item["requirement_id"] for item in quality_audits
         if item.get("verification_readiness") == "physical_evidence_required"
@@ -980,6 +1177,78 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
         (item["from"], item["relation"], item["to"]): item
         for item in traceability["relationships"]
     }
+    if len(relationships) != len(traceability["relationships"]):
+        errors.append("traceability relationships contain a duplicate from/relation/to triple")
+    current_components = [
+        item for item in architecture["components"]
+        if current_configs.intersection(item.get("applicable_configurations", []))
+    ]
+    requirement_allocations = {
+        allocation
+        for requirement in assurance["requirements"]
+        for allocation in requirement.get("allocation_refs", [])
+    }
+    function_allocations = {
+        item["to"]
+        for item in traceability["relationships"]
+        if item.get("relation") == "allocated_to" and item.get("from", "").startswith("FUN-")
+    }
+    interface_participants = {
+        endpoint
+        for interface in architecture["interfaces"]
+        if current_configs.intersection(interface.get("applicable_configurations", []))
+        for endpoint in (interface.get("endpoint_a"), interface.get("endpoint_b"))
+    }
+    resource_participants = {
+        endpoint
+        for relationship in resource_relationships
+        for endpoint in (relationship.get("from"), relationship.get("to"))
+    }
+    for component in current_components:
+        component_id = component["id"]
+        if not component.get("architecture_role"):
+            errors.append(f"current component {component_id} lacks an architecture role")
+        participates = component_id in (
+            requirement_allocations | function_allocations | interface_participants | resource_participants
+        )
+        if not participates and not component.get("passive_rationale"):
+            errors.append(
+                f"current component {component_id} has no function, interface, resource relationship, "
+                "requirement allocation, or passive rationale"
+            )
+
+    current_scenarios = [
+        item for item in architecture["scenarios"]
+        if current_configs.intersection(item.get("applicable_configurations", []))
+    ]
+    scenario_functions = {
+        function_id for scenario in current_scenarios for function_id in scenario.get("system_functions", [])
+    }
+    activity_functions = {
+        item["to"]
+        for item in traceability["relationships"]
+        if item.get("relation") == "performed_by_function"
+    }
+    for function in architecture["functions"]:
+        if not current_configs.intersection(function.get("applicable_configurations", [])):
+            continue
+        function_id = function["id"]
+        if not function.get("purpose"):
+            errors.append(f"current function {function_id} lacks an explicit purpose")
+        if (
+            function_id not in scenario_functions
+            and function_id not in activity_functions
+            and not function.get("activity_rationale")
+        ):
+            errors.append(f"current function {function_id} lacks scenario or activity rationale")
+        requirement_trace = any(
+            function_id in requirement.get("allocation_refs", [])
+            for requirement in assurance["requirements"]
+        )
+        if not requirement_trace and not function.get("traceability_rationale"):
+            errors.append(
+                f"current function {function_id} lacks requirement/verification trace or explicit rationale"
+            )
     for exchange in architecture["information_exchanges"]:
         if current_configs.intersection(exchange.get("applicable_configurations", [])):
             realized = any(
@@ -1077,10 +1346,45 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
     if req_ifc_003.get("text") != expected_requirement:
         errors.append("REQ-IFC-003 wording changed")
 
+    expected_completion_interfaces = {
+        "IFC-INT-011": ("CMP-PWR-01", "CMP-PWR-02", "a_to_b"),
+        "IFC-INT-012": ("CMP-AVN-03", "CMP-AVN-01", "a_to_b"),
+        "IFC-INT-013": ("CMP-PRP-02", "CMP-PRP-01", "a_to_b"),
+        "IFC-INT-014": ("CMP-PRP-01", "CMP-PRP-03", "a_to_b"),
+        "IFC-INT-015": ("CMP-PWR-02", "CMP-PWR-03", "a_to_b"),
+    }
+    interface_by_identifier = {item["id"]: item for item in architecture["interfaces"]}
+    for interface_id, expected in expected_completion_interfaces.items():
+        interface = interface_by_identifier.get(interface_id, {})
+        actual = (
+            interface.get("endpoint_a"), interface.get("endpoint_b"), interface.get("direction")
+        )
+        if actual != expected:
+            errors.append(f"{interface_id} no longer preserves its model-completion determination")
+    expected_resource_relationships = {
+        ("CMP-AFR-01", "structurally_supports", "CMP-AFR-02"),
+        ("CMP-AFR-01", "structurally_supports", "CMP-AFR-03"),
+        ("CMP-AFR-01", "structurally_supports", "CMP-AFR-04"),
+        ("CMP-AFR-01", "uses_retention_hardware", "CMP-AFR-05"),
+        ("CMP-AFR-04", "structurally_supports", "CMP-MNT-01"),
+        ("CMP-PWR-04", "participates_in_source_connection", "CMP-PWR-02"),
+    }
+    if resource_relationship_keys != expected_resource_relationships:
+        errors.append("current resource-relationship set changed without an explicit model disposition")
+    budget_view_relationships = [
+        item for item in traceability["relationships"]
+        if item.get("view_group") == "mass_cost_power_endurance"
+    ]
+    if len(budget_view_relationships) != 10:
+        errors.append("mass-cost-power-endurance view must derive from 10 controlled relationships")
+
     decision_by_id = {item["id"]: item for item in assurance["decisions"]}
     for decision_id in ("DEC-002", "DEC-003", "DEC-004", "DEC-005"):
         if decision_by_id.get(decision_id, {}).get("decision_status") != "proposed":
             errors.append(f"{decision_id} must remain proposed after work-package acceptance")
+        review = decision_by_id.get(decision_id, {}).get("verification_review", {})
+        if review.get("reviewed_model_version") != system["model_version"] or review.get("evidence_ids") != ["EVD-013"]:
+            errors.append(f"{decision_id} lacks a current non-approval consistency review")
     std_decision = decision_by_id["DEC-002"]
     if std_decision.get("decision_status") != "proposed" or "GAP-STD-001" not in gap_codes:
         errors.append("DEC-002 / GAP-STD-001 standards decision must remain unresolved")
@@ -1125,6 +1429,62 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
     for interface in architecture["interfaces"]:
         if atlas_text.count(interface["id"]) < 2:
             errors.append(f"{interface['id']} lacks atlas diagram and inventory coverage")
+
+    generator_text = VIEW_GENERATOR.read_text(encoding="utf-8-sig")
+    forbidden_renderer_semantics = (
+        "source association - IFC not allocated",
+        "resource association - IFC not allocated",
+        "mount relationship [UNRESOLVED]",
+        "navigation resource - IFC unresolved",
+        "propulsion association",
+        "MODE_005 --> MODE_001: SCN-002 transition",
+        'SCN_001 -->|"progression"| SCN_002',
+        'TS_006 -->|"defines payload envelope"| REQ_PER_004',
+        "future relationship unresolved",
+    )
+    for semantic_literal in forbidden_renderer_semantics:
+        if semantic_literal in generator_text:
+            errors.append(
+                f"Mermaid generator still defines architecture semantics directly: {semantic_literal}"
+            )
+    for required_model_input in (
+        'get("resource_relationships", [])',
+        'architecture["mode_transitions"]',
+        'catalogs["architecture"]["scenario_transitions"]',
+        'relationship.get("view_group")',
+    ):
+        if required_model_input not in generator_text:
+            errors.append(f"Mermaid generator does not consume structured semantic input {required_model_input}")
+
+    readme_text = (ROOT / "README.md").read_text(encoding="utf-8-sig")
+    required_readme_sections = (
+        "## System in 60 seconds",
+        "## Current, reference, and future configurations",
+        "## Maturity in one minute",
+        "## Model authority",
+    )
+    section_positions = [readme_text.find(section) for section in required_readme_sections]
+    if any(position < 0 for position in section_positions) or section_positions != sorted(section_positions):
+        errors.append("README first-five-minute orientation sections are missing or out of order")
+    readme_blocks, _ = extract_mermaid_blocks(readme_text)
+    if readme_blocks:
+        orientation_block = readme_blocks[0][1]
+        required_orientation_interfaces = {
+            "IFC-EXT-005", "IFC-INT-003", "IFC-INT-007", "IFC-EXT-001",
+            "IFC-EXT-002", "IFC-EXT-003", "IFC-EXT-004",
+        }
+        for interface_id in required_orientation_interfaces:
+            if orientation_block.count(interface_id) != 1:
+                errors.append(
+                    f"README orientation must show {interface_id} exactly once from authoritative interface data"
+                )
+        shown_interfaces = set(re.findall(r"IFC-(?:INT|EXT)-\d{3}", orientation_block))
+        if shown_interfaces != required_orientation_interfaces:
+            errors.append("README orientation contains an unexpected or missing interface")
+    workflow = ROOT / ".github" / "workflows" / "check.yml"
+    workflow_text = workflow.read_text(encoding="utf-8-sig") if workflow.exists() else ""
+    if not re.search(r"python-version:\s*['\"]3\.12['\"]", workflow_text) or "python scripts/validate-baseline.py --check-generated" not in workflow_text:
+        errors.append("CI workflow no longer runs the pinned generated-baseline validation")
     errors.extend(validate_mermaid_documents(set(definitions), gap_codes))
 
     implementation_patterns = [

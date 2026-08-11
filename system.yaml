@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "model_version": "0.7.0-baseline-candidate",
+  "model_version": "0.8.0-baseline-candidate",
   "title": "Low-Cost Attritable Communications Relay UAS",
   "domain": "defense",
   "tier": "exploratory",
@@ -26,6 +26,18 @@
     "safety_approval": "not_approved",
     "external_interface_conformance": "not_established",
     "unresolved_decisions": ["DEC-002", "DEC-003", "DEC-004", "DEC-005"]
+  },
+  "current_model_review": {
+    "model_version": "0.8.0-baseline-candidate",
+    "review_status": "executed_not_owner_accepted",
+    "review_date": "2026-08-11",
+    "source_refs": ["SRC-DEC-006"],
+    "evidence_refs": ["EVD-013"],
+    "relationship_to_accepted_baseline": "The accepted 0.7.0 internal-verification baseline remains preserved. EVD-013 records the fresh model-level review of 0.8.0 changes but is not project-owner acceptance or technical-baseline approval.",
+    "technical_baseline_approval": "not_approved",
+    "physical_verification": "not_established",
+    "safety_approval": "not_approved",
+    "external_interface_conformance": "not_established"
   },
   "authority": {
     "rule": "system.yaml is the manifest. The structured catalogs referenced by it are authoritative model data. Markdown documents and generated reports are views of that model."

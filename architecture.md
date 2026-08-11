@@ -21,6 +21,30 @@ Three principles organize the model:
 No diagram is approval evidence. `[PROPOSED]`, `[TBD]`, `[DEFERRED]`, and
 `[UNVERIFIED]` state maturity explicitly.
 
+## Current architecture at a glance
+
+The current system under study is the **Relay UAS** (`OP-002`) in `CFG-REP` and
+`CFG-DOM`. It contains the aircraft structure, propulsion, stored and regulated
+power, flight-control and navigation resources, an independent platform-command
+receiver, a modular payload bay, and a communications payload treated as a black
+box. The human operator, Ground Control Node, Remote UAS, maintenance personnel,
+and external authorities remain outside the product boundary.
+
+| Question | Current architecture answer |
+|---|---|
+| What does it do? | Positions and holds a communications payload so outbound and return mission traffic can pass between ground control and a Remote UAS. |
+| How is the aircraft controlled? | The operator uses a separate platform-command path (`IX-001`, `IFC-EXT-005`) that does not pass through the relay payload. |
+| What crosses the payload boundary? | Regulated payload power (`IFC-INT-003`) and mechanical retention (`IFC-INT-007`) only. |
+| What are the major aircraft subsystems? | Structure and mounting (`CMP-AFR-*`, `CMP-MNT-01`), propulsion (`CMP-PRP-*`), power (`CMP-PWR-*`), avionics (`CMP-AVN-*`), and black-box communications payload (`CMP-COM-*`). |
+| What traffic is relayed? | Outbound traffic uses `IX-002` / `IX-003`; return traffic uses `IX-004` / `IX-005`. External implementation attributes remain undefined. |
+| What modes matter now? | Ground Safe, Transit, Station Keeping, Relay Degraded, and Return / Recovery (`MODE-005`, then `MODE-001` through `MODE-004`). |
+| What is future? | The digital payload-management interface in `CFG-DIG` and the broader UGV, radio-user, service, and infrastructure context in `CFG-SOS`. |
+
+The current structured model is internally reviewable and has undergone a fresh
+0.8.0 model-level check (`EVD-013`), but it is neither a physically verified system
+nor an approved technical baseline. Read the next sections to inspect configuration
+and behavior, then use the assurance and traceability sections to audit maturity.
+
 ## 2. Configuration Baselines
 
 The current/reference axis is `CFG-REC -> CFG-REP -> CFG-DOM`. The future-extension
@@ -52,7 +76,7 @@ modify the current candidate.
 
 The controlled reconciliation contains 24 recovered-item records and 10 recovered-
 connection records, plus reverse coverage for all 19 current candidate components
-and all 17 interfaces. It records role correspondence, limitations, confidence, and
+and all 22 interfaces. It records role correspondence, limitations, confidence, and
 configuration scope. It does not claim identical hardware, exact recovered
 connectivity, candidate approval, or inheritance from `CFG-REC`.
 
@@ -81,9 +105,9 @@ crossings. It indirectly supports a separate carrier-command resource, while the
 complete command path remains ambiguous. It does not establish the proposed end-to-
 end health/status return or maintenance/configuration interface.
 
-Two candidate changes remain owner-review questions, not automatic model changes:
+The model-completion audit disposition is explicit:
 
-- `REC-CHG-001`: consider an implementation-neutral interface from `CMP-PWR-01` to `CMP-PWR-02`; all electrical attributes would remain unknown.
+- `REC-CHG-001`: the explicit implementation-neutral source-power interface `IFC-INT-011` was added as a model-local completeness correction under `SRC-DEC-006`; it remains proposed and every electrical implementation attribute remains unknown.
 - `REC-CHG-002`: keep the candidate unchanged unless the operator concept establishes a need for a separate carrier-view feedback resource and path.
 
 ## 3. System Boundaries
@@ -107,15 +131,15 @@ flowchart LR
             OP_002["OP-002<br/>Relay UAS [PROPOSED]"]
         end
     end
-    OP_010 --> OP_002
-    OP_001 <--> OP_002
-    OP_002 <--> OP_003
-    OP_007 <--> OP_002
-    OP_004 -.-> OP_002
-    OP_005 -.-> OP_002
-    OP_006 -.-> OP_002
-    OP_008 -.-> OP_002
-    OP_009 -.-> OP_002
+    OP_010 -->|"IX-001 platform command"| OP_002
+    OP_002 -->|"IX-009 health/status"| OP_010
+    OP_001 -->|"IX-002 outbound"| OP_002
+    OP_002 -->|"IX-003 outbound"| OP_003
+    OP_003 -->|"IX-004 return"| OP_002
+    OP_002 -->|"IX-005 return"| OP_001
+    OP_007 <-->|"IX-010 maintenance"| OP_002
+    OP_001 -.->|"IX-006 future command"| OP_004
+    OP_004 -.->|"IX-007 future telemetry"| OP_001
 ```
 
 External performers remain independently managed. The context does not imply
@@ -158,7 +182,6 @@ flowchart LR
     OP_002 -->|"IX-003 / IFC-EXT-002<br/>outbound"| OP_003["OP-003<br/>Remote UAS"]
     OP_003 -->|"IX-004 / IFC-EXT-003<br/>return"| OP_002
     OP_002 -->|"IX-005 / IFC-EXT-004<br/>return"| OP_001
-    OP_001 -.->|"direct path unavailable"| OP_003
 ```
 
 The relay is bidirectional, positional, and logically transparent at this level. No
@@ -215,13 +238,21 @@ define another platform interface or any antenna characteristic. `IFC-INT-008` i
 future `CFG-DIG`/`CFG-SOS` payload-management candidate and is absent from the current
 architecture.
 
-The complete 17-interface inventory, including internal power, control, health,
+The complete 22-interface inventory, including internal power, control, health,
 navigation, external traffic, and maintenance groups, is generated in the diagram
 atlas. Every external interface now has model-review allocation, but real conformance
 still requires external authority, specifications, and evidence (`VER-009` /
 `GAP-IFC-001`). Implementation attributes remain intentionally out of scope
 (`GAP-IFC-002`). Internal battery-state telemetry (`IFC-INT-006`) is an input to the
 health function, not a substitute for the external `IFC-EXT-007` status return.
+
+The completeness audit added five implementation-neutral internal interfaces that
+were previously absent or represented only as diagram associations: battery source
+to distribution (`IFC-INT-011`), GNSS/heading data (`IFC-INT-012`), propulsion-
+controller output to motor (`IFC-INT-013`), motor drive to propeller
+(`IFC-INT-014`), and distribution power to regulators (`IFC-INT-015`). These records
+define architecture connectivity and failure meaning while leaving voltage, current,
+connector, timing, load, sizing, and other implementation attributes unknown.
 
 ## 7. Operational Behavior
 
@@ -234,7 +265,6 @@ stateDiagram-v2
     state "MODE-003 Relay Degraded" as MODE_003
     state "MODE-004 Return / Recovery" as MODE_004
     [*] --> MODE_005
-    MODE_005 --> MODE_005: SCN-001 / OA-007 readiness
     MODE_005 --> MODE_001: SCN-002
     MODE_001 --> MODE_002: SCN-002 station established
     MODE_002 --> MODE_003: SCN-007 payload degraded
@@ -353,12 +383,12 @@ The project owner accepted the internal architecture verification work package f
 it does not approve the technical baseline, physical verification, safety,
 external-interface conformance, or `DEC-002` through `DEC-005`.
 
-`VER-*` entries distinguish method readiness from execution. `VER-001` through
-`VER-007` have now been executed against the `0.7.0` baseline for requirements,
-traceability, source/evidence governance, scenarios, interfaces, hazard/control
-relationships, and configuration applicability. These reviews establish model
-consistency only. They do not demonstrate physical performance, safety, external
-compatibility, or approval.
+`VER-*` entries distinguish method readiness from execution. The accepted 0.7.0
+execution trail remains in `EVD-008` through `EVD-012`. `VER-001` through `VER-007`
+were re-executed against `0.8.0-baseline-candidate` in `EVD-013` after the
+model-completeness corrections. That fresh review is not owner acceptance. Both
+cycles establish model consistency only; neither demonstrates physical performance,
+safety, external compatibility, or technical approval.
 
 `VER-008` remains unexecuted and dependent on future physical evidence. `VER-009`
 remains blocked by absent external authority, specifications, and conformance
@@ -367,7 +397,8 @@ evidence. A passing repository validator cannot substitute for either activity.
 ```mermaid
 flowchart LR
     %% Configuration scope: CFG-REP / CFG-DOM with project-scope deferrals
-    EXECUTED["EXECUTED MODEL REVIEW<br/>VER-001 through VER-007<br/>EVD-008 through EVD-011"] --> PASS["EXECUTED PASS<br/>VER-002 / VER-007"]
+    EXECUTED["CURRENT MODEL REVIEW<br/>VER-001 through VER-007<br/>EVD-013 - not owner accepted"] --> PASS["EXECUTED PASS<br/>VER-002 / VER-007"]
+    ACCEPTED["PRESERVED ACCEPTED WORK PACKAGE<br/>0.7.0 / EVD-008 through EVD-012"] --> EXECUTED
     EXECUTED --> OPEN["EXECUTED WITH OPEN GAPS<br/>VER-001 / VER-003 through VER-006"]
     PHYSICAL["PHYSICAL-EVIDENCE-REQUIRED<br/>REQ-FUN-006 / REQ-FUN-008"] -.-> VER_008["VER-008<br/>Deferred physical method"]
     EXTERNAL["EXTERNAL-AUTHORITY-REQUIRED<br/>REQ-FUN-001 / REQ-FUN-004"] -.-> VER_009["VER-009<br/>External conformance"]
@@ -404,10 +435,12 @@ principal active deficiency. No Cameo content was used to close any gap.
 
 ## 13. Project-owner decisions required
 
-The reconciliation also presents `REC-CHG-001` and `REC-CHG-002` for owner review.
-They are architecture-change candidates recorded in `model/architecture.yaml`, not
-approved `DEC-*` records. No candidate component or interface was changed by this
-work package.
+`REC-CHG-001` is no longer an owner-decision blocker: `SRC-DEC-006` explicitly
+authorized model-local completeness correction, so `IFC-INT-011` now records the
+already intended battery-to-distribution energy path without selecting any technical
+values or approving it. `REC-CHG-002` remains an owner-review question because adding
+a carrier-view feedback resource would introduce new architecture intent. It is not
+an approved `DEC-*` record.
 
 ### DEC-003 - HAZ-001 safety objective
 

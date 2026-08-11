@@ -1219,6 +1219,7 @@
     {
       "id": "FUN-FLT-01",
       "name": "Maintain stable flight",
+      "purpose": "Maintain controlled multirotor flight while the platform carries and positions the relay payload.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1232,6 +1233,8 @@
     {
       "id": "FUN-FLT-02",
       "name": "Navigate to station",
+      "purpose": "Navigate the Relay UAS from its starting location to the intended relay station.",
+      "traceability_rationale": "This enabling navigation subfunction is exercised by OA-002 and SCN-002 and allocated to flight-control and GNSS resources. Its mission outcome is governed through the station-keeping requirement path rather than a duplicate standalone requirement.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1245,6 +1248,7 @@
     {
       "id": "FUN-FLT-03",
       "name": "Hold station",
+      "purpose": "Maintain the relay geometry represented by the selected station-keeping concept.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1258,6 +1262,7 @@
     {
       "id": "FUN-FLT-04",
       "name": "Return to launch",
+      "purpose": "Support architecture-level recovery of the Relay UAS when termination or degraded-state logic calls for return.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1271,6 +1276,7 @@
     {
       "id": "FUN-REL-01",
       "name": "Relay outbound traffic",
+      "purpose": "Carry outbound mission traffic from the Ground Control Node through the black-box payload toward the Remote UAS.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1284,6 +1290,7 @@
     {
       "id": "FUN-REL-02",
       "name": "Relay return traffic",
+      "purpose": "Carry return mission traffic from the Remote UAS through the black-box payload toward the Ground Control Node.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1297,6 +1304,8 @@
     {
       "id": "FUN-PWR-01",
       "name": "Distribute and regulate power",
+      "purpose": "Distribute stored electrical energy to propulsion, avionics, and the relay-payload power boundary at architecture level.",
+      "activity_rationale": "Power distribution is a cross-cutting enabling function active across setup, flight, relay, degradation, and recovery rather than a standalone operational activity.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1310,6 +1319,7 @@
     {
       "id": "FUN-PWR-02",
       "name": "Report battery state",
+      "purpose": "Provide battery-state information needed by the proposed health and recovery architecture.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1323,6 +1333,7 @@
     {
       "id": "FUN-CMD-01",
       "name": "Receive platform command link",
+      "purpose": "Receive independent Relay-UAS platform command input without treating relayed mission traffic as aircraft control.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1336,6 +1347,8 @@
     {
       "id": "FUN-CFG-01",
       "name": "Establish operational configuration and readiness state",
+      "purpose": "Establish the architecture-level configuration and readiness state needed before flight or maintenance disposition.",
+      "traceability_rationale": "This preparation function is exercised by OA-007 and SCN-001 and reviewed through the configuration-applicability and scenario checks. A separate technical requirement is not added because implementation procedure and readiness criteria remain outside the current architecture baseline.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1350,6 +1363,7 @@
     {
       "id": "FUN-HLT-01",
       "name": "Monitor and report Relay-UAS health/status",
+      "purpose": "Make detected platform mode and health/status available for readiness, degradation, and recovery decisions without defining message implementation.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1366,6 +1380,7 @@
     {
       "id": "CMP-AFR-01",
       "name": "Center frame plate",
+      "architecture_role": "Primary structural hub that supports the arm, landing, payload-mount, and hardware relationships.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1379,6 +1394,7 @@
     {
       "id": "CMP-AFR-02",
       "name": "Arm assembly",
+      "architecture_role": "Passive structural member that carries propulsion resources away from the center frame.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1392,6 +1408,7 @@
     {
       "id": "CMP-AFR-03",
       "name": "Landing gear",
+      "architecture_role": "Passive structural resource that supports the platform during ground contact.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1405,6 +1422,7 @@
     {
       "id": "CMP-AFR-04",
       "name": "Payload mount interface",
+      "architecture_role": "Airframe-side structural attachment that supports the modular payload bay.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1418,6 +1436,7 @@
     {
       "id": "CMP-AFR-05",
       "name": "Fastener and hardware set",
+      "architecture_role": "Passive retention hardware used by the candidate airframe structure.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1431,6 +1450,7 @@
     {
       "id": "CMP-PRP-01",
       "name": "Brushless motor",
+      "architecture_role": "Converts propulsion-controller electrical output into mechanical drive for the propeller.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1444,6 +1464,7 @@
     {
       "id": "CMP-PRP-02",
       "name": "Electronic speed controller",
+      "architecture_role": "Receives main-bus power and flight-control commands and supplies controlled electrical drive to the motor.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1457,6 +1478,7 @@
     {
       "id": "CMP-PRP-03",
       "name": "Propeller",
+      "architecture_role": "Converts motor mechanical drive into aerodynamic force at the platform level.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1470,6 +1492,7 @@
     {
       "id": "CMP-PWR-01",
       "name": "Battery pack",
+      "architecture_role": "Stores the candidate platform energy supply and feeds the main distribution interface.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1483,6 +1506,7 @@
     {
       "id": "CMP-PWR-02",
       "name": "Power distribution board",
+      "architecture_role": "Accepts source power, distributes the main bus, and supplies battery-state information to flight control.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1496,6 +1520,7 @@
     {
       "id": "CMP-PWR-03",
       "name": "Step-down regulator(s)",
+      "architecture_role": "Receives distributed power and provides regulated architecture-level power to avionics and the relay payload.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1509,6 +1534,7 @@
     {
       "id": "CMP-PWR-04",
       "name": "Battery connector",
+      "architecture_role": "Passive physical connection resource participating in the battery-to-distribution power interface.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1522,6 +1548,7 @@
     {
       "id": "CMP-AVN-01",
       "name": "Flight controller",
+      "architecture_role": "Central platform-control resource for stable flight, navigation, station keeping, recovery, and health/status logic.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1535,6 +1562,7 @@
     {
       "id": "CMP-AVN-02",
       "name": "IMU / sensor suite",
+      "architecture_role": "Provides inertial and supporting sensor information to the flight controller.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1548,6 +1576,7 @@
     {
       "id": "CMP-AVN-03",
       "name": "GNSS / compass module",
+      "architecture_role": "Provides position and heading information to the flight controller through a distinct navigation interface.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1561,6 +1590,7 @@
     {
       "id": "CMP-AVN-04",
       "name": "Control link receiver",
+      "architecture_role": "Terminates the independent external platform-command link and passes control input to the flight controller.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1574,6 +1604,7 @@
     {
       "id": "CMP-COM-01",
       "name": "Relay payload module (black box)",
+      "architecture_role": "Performs logical outbound and return traffic relay while its internal implementation remains intentionally undefined.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1587,6 +1618,7 @@
     {
       "id": "CMP-COM-02",
       "name": "Antenna physical-resource envelope",
+      "architecture_role": "Represents payload-internal antenna physical resources without asserting RF design or implementation characteristics.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1600,6 +1632,7 @@
     {
       "id": "CMP-MNT-01",
       "name": "Modular payload bay",
+      "architecture_role": "Platform-side bay that retains the black-box relay payload and transfers its loads to the airframe mount.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1609,6 +1642,99 @@
       "source_ids": [
         "SRC-REPO-003"
       ]
+    }
+  ],
+  "resource_relationships": [
+    {
+      "from": "CMP-AFR-01",
+      "relation": "structurally_supports",
+      "to": "CMP-AFR-02",
+      "label": "supports arm assembly",
+      "purpose": "Represents the candidate center-frame-to-arm structural relationship without defining geometry, material, or fastening detail.",
+      "relationship_type": "structural",
+      "status": "candidate",
+      "evidence_basis": "proposed_design",
+      "decision_status": "proposed",
+      "applicable_configurations": ["CFG-REP", "CFG-DOM"],
+      "source_ids": ["SRC-DEC-006", "SRC-REPO-003"],
+      "verification_ids": ["VER-005"],
+      "view_groups": ["structure"]
+    },
+    {
+      "from": "CMP-AFR-01",
+      "relation": "structurally_supports",
+      "to": "CMP-AFR-03",
+      "label": "supports landing gear",
+      "purpose": "Represents the candidate center-frame-to-landing-gear structural relationship without defining geometry or loads.",
+      "relationship_type": "structural",
+      "status": "candidate",
+      "evidence_basis": "proposed_design",
+      "decision_status": "proposed",
+      "applicable_configurations": ["CFG-REP", "CFG-DOM"],
+      "source_ids": ["SRC-DEC-006", "SRC-REPO-003"],
+      "verification_ids": ["VER-005"],
+      "view_groups": ["structure"]
+    },
+    {
+      "from": "CMP-AFR-01",
+      "relation": "structurally_supports",
+      "to": "CMP-AFR-04",
+      "label": "supports payload mount",
+      "purpose": "Represents the candidate center-frame-to-airframe-side payload-mount relationship.",
+      "relationship_type": "structural",
+      "status": "candidate",
+      "evidence_basis": "proposed_design",
+      "decision_status": "proposed",
+      "applicable_configurations": ["CFG-REP", "CFG-DOM"],
+      "source_ids": ["SRC-DEC-006", "SRC-REPO-003"],
+      "verification_ids": ["VER-005"],
+      "view_groups": ["structure"]
+    },
+    {
+      "from": "CMP-AFR-01",
+      "relation": "uses_retention_hardware",
+      "to": "CMP-AFR-05",
+      "label": "uses retention hardware",
+      "purpose": "Identifies the passive fastener and hardware set as part of the candidate airframe structure without assigning it an artificial function.",
+      "relationship_type": "structural",
+      "status": "candidate",
+      "evidence_basis": "proposed_design",
+      "decision_status": "proposed",
+      "applicable_configurations": ["CFG-REP", "CFG-DOM"],
+      "source_ids": ["SRC-DEC-006", "SRC-REPO-003"],
+      "verification_ids": ["VER-005"],
+      "view_groups": ["structure"]
+    },
+    {
+      "from": "CMP-AFR-04",
+      "relation": "structurally_supports",
+      "to": "CMP-MNT-01",
+      "label": "supports modular payload bay",
+      "purpose": "Connects the airframe-side payload mount to the modular payload bay as a structural relationship rather than duplicating the payload-retention interface.",
+      "relationship_type": "structural",
+      "status": "candidate",
+      "evidence_basis": "proposed_design",
+      "decision_status": "proposed",
+      "applicable_configurations": ["CFG-REP", "CFG-DOM"],
+      "source_ids": ["SRC-DEC-006", "SRC-REPO-003"],
+      "verification_ids": ["VER-005", "VER-008"],
+      "view_groups": ["structure"]
+    },
+    {
+      "from": "CMP-PWR-04",
+      "relation": "participates_in_source_connection",
+      "to": "CMP-PWR-02",
+      "label": "physical connection resource",
+      "purpose": "Identifies the battery connector as a passive participant in the source-power interface without turning the connector into a third interface endpoint.",
+      "interface_refs": ["IFC-INT-011"],
+      "relationship_type": "interface_participation",
+      "status": "candidate",
+      "evidence_basis": "proposed_design",
+      "decision_status": "proposed",
+      "applicable_configurations": ["CFG-REP", "CFG-DOM"],
+      "source_ids": ["SRC-DEC-006", "SRC-REPO-003"],
+      "verification_ids": ["VER-005", "VER-008"],
+      "view_groups": ["power"]
     }
   ],
   "interfaces": [
@@ -2506,6 +2632,116 @@
         "endpoint compatibility",
         "conformance authority"
       ]
+    },
+    {
+      "id": "IFC-INT-011",
+      "name": "Battery source power to main distribution",
+      "endpoint_a": "CMP-PWR-01",
+      "endpoint_b": "CMP-PWR-02",
+      "direction": "a_to_b",
+      "flow_class": "electrical power",
+      "interface_type": "internal electrical",
+      "owner": "Relay UAS product boundary",
+      "applicable_configurations": ["CFG-REP", "CFG-DOM"],
+      "operational_scenarios": ["SCN-001", "SCN-002", "SCN-007", "SCN-008"],
+      "normal_behavior": "Transfers stored source power from the candidate battery resource to the main distribution resource through an implementation-undefined connection.",
+      "failure_behavior": "An open, degraded, or unsafe source connection may remove platform power or create an electrical hazard.",
+      "security_concerns": ["Not applicable at current architecture level"],
+      "safety_concerns": ["Stored energy", "Short circuit", "Loss of platform power"],
+      "verification_ids": ["VER-005", "VER-008"],
+      "source_ids": ["SRC-DEC-006", "SRC-INT-001", "SRC-INT-002", "SRC-REPO-003"],
+      "claim_ids": [],
+      "evidence_basis": "proposed_design",
+      "decision_status": "proposed",
+      "unknown_attributes": ["voltage", "current", "polarity", "protection", "connector implementation", "physical routing"]
+    },
+    {
+      "id": "IFC-INT-012",
+      "name": "GNSS and heading sensor data",
+      "endpoint_a": "CMP-AVN-03",
+      "endpoint_b": "CMP-AVN-01",
+      "direction": "a_to_b",
+      "flow_class": "navigation and timing",
+      "interface_type": "candidate internal sensor interface",
+      "owner": "Relay UAS product boundary",
+      "applicable_configurations": ["CFG-REP", "CFG-DOM"],
+      "operational_scenarios": ["SCN-002", "SCN-007"],
+      "normal_behavior": "Provides architecture-level position and heading information to the flight controller for navigation and station keeping.",
+      "failure_behavior": "Position or heading information may become invalid or unavailable, degrading navigation or station keeping.",
+      "security_concerns": ["Integrity and trust criteria are unresolved"],
+      "safety_concerns": ["Station drift", "Navigation error", "Loss of controlled flight"],
+      "verification_ids": ["VER-005", "VER-008"],
+      "source_ids": ["SRC-DEC-006", "SRC-REPO-003", "SRC-REPO-004"],
+      "claim_ids": ["CLM-CAP-001"],
+      "evidence_basis": "engineering_inference",
+      "decision_status": "proposed",
+      "unknown_attributes": ["data format", "timing", "accuracy", "fault detection", "connector"]
+    },
+    {
+      "id": "IFC-INT-013",
+      "name": "Propulsion-controller output to motor",
+      "endpoint_a": "CMP-PRP-02",
+      "endpoint_b": "CMP-PRP-01",
+      "direction": "a_to_b",
+      "flow_class": "controlled electrical propulsion power",
+      "interface_type": "internal electrical",
+      "owner": "Relay UAS product boundary",
+      "applicable_configurations": ["CFG-REP", "CFG-DOM"],
+      "operational_scenarios": ["SCN-002", "SCN-007", "SCN-008"],
+      "normal_behavior": "Transfers controlled electrical propulsion power from each propulsion controller to its associated motor at architecture level.",
+      "failure_behavior": "Loss, asymmetry, or unintended output may degrade or remove a propulsion branch.",
+      "security_concerns": ["Not applicable at current architecture level"],
+      "safety_concerns": ["Uncommanded propulsion", "Electrical fault", "Loss of controllability"],
+      "verification_ids": ["VER-005", "VER-008"],
+      "source_ids": ["SRC-DEC-006", "SRC-REPO-003"],
+      "claim_ids": [],
+      "evidence_basis": "proposed_design",
+      "decision_status": "proposed",
+      "unknown_attributes": ["electrical characteristics", "connector", "wiring", "fault response"]
+    },
+    {
+      "id": "IFC-INT-014",
+      "name": "Motor mechanical drive to propeller",
+      "endpoint_a": "CMP-PRP-01",
+      "endpoint_b": "CMP-PRP-03",
+      "direction": "a_to_b",
+      "flow_class": "mechanical propulsion drive",
+      "interface_type": "internal mechanical",
+      "owner": "Relay UAS product boundary",
+      "applicable_configurations": ["CFG-REP", "CFG-DOM"],
+      "operational_scenarios": ["SCN-002", "SCN-007", "SCN-008"],
+      "normal_behavior": "Transfers motor rotation and torque to the associated propeller at architecture level.",
+      "failure_behavior": "Loss, slip, imbalance, or separation may remove thrust or create a rotating-part hazard.",
+      "security_concerns": ["Not applicable at current architecture level"],
+      "safety_concerns": ["Propeller separation", "Imbalance", "Loss of controllability"],
+      "verification_ids": ["VER-005", "VER-008"],
+      "source_ids": ["SRC-DEC-006", "SRC-REPO-003"],
+      "claim_ids": [],
+      "evidence_basis": "proposed_design",
+      "decision_status": "proposed",
+      "unknown_attributes": ["attachment method", "rotation direction", "torque envelope", "retention criteria"]
+    },
+    {
+      "id": "IFC-INT-015",
+      "name": "Main distribution power to regulators",
+      "endpoint_a": "CMP-PWR-02",
+      "endpoint_b": "CMP-PWR-03",
+      "direction": "a_to_b",
+      "flow_class": "electrical power",
+      "interface_type": "internal electrical",
+      "owner": "Relay UAS product boundary",
+      "applicable_configurations": ["CFG-REP", "CFG-DOM"],
+      "operational_scenarios": ["SCN-001", "SCN-002", "SCN-003", "SCN-004", "SCN-007", "SCN-008"],
+      "normal_behavior": "Transfers main-bus power from distribution to the regulator resources that supply avionics and the relay payload.",
+      "failure_behavior": "Loss or degradation may remove regulated avionics power, payload power, or both.",
+      "security_concerns": ["Not applicable at current architecture level"],
+      "safety_concerns": ["Over-current", "Power-quality degradation", "Loss of flight control or relay function"],
+      "verification_ids": ["VER-005", "VER-008"],
+      "source_ids": ["SRC-DEC-006", "SRC-REPO-003"],
+      "claim_ids": [],
+      "evidence_basis": "proposed_design",
+      "decision_status": "proposed",
+      "unknown_attributes": ["voltage", "current", "connector", "protection", "branch allocation"]
     }
   ],
   "configuration_reconciliation": {
@@ -2562,7 +2798,7 @@
         "category": "airframe / structure",
         "source_item_description": "Documented paired center-plate structure.",
         "source_refs": ["SRC-INT-001", "SRC-INT-002"],
-        "evidence_refs": ["EVD-006"],
+        "evidence_refs": ["EVD-006", "EVD-013"],
         "evidence_basis": "physically_observed",
         "cross_source_support": "CORROBORATED",
         "mapping_classification": "DIRECT_ROLE_CORRESPONDENCE",
@@ -2926,13 +3162,13 @@
         "category": "observed connection",
         "source_item_description": "Documented main-harness connection into the power-distribution resource; source-side battery implementation absent.",
         "source_refs": ["SRC-INT-001", "SRC-INT-002"],
-        "evidence_refs": ["EVD-006"],
+        "evidence_refs": ["EVD-006", "EVD-013"],
         "evidence_basis": "physically_observed",
         "cross_source_support": "CORROBORATED",
         "mapping_classification": "PARTIAL_ROLE_CORRESPONDENCE",
-        "candidate_target_ids": ["CMP-PWR-01", "CMP-PWR-02"],
+        "candidate_target_ids": ["CMP-PWR-01", "CMP-PWR-02", "IFC-INT-011"],
         "confidence": 0.68,
-        "limitation": "The candidate catalog has the endpoint resources but no explicit source-to-distribution interface; battery-side details are unknown.",
+        "limitation": "IFC-INT-011 now makes the candidate source-to-distribution energy path explicit, while every battery-side implementation detail remains unknown and the recovered battery itself remains absent.",
         "applicable_configurations": ["CFG-REC", "CFG-REP", "CFG-DOM"]
       },
       {
@@ -2956,7 +3192,7 @@
         "category": "observed connection",
         "source_item_description": "Source-reported flight-controller connections to propulsion controllers.",
         "source_refs": ["SRC-INT-001"],
-        "evidence_refs": ["EVD-006"],
+        "evidence_refs": ["EVD-006", "EVD-013"],
         "evidence_basis": "engineering_inference",
         "cross_source_support": "SINGLE_SOURCE",
         "mapping_classification": "ENGINEERING_INFERENCE",
@@ -2971,13 +3207,13 @@
         "category": "observed connection",
         "source_item_description": "Source-reported power connection between distribution and flight-control resources.",
         "source_refs": ["SRC-INT-001"],
-        "evidence_refs": ["EVD-006"],
+        "evidence_refs": ["EVD-006", "EVD-013"],
         "evidence_basis": "internal_document",
         "cross_source_support": "SINGLE_SOURCE",
         "mapping_classification": "PARTIAL_ROLE_CORRESPONDENCE",
-        "candidate_target_ids": ["IFC-INT-002"],
+        "candidate_target_ids": ["IFC-INT-002", "IFC-INT-015"],
         "confidence": 0.7,
-        "limitation": "A power relationship is supported, but actual recovered rail configuration and the candidate regulator boundary are not established.",
+        "limitation": "The candidate splits the role into distribution-to-regulator and regulated-avionics-power interfaces, while recovered regulator boundaries and rail characteristics remain unestablished.",
         "applicable_configurations": ["CFG-REC", "CFG-REP", "CFG-DOM"]
       },
       {
@@ -3110,7 +3346,12 @@
       {"candidate_id": "IFC-INT-009", "source_item_description": "Matched sources do not establish the candidate navigation/timing sensor-data interface.", "source_refs": ["SRC-INT-001", "SRC-INT-002"], "evidence_refs": ["EVD-007"], "evidence_basis": "unknown", "mapping_classification": "NO_RECOVERED_EVIDENCE", "candidate_target_ids": ["IFC-INT-009"], "confidence": 0.8, "limitation": "Source silence does not disprove the candidate need.", "applicable_configurations": ["CFG-REP", "CFG-DOM"]},
       {"candidate_id": "IFC-INT-010", "source_item_description": "Documented payload-electronics-to-antenna coupling directly supports this physical-resource connection.", "source_refs": ["SRC-INT-001", "SRC-INT-002"], "evidence_refs": ["EVD-007"], "evidence_basis": "physically_observed", "mapping_classification": "DIRECT_SOURCE_SUPPORT", "candidate_target_ids": ["IFC-INT-010"], "confidence": 0.84, "limitation": "Roles and RF implementation attributes remain unknown and excluded.", "applicable_configurations": ["CFG-REP", "CFG-DOM"]},
       {"candidate_id": "IFC-EXT-006", "source_item_description": "A controlled configuration and maintenance interface is a candidate architecture necessity, not a recovered implementation fact.", "source_refs": ["SRC-REPO-003", "SRC-INT-001", "SRC-INT-002"], "evidence_refs": ["EVD-007"], "evidence_basis": "proposed_design", "mapping_classification": "PROPOSED_ARCHITECTURE_ONLY", "candidate_target_ids": ["IFC-EXT-006"], "confidence": 0.95, "limitation": "The source package describes unresolved configuration recovery needs, not an installed external maintenance interface.", "applicable_configurations": ["CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"]},
-      {"candidate_id": "IFC-EXT-007", "source_item_description": "The explicit operator health/status return is a proposed candidate thread.", "source_refs": ["SRC-DEC-002", "SRC-INT-001", "SRC-INT-002"], "evidence_refs": ["EVD-007"], "evidence_basis": "proposed_design", "mapping_classification": "PROPOSED_ARCHITECTURE_ONLY", "candidate_target_ids": ["IFC-EXT-007"], "confidence": 0.95, "limitation": "Recovered sources show at most board-level monitoring capability, not an end-to-end status-return architecture.", "applicable_configurations": ["CFG-REP", "CFG-DOM"]}
+      {"candidate_id": "IFC-EXT-007", "source_item_description": "The explicit operator health/status return is a proposed candidate thread.", "source_refs": ["SRC-DEC-002", "SRC-INT-001", "SRC-INT-002"], "evidence_refs": ["EVD-007"], "evidence_basis": "proposed_design", "mapping_classification": "PROPOSED_ARCHITECTURE_ONLY", "candidate_target_ids": ["IFC-EXT-007"], "confidence": 0.95, "limitation": "Recovered sources show at most board-level monitoring capability, not an end-to-end status-return architecture.", "applicable_configurations": ["CFG-REP", "CFG-DOM"]},
+      {"candidate_id": "IFC-INT-011", "source_item_description": "Documented main-harness entry into the recovered distribution resource indirectly supports an implementation-neutral source-power interface.", "source_refs": ["SRC-INT-001", "SRC-INT-002", "SRC-DEC-006"], "evidence_refs": ["EVD-013"], "evidence_basis": "internal_document", "mapping_classification": "INDIRECT_SOURCE_SUPPORT", "candidate_target_ids": ["IFC-INT-011"], "confidence": 0.68, "limitation": "The recovered battery is absent and all source-side electrical and physical details remain unknown.", "applicable_configurations": ["CFG-REP", "CFG-DOM"]},
+      {"candidate_id": "IFC-INT-012", "source_item_description": "Matched sources do not establish the candidate GNSS and heading data interface.", "source_refs": ["SRC-INT-001", "SRC-INT-002", "SRC-DEC-006"], "evidence_refs": ["EVD-013"], "evidence_basis": "unknown", "mapping_classification": "NO_RECOVERED_EVIDENCE", "candidate_target_ids": ["IFC-INT-012"], "confidence": 0.82, "limitation": "Source silence does not disprove the candidate navigation need or establish an implementation.", "applicable_configurations": ["CFG-REP", "CFG-DOM"]},
+      {"candidate_id": "IFC-INT-013", "source_item_description": "Recovered propulsion-controller and motor resource classes indirectly support the need for a controlled electrical drive relationship.", "source_refs": ["SRC-INT-001", "SRC-INT-002", "SRC-DEC-006"], "evidence_refs": ["EVD-013"], "evidence_basis": "internal_document", "mapping_classification": "INDIRECT_SOURCE_SUPPORT", "candidate_target_ids": ["IFC-INT-013"], "confidence": 0.7, "limitation": "The recovered connection and every electrical characteristic remain unverified at this architecture level.", "applicable_configurations": ["CFG-REP", "CFG-DOM"]},
+      {"candidate_id": "IFC-INT-014", "source_item_description": "Recovered motor and propeller resource classes indirectly support the need for a mechanical propulsion-drive relationship.", "source_refs": ["SRC-INT-001", "SRC-INT-002", "SRC-DEC-006"], "evidence_refs": ["EVD-013"], "evidence_basis": "internal_document", "mapping_classification": "INDIRECT_SOURCE_SUPPORT", "candidate_target_ids": ["IFC-INT-014"], "confidence": 0.72, "limitation": "Attachment, load, retention, and rotational characteristics remain unknown and physically unverified.", "applicable_configurations": ["CFG-REP", "CFG-DOM"]},
+      {"candidate_id": "IFC-INT-015", "source_item_description": "A source-reported distribution-to-flight-control power relationship indirectly supports the candidate distribution-to-regulator segment.", "source_refs": ["SRC-INT-001", "SRC-DEC-006"], "evidence_refs": ["EVD-013"], "evidence_basis": "internal_document", "mapping_classification": "INDIRECT_SOURCE_SUPPORT", "candidate_target_ids": ["IFC-INT-015"], "confidence": 0.7, "limitation": "The candidate regulator boundary and all recovered rail characteristics remain unestablished.", "applicable_configurations": ["CFG-REP", "CFG-DOM"]}
     ],
     "special_reviews": [
       {
@@ -3155,15 +3396,16 @@
         "review_id": "REC-CHG-001",
         "decision_question": "Should CFG-REP / CFG-DOM add an explicit power-source-to-distribution interface between CMP-PWR-01 and CMP-PWR-02?",
         "recovered_evidence": "The source package documents a main harness entering the recovered distribution resource while the battery itself is absent.",
-        "current_candidate_architecture": "The candidate contains CMP-PWR-01 and CMP-PWR-02 but no explicit interface between them.",
+        "current_candidate_architecture": "The candidate now contains the implementation-neutral IFC-INT-011 source-power interface between CMP-PWR-01 and CMP-PWR-02, with CMP-PWR-04 recorded as a passive connection participant.",
         "correspondence_status": "PARTIAL_ROLE_CORRESPONDENCE",
-        "affected_ids": ["CMP-PWR-01", "CMP-PWR-02", "REC-CON-001"],
-        "recommendation": "Owner should consider a future implementation-neutral internal power interface because the missing relationship is architectural, while retaining all electrical attributes as unknown.",
+        "affected_ids": ["CMP-PWR-01", "CMP-PWR-02", "CMP-PWR-04", "IFC-INT-011", "REC-CON-001"],
+        "recommendation": "Retain IFC-INT-011 as a proposed architecture-level interface because the energy path is necessary to understand the candidate, while retaining all implementation attributes as unknown.",
         "reasoning": "The connection is necessary to explain candidate energy flow, but the recovered package does not establish a complete source-side implementation.",
-        "change_if_accepted": "Add one proposed architecture-level internal interface and associated trace links after owner review.",
+        "change_if_accepted": "Implemented as a model-local architecture-completeness correction under SRC-DEC-006; the interface remains proposed and gains no technical approval.",
         "remaining_unknowns": "All source-side hardware, protection, connector, polarity, current, voltage, and physical routing.",
-        "owner_review_status": "required_before_candidate_change",
-        "source_refs": ["SRC-INT-001", "SRC-INT-002"],
+        "owner_review_status": "superseded_by_explicit_model_completion_instruction_SRC-DEC-006",
+        "source_refs": ["SRC-INT-001", "SRC-INT-002", "SRC-DEC-006"],
+        "evidence_refs": ["EVD-013"],
         "gap_refs": ["GAP-REC-001"]
       },
       {
@@ -3249,5 +3491,92 @@
         "SRC-REPO-002"
       ]
     }
+  ],
+  "initial_mode": "MODE-005",
+  "mode_transitions": [
+    {
+      "from": "MODE-005",
+      "to": "MODE-001",
+      "label": "launch and transit",
+      "trigger_refs": ["SCN-002"],
+      "status": "candidate",
+      "evidence_basis": "proposed_design",
+      "decision_status": "proposed",
+      "applicable_configurations": ["CFG-REP", "CFG-DOM"],
+      "source_ids": ["SRC-DEC-006", "SRC-REPO-002"],
+      "verification_ids": ["VER-004"]
+    },
+    {
+      "from": "MODE-001",
+      "to": "MODE-002",
+      "label": "relay station established",
+      "trigger_refs": ["SCN-002"],
+      "status": "candidate",
+      "evidence_basis": "proposed_design",
+      "decision_status": "proposed",
+      "applicable_configurations": ["CFG-REP", "CFG-DOM"],
+      "source_ids": ["SRC-DEC-006", "SRC-REPO-002"],
+      "verification_ids": ["VER-004"]
+    },
+    {
+      "from": "MODE-002",
+      "to": "MODE-003",
+      "label": "relay function degraded",
+      "trigger_refs": ["SCN-007"],
+      "status": "candidate",
+      "evidence_basis": "proposed_design",
+      "decision_status": "proposed",
+      "applicable_configurations": ["CFG-REP", "CFG-DOM"],
+      "source_ids": ["SRC-DEC-006", "SRC-REPO-002"],
+      "verification_ids": ["VER-004", "VER-008"]
+    },
+    {
+      "from": "MODE-003",
+      "to": "MODE-004",
+      "label": "recovery intent",
+      "trigger_refs": ["SCN-007", "REQ-FUN-007"],
+      "status": "candidate",
+      "evidence_basis": "proposed_design",
+      "decision_status": "proposed",
+      "applicable_configurations": ["CFG-REP", "CFG-DOM"],
+      "source_ids": ["SRC-DEC-006", "SRC-REPO-002"],
+      "verification_ids": ["VER-004", "VER-008"]
+    },
+    {
+      "from": "MODE-002",
+      "to": "MODE-004",
+      "label": "normal termination or low-battery recovery",
+      "trigger_refs": ["SCN-008", "REQ-FUN-005"],
+      "status": "candidate",
+      "evidence_basis": "proposed_design",
+      "decision_status": "proposed",
+      "applicable_configurations": ["CFG-REP", "CFG-DOM"],
+      "source_ids": ["SRC-DEC-006", "SRC-REPO-002"],
+      "verification_ids": ["VER-004", "VER-008"]
+    },
+    {
+      "from": "MODE-004",
+      "to": "MODE-005",
+      "label": "platform recovered and made ground safe",
+      "trigger_refs": ["SCN-008"],
+      "status": "candidate",
+      "evidence_basis": "proposed_design",
+      "decision_status": "proposed",
+      "applicable_configurations": ["CFG-REP", "CFG-DOM"],
+      "source_ids": ["SRC-DEC-006", "SRC-REPO-002"],
+      "verification_ids": ["VER-004", "VER-006"]
+    }
+  ],
+  "scenario_transitions": [
+    {"from": "SCN-001", "to": "SCN-002", "label": "progression", "transition_type": "current", "status": "candidate", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-DEC-006", "SRC-REPO-002"], "verification_ids": ["VER-004"]},
+    {"from": "SCN-002", "to": "SCN-003", "label": "outbound relay thread", "transition_type": "current", "status": "candidate", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-DEC-006", "SRC-REPO-002"], "verification_ids": ["VER-004"]},
+    {"from": "SCN-002", "to": "SCN-004", "label": "return relay thread", "transition_type": "current", "status": "candidate", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-DEC-006", "SRC-REPO-002"], "verification_ids": ["VER-004"]},
+    {"from": "SCN-003", "to": "SCN-007", "label": "degraded relay condition", "transition_type": "current", "status": "candidate", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-DEC-006", "SRC-REPO-002"], "verification_ids": ["VER-004"]},
+    {"from": "SCN-004", "to": "SCN-007", "label": "degraded relay condition", "transition_type": "current", "status": "candidate", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-DEC-006", "SRC-REPO-002"], "verification_ids": ["VER-004"]},
+    {"from": "SCN-003", "to": "SCN-008", "label": "normal termination", "transition_type": "current", "status": "candidate", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-DEC-006", "SRC-REPO-002"], "verification_ids": ["VER-004"]},
+    {"from": "SCN-004", "to": "SCN-008", "label": "normal termination", "transition_type": "current", "status": "candidate", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-DEC-006", "SRC-REPO-002"], "verification_ids": ["VER-004"]},
+    {"from": "SCN-007", "to": "SCN-008", "label": "recovery intent", "transition_type": "current", "status": "candidate", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-REP", "CFG-DOM"], "source_ids": ["SRC-DEC-006", "SRC-REPO-002"], "verification_ids": ["VER-004"]},
+    {"from": "SCN-001", "to": "SCN-005", "label": "future UGV branch", "transition_type": "future", "status": "unresolved", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-SOS"], "source_ids": ["SRC-DEC-006", "SRC-REPO-002"], "verification_ids": ["VER-004"], "gap_refs": ["GAP-SOS-001"]},
+    {"from": "SCN-001", "to": "SCN-006", "label": "future sensor-data branch", "transition_type": "future", "status": "unresolved", "evidence_basis": "proposed_design", "decision_status": "proposed", "applicable_configurations": ["CFG-DIG", "CFG-SOS"], "source_ids": ["SRC-DEC-006", "SRC-REPO-002"], "verification_ids": ["VER-004"], "gap_refs": ["GAP-SOS-002"]}
   ]
 }

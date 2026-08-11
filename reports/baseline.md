@@ -7,7 +7,7 @@
 
 ## Baseline status
 
-- Model version: `0.7.0-baseline-candidate`
+- Model version: `0.8.0-baseline-candidate`
 - Status: `baseline_candidate_not_approved`
 - Approval: `not_approved`
 - Model-valid means structurally consistent; it does not mean safe, verified, or ready.
@@ -19,6 +19,13 @@
 - Authority record: `SRC-DEC-005`; acceptance evidence: `EVD-012`.
 - Technical baseline: `not_approved`; physical verification and external-interface conformance: `not_established`; safety approval: `not_approved`.
 - Unresolved decisions remain proposed: `DEC-002`, `DEC-003`, `DEC-004`, `DEC-005`.
+
+## Current model-review status
+
+- Current semantic model: `0.8.0-baseline-candidate`.
+- Current review: `executed_not_owner_accepted` in `EVD-013` under `SRC-DEC-006`.
+- The accepted 0.7.0 work package remains preserved; the 0.8.0 model-level review is not owner acceptance or technical-baseline approval.
+- Physical verification, safety approval, and external-interface conformance remain not established.
 
 ## Configuration summary
 
@@ -43,7 +50,7 @@
 - Forward inventory: 24 recovered items and 10 recovered connections (34 total records).
 - Forward classifications: CLASS_LEVEL_CORRESPONDENCE: 6, DIRECT_ROLE_CORRESPONDENCE: 9, ENGINEERING_INFERENCE: 2, PARTIAL_ROLE_CORRESPONDENCE: 11, UNKNOWN: 1, UNMATCHED_RECOVERED_ITEM: 5.
 - Candidate component coverage: 19 of 19; DIRECT_SOURCE_SUPPORT: 10, ENGINEERING_INFERENCE: 2, INDIRECT_SOURCE_SUPPORT: 4, NO_RECOVERED_EVIDENCE: 2, PROPOSED_ARCHITECTURE_ONLY: 1.
-- Candidate interface coverage: 17 of 17; DIRECT_SOURCE_SUPPORT: 3, ENGINEERING_INFERENCE: 4, INDIRECT_SOURCE_SUPPORT: 4, NOT_APPLICABLE: 1, NO_RECOVERED_EVIDENCE: 1, PROPOSED_ARCHITECTURE_ONLY: 4.
+- Candidate interface coverage: 22 of 22; DIRECT_SOURCE_SUPPORT: 3, ENGINEERING_INFERENCE: 4, INDIRECT_SOURCE_SUPPORT: 8, NOT_APPLICABLE: 1, NO_RECOVERED_EVIDENCE: 2, PROPOSED_ARCHITECTURE_ONLY: 4.
 - Contradictions: 0. Unmatched recovered records: 5. Unknown recovered records: 1.
 - `GAP-REC-001` is narrowed, not closed: the role mapping exists, while complete physical reconstruction and exact equivalence remain unsupported.
 - In this repository, `physically_observed` means documented as an observation in an integrity-accepted registered record; it does not claim direct inspection by the model author or automation.
@@ -51,7 +58,7 @@
 ## Evidence and claim summary
 
 - Claims: 14 (gapped: 10, proven: 4)
-- Evidence records: 12
+- Evidence records: 13
 - Claim evidence basis: engineering_inference: 3, internal_document: 1, physically_observed: 2, proposed_design: 7, unknown: 1
 - Evidence supports claims; it does not approve the candidate architecture.
 
@@ -82,17 +89,17 @@
 | Decision | Status | Current model-review evidence | Internal-consistency finding |
 |---|---|---|---|
 | DEC-001 - Retain baseline-candidate status and project safety/scope constraints | approved | - | - |
-| DEC-002 - Select UAF terminology and version posture | proposed | EVD-008, EVD-010 | current architecture remains internally consistent while the terminology/version choice stays unresolved |
-| DEC-003 - Select HAZ-001 architecture-level safety objective | proposed | EVD-011 | HAZ-001 is consistently visible, explicitly unmitigated, and governed by GAP-HAZ-001 rather than hidden |
-| DEC-004 - Accept explicit Relay-UAS health/status architecture | proposed | EVD-009, EVD-010 | The proposed health/status thread is internally traceable across scenarios, functions, resources, interface, and requirement |
-| DEC-005 - Confirm CAP-004 cross-cutting semantics | proposed | EVD-009 | CAP-004 remains internally consistent as a cross-cutting constraint with requirement and trade-study allocations rather than a synthetic mission activity |
+| DEC-002 - Select UAF terminology and version posture | proposed | EVD-013 | current architecture remains internally consistent while the terminology/version choice stays unresolved |
+| DEC-003 - Select HAZ-001 architecture-level safety objective | proposed | EVD-013 | HAZ-001 is consistently visible, explicitly unmitigated, and governed by GAP-HAZ-001 rather than hidden |
+| DEC-004 - Accept explicit Relay-UAS health/status architecture | proposed | EVD-013 | The proposed health/status thread is internally traceable across scenarios, functions, resources, interface, and requirement |
+| DEC-005 - Confirm CAP-004 cross-cutting semantics | proposed | EVD-013 | CAP-004 remains internally consistent as a cross-cutting constraint with requirement and trade-study allocations rather than a synthetic mission activity |
 
 ## Active architecture gaps
 
 | Gap | Category | Outcome | Severity | Affected model area |
 |---|---|---|---|---|
 | GAP-STD-001 | standards-version decision | OWNER DECISION REQUIRED | moderate | DEC-002, SRC-EXT-003, CFG-REP, CFG-DOM, CFG-DIG, CFG-SOS |
-| GAP-REC-001 | configuration mapping | NARROWED | moderate | CFG-REC, CFG-REP, CFG-DOM, CLM-REC-005, EVD-006, EVD-007 |
+| GAP-REC-001 | configuration mapping | NARROWED | moderate | CFG-REC, CFG-REP, CFG-DOM, CLM-REC-005, EVD-006, EVD-007, EVD-013, IFC-INT-011 |
 | GAP-SRC-001 | missing evidence | PHYSICAL EVIDENCE REQUIRED | major | CFG-REC, SRC-GAP-001, SRC-INT-003, EVD-005 |
 | GAP-TRC-001 | unallocated capability | INTENTIONAL DEFERRAL | major | CAP-003, REQ-DEF-004, TS-009 |
 | GAP-HAZ-001 | unmitigated hazard | OWNER DECISION REQUIRED | major | HAZ-001, DEC-003 |
@@ -100,19 +107,49 @@
 | GAP-SOS-001 | proposed system-of-systems thread | FUTURE CONFIGURATION | major | CFG-SOS, SCN-005, OP-004, IX-006, IX-007 |
 | GAP-SOS-002 | proposed system-of-systems thread | FUTURE CONFIGURATION | major | CFG-DIG, CFG-SOS, SCN-006, IX-008 |
 | GAP-BUDGET-001 | mass-cost-endurance coupling | NARROWED | major | REQ-PER-001, REQ-PER-002, REQ-PER-003, REQ-PER-004, TS-001, TS-002, TS-003, TS-004, TS-006 |
-| GAP-VER-001 | verification evidence | NARROWED | major | VER-001, VER-002, VER-003, VER-004, VER-005, VER-006, VER-007, VER-008, VER-009, EVD-008, EVD-009, EVD-010, EVD-011 |
+| GAP-VER-001 | verification evidence | NARROWED | major | VER-001, VER-002, VER-003, VER-004, VER-005, VER-006, VER-007, VER-008, VER-009, EVD-008, EVD-009, EVD-010, EVD-011, EVD-012, EVD-013 |
+
+## Remaining work by dependency
+
+### Can be improved through model work now
+
+- No accidental model-local completeness gap remains after this pass.
+
+### Requires project-owner decision
+
+- `GAP-STD-001` - **OWNER DECISION REQUIRED**: Project owner selects one DEC-002 option: retain UAF 1.2 terminology, adopt version-neutral terminology, or authorize a later UAF 1.3 migration. Retain no-conformance posture until then.
+- `GAP-HAZ-001` - **OWNER DECISION REQUIRED**: Project owner selects one DEC-003 safety-objective option. Add a CTL/REQ path only after the exact generic objective is accepted.
+
+### Requires physical or external evidence
+
+- `GAP-REC-001` - **NARROWED**: Restore or register an authoritative DOCX revision, supply missing original evidence if available, and obtain owner review of REC-CHG-002 before adding any recovered-specific carrier-view architecture.
+- `GAP-SRC-001` - **PHYSICAL EVIDENCE REQUIRED**: Project owner supplies and registers the original evidence set and either restores the registered SRC-INT-003 revision or explicitly registers the changed DOCX as a new source revision; otherwise retain document-reported observations at their current evidence level.
+- `GAP-IFC-001` - **NARROWED**: Each external interface authority supplies an authoritative interface basis and accepts a future conformance method before compatibility evidence can be produced.
+- `GAP-BUDGET-001` - **NARROWED**: Project owner selects candidate cost, endurance, mass, and payload target ranges; source-backed component inputs are then required before executing the coupled TS-001/002/003/004/006 analysis.
+- `GAP-VER-001` - **NARROWED**: Preserve the accepted 0.7.0 trail and current 0.8.0 model-review evidence. Designated future physical and external authorities must supply performance, behavior, safety-relevant physical, and interface-conformance evidence before VER-008 or VER-009 can execute.
+
+### Intentionally deferred or future configuration
+
+- `GAP-CFG-001` - **INTENTIONAL DEFERRAL**: Do not inspect in this baseline; address only under a separately authorized future work package.
+- `GAP-CFG-002` - **INTENTIONAL DEFERRAL**: A designated external safety authority supplies employment assumptions, configuration applicability, and responsibility allocation before these hazards are activated.
+- `GAP-TRC-001` - **INTENTIONAL DEFERRAL**: Retain CAP-003 as unsupported with REQ-DEF-004 and TS-009; only an explicitly authorized future payload scope may introduce a mechanism or satisfaction claim.
+- `GAP-HAZ-002` - **INTENTIONAL DEFERRAL**: Keep the ID reserved; activate it only through an explicit owner decision supported by hazard content.
+- `GAP-IFC-002` - **INTENTIONAL DEFERRAL**: Keep implementation attributes unknown in this repository and preserve TS-009 as intentionally deferred.
+- `GAP-SOS-001` - **FUTURE CONFIGURATION**: A future CFG-SOS owner defines UGV responsibilities, authorized information classes, interface authority, and verification criteria before any current-system allocation.
+- `GAP-SOS-002` - **FUTURE CONFIGURATION**: A future CFG-DIG/CFG-SOS owner identifies authorized consumers, service purpose, interface authority, and verification criteria before allocation.
+
 
 ## Verification execution matrix
 
 | VER ID | Method | Readiness | Execution | Evidence | Result | Residual gaps |
 |---|---|---|---|---|---|---|
-| VER-001 | analysis | model_verifiable_now | executed_with_open_gaps | EVD-009 | PASS_WITH_OPEN_GAPS | GAP-BUDGET-001, GAP-IFC-001, GAP-TRC-001, GAP-VER-001 |
-| VER-002 | analysis | model_verifiable_now | executed_pass | EVD-008 | PASS | - |
-| VER-003 | inspection | model_verifiable_now | executed_with_open_gaps | EVD-011 | PASS_WITH_OPEN_GAPS | GAP-CFG-001, GAP-REC-001, GAP-SRC-001 |
-| VER-004 | analysis | model_verifiable_now | executed_with_open_gaps | EVD-009 | PASS_WITH_OPEN_GAPS | GAP-BUDGET-001, GAP-HAZ-001, GAP-IFC-001, GAP-SOS-001, GAP-SOS-002, GAP-VER-001 |
-| VER-005 | inspection | model_verifiable_now | executed_with_open_gaps | EVD-010 | PASS_WITH_OPEN_GAPS | GAP-IFC-001, GAP-VER-001 |
-| VER-006 | analysis | model_verifiable_now | executed_with_open_gaps | EVD-011 | PASS_WITH_OPEN_GAPS | GAP-CFG-002, GAP-HAZ-001, GAP-VER-001 |
-| VER-007 | inspection | model_verifiable_now | executed_pass | EVD-010 | PASS | - |
+| VER-001 | analysis | model_verifiable_now | executed_with_open_gaps | EVD-013 | PASS_WITH_OPEN_GAPS | GAP-BUDGET-001, GAP-IFC-001, GAP-TRC-001, GAP-VER-001 |
+| VER-002 | analysis | model_verifiable_now | executed_pass | EVD-013 | PASS | - |
+| VER-003 | inspection | model_verifiable_now | executed_with_open_gaps | EVD-013 | PASS_WITH_OPEN_GAPS | GAP-CFG-001, GAP-REC-001, GAP-SRC-001 |
+| VER-004 | analysis | model_verifiable_now | executed_with_open_gaps | EVD-013 | PASS_WITH_OPEN_GAPS | GAP-BUDGET-001, GAP-HAZ-001, GAP-IFC-001, GAP-SOS-001, GAP-SOS-002, GAP-VER-001 |
+| VER-005 | inspection | model_verifiable_now | executed_with_open_gaps | EVD-013 | PASS_WITH_OPEN_GAPS | GAP-IFC-001, GAP-VER-001 |
+| VER-006 | analysis | model_verifiable_now | executed_with_open_gaps | EVD-013 | PASS_WITH_OPEN_GAPS | GAP-CFG-002, GAP-HAZ-001, GAP-VER-001 |
+| VER-007 | inspection | model_verifiable_now | executed_pass | EVD-013 | PASS | - |
 | VER-008 | deferred demonstration or test | physical_evidence_required | deferred | - | NOT_EXECUTED | GAP-BUDGET-001, GAP-VER-001 |
 | VER-009 | external-authority review and future conformance evidence | external_authority_required | blocked | - | BLOCKED | GAP-IFC-001, GAP-VER-001 |
 
@@ -121,7 +158,7 @@
 - Requirements reviewed: 28; model-level review passed: 2 (`REQ-IFC-003`, `REQ-CON-003`); architecture review passed with open limitations: 26.
 - Readiness: analysis_blocked_by_tbd: 12, external_authority_required: 5, intentionally_deferred: 3, model_verifiable_now: 2, physical_evidence_required: 6.
 - `REQ-DEF-*` records remain explicit scope/deferral records rather than requirements claimed satisfied.
-- `EVD-001` through `EVD-004` remain historical. `EVD-008` through `EVD-011` record the current model-level execution events.
+- `EVD-001` through `EVD-004` remain historical. `EVD-008` through `EVD-012` preserve the accepted 0.7.0 review and acceptance trail; `EVD-013` records the current 0.8.0 model-level review without owner acceptance.
 - Internal review does not establish physical requirement satisfaction, external conformance, safety, or technical approval (`GAP-VER-001`).
 
 ### Objective corrections from verification
@@ -129,6 +166,8 @@
 | Evidence | Affected IDs | Problem | Correction | Architecture intent changed? |
 |---|---|---|---|---|
 | EVD-010 | SRC-INT-001, SRC-INT-002, SRC-INT-003 | Recovered-reference sources listed candidate configurations without an explicit source-record scope distinguishing lineage from physical equivalence or approval. | Each recovered-source record now states that lineage may inform candidate reasoning but does not establish candidate existence, equivalence, inheritance, or approval. | false |
+| EVD-013 | IFC-INT-011, IFC-INT-012, IFC-INT-013, IFC-INT-014, IFC-INT-015 | Five necessary current-architecture energy, navigation, and propulsion relationships were absent from the interface catalog or appeared only as renderer associations. | Five implementation-neutral interfaces now state endpoints, purpose, behavior, unknowns, applicability, provenance, and verification allocation without selecting technical values. | false |
+| EVD-013 | CMP-AFR-01, CMP-AFR-02, CMP-AFR-03, CMP-AFR-04, CMP-AFR-05, CMP-MNT-01, CMP-PWR-04, MODE-001, MODE-002, MODE-003, MODE-004, MODE-005 | Structural decomposition, passive connector participation, operating-mode transitions, and scenario-lifecycle transitions conveyed engineering meaning only in rendering code. | Resource relationships, mode transitions, and scenario transitions are structured model data and the renderer consumes those records. | false |
 
 ## Concise traceability summary
 
@@ -151,7 +190,7 @@
 - `GAP-SOS-001`: A future CFG-SOS owner defines UGV responsibilities, authorized information classes, interface authority, and verification criteria before any current-system allocation.
 - `GAP-SOS-002`: A future CFG-DIG/CFG-SOS owner identifies authorized consumers, service purpose, interface authority, and verification criteria before allocation.
 - `GAP-BUDGET-001`: Project owner selects candidate cost, endurance, mass, and payload target ranges; source-backed component inputs are then required before executing the coupled TS-001/002/003/004/006 analysis.
-- `GAP-VER-001`: Preserve the completed internal review evidence. Designated future physical and external authorities must supply performance, behavior, safety-relevant physical, and interface-conformance evidence before VER-008 or VER-009 can execute.
+- `GAP-VER-001`: Preserve the accepted 0.7.0 trail and current 0.8.0 model-review evidence. Designated future physical and external authorities must supply performance, behavior, safety-relevant physical, and interface-conformance evidence before VER-008 or VER-009 can execute.
 
 ## Closed or reclassified gaps in this maturation pass
 

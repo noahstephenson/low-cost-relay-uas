@@ -202,6 +202,18 @@ def edge_for_interface(
     )
 
 
+def edge_for_resource_relationship(relationship: dict[str, Any], *, indent: str = "    ") -> str:
+    label = clean_label(relationship["label"])
+    interface_refs = relationship.get("interface_refs", [])
+    if interface_refs:
+        label += "<br/>" + " / ".join(interface_refs)
+    arrow = "-.->" if relationship.get("status") in {"candidate", "unresolved"} else "-->"
+    return (
+        f"{indent}{mermaid_key(relationship['from'])} {arrow}|\"{label}\"| "
+        f"{mermaid_key(relationship['to'])}"
+    )
+
+
 def generated_header() -> list[str]:
     return [
         "<!-- GENERATED VIEW: DO NOT EDIT. Run python scripts/generate-mermaid-views.py -->",
@@ -250,7 +262,9 @@ def configuration_view(catalogs: dict[str, dict[str, Any]], index: dict[str, dic
     )
 
 
-def boundary_view(index: dict[str, dict[str, Any]]) -> list[str]:
+def boundary_view(
+    catalogs: dict[str, dict[str, Any]], index: dict[str, dict[str, Any]]
+) -> list[str]:
     body = [
         '    subgraph OUTER["C2 Ecosystem outer boundary - CFG-SOS proposed context"]',
         "        " + node(index, "OP-010", "independently managed human performer"),
@@ -266,22 +280,28 @@ def boundary_view(index: dict[str, dict[str, Any]]) -> list[str]:
         "            " + node(index, "OP-002", "system under study"),
         "        end",
         "    end",
-        '    OP_010 -->|"IX-001 platform command"| OP_002',
-        '    OP_001 <-->|"IX-002 through IX-005 relay thread"| OP_002',
-        '    OP_002 <-->|"mission traffic relationship"| OP_003',
-        '    OP_007 <-->|"IX-010 / IFC-EXT-006 support"| OP_002',
-        '    OP_008 -.->|"external authority - criteria unresolved"| OP_002',
-        '    OP_001 -.->|"IX-006 / IX-007 future / unresolved"| OP_004',
-        '    OP_002 -.->|"future relationship unresolved"| OP_005',
-        '    OP_002 -.->|"future relationship unresolved"| OP_006',
-        '    OP_009 -.->|"future support relationship unresolved"| OP_002',
     ]
+    realization = {
+        rel["from"]: rel["to"]
+        for rel in catalogs["traceability"]["relationships"]
+        if rel["relation"] in {"realized_by", "partially_realized_by"}
+    }
+    for exchange in catalogs["architecture"]["information_exchanges"]:
+        if exchange["id"] not in {"IX-001", "IX-002", "IX-003", "IX-004", "IX-005", "IX-006", "IX-007", "IX-009", "IX-010"}:
+            continue
+        interface_id = realization.get(exchange["id"])
+        suffix = f" / {interface_id}" if interface_id else " / unresolved"
+        arrow = "-.->" if set(exchange.get("applicable_configurations", [])).issubset({"CFG-DIG", "CFG-SOS"}) else "-->"
+        body.append(
+            f'    {mermaid_key(exchange["from"])} {arrow}|"{exchange["id"]}{suffix}<br/>{clean_label(exchange["flow_class"])}"| '
+            f'{mermaid_key(exchange["to"])}'
+        )
     return flow_diagram(
         "2",
         "Two-boundary context",
         "CFG-SOS outer context - CFG-REP / CFG-DOM / CFG-DIG inner constituent",
         body,
-        "External constituents remain independently managed. Dashed relationships are future or unresolved.",
+        "External constituents remain independently managed. Only catalogued information exchanges are drawn; unconnected future actors remain context, not implied interfaces.",
     )
 
 
@@ -307,9 +327,6 @@ def operational_connectivity_view(
         body.append(
             f'    {mermaid_key(exchange["from"])} -->|"{label}"| {mermaid_key(exchange["to"])}'
         )
-    body.extend([
-        '    OP_010 -.->|"platform command is separate from relayed mission traffic"| OP_001',
-    ])
     return flow_diagram(
         "3",
         "Current three-node operational connectivity",
@@ -321,31 +338,35 @@ def operational_connectivity_view(
 
 def resource_diagrams(catalogs: dict[str, dict[str, Any]], index: dict[str, dict[str, Any]]) -> list[str]:
     interfaces = interface_by_id(catalogs)
+    resource_relationships = catalogs["architecture"].get("resource_relationships", [])
     lines: list[str] = ["## Relay-UAS resource views", ""]
 
     structure_ids = ["CMP-AFR-01", "CMP-AFR-02", "CMP-AFR-03", "CMP-AFR-04", "CMP-AFR-05", "CMP-MNT-01", "CMP-COM-01"]
     body = ["    " + node(index, item_id) for item_id in structure_ids]
-    body.extend([
-        '    CMP_AFR_01 -.->|"structural decomposition"| CMP_AFR_02',
-        '    CMP_AFR_01 -.->|"structural decomposition"| CMP_AFR_03',
-        '    CMP_AFR_01 -.->|"structural decomposition"| CMP_AFR_04',
-        '    CMP_AFR_01 -.->|"hardware set"| CMP_AFR_05',
-        '    CMP_AFR_04 -.->|"mount relationship [UNRESOLVED]"| CMP_MNT_01',
-        edge_for_interface(interfaces["IFC-INT-007"]),
-    ])
+    body.extend(
+        edge_for_resource_relationship(item)
+        for item in resource_relationships
+        if "structure" in item.get("view_groups", [])
+    )
+    body.append(edge_for_interface(interfaces["IFC-INT-007"]))
     lines.extend(flow_diagram("4A", "Structure and payload mounting", "CFG-REP / CFG-DOM", body))
 
     power_ids = ["CMP-PWR-01", "CMP-PWR-02", "CMP-PWR-03", "CMP-PWR-04", "CMP-PRP-01", "CMP-PRP-02", "CMP-PRP-03", "CMP-AVN-01", "CMP-COM-01"]
     body = ["    " + node(index, item_id) for item_id in power_ids]
     body.extend([
-        '    CMP_PWR_01 -.->|"source association - IFC not allocated"| CMP_PWR_02',
-        '    CMP_PWR_04 -.->|"resource association - IFC not allocated"| CMP_PWR_02',
+        edge_for_interface(interfaces["IFC-INT-011"]),
+        *[
+            edge_for_resource_relationship(item)
+            for item in resource_relationships
+            if "power" in item.get("view_groups", [])
+        ],
         edge_for_interface(interfaces["IFC-INT-001"]),
+        edge_for_interface(interfaces["IFC-INT-015"]),
         edge_for_interface(interfaces["IFC-INT-002"]),
         edge_for_interface(interfaces["IFC-INT-003"], label_suffix="platform-to-payload"),
         edge_for_interface(interfaces["IFC-INT-006"]),
-        '    CMP_PRP_02 -.->|"propulsion association"| CMP_PRP_01',
-        '    CMP_PRP_01 -.->|"propulsion association"| CMP_PRP_03',
+        edge_for_interface(interfaces["IFC-INT-013"]),
+        edge_for_interface(interfaces["IFC-INT-014"]),
     ])
     lines.extend(flow_diagram("4B", "Power and propulsion connectivity", "CFG-REP / CFG-DOM", body))
 
@@ -357,7 +378,7 @@ def resource_diagrams(catalogs: dict[str, dict[str, Any]], index: dict[str, dict
         edge_for_interface(interfaces["IFC-INT-004"]),
         edge_for_interface(interfaces["IFC-INT-006"]),
         edge_for_interface(interfaces["IFC-INT-009"]),
-        '    CMP_AVN_03 -.->|"navigation resource - IFC unresolved"| CMP_AVN_01',
+        edge_for_interface(interfaces["IFC-INT-012"]),
     ])
     lines.extend(flow_diagram("4C", "Avionics and platform control connectivity", "CFG-REP / CFG-DOM", body))
 
@@ -399,12 +420,18 @@ def resource_diagrams(catalogs: dict[str, dict[str, Any]], index: dict[str, dict
         "This support/governance interface is intentionally omitted from airborne mission-traffic diagrams.",
     ))
 
+    ix_008_gap = next(
+        item for item in catalogs["traceability"]["relationships"]
+        if item["from"] == "IX-008" and item["relation"] == "deferred_to_gap"
+    )
     body = [
         "    " + node(index, "CMP-AVN-01"),
         "    " + node(index, "CMP-COM-01", "future payload [PROPOSED]"),
         edge_for_interface(interfaces["IFC-INT-008"], label_suffix="future / proposed"),
         "    " + node(index, "IX-008", "future sensor-data exchange [UNRESOLVED]"),
-        '    IX_008 -.->|"realizing interface unresolved - GAP-SOS-002"| CMP_COM_01',
+        "    " + node(index, ix_008_gap["to"], "realizing interface unresolved"),
+        f'    IX_008 -.->|"{clean_label(ix_008_gap["relation"].replace("_", " "))}"| '
+        f'{mermaid_key(ix_008_gap["to"])}',
     ]
     lines.extend(flow_diagram(
         "4F",
@@ -447,7 +474,7 @@ def reconciliation_views(catalogs: dict[str, dict[str, Any]]) -> list[str]:
         return values.get(classification, 0)
 
     body = [
-        '    COVERAGE["Two-way candidate coverage<br/>19 components / 17 interfaces"]',
+        f'    COVERAGE["Two-way candidate coverage<br/>{len(reconciliation["candidate_components_to_recovered"])} components / {len(reconciliation["candidate_interfaces_to_recovered"])} interfaces"]',
         f'    COVERAGE --> DIRECT["Direct source support<br/>components {count("DIRECT_SOURCE_SUPPORT", component_counts)} / interfaces {count("DIRECT_SOURCE_SUPPORT", interface_counts)}"]',
         f'    COVERAGE --> INDIRECT["Indirect source support<br/>components {count("INDIRECT_SOURCE_SUPPORT", component_counts)} / interfaces {count("INDIRECT_SOURCE_SUPPORT", interface_counts)}"]',
         f'    COVERAGE --> INFERENCE["Engineering inference<br/>components {count("ENGINEERING_INFERENCE", component_counts)} / interfaces {count("ENGINEERING_INFERENCE", interface_counts)}"]',
@@ -465,27 +492,30 @@ def reconciliation_views(catalogs: dict[str, dict[str, Any]]) -> list[str]:
     return lines
 
 
-def mode_view(index: dict[str, dict[str, Any]]) -> list[str]:
+def mode_view(
+    catalogs: dict[str, dict[str, Any]], index: dict[str, dict[str, Any]]
+) -> list[str]:
+    architecture = catalogs["architecture"]
+    ordered_modes = ["MODE-005", "MODE-001", "MODE-002", "MODE-003", "MODE-004"]
     body = [
-        '    state "MODE-005 Ground Safe" as MODE_005',
-        '    state "MODE-001 Transit" as MODE_001',
-        '    state "MODE-002 Station Keeping" as MODE_002',
-        '    state "MODE-003 Relay Degraded" as MODE_003',
-        '    state "MODE-004 Return / Recovery" as MODE_004',
-        "    [*] --> MODE_005",
-        "    MODE_005 --> MODE_001: SCN-002 transition",
-        "    MODE_001 --> MODE_002: SCN-002 station established",
-        "    MODE_002 --> MODE_003: SCN-007 relay function degraded",
-        "    MODE_003 --> MODE_004: SCN-007 recovery intent",
-        "    MODE_002 --> MODE_004: SCN-008 termination or REQ-FUN-005",
-        "    MODE_004 --> MODE_005: SCN-008 recovered",
+        f'    state "{item_id} {record_name(index[item_id])}" as {mermaid_key(item_id)}'
+        for item_id in ordered_modes
+    ]
+    body.append(f"    [*] --> {mermaid_key(architecture['initial_mode'])}")
+    for transition in architecture["mode_transitions"]:
+        triggers = " / ".join(transition["trigger_refs"])
+        body.append(
+            f"    {mermaid_key(transition['from'])} --> {mermaid_key(transition['to'])}: "
+            f"{triggers} - {clean_label(transition['label'])}"
+        )
+    body.extend([
         "    note right of MODE_003",
         "      Payload function degraded",
         "      Platform control may remain available",
         "      REQ-FUN-007 [PROPOSED]",
         "      Evidence [DEFERRED]",
         "    end note",
-    ]
+    ])
     return state_diagram(
         "5",
         "Operating-mode state",
@@ -558,21 +588,18 @@ def degradation_sequence(index: dict[str, dict[str, Any]]) -> list[str]:
     )
 
 
-def lifecycle_view(index: dict[str, dict[str, Any]]) -> list[str]:
+def lifecycle_view(
+    catalogs: dict[str, dict[str, Any]], index: dict[str, dict[str, Any]]
+) -> list[str]:
     scenario_ids = [f"SCN-{number:03d}" for number in range(1, 9)]
     body = ["    " + node(index, item_id, status_of(index, item_id)) for item_id in scenario_ids]
-    body.extend([
-        '    SCN_001 -->|"progression"| SCN_002',
-        '    SCN_002 -->|"outbound thread"| SCN_003',
-        '    SCN_002 -->|"return thread"| SCN_004',
-        '    SCN_003 -->|"degraded"| SCN_007',
-        '    SCN_004 -->|"degraded"| SCN_007',
-        '    SCN_003 -->|"normal termination"| SCN_008',
-        '    SCN_004 -->|"normal termination"| SCN_008',
-        '    SCN_007 -->|"recovery intent"| SCN_008',
-        '    SCN_001 -.->|"future CFG-SOS / GAP-SOS-001"| SCN_005',
-        '    SCN_001 -.->|"future CFG-DIG / CFG-SOS / GAP-SOS-002"| SCN_006',
-    ])
+    for transition in catalogs["architecture"]["scenario_transitions"]:
+        arrow = "-.->" if transition["transition_type"] == "future" else "-->"
+        gap_note = " / " + " / ".join(transition.get("gap_refs", [])) if transition.get("gap_refs") else ""
+        body.append(
+            f'    {mermaid_key(transition["from"])} {arrow}|"{clean_label(transition["label"])}{gap_note}"| '
+            f'{mermaid_key(transition["to"])}'
+        )
     return flow_diagram(
         "9",
         "Scenario lifecycle",
@@ -593,7 +620,7 @@ def health_status_view(index: dict[str, dict[str, Any]]) -> list[str]:
         '    IX_009 -->|"supported by"| FUN_HLT_01',
         '    IFC_INT_006 -->|"battery-state input only"| FUN_HLT_01',
         '    FUN_HLT_01 -->|"allocated to"| CMP_AVN_01',
-        '    FUN_HLT_01 -->|"logical return"| IFC_EXT_007',
+        '    IX_009 -->|"realized by"| IFC_EXT_007',
         '    IFC_EXT_007 -->|"made available to"| OP_010',
         '    REQ_FUN_008 -->|"allocates behavior"| FUN_HLT_01',
         '    REQ_FUN_008 -->|"model review"| VER_005',
@@ -609,24 +636,23 @@ def health_status_view(index: dict[str, dict[str, Any]]) -> list[str]:
     )
 
 
-def design_dependency_view(index: dict[str, dict[str, Any]]) -> list[str]:
+def design_dependency_view(
+    catalogs: dict[str, dict[str, Any]], index: dict[str, dict[str, Any]]
+) -> list[str]:
     item_ids = [
         "REQ-PER-004", "TS-006", "TS-001", "REQ-PER-003", "TS-002",
         "TS-004", "REQ-PER-002", "TS-003", "REQ-PER-001", "GAP-BUDGET-001",
     ]
     body = ["    " + node(index, item_id, status_of(index, item_id)) for item_id in item_ids]
-    body.extend([
-        '    TS_006 -->|"defines payload envelope"| REQ_PER_004',
-        '    REQ_PER_004 -->|"contributes to"| REQ_PER_003',
-        '    TS_001 -->|"sets dry-mass contribution"| REQ_PER_003',
-        '    REQ_PER_003 -->|"drives propulsion demand"| TS_002',
-        '    TS_002 -->|"drives power demand"| TS_003',
-        '    TS_004 -->|"adds payload-power demand"| TS_003',
-        '    REQ_PER_002 -->|"sets energy demand"| TS_003',
-        '    TS_003 -->|"adds battery mass"| REQ_PER_003',
-        '    TS_003 -->|"adds battery cost"| REQ_PER_001',
-        '    REQ_PER_001 -.->|"targets and evidence unresolved"| GAP_BUDGET_001',
-    ])
+    for relationship in catalogs["traceability"]["relationships"]:
+        if relationship.get("view_group") != "mass_cost_power_endurance":
+            continue
+        arrow = "-.->" if relationship["to"].startswith("GAP-") else "-->"
+        label = clean_label(relationship["relation"].replace("_", " "))
+        body.append(
+            f'    {mermaid_key(relationship["from"])} {arrow}|"{label}"| '
+            f'{mermaid_key(relationship["to"])}'
+        )
     return flow_diagram(
         "9B",
         "Mass-cost-power-endurance dependency",
@@ -674,7 +700,8 @@ def hazard_view(catalogs: dict[str, dict[str, Any]], index: dict[str, dict[str, 
 
 def verification_readiness_view(index: dict[str, dict[str, Any]]) -> list[str]:
     body = [
-        '    EXECUTED["EXECUTED MODEL REVIEW<br/>VER-001 through VER-007<br/>EVD-008 through EVD-011"]',
+        '    ACCEPTED["PRESERVED OWNER-ACCEPTED REVIEW<br/>0.7.0 / EVD-008 through EVD-012"]',
+        '    EXECUTED["CURRENT MODEL REVIEW<br/>0.8.0 / VER-001 through VER-007<br/>EVD-013 - not owner accepted"]',
         '    PASS["EXECUTED PASS<br/>VER-002 / VER-007"]',
         '    OPEN["EXECUTED WITH OPEN GAPS<br/>VER-001 / VER-003 through VER-006"]',
         '    PHYSICAL["PHYSICAL-EVIDENCE-REQUIRED<br/>REQ-FUN-006 / REQ-FUN-008<br/>GAP-VER-001"]',
@@ -683,6 +710,7 @@ def verification_readiness_view(index: dict[str, dict[str, Any]]) -> list[str]:
         "    " + node(index, "VER-008", "future physical evidence"),
         "    " + node(index, "VER-009", "external authority required"),
         "    " + node(index, "TS-009", "formal deferral"),
+        '    ACCEPTED -->|"historical acceptance boundary preserved"| EXECUTED',
         '    EXECUTED -->|"no structural failure"| PASS',
         '    EXECUTED -->|"known gaps retained"| OPEN',
         '    PHYSICAL -.->|"no execution evidence"| VER_008',
@@ -694,7 +722,7 @@ def verification_readiness_view(index: dict[str, dict[str, Any]]) -> list[str]:
         "Verification execution and remaining readiness",
         "CFG-REP / CFG-DOM with project-scope deferrals",
         body,
-        "VER-001 through VER-007 have current model-level evidence, and the project owner accepted that internal verification work package in EVD-012. VER-008 remains deferred and VER-009 remains blocked; the acceptance is not physical verification, external conformance, safety approval, or technical-baseline approval.",
+        "VER-001 through VER-007 have current 0.8.0 model-level evidence in EVD-013 but no new owner acceptance. EVD-008 through EVD-012 preserve the accepted 0.7.0 work package. VER-008 remains deferred and VER-009 remains blocked; neither review constitutes physical verification, external conformance, safety approval, or technical-baseline approval.",
     )
 
 
@@ -805,18 +833,18 @@ def render(catalogs: dict[str, dict[str, Any]]) -> str:
     index = build_index(catalogs)
     lines = generated_header()
     lines.extend(configuration_view(catalogs, index))
-    lines.extend(boundary_view(index))
+    lines.extend(boundary_view(catalogs, index))
     lines.extend(operational_connectivity_view(catalogs, index))
     lines.extend(resource_diagrams(catalogs, index))
     lines.extend(reconciliation_views(catalogs))
     lines.extend(["## Behavioral views", ""])
-    lines.extend(mode_view(index))
+    lines.extend(mode_view(catalogs, index))
     lines.extend(launch_sequence(index))
     lines.extend(relay_sequence(index))
     lines.extend(degradation_sequence(index))
-    lines.extend(lifecycle_view(index))
+    lines.extend(lifecycle_view(catalogs, index))
     lines.extend(health_status_view(index))
-    lines.extend(design_dependency_view(index))
+    lines.extend(design_dependency_view(catalogs, index))
     lines.extend(["## Assurance and traceability views", ""])
     lines.extend(hazard_view(catalogs, index))
     lines.extend(verification_readiness_view(index))

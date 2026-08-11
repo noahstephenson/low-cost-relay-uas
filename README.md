@@ -4,84 +4,89 @@
 > architecture model. It is not a build specification, safety case, flight-test
 > plan, deployable communications design, or readiness claim.
 
-## What this project is
+## System in 60 seconds
 
-The project models a small airborne communications-relay platform and the larger C2
-ecosystem in which it could participate. Its useful engineering question is whether
-extended-range and terrain-masked relay can be achieved while preserving a genuinely
-low-cost, attritable platform concept.
+This project models a small multirotor that carries a communications relay payload.
+The aircraft flies to a useful position and holds that geometry so traffic can pass
+between a Ground Control Node and a Remote UAS when direct communication is limited
+by range or terrain.
 
-The candidate platform is intentionally conventional. The important architecture
-decisions are configuration separation, a black-box relay payload, two tightly
-controlled platform-to-payload interfaces, and honest treatment of unresolved cost,
-mass, power, endurance, evidence, and system-of-systems gaps.
+Two paths must not be confused: the operator commands the relay aircraft through its
+own platform-command path, while mission traffic passes through the relay payload.
+The payload is intentionally a black box. In the current candidate, the aircraft
+provides it only regulated power and mechanical retention; no platform-to-payload
+data interface is defined. The current architecture is `CFG-REP` / `CFG-DOM`.
+Recovered evidence and future ecosystem concepts inform the work but are not the
+same baseline.
+
+```mermaid
+flowchart LR
+    %% Configuration scope: CFG-REP / CFG-DOM
+    Operator["Operator<br/>OP-010"] -->|"Independent platform command<br/>IFC-EXT-005"| Receiver["Platform command receiver<br/>CMP-AVN-04"]
+    subgraph RelayUAS["Relay UAS product boundary"]
+        subgraph Platform["Relay-UAS platform - aircraft"]
+            Receiver
+            Power["Regulated payload power<br/>CMP-PWR-03"]
+            Mount["Modular payload bay<br/>CMP-MNT-01"]
+        end
+        Payload["Relay payload - black box<br/>CMP-COM-01"]
+        Power -->|"Payload power<br/>IFC-INT-003"| Payload
+        Mount <-->|"Mechanical retention<br/>IFC-INT-007"| Payload
+    end
+    Ground["Ground Control Node<br/>OP-001"] -->|"Outbound traffic<br/>IFC-EXT-001"| Payload
+    Payload -->|"Outbound traffic<br/>IFC-EXT-002"| Remote["Remote UAS<br/>OP-003"]
+    Remote -->|"Return traffic<br/>IFC-EXT-003"| Payload
+    Payload -->|"Return traffic<br/>IFC-EXT-004"| Ground
+```
+
+The Relay UAS boundary contains the airframe and structure, propulsion, battery and
+power distribution, flight control and navigation, the independent platform-command
+receiver, payload mounting, and the black-box relay payload. Ground control, the
+Remote UAS, and the human operator are outside that product boundary.
+
+During the current mission concept the system is prepared in Ground Safe, launches
+and navigates to station, holds position while relaying outbound and return traffic,
+reports proposed platform health/status, and transitions toward recovery when the
+mission ends or the relay function degrades. These are architecture behaviors, not
+operating procedures or proven flight behavior.
+
+## Current, reference, and future configurations
+
+| Configuration | Plain-language role | Current implementation scope? |
+|---|---|---|
+| `CFG-REC` | Recovered/reference evidence | No - evidence only, not the candidate design |
+| `CFG-REP` | Functional-replica candidate | Yes - current proposed architecture |
+| `CFG-DOM` | Domestic-supply candidate variant | Yes - current architecture, substitutions not selected |
+| `CFG-DIG` | Digital-payload extension | No - future concept |
+| `CFG-SOS` | Wider C2 system-of-systems context | No - future/context branch |
+
+Configuration derivation means lineage, not exact equivalence, physical proof,
+automatic inheritance, or approval. `CFG-REC` does not inherit the proposed product
+decomposition, and `CFG-DIG` / `CFG-SOS` do not leak into the current candidate.
+
+## Maturity in one minute
+
+- **Established in the model:** boundaries, major subsystems, current mission and recovery scenarios, function/resource allocations, 22 architecture-level interfaces, explicit resource relationships, requirements, hazards, verification methods, evidence lineage, and traceability.
+- **Internally reviewed:** `VER-001` through `VER-007` were executed for the current `0.8.0-baseline-candidate` model in `EVD-013`. The project-owner-accepted verification baseline remains the preserved `0.7.0-baseline-candidate` work package in `EVD-012`; the new review has not received owner acceptance.
+- **Owner decisions still required:** terminology/version posture (`DEC-002`), the `HAZ-001` safety objective (`DEC-003`), health/status architecture (`DEC-004`), and `CAP-004` semantics (`DEC-005`) all remain proposed.
+- **Design inputs still TBD:** cost, endurance, mass, payload envelope, power allocation, station-keeping, environmental, retention, and sizing targets remain controlled unknowns under the coupled trade studies and `GAP-BUDGET-001`.
+- **Not established:** physical verification (`VER-008`), external-interface conformance (`VER-009`), safety or airworthiness approval, interoperability, readiness, and technical-baseline approval.
+- **Deliberately deferred:** recovered-export reconciliation, unresolved external-hazard applicability, the inactive `HAZ-009` identifier, implementation-level external communications attributes, `TS-009`, and future UGV/sensor-data branches.
+
+A valid model is not a verified aircraft. Validation shows that the repository is
+internally structured and honest about its unknowns; it does not close evidence,
+authority, safety, or physical-performance gaps.
 
 ## Model authority
 
 `system.yaml` is the manifest. The structured catalogs referenced by it are
 authoritative model data. Markdown documents and generated reports are views of that
-model.
+model. When a view and structured data disagree, the structured data governs and the
+difference is a defect to correct.
 
-The baseline may validate successfully while remaining incomplete and unapproved.
-When a view and structured data disagree, the structured data governs and the
-difference should be treated as a reconciliation issue.
-
-## Configurations and boundaries
-
-| Configuration | Meaning |
-|---|---|
-| `CFG-REC` | Recovered-reference evidence boundary; no proposed decomposition is inherited |
-| `CFG-REP` | Safe functional-replica candidate architecture |
-| `CFG-DOM` | Domestic-supply-chain candidate derived from `CFG-REP` |
-| `CFG-DIG` | Future digital-payload extension candidate |
-| `CFG-SOS` | Proposed C2 Ecosystem system-of-systems context |
-
-```mermaid
-flowchart LR
-    %% Configuration scope: CFG-REC / CFG-REP / CFG-DOM / CFG-DIG / CFG-SOS
-    CFG_REC["CFG-REC<br/>Reference evidence"] -->|"informs - not exact inheritance"| CFG_REP["CFG-REP<br/>Replica candidate"]
-    CFG_REP --> CFG_DOM["CFG-DOM<br/>Domestic candidate"]
-    CFG_REP --> CFG_DIG["CFG-DIG<br/>Digital extension"]
-    CFG_DIG --> CFG_SOS["CFG-SOS<br/>C2 Ecosystem context"]
-    OP_002["OP-002<br/>Relay UAS inner boundary"] --> CFG_SOS
-```
-
-Read the configuration space along two axes:
-
-- Current/reference axis: `CFG-REC -> CFG-REP -> CFG-DOM`.
-- Future-extension axis: `CFG-REP -> CFG-DIG -> CFG-SOS`.
-
-Derivation means architectural lineage, not equivalence, inheritance of every
-element, physical proof, or approval.
-
-### Inner boundary: Relay UAS
-
-The product boundary contains the candidate airframe, propulsion, power, avionics,
-platform command link, payload mount, and relay payload as a black box. For
-`CFG-REP`/`CFG-DOM`, only `IFC-INT-003` power and `IFC-INT-007` mechanical retention
-cross from platform to payload. `IFC-INT-010` stays inside the payload envelope.
-
-### Outer boundary: C2 Ecosystem
-
-The proposed context includes the operator, ground-control node, remote UAS, future
-UGV, radio users, services, authorities, maintenance, and supporting infrastructure.
-Those constituents remain independently managed unless a structured source proves
-otherwise.
-
-## Current candidate at a glance
-
-- `CFG-REP` and `CFG-DOM` are the current proposed Relay-UAS architecture; `CFG-DOM` has no selected substitutions yet.
-- A controlled two-way role mapping now reconciles `CFG-REC` with every current candidate component and interface. The registered PDF and workbook match their checksums; the current DOCX does not and was excluded from claim strengthening. This mapping is not an equivalence or approval claim.
-- `SCN-001 -> OA-007` represents preparation and readiness in `MODE-005` without defining a procedure.
-- `IX-009 -> FUN-HLT-01 -> IFC-EXT-007 -> REQ-FUN-008` is the proposed health/status return for setup and recovery decisions.
-- The project owner accepted the `0.7.0-baseline-candidate` internal architecture verification work package as the current working verification baseline (`SRC-DEC-005`, `EVD-012`). This is work-package acceptance only; the technical baseline remains not approved.
-- Internal model reviews `VER-001` through `VER-007` are executed; physical `VER-008` and external-conformance `VER-009` remain unexecuted.
-- External interfaces are model-reviewable now, but real conformance still requires external authority and evidence.
-- The largest open questions are `HAZ-001`, the coupled mass/cost/power/endurance targets, external conformance, physical evidence, and unsupported `CAP-003`.
-
-The project owner still must decide the `HAZ-001` safety objective (`DEC-003`), whether
-to retain the explicit health/status thread (`DEC-004`), and whether to confirm
-`CAP-004` as a cross-cutting constraint (`DEC-005`). None is approved by this pass.
+The model intentionally separates three states: model-level internal review,
+physical verification, and external conformance. Evidence can support a claim without
+approving the design.
 
 ## What is authoritative
 

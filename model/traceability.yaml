@@ -632,12 +632,12 @@
     {"from": "DEC-004", "relation": "governs_candidate", "to": "IFC-EXT-007", "status": "candidate", "gap": null},
     {"from": "DEC-004", "relation": "governs_candidate", "to": "REQ-FUN-008", "status": "candidate", "gap": null},
     {"from": "DEC-005", "relation": "governs_candidate", "to": "CAP-004", "status": "candidate", "gap": null},
-    {"from": "REQ-PER-004", "relation": "contributes_to", "to": "REQ-PER-003", "status": "candidate", "gap": "GAP-BUDGET-001"},
+    {"from": "REQ-PER-004", "relation": "contributes_to", "to": "REQ-PER-003", "status": "candidate", "gap": "GAP-BUDGET-001", "view_group": "mass_cost_power_endurance"},
     {"from": "REQ-PER-003", "relation": "coupled_to", "to": "REQ-PER-002", "status": "candidate", "gap": "GAP-BUDGET-001"},
     {"from": "REQ-PER-002", "relation": "coupled_to", "to": "REQ-PER-001", "status": "candidate", "gap": "GAP-BUDGET-001"},
-    {"from": "TS-002", "relation": "coupled_to", "to": "TS-003", "status": "candidate", "gap": "GAP-BUDGET-001"},
+    {"from": "TS-002", "relation": "coupled_to", "to": "TS-003", "status": "candidate", "gap": "GAP-BUDGET-001", "view_group": "mass_cost_power_endurance"},
     {"from": "TS-001", "relation": "constrains", "to": "TS-002", "status": "candidate", "gap": "GAP-BUDGET-001"},
-    {"from": "TS-004", "relation": "constrains", "to": "TS-003", "status": "candidate", "gap": "GAP-BUDGET-001"},
+    {"from": "TS-004", "relation": "constrains", "to": "TS-003", "status": "candidate", "gap": "GAP-BUDGET-001", "view_group": "mass_cost_power_endurance"},
     {"from": "IFC-EXT-001", "relation": "model_reviewed_by", "to": "VER-005", "status": "candidate", "gap": null},
     {"from": "IFC-EXT-001", "relation": "conformance_verified_by", "to": "VER-009", "status": "unresolved", "gap": "GAP-IFC-001"},
     {"from": "IFC-EXT-002", "relation": "model_reviewed_by", "to": "VER-005", "status": "candidate", "gap": null},
@@ -662,7 +662,32 @@
     {"from": "EVD-010", "relation": "records_execution_of", "to": "VER-007", "status": "established", "gap": null},
     {"from": "EVD-011", "relation": "records_execution_of", "to": "VER-003", "status": "established", "gap": "GAP-SRC-001"},
     {"from": "EVD-011", "relation": "records_execution_of", "to": "VER-006", "status": "established", "gap": "GAP-HAZ-001"},
-    {"from": "EVD-012", "relation": "supports", "to": "CLM-SCP-001", "status": "established", "gap": null}
+    {"from": "EVD-012", "relation": "supports", "to": "CLM-SCP-001", "status": "established", "gap": null},
+    {"from": "IFC-INT-011", "relation": "supports", "to": "FUN-PWR-01", "status": "candidate", "gap": null},
+    {"from": "REQ-SAF-001", "relation": "allocated_to", "to": "IFC-INT-011", "status": "candidate", "gap": "GAP-VER-001"},
+    {"from": "IFC-INT-012", "relation": "supports", "to": "FUN-FLT-02", "status": "candidate", "gap": null},
+    {"from": "IFC-INT-012", "relation": "supports", "to": "FUN-FLT-03", "status": "candidate", "gap": null},
+    {"from": "REQ-FUN-003", "relation": "allocated_to", "to": "IFC-INT-012", "status": "candidate", "gap": "GAP-VER-001"},
+    {"from": "IFC-INT-013", "relation": "supports", "to": "FUN-FLT-01", "status": "candidate", "gap": null},
+    {"from": "IFC-INT-014", "relation": "supports", "to": "FUN-FLT-01", "status": "candidate", "gap": null},
+    {"from": "REQ-FUN-007", "relation": "allocated_to", "to": "IFC-INT-013", "status": "candidate", "gap": "GAP-VER-001"},
+    {"from": "REQ-FUN-007", "relation": "allocated_to", "to": "IFC-INT-014", "status": "candidate", "gap": "GAP-VER-001"},
+    {"from": "IFC-INT-015", "relation": "supports", "to": "FUN-PWR-01", "status": "candidate", "gap": null},
+    {"from": "REQ-IFC-002", "relation": "allocated_to", "to": "IFC-INT-015", "status": "candidate", "gap": "GAP-VER-001"},
+    {"from": "TS-006", "relation": "defines_envelope_for", "to": "REQ-PER-004", "status": "candidate", "gap": "GAP-BUDGET-001", "view_group": "mass_cost_power_endurance"},
+    {"from": "TS-001", "relation": "contributes_mass_to", "to": "REQ-PER-003", "status": "candidate", "gap": "GAP-BUDGET-001", "view_group": "mass_cost_power_endurance"},
+    {"from": "REQ-PER-003", "relation": "drives", "to": "TS-002", "status": "candidate", "gap": "GAP-BUDGET-001", "view_group": "mass_cost_power_endurance"},
+    {"from": "REQ-PER-002", "relation": "sets_energy_demand_for", "to": "TS-003", "status": "candidate", "gap": "GAP-BUDGET-001", "view_group": "mass_cost_power_endurance"},
+    {"from": "TS-003", "relation": "contributes_mass_to", "to": "REQ-PER-003", "status": "candidate", "gap": "GAP-BUDGET-001", "view_group": "mass_cost_power_endurance"},
+    {"from": "TS-003", "relation": "contributes_cost_to", "to": "REQ-PER-001", "status": "candidate", "gap": "GAP-BUDGET-001", "view_group": "mass_cost_power_endurance"},
+    {"from": "REQ-PER-001", "relation": "remains_blocked_by", "to": "GAP-BUDGET-001", "status": "unresolved", "gap": "GAP-BUDGET-001", "view_group": "mass_cost_power_endurance"},
+    {"from": "EVD-013", "relation": "records_execution_of", "to": "VER-001", "status": "established", "gap": "GAP-VER-001"},
+    {"from": "EVD-013", "relation": "records_execution_of", "to": "VER-002", "status": "established", "gap": null},
+    {"from": "EVD-013", "relation": "records_execution_of", "to": "VER-003", "status": "established", "gap": "GAP-SRC-001"},
+    {"from": "EVD-013", "relation": "records_execution_of", "to": "VER-004", "status": "established", "gap": "GAP-VER-001"},
+    {"from": "EVD-013", "relation": "records_execution_of", "to": "VER-005", "status": "established", "gap": "GAP-IFC-001"},
+    {"from": "EVD-013", "relation": "records_execution_of", "to": "VER-006", "status": "established", "gap": "GAP-HAZ-001"},
+    {"from": "EVD-013", "relation": "records_execution_of", "to": "VER-007", "status": "established", "gap": null}
   ],
   "gaps": [
     {
@@ -693,11 +718,13 @@
         "CFG-DOM",
         "CLM-REC-005",
         "EVD-006",
-        "EVD-007"
+        "EVD-007",
+        "EVD-013",
+        "IFC-INT-011"
       ],
       "disposition": "unresolved",
       "severity": "moderate",
-      "next_action": "Restore or register an authoritative DOCX revision, supply missing original evidence if available, and obtain owner review of REC-CHG-001 / REC-CHG-002 before any candidate architecture change.",
+      "next_action": "Restore or register an authoritative DOCX revision, supply missing original evidence if available, and obtain owner review of REC-CHG-002 before adding any recovered-specific carrier-view architecture.",
       "audit_classification": "C_physical_or_external_evidence",
       "work_package_outcome": "NARROWED"
     },
@@ -932,7 +959,7 @@
     {
       "code": "GAP-VER-001",
       "category": "verification evidence",
-      "statement": "VER-001 through VER-007 internal architecture and model reviews have been executed and recorded for the current baseline. Physical behavior, performance evidence, and external conformance evidence remain unavailable; VER-008 is deferred and VER-009 is blocked.",
+      "statement": "VER-001 through VER-007 have an accepted 0.7.0 review trail in EVD-008 through EVD-012 and a current 0.8.0 model-level execution record in EVD-013. Physical behavior, performance evidence, and external conformance evidence remain unavailable; VER-008 is deferred and VER-009 is blocked.",
       "affected_ids": [
         "VER-001",
         "VER-002",
@@ -946,11 +973,13 @@
         "EVD-008",
         "EVD-009",
         "EVD-010",
-        "EVD-011"
+        "EVD-011",
+        "EVD-012",
+        "EVD-013"
       ],
       "disposition": "expected_at_current_maturity",
       "severity": "major",
-      "next_action": "Preserve the completed internal review evidence. Designated future physical and external authorities must supply performance, behavior, safety-relevant physical, and interface-conformance evidence before VER-008 or VER-009 can execute.",
+      "next_action": "Preserve the accepted 0.7.0 trail and current 0.8.0 model-review evidence. Designated future physical and external authorities must supply performance, behavior, safety-relevant physical, and interface-conformance evidence before VER-008 or VER-009 can execute.",
       "audit_classification": "C_physical_or_external_evidence",
       "work_package_outcome": "NARROWED"
     }

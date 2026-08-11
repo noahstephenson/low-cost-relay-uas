@@ -37,7 +37,7 @@ flowchart LR
 
 Configuration scope: `CFG-SOS outer context - CFG-REP / CFG-DOM / CFG-DIG inner constituent`.
 
-External constituents remain independently managed. Dashed relationships are future or unresolved.
+External constituents remain independently managed. Only catalogued information exchanges are drawn; unconnected future actors remain context, not implied interfaces.
 
 ```mermaid
 flowchart LR
@@ -56,15 +56,15 @@ flowchart LR
             OP_002["OP-002<br/>Relay UAS / Relay Node<br/>system under study"]
         end
     end
-    OP_010 -->|"IX-001 platform command"| OP_002
-    OP_001 <-->|"IX-002 through IX-005 relay thread"| OP_002
-    OP_002 <-->|"mission traffic relationship"| OP_003
-    OP_007 <-->|"IX-010 / IFC-EXT-006 support"| OP_002
-    OP_008 -.->|"external authority - criteria unresolved"| OP_002
-    OP_001 -.->|"IX-006 / IX-007 future / unresolved"| OP_004
-    OP_002 -.->|"future relationship unresolved"| OP_005
-    OP_002 -.->|"future relationship unresolved"| OP_006
-    OP_009 -.->|"future support relationship unresolved"| OP_002
+    OP_010 -->|"IX-001 / IFC-EXT-005<br/>command and control"| OP_002
+    OP_001 -->|"IX-002 / IFC-EXT-001<br/>command and control"| OP_002
+    OP_002 -->|"IX-003 / IFC-EXT-002<br/>command and control"| OP_003
+    OP_003 -->|"IX-004 / IFC-EXT-003<br/>telemetry"| OP_002
+    OP_002 -->|"IX-005 / IFC-EXT-004<br/>telemetry"| OP_001
+    OP_001 -.->|"IX-006 / unresolved<br/>command and control"| OP_004
+    OP_004 -.->|"IX-007 / unresolved<br/>telemetry"| OP_001
+    OP_002 -->|"IX-009 / IFC-EXT-007<br/>health and status"| OP_010
+    OP_007 -->|"IX-010 / IFC-EXT-006<br/>configuration and maintenance"| OP_002
 ```
 
 ### 3. Current three-node operational connectivity
@@ -85,7 +85,6 @@ flowchart LR
     OP_002 -->|"IX-003 / IFC-EXT-002<br/>command and control"| OP_003
     OP_003 -->|"IX-004 / IFC-EXT-003<br/>telemetry"| OP_002
     OP_002 -->|"IX-005 / IFC-EXT-004<br/>telemetry"| OP_001
-    OP_010 -.->|"platform command is separate from relayed mission traffic"| OP_001
 ```
 
 ## Relay-UAS resource views
@@ -104,11 +103,11 @@ flowchart LR
     CMP_AFR_05["CMP-AFR-05<br/>Fastener and hardware set"]
     CMP_MNT_01["CMP-MNT-01<br/>Modular payload bay"]
     CMP_COM_01["CMP-COM-01<br/>Relay payload module (black box)"]
-    CMP_AFR_01 -.->|"structural decomposition"| CMP_AFR_02
-    CMP_AFR_01 -.->|"structural decomposition"| CMP_AFR_03
-    CMP_AFR_01 -.->|"structural decomposition"| CMP_AFR_04
-    CMP_AFR_01 -.->|"hardware set"| CMP_AFR_05
-    CMP_AFR_04 -.->|"mount relationship [UNRESOLVED]"| CMP_MNT_01
+    CMP_AFR_01 -.->|"supports arm assembly"| CMP_AFR_02
+    CMP_AFR_01 -.->|"supports landing gear"| CMP_AFR_03
+    CMP_AFR_01 -.->|"supports payload mount"| CMP_AFR_04
+    CMP_AFR_01 -.->|"uses retention hardware"| CMP_AFR_05
+    CMP_AFR_04 -.->|"supports modular payload bay"| CMP_MNT_01
     CMP_MNT_01 <-->|"IFC-INT-007<br/>mechanical mounting"| CMP_COM_01
 ```
 
@@ -128,14 +127,15 @@ flowchart LR
     CMP_PRP_03["CMP-PRP-03<br/>Propeller"]
     CMP_AVN_01["CMP-AVN-01<br/>Flight controller"]
     CMP_COM_01["CMP-COM-01<br/>Relay payload module (black box)"]
-    CMP_PWR_01 -.->|"source association - IFC not allocated"| CMP_PWR_02
-    CMP_PWR_04 -.->|"resource association - IFC not allocated"| CMP_PWR_02
+    CMP_PWR_01 -->|"IFC-INT-011<br/>electrical power"| CMP_PWR_02
+    CMP_PWR_04 -.->|"physical connection resource<br/>IFC-INT-011"| CMP_PWR_02
     CMP_PWR_02 -->|"IFC-INT-001<br/>electrical power"| CMP_PRP_02
+    CMP_PWR_02 -->|"IFC-INT-015<br/>electrical power"| CMP_PWR_03
     CMP_PWR_03 -->|"IFC-INT-002<br/>electrical power"| CMP_AVN_01
     CMP_PWR_03 -->|"IFC-INT-003<br/>electrical power<br/>platform-to-payload"| CMP_COM_01
     CMP_PWR_02 -->|"IFC-INT-006<br/>health and status"| CMP_AVN_01
-    CMP_PRP_02 -.->|"propulsion association"| CMP_PRP_01
-    CMP_PRP_01 -.->|"propulsion association"| CMP_PRP_03
+    CMP_PRP_02 -->|"IFC-INT-013<br/>controlled electrical propulsion power"| CMP_PRP_01
+    CMP_PRP_01 -->|"IFC-INT-014<br/>mechanical propulsion drive"| CMP_PRP_03
 ```
 
 ### 4C. Avionics and platform control connectivity
@@ -157,7 +157,7 @@ flowchart LR
     CMP_AVN_01 -->|"IFC-INT-004<br/>command and control"| CMP_PRP_02
     CMP_PWR_02 -->|"IFC-INT-006<br/>health and status"| CMP_AVN_01
     CMP_AVN_02 -->|"IFC-INT-009<br/>navigation and timing"| CMP_AVN_01
-    CMP_AVN_03 -.->|"navigation resource - IFC unresolved"| CMP_AVN_01
+    CMP_AVN_03 -->|"IFC-INT-012<br/>navigation and timing"| CMP_AVN_01
 ```
 
 ### 4D. Payload boundary and external traffic
@@ -213,7 +213,8 @@ flowchart LR
     CMP_COM_01["CMP-COM-01<br/>Relay payload module (black box)<br/>future payload [PROPOSED]"]
     CMP_AVN_01 <-->|"IFC-INT-008<br/>payload management and health and status<br/>future / proposed"| CMP_COM_01
     IX_008["IX-008<br/>Video or sensor-data return candidate<br/>future sensor-data exchange [UNRESOLVED]"]
-    IX_008 -.->|"realizing interface unresolved - GAP-SOS-002"| CMP_COM_01
+    GAP_SOS_002["GAP-SOS-002<br/>Video or sensor-data return has no allocated current interface, function, requirement, hazard set, or verification authority.<br/>realizing interface unresolved"]
+    IX_008 -.->|"deferred to gap"| GAP_SOS_002
 ```
 
 ## Evidence correspondence views
@@ -244,12 +245,12 @@ Coverage classification is evidence posture, not approval, identity, or requirem
 ```mermaid
 flowchart LR
     %% Configuration scope: CFG-REP / CFG-DOM current - CFG-DIG future interface classified separately
-    COVERAGE["Two-way candidate coverage<br/>19 components / 17 interfaces"]
+    COVERAGE["Two-way candidate coverage<br/>19 components / 22 interfaces"]
     COVERAGE --> DIRECT["Direct source support<br/>components 10 / interfaces 3"]
-    COVERAGE --> INDIRECT["Indirect source support<br/>components 4 / interfaces 4"]
+    COVERAGE --> INDIRECT["Indirect source support<br/>components 4 / interfaces 8"]
     COVERAGE --> INFERENCE["Engineering inference<br/>components 2 / interfaces 4"]
     COVERAGE --> PROPOSED["Proposed architecture only<br/>components 1 / interfaces 4"]
-    COVERAGE --> NONE["No recovered evidence<br/>components 2 / interfaces 1"]
+    COVERAGE --> NONE["No recovered evidence<br/>components 2 / interfaces 2"]
     COVERAGE --> NA["Not applicable<br/>components 0 / interfaces 1"]
 ```
 
@@ -270,12 +271,12 @@ stateDiagram-v2
     state "MODE-003 Relay Degraded" as MODE_003
     state "MODE-004 Return / Recovery" as MODE_004
     [*] --> MODE_005
-    MODE_005 --> MODE_001: SCN-002 transition
-    MODE_001 --> MODE_002: SCN-002 station established
-    MODE_002 --> MODE_003: SCN-007 relay function degraded
-    MODE_003 --> MODE_004: SCN-007 recovery intent
-    MODE_002 --> MODE_004: SCN-008 termination or REQ-FUN-005
-    MODE_004 --> MODE_005: SCN-008 recovered
+    MODE_005 --> MODE_001: SCN-002 - launch and transit
+    MODE_001 --> MODE_002: SCN-002 - relay station established
+    MODE_002 --> MODE_003: SCN-007 - relay function degraded
+    MODE_003 --> MODE_004: SCN-007 / REQ-FUN-007 - recovery intent
+    MODE_002 --> MODE_004: SCN-008 / REQ-FUN-005 - normal termination or low-battery recovery
+    MODE_004 --> MODE_005: SCN-008 - platform recovered and made ground safe
     note right of MODE_003
       Payload function degraded
       Platform control may remain available
@@ -370,15 +371,15 @@ flowchart LR
     SCN_007["SCN-007<br/>Relay degradation, loss, or recovery<br/>[PROPOSED]"]
     SCN_008["SCN-008<br/>Mission termination and data recovery<br/>[PROPOSED]"]
     SCN_001 -->|"progression"| SCN_002
-    SCN_002 -->|"outbound thread"| SCN_003
-    SCN_002 -->|"return thread"| SCN_004
-    SCN_003 -->|"degraded"| SCN_007
-    SCN_004 -->|"degraded"| SCN_007
+    SCN_002 -->|"outbound relay thread"| SCN_003
+    SCN_002 -->|"return relay thread"| SCN_004
+    SCN_003 -->|"degraded relay condition"| SCN_007
+    SCN_004 -->|"degraded relay condition"| SCN_007
     SCN_003 -->|"normal termination"| SCN_008
     SCN_004 -->|"normal termination"| SCN_008
     SCN_007 -->|"recovery intent"| SCN_008
-    SCN_001 -.->|"future CFG-SOS / GAP-SOS-001"| SCN_005
-    SCN_001 -.->|"future CFG-DIG / CFG-SOS / GAP-SOS-002"| SCN_006
+    SCN_001 -.->|"future UGV branch / GAP-SOS-001"| SCN_005
+    SCN_001 -.->|"future sensor-data branch / GAP-SOS-002"| SCN_006
 ```
 
 ### 9A. Health/status logical thread
@@ -405,7 +406,7 @@ flowchart LR
     IX_009 -->|"supported by"| FUN_HLT_01
     IFC_INT_006 -->|"battery-state input only"| FUN_HLT_01
     FUN_HLT_01 -->|"allocated to"| CMP_AVN_01
-    FUN_HLT_01 -->|"logical return"| IFC_EXT_007
+    IX_009 -->|"realized by"| IFC_EXT_007
     IFC_EXT_007 -->|"made available to"| OP_010
     REQ_FUN_008 -->|"allocates behavior"| FUN_HLT_01
     REQ_FUN_008 -->|"model review"| VER_005
@@ -432,16 +433,16 @@ flowchart LR
     TS_003["TS-003<br/>Battery architecture<br/>[PROPOSED]"]
     REQ_PER_001["REQ-PER-001<br/>System unit cost shall not exceed [TBD].<br/>[PROPOSED]"]
     GAP_BUDGET_001["GAP-BUDGET-001<br/>Coupled targets and evidence unresolved<br/>[UNRESOLVED]"]
-    TS_006 -->|"defines payload envelope"| REQ_PER_004
     REQ_PER_004 -->|"contributes to"| REQ_PER_003
-    TS_001 -->|"sets dry-mass contribution"| REQ_PER_003
-    REQ_PER_003 -->|"drives propulsion demand"| TS_002
-    TS_002 -->|"drives power demand"| TS_003
-    TS_004 -->|"adds payload-power demand"| TS_003
-    REQ_PER_002 -->|"sets energy demand"| TS_003
-    TS_003 -->|"adds battery mass"| REQ_PER_003
-    TS_003 -->|"adds battery cost"| REQ_PER_001
-    REQ_PER_001 -.->|"targets and evidence unresolved"| GAP_BUDGET_001
+    TS_002 -->|"coupled to"| TS_003
+    TS_004 -->|"constrains"| TS_003
+    TS_006 -->|"defines envelope for"| REQ_PER_004
+    TS_001 -->|"contributes mass to"| REQ_PER_003
+    REQ_PER_003 -->|"drives"| TS_002
+    REQ_PER_002 -->|"sets energy demand for"| TS_003
+    TS_003 -->|"contributes mass to"| REQ_PER_003
+    TS_003 -->|"contributes cost to"| REQ_PER_001
+    REQ_PER_001 -.->|"remains blocked by"| GAP_BUDGET_001
 ```
 
 ## Assurance and traceability views
@@ -492,12 +493,13 @@ flowchart LR
 
 Configuration scope: `CFG-REP / CFG-DOM with project-scope deferrals`.
 
-VER-001 through VER-007 have current model-level evidence, and the project owner accepted that internal verification work package in EVD-012. VER-008 remains deferred and VER-009 remains blocked; the acceptance is not physical verification, external conformance, safety approval, or technical-baseline approval.
+VER-001 through VER-007 have current 0.8.0 model-level evidence in EVD-013 but no new owner acceptance. EVD-008 through EVD-012 preserve the accepted 0.7.0 work package. VER-008 remains deferred and VER-009 remains blocked; neither review constitutes physical verification, external conformance, safety approval, or technical-baseline approval.
 
 ```mermaid
 flowchart LR
     %% Configuration scope: CFG-REP / CFG-DOM with project-scope deferrals
-    EXECUTED["EXECUTED MODEL REVIEW<br/>VER-001 through VER-007<br/>EVD-008 through EVD-011"]
+    ACCEPTED["PRESERVED OWNER-ACCEPTED REVIEW<br/>0.7.0 / EVD-008 through EVD-012"]
+    EXECUTED["CURRENT MODEL REVIEW<br/>0.8.0 / VER-001 through VER-007<br/>EVD-013 - not owner accepted"]
     PASS["EXECUTED PASS<br/>VER-002 / VER-007"]
     OPEN["EXECUTED WITH OPEN GAPS<br/>VER-001 / VER-003 through VER-006"]
     PHYSICAL["PHYSICAL-EVIDENCE-REQUIRED<br/>REQ-FUN-006 / REQ-FUN-008<br/>GAP-VER-001"]
@@ -506,6 +508,7 @@ flowchart LR
     VER_008["VER-008<br/>Deferred physical verification method<br/>future physical evidence"]
     VER_009["VER-009<br/>External conformance verification<br/>external authority required"]
     TS_009["TS-009<br/>Relay payload characterization<br/>formal deferral"]
+    ACCEPTED -->|"historical acceptance boundary preserved"| EXECUTED
     EXECUTED -->|"no structural failure"| PASS
     EXECUTED -->|"known gaps retained"| OPEN
     PHYSICAL -.->|"no execution evidence"| VER_008
@@ -599,6 +602,11 @@ allocation is distinct from real-world external conformance and execution eviden
 | IFC-INT-010 | CMP-COM-01 to CMP-COM-02 | bidirectional_physical | physical-resource coupling | CFG-REP, CFG-DOM | DIRECT_SOURCE_SUPPORT | proposed_design / proposed | VER-005 | not an external conformance interface | antenna count; role; placement; connector; all RF characteristics |
 | IFC-EXT-006 | OP-007 to OP-002 | bidirectional | configuration and maintenance | CFG-REP, CFG-DOM, CFG-DIG, CFG-SOS | PROPOSED_ARCHITECTURE_ONLY | proposed_design / proposed | VER-005, VER-007 | external_authority_and_execution_evidence_required | data set; format; transport; authorization; retention period; tool ownership |
 | IFC-EXT-007 | CMP-AVN-01 to OP-010 | a_to_b | health and status | CFG-REP, CFG-DOM | PROPOSED_ARCHITECTURE_ONLY | proposed_design / proposed | VER-004, VER-005, VER-007 | external_authority_and_execution_evidence_required | minimum status set; format; transport; update behavior; endpoint compatibility; conformance authority |
+| IFC-INT-011 | CMP-PWR-01 to CMP-PWR-02 | a_to_b | electrical power | CFG-REP, CFG-DOM | INDIRECT_SOURCE_SUPPORT | proposed_design / proposed | VER-005, VER-008 | not an external conformance interface | voltage; current; polarity; protection; connector implementation; physical routing |
+| IFC-INT-012 | CMP-AVN-03 to CMP-AVN-01 | a_to_b | navigation and timing | CFG-REP, CFG-DOM | NO_RECOVERED_EVIDENCE | engineering_inference / proposed | VER-005, VER-008 | not an external conformance interface | data format; timing; accuracy; fault detection; connector |
+| IFC-INT-013 | CMP-PRP-02 to CMP-PRP-01 | a_to_b | controlled electrical propulsion power | CFG-REP, CFG-DOM | INDIRECT_SOURCE_SUPPORT | proposed_design / proposed | VER-005, VER-008 | not an external conformance interface | electrical characteristics; connector; wiring; fault response |
+| IFC-INT-014 | CMP-PRP-01 to CMP-PRP-03 | a_to_b | mechanical propulsion drive | CFG-REP, CFG-DOM | INDIRECT_SOURCE_SUPPORT | proposed_design / proposed | VER-005, VER-008 | not an external conformance interface | attachment method; rotation direction; torque envelope; retention criteria |
+| IFC-INT-015 | CMP-PWR-02 to CMP-PWR-03 | a_to_b | electrical power | CFG-REP, CFG-DOM | INDIRECT_SOURCE_SUPPORT | proposed_design / proposed | VER-005, VER-008 | not an external conformance interface | voltage; current; connector; protection; branch allocation |
 
 ## Validation notes
 
