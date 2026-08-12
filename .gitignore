@@ -7,6 +7,10 @@ Thumbs.db
 .idea/
 *.swp
 
+# Python-generated files
+__pycache__/
+*.py[cod]
+
 # MagicDraw / Cameo working files (when transcribing the model)
 *.mdzip.bak
 *.lck

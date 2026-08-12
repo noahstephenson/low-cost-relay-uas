@@ -279,7 +279,7 @@ configuration approval states remain `not_approved`; and future configurations
 remain concept/context candidates.
 
 The model version remains `0.8.0-baseline-candidate`; the technical status remains
-`baseline_candidate_not_approved`. This work package is not committed, local `HEAD`
-therefore remains the parent SHA, and nothing was pushed. Pre-existing unrelated
-worktree entries (`.gitignore` mode noise, the local HTML export, and
-`scripts/__pycache__/`) were left untouched.
+`baseline_candidate_not_approved`. The communication and final-presentation work is
+recorded in repository history. Commit and remote-publication state are intentionally
+not treated as architecture evidence because they can change independently of this
+report.
