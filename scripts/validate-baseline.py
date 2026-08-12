@@ -22,6 +22,7 @@ ROOT = Path(__file__).resolve().parents[1]
 VIEW_GENERATOR = ROOT / "scripts" / "generate-mermaid-views.py"
 BASELINE_REPORT = ROOT / "reports" / "baseline.md"
 ATLAS_REPORT = ROOT / "reports" / "architecture-views.md"
+OWNER_DECISION_PACKAGE = ROOT / "reports" / "architecture-decision-target-package.md"
 
 CATALOG_PATHS = {
     "system": ROOT / "system.yaml",
@@ -607,7 +608,7 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
 
     for markdown in [
         ROOT / "README.md", ROOT / "architecture.md", ROOT / "trade-studies.md",
-        BASELINE_REPORT, ATLAS_REPORT,
+        BASELINE_REPORT, ATLAS_REPORT, OWNER_DECISION_PACKAGE,
     ]:
         if not markdown.exists():
             continue
@@ -650,8 +651,12 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
         errors.append("system.yaml catalog map does not match the consolidated authority model")
     if system.get("generated_reports") != ["reports/baseline.md", "reports/architecture-views.md"]:
         errors.append("system.yaml must name exactly the two generated reports")
-    if system.get("human_readable_views") != ["README.md", "architecture.md", "trade-studies.md"]:
-        errors.append("system.yaml must name exactly the three primary human-readable documents")
+    expected_human_views = [
+        "README.md", "architecture.md", "trade-studies.md",
+        "reports/architecture-decision-target-package.md",
+    ]
+    if system.get("human_readable_views") != expected_human_views:
+        errors.append("system.yaml must name the four primary human-readable documents")
 
     if system.get("status") != "baseline_candidate_not_approved":
         errors.append("baseline status must remain baseline_candidate_not_approved")
@@ -1413,8 +1418,11 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
     if model_files != {"architecture.yaml", "assurance.yaml", "traceability.yaml"}:
         errors.append(f"model catalog set is not consolidated: {sorted(model_files)}")
     report_files = {path.name for path in (ROOT / "reports").glob("*.md")}
-    if report_files != {"architecture-views.md", "baseline.md"}:
-        errors.append(f"generated report set is not consolidated: {sorted(report_files)}")
+    expected_report_files = {
+        "architecture-decision-target-package.md", "architecture-views.md", "baseline.md",
+    }
+    if report_files != expected_report_files:
+        errors.append(f"report set is not consolidated: {sorted(report_files)}")
     script_files = {path.name for path in (ROOT / "scripts").glob("*.py")}
     if script_files != {"generate-mermaid-views.py", "validate-baseline.py"}:
         errors.append(f"supporting Python toolchain is not minimal: {sorted(script_files)}")

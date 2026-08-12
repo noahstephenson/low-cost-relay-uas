@@ -97,8 +97,7 @@
       "verification_method": "A",
       "verification_status": "deferred",
       "tbd_owner_ids": [
-        "TS-007",
-        "TS-009"
+        "TS-007"
       ],
       "provenance_gap": null
     },

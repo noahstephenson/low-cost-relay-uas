@@ -101,6 +101,7 @@ approving the design.
 
 - [`architecture.md`](architecture.md): primary systems-engineering explanation and high-value diagrams.
 - [`trade-studies.md`](trade-studies.md): substantive open engineering analysis, especially the coupled TS-002/TS-003 loop.
+- [`reports/architecture-decision-target-package.md`](reports/architecture-decision-target-package.md): owner-facing recommendations that separate architecture targets from derived and evidence-dependent outputs; no decision in this package is approved.
 - [`reports/architecture-views.md`](reports/architecture-views.md): generated detailed diagram atlas and interface inventory.
 - [`reports/baseline.md`](reports/baseline.md): generated status, evidence, decisions, gaps, verification, and traceability summary.
 
@@ -134,7 +135,7 @@ trade-studies.md           unique engineering analysis
 system.yaml                manifest
 model/                     three authoritative model catalogs
 .seal/                     source and proof catalogs
-reports/                   two generated views
+reports/                   two generated views and one owner-review package
 scripts/                   validator and Mermaid generator
 .github/workflows/         validation automation
 ```
@@ -156,10 +157,11 @@ python scripts/validate-baseline.py --validate-mermaid
 ## Where to go next
 
 1. Start with [`architecture.md`](architecture.md) for system context and behavior.
-2. Use [`reports/baseline.md`](reports/baseline.md) for current decisions and gaps.
-3. Follow IDs into the three structured model catalogs for audit work.
-4. Use [`trade-studies.md`](trade-studies.md) when working the unresolved physical and economic couplings.
-5. Use the generated atlas for detailed interface, sequence, and assurance views.
+2. Use [`reports/architecture-decision-target-package.md`](reports/architecture-decision-target-package.md) for the current owner decisions and minimum target set.
+3. Use [`reports/baseline.md`](reports/baseline.md) for current decisions and gaps.
+4. Follow IDs into the three structured model catalogs for audit work.
+5. Use [`trade-studies.md`](trade-studies.md) when working the unresolved physical and economic couplings.
+6. Use the generated atlas for detailed interface, sequence, and assurance views.
 
 ## Standards posture
 

@@ -236,7 +236,8 @@
   "human_readable_views": [
     "README.md",
     "architecture.md",
-    "trade-studies.md"
+    "trade-studies.md",
+    "reports/architecture-decision-target-package.md"
   ],
   "id_scheme": {
     "CFG": "configuration baseline",
