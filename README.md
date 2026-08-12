@@ -68,8 +68,9 @@ decomposition, and `CFG-DIG` / `CFG-SOS` do not leak into the current candidate.
 
 - **Established in the model:** boundaries, major subsystems, current mission and recovery scenarios, function/resource allocations, 22 architecture-level interfaces, explicit resource relationships, requirements, hazards, verification methods, evidence lineage, and traceability.
 - **Internally reviewed:** `VER-001` through `VER-007` were executed for the current `0.8.0-baseline-candidate` model in `EVD-013`. The project-owner-accepted verification baseline remains the preserved `0.7.0-baseline-candidate` work package in `EVD-012`; the new review has not received owner acceptance.
+- **Quantitatively explored:** a reproducible architecture-level feasibility sweep now bounds the coupled payload, endurance, mass, power, battery, and platform-cost space. It finds a conditional short-dwell feasible region and a strong long-dwell penalty, but approves no target or component.
 - **Owner decisions still required:** terminology/version posture (`DEC-002`), the `HAZ-001` safety objective (`DEC-003`), health/status architecture (`DEC-004`), and `CAP-004` semantics (`DEC-005`) all remain proposed.
-- **Design inputs still TBD:** cost, endurance, mass, payload envelope, power allocation, station-keeping, environmental, retention, and sizing targets remain controlled unknowns under the coupled trade studies and `GAP-BUDGET-001`.
+- **Design inputs still TBD:** cost, endurance, payload service, portability, station-keeping, environmental, retention, reserve/recovery, and sourcing targets remain controlled unknowns under the coupled trade studies and `GAP-BUDGET-001`. Gross mass is a derived model output unless a separate handling, transport, or regulatory boundary is approved.
 - **Not established:** physical verification (`VER-008`), external-interface conformance (`VER-009`), safety or airworthiness approval, interoperability, readiness, and technical-baseline approval.
 - **Deliberately deferred:** recovered-export reconciliation, unresolved external-hazard applicability, the inactive `HAZ-009` identifier, implementation-level external communications attributes, `TS-009`, and future UGV/sensor-data branches.
 
@@ -102,6 +103,7 @@ approving the design.
 - [`architecture.md`](architecture.md): primary systems-engineering explanation and high-value diagrams.
 - [`trade-studies.md`](trade-studies.md): substantive open engineering analysis, especially the coupled TS-002/TS-003 loop.
 - [`reports/architecture-decision-target-package.md`](reports/architecture-decision-target-package.md): owner-facing recommendations that separate architecture targets from derived and evidence-dependent outputs; no decision in this package is approved.
+- [`reports/feasibility-analysis.md`](reports/feasibility-analysis.md): reproducible conditional design-space result, sensitivity ranking, trade-study implications, and owner-input needs; no target or component is selected.
 - [`reports/architecture-views.md`](reports/architecture-views.md): generated detailed diagram atlas and interface inventory.
 - [`reports/baseline.md`](reports/baseline.md): generated status, evidence, decisions, gaps, verification, and traceability summary.
 
@@ -135,7 +137,8 @@ trade-studies.md           unique engineering analysis
 system.yaml                manifest
 model/                     three authoritative model catalogs
 .seal/                     source and proof catalogs
-reports/                   two generated views and one owner-review package
+reports/                   generated views plus owner and feasibility reports
+analysis/                  feasibility inputs, executable model, data, and plots
 scripts/                   validator and Mermaid generator
 .github/workflows/         validation automation
 ```
@@ -146,6 +149,7 @@ scripts/                   validator and Mermaid generator
 python scripts/validate-baseline.py
 python scripts/validate-baseline.py --write-reports
 python scripts/validate-baseline.py --check-generated
+python analysis/feasibility.py --check
 ```
 
 Optional Mermaid syntax validation uses a locally installed pinned Mermaid CLI:
@@ -158,10 +162,11 @@ python scripts/validate-baseline.py --validate-mermaid
 
 1. Start with [`architecture.md`](architecture.md) for system context and behavior.
 2. Use [`reports/architecture-decision-target-package.md`](reports/architecture-decision-target-package.md) for the current owner decisions and minimum target set.
-3. Use [`reports/baseline.md`](reports/baseline.md) for current decisions and gaps.
-4. Follow IDs into the three structured model catalogs for audit work.
-5. Use [`trade-studies.md`](trade-studies.md) when working the unresolved physical and economic couplings.
-6. Use the generated atlas for detailed interface, sequence, and assurance views.
+3. Read [`reports/feasibility-analysis.md`](reports/feasibility-analysis.md) before setting targets or authorizing component-class research.
+4. Use [`reports/baseline.md`](reports/baseline.md) for current decisions and gaps.
+5. Follow IDs into the three structured model catalogs for audit work.
+6. Use [`trade-studies.md`](trade-studies.md) when working the unresolved physical and economic couplings.
+7. Use the generated atlas for detailed interface, sequence, and assurance views.
 
 ## Standards posture
 

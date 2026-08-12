@@ -237,7 +237,8 @@
     "README.md",
     "architecture.md",
     "trade-studies.md",
-    "reports/architecture-decision-target-package.md"
+    "reports/architecture-decision-target-package.md",
+    "reports/feasibility-analysis.md"
   ],
   "id_scheme": {
     "CFG": "configuration baseline",

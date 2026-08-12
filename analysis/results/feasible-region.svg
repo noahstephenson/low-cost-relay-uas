@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="570" height="425" viewBox="0 0 570 425" role="img" aria-labelledby="title desc">
+<title id="title">Conditional payload-endurance feasibility region</title>
+<desc id="desc">Generated deterministically by analysis/feasibility.py.</desc>
+<style>text{font-family:Arial,sans-serif;fill:#172033}.axis{stroke:#607089;stroke-width:1}.grid{stroke:#d9e0ea;stroke-width:1}.label{font-size:12px}.small{font-size:10px}.title{font-size:18px;font-weight:700}</style>
+<rect width="570" height="425" fill="#ffffff"/>
+<text x="20" y="28" class="title">Conditional feasibility at 50 W payload demand</text>
+<text x="20" y="47" class="small">Analysis-only 10 kg / $2,500 reference boundaries; not owner-approved requirements</text>
+<text x="139.0" y="53" text-anchor="middle" class="label">10 min</text>
+<text x="227.0" y="53" text-anchor="middle" class="label">20 min</text>
+<text x="315.0" y="53" text-anchor="middle" class="label">30 min</text>
+<text x="403.0" y="53" text-anchor="middle" class="label">45 min</text>
+<text x="491.0" y="53" text-anchor="middle" class="label">60 min</text>
+<text x="85" y="96.0" text-anchor="end" class="label">0.25 kg</text>
+<rect x="95" y="65" width="86" height="52" rx="4" fill="#2f9e68"/>
+<text x="139.0" y="86" text-anchor="middle" fill="#ffffff" style="font-size:11px;font-weight:700">F</text>
+<text x="139.0" y="104" text-anchor="middle" fill="#ffffff" style="font-size:10px">5.3 kg</text>
+<rect x="183" y="65" width="86" height="52" rx="4" fill="#2f9e68"/>
+<text x="227.0" y="86" text-anchor="middle" fill="#ffffff" style="font-size:11px;font-weight:700">F</text>
+<text x="227.0" y="104" text-anchor="middle" fill="#ffffff" style="font-size:10px">5.3 kg</text>
+<rect x="271" y="65" width="86" height="52" rx="4" fill="#e6a43a"/>
+<text x="315.0" y="86" text-anchor="middle" fill="#ffffff" style="font-size:11px;font-weight:700">M</text>
+<text x="315.0" y="104" text-anchor="middle" fill="#ffffff" style="font-size:10px">8.9 kg</text>
+<rect x="359" y="65" width="86" height="52" rx="4" fill="#c95757"/>
+<text x="403.0" y="86" text-anchor="middle" fill="#ffffff" style="font-size:11px;font-weight:700">I</text>
+<text x="403.0" y="104" text-anchor="middle" fill="#ffffff" style="font-size:10px">50.0 kg</text>
+<rect x="447" y="65" width="86" height="52" rx="4" fill="#c95757"/>
+<text x="491.0" y="86" text-anchor="middle" fill="#ffffff" style="font-size:11px;font-weight:700">I</text>
+<text x="491.0" y="104" text-anchor="middle" fill="#ffffff" style="font-size:10px">54.6 kg</text>
+<text x="85" y="150.0" text-anchor="end" class="label">0.5 kg</text>
+<rect x="95" y="119" width="86" height="52" rx="4" fill="#2f9e68"/>
+<text x="139.0" y="140" text-anchor="middle" fill="#ffffff" style="font-size:11px;font-weight:700">F</text>
+<text x="139.0" y="158" text-anchor="middle" fill="#ffffff" style="font-size:10px">6.1 kg</text>
+<rect x="183" y="119" width="86" height="52" rx="4" fill="#2f9e68"/>
+<text x="227.0" y="140" text-anchor="middle" fill="#ffffff" style="font-size:11px;font-weight:700">F</text>
+<text x="227.0" y="158" text-anchor="middle" fill="#ffffff" style="font-size:10px">6.1 kg</text>
+<rect x="271" y="119" width="86" height="52" rx="4" fill="#e6a43a"/>
+<text x="315.0" y="140" text-anchor="middle" fill="#ffffff" style="font-size:11px;font-weight:700">M</text>
+<text x="315.0" y="158" text-anchor="middle" fill="#ffffff" style="font-size:10px">10.1 kg</text>
+<rect x="359" y="119" width="86" height="52" rx="4" fill="#c95757"/>
+<text x="403.0" y="140" text-anchor="middle" fill="#ffffff" style="font-size:11px;font-weight:700">I</text>
+<text x="403.0" y="158" text-anchor="middle" fill="#ffffff" style="font-size:10px">50.9 kg</text>
+<rect x="447" y="119" width="86" height="52" rx="4" fill="#c95757"/>
+<text x="491.0" y="140" text-anchor="middle" fill="#ffffff" style="font-size:11px;font-weight:700">I</text>
+<text x="491.0" y="158" text-anchor="middle" fill="#ffffff" style="font-size:10px">50.3 kg</text>
+<text x="85" y="204.0" text-anchor="end" class="label">1 kg</text>
+<rect x="95" y="173" width="86" height="52" rx="4" fill="#2f9e68"/>
+<text x="139.0" y="194" text-anchor="middle" fill="#ffffff" style="font-size:11px;font-weight:700">F</text>
+<text x="139.0" y="212" text-anchor="middle" fill="#ffffff" style="font-size:10px">7.7 kg</text>
+<rect x="183" y="173" width="86" height="52" rx="4" fill="#2f9e68"/>
+<text x="227.0" y="194" text-anchor="middle" fill="#ffffff" style="font-size:11px;font-weight:700">F</text>
+<text x="227.0" y="212" text-anchor="middle" fill="#ffffff" style="font-size:10px">7.7 kg</text>
+<rect x="271" y="173" width="86" height="52" rx="4" fill="#e6a43a"/>
+<text x="315.0" y="194" text-anchor="middle" fill="#ffffff" style="font-size:11px;font-weight:700">M</text>
+<text x="315.0" y="212" text-anchor="middle" fill="#ffffff" style="font-size:10px">12.5 kg</text>
+<rect x="359" y="173" width="86" height="52" rx="4" fill="#c95757"/>
+<text x="403.0" y="194" text-anchor="middle" fill="#ffffff" style="font-size:11px;font-weight:700">I</text>
+<text x="403.0" y="212" text-anchor="middle" fill="#ffffff" style="font-size:10px">50.7 kg</text>
+<rect x="447" y="173" width="86" height="52" rx="4" fill="#c95757"/>
+<text x="491.0" y="194" text-anchor="middle" fill="#ffffff" style="font-size:11px;font-weight:700">I</text>
+<text x="491.0" y="212" text-anchor="middle" fill="#ffffff" style="font-size:10px">57.2 kg</text>
+<text x="85" y="258.0" text-anchor="end" class="label">1.5 kg</text>
+<rect x="95" y="227" width="86" height="52" rx="4" fill="#e6a43a"/>
+<text x="139.0" y="248" text-anchor="middle" fill="#ffffff" style="font-size:11px;font-weight:700">M</text>
+<text x="139.0" y="266" text-anchor="middle" fill="#ffffff" style="font-size:10px">9.3 kg</text>
+<rect x="183" y="227" width="86" height="52" rx="4" fill="#e6a43a"/>
+<text x="227.0" y="248" text-anchor="middle" fill="#ffffff" style="font-size:11px;font-weight:700">M</text>
+<text x="227.0" y="266" text-anchor="middle" fill="#ffffff" style="font-size:10px">9.3 kg</text>
+<rect x="271" y="227" width="86" height="52" rx="4" fill="#e6a43a"/>
+<text x="315.0" y="248" text-anchor="middle" fill="#ffffff" style="font-size:11px;font-weight:700">M</text>
+<text x="315.0" y="266" text-anchor="middle" fill="#ffffff" style="font-size:10px">14.9 kg</text>
+<rect x="359" y="227" width="86" height="52" rx="4" fill="#c95757"/>
+<text x="403.0" y="248" text-anchor="middle" fill="#ffffff" style="font-size:11px;font-weight:700">I</text>
+<text x="403.0" y="266" text-anchor="middle" fill="#ffffff" style="font-size:10px">50.6 kg</text>
+<rect x="447" y="227" width="86" height="52" rx="4" fill="#c95757"/>
+<text x="491.0" y="248" text-anchor="middle" fill="#ffffff" style="font-size:11px;font-weight:700">I</text>
+<text x="491.0" y="266" text-anchor="middle" fill="#ffffff" style="font-size:10px">54.5 kg</text>
+<text x="85" y="312.0" text-anchor="end" class="label">2 kg</text>
+<rect x="95" y="281" width="86" height="52" rx="4" fill="#e6a43a"/>
+<text x="139.0" y="302" text-anchor="middle" fill="#ffffff" style="font-size:11px;font-weight:700">M</text>
+<text x="139.0" y="320" text-anchor="middle" fill="#ffffff" style="font-size:10px">10.9 kg</text>
+<rect x="183" y="281" width="86" height="52" rx="4" fill="#e6a43a"/>
+<text x="227.0" y="302" text-anchor="middle" fill="#ffffff" style="font-size:11px;font-weight:700">M</text>
+<text x="227.0" y="320" text-anchor="middle" fill="#ffffff" style="font-size:10px">10.9 kg</text>
+<rect x="271" y="281" width="86" height="52" rx="4" fill="#c95757"/>
+<text x="315.0" y="302" text-anchor="middle" fill="#ffffff" style="font-size:11px;font-weight:700">I</text>
+<text x="315.0" y="320" text-anchor="middle" fill="#ffffff" style="font-size:10px">17.3 kg</text>
+<rect x="359" y="281" width="86" height="52" rx="4" fill="#c95757"/>
+<text x="403.0" y="302" text-anchor="middle" fill="#ffffff" style="font-size:11px;font-weight:700">I</text>
+<text x="403.0" y="320" text-anchor="middle" fill="#ffffff" style="font-size:10px">51.5 kg</text>
+<rect x="447" y="281" width="86" height="52" rx="4" fill="#c95757"/>
+<text x="491.0" y="302" text-anchor="middle" fill="#ffffff" style="font-size:11px;font-weight:700">I</text>
+<text x="491.0" y="320" text-anchor="middle" fill="#ffffff" style="font-size:10px">50.7 kg</text>
+<text x="20" y="397" class="small">F = feasible, M = marginal, I = infeasible under exploratory boundaries. All owner-requirement dispositions remain UNDETERMINED.</text>
+</svg>

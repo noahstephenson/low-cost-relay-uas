@@ -1,0 +1,316 @@
+{
+  "analysis_id": "ANL-FEAS-001",
+  "model_version": "0.8.0-baseline-candidate",
+  "parent_commit": "e7a84d2",
+  "approval_state": "analysis_assumptions_not_owner_approved",
+  "grid_points": 225,
+  "sensitivity_samples": 4096,
+  "conditional_class_counts": {
+    "favorable": {
+      "FEASIBLE": 73,
+      "MARGINAL": 2,
+      "INFEASIBLE": 0
+    },
+    "reference": {
+      "FEASIBLE": 20,
+      "MARGINAL": 21,
+      "INFEASIBLE": 34
+    },
+    "adverse": {
+      "FEASIBLE": 0,
+      "MARGINAL": 0,
+      "INFEASIBLE": 75
+    }
+  },
+  "all_owner_requirement_dispositions": "UNDETERMINED",
+  "representative_points": {
+    "light_short": {
+      "converged": true,
+      "convergence_reason": "converged",
+      "iterations": 49,
+      "conditional_class": "FEASIBLE",
+      "owner_requirement_class": "UNDETERMINED",
+      "feasibility_burden": 0.9565217391304349,
+      "burden_terms": {
+        "portability": 0.6024783189271903,
+        "cost": 0.7936495931097739,
+        "battery_fraction": 0.7375103915004563,
+        "discharge": 0.9565217391304349
+      },
+      "payload_mass_kg": 0.5,
+      "payload_power_w": 25.0,
+      "endurance_min": 20.0,
+      "gross_mass_kg": 6.024783189271902,
+      "battery_mass_kg": 1.9995030938813796,
+      "battery_mass_fraction": 0.3318796761752053,
+      "structure_mass_kg": 1.7597444793251138,
+      "propulsion_mass_kg": 0.7955360911551442,
+      "total_disk_area_m2": 0.9847155728115434,
+      "equivalent_rotor_diameter_m": 0.5598613238160398,
+      "ideal_induced_power_w": 292.3846976766657,
+      "propulsion_hover_power_w": 653.405367913264,
+      "total_hover_power_w": 705.5792809567422,
+      "required_nominal_battery_energy_wh": 326.6570745170102,
+      "installed_nominal_battery_energy_wh": 339.91552595983455,
+      "battery_sizing_driver": "power",
+      "achievable_endurance_min": 20.811765761536197,
+      "peak_battery_power_w": 1564.8285082549928,
+      "battery_discharge_margin": 1.15,
+      "platform_cost_usd": 1984.1239827744348,
+      "cost_breakdown": {
+        "structure_usd": 366.7540062785205,
+        "propulsion_usd": 529.42910832403,
+        "avionics_usd": 350.0,
+        "battery_usd": 237.94086817188418,
+        "power_electronics_usd": 150.0,
+        "mount_usd": 125.0,
+        "other_platform_usd": 225.0
+      }
+    },
+    "middle": {
+      "converged": true,
+      "convergence_reason": "converged",
+      "iterations": 82,
+      "conditional_class": "MARGINAL",
+      "owner_requirement_class": "UNDETERMINED",
+      "feasibility_burden": 1.2904740832322672,
+      "burden_terms": {
+        "portability": 1.2514850032093066,
+        "cost": 1.2904740832322672,
+        "battery_fraction": 1.042059010860377,
+        "discharge": 0.6709261191959482
+      },
+      "payload_mass_kg": 1.0,
+      "payload_power_w": 50.0,
+      "endurance_min": 30.0,
+      "gross_mass_kg": 12.514850032093065,
+      "battery_mass_kg": 5.868545510478986,
+      "battery_mass_fraction": 0.4689265548871697,
+      "structure_mass_kg": 2.9337953951480586,
+      "propulsion_mass_kg": 1.6525100740333838,
+      "total_disk_area_m2": 2.045479045162875,
+      "equivalent_rotor_diameter_m": 0.8069053240976438,
+      "ideal_induced_power_w": 607.3497654924982,
+      "propulsion_hover_power_w": 1357.2721148782996,
+      "total_hover_power_w": 1436.619940965256,
+      "required_nominal_battery_energy_wh": 997.6527367814277,
+      "installed_nominal_battery_energy_wh": 997.6527367814276,
+      "battery_sizing_driver": "energy",
+      "achievable_endurance_min": 29.999999999999996,
+      "peak_battery_power_w": 3221.476743821294,
+      "battery_discharge_margin": 1.639524783024192,
+      "platform_cost_usd": 3226.185208080668,
+      "cost_breakdown": {
+        "structure_usd": 578.0831711266505,
+        "propulsion_usd": 1099.7451212070182,
+        "avionics_usd": 350.0,
+        "battery_usd": 698.3569157469993,
+        "power_electronics_usd": 150.0,
+        "mount_usd": 125.0,
+        "other_platform_usd": 225.0
+      }
+    },
+    "demanding": {
+      "converged": false,
+      "convergence_reason": "mass_divergence",
+      "iterations": 20,
+      "conditional_class": "INFEASIBLE",
+      "owner_requirement_class": "UNDETERMINED",
+      "feasibility_burden": 10.0,
+      "burden_terms": {
+        "portability": 5.084428511147436,
+        "cost": 4.389003934909383,
+        "battery_fraction": 1.4540750518612746,
+        "discharge": 0.4553128379484198
+      },
+      "payload_mass_kg": 1.5,
+      "payload_power_w": 100.0,
+      "endurance_min": 45.0,
+      "gross_mass_kg": 50.84428511147436,
+      "battery_mass_kg": 33.26913292964243,
+      "battery_mass_fraction": 0.6543337733375736,
+      "structure_mass_kg": 10.124884836160458,
+      "propulsion_mass_kg": 6.447791206137849,
+      "total_disk_area_m2": 7.9810840532727605,
+      "equivalent_rotor_diameter_m": 1.5938814123455105,
+      "ideal_induced_power_w": 2369.7673850993433,
+      "propulsion_hover_power_w": 5295.826841943733,
+      "total_hover_power_w": 5429.522494117646,
+      "required_nominal_battery_energy_wh": 5655.752598039214,
+      "installed_nominal_battery_energy_wh": 5655.752598039213,
+      "battery_sizing_driver": "energy",
+      "achievable_endurance_min": 44.99999999999999,
+      "peak_battery_power_w": 12393.706361137136,
+      "battery_discharge_margin": 2.415921336539634,
+      "platform_cost_usd": 10972.509837273457,
+      "cost_breakdown": {
+        "structure_usd": 1872.4792705088823,
+        "propulsion_usd": 4291.003748137127,
+        "avionics_usd": 350.0,
+        "battery_usd": 3959.026818627449,
+        "power_electronics_usd": 150.0,
+        "mount_usd": 125.0,
+        "other_platform_usd": 225.0
+      }
+    }
+  },
+  "sensitivity_ranking": [
+    {
+      "variable": "endurance_min",
+      "overall_score": 0.680749,
+      "rho_gross_mass": 0.708536,
+      "rho_platform_cost": 0.661551,
+      "rho_feasibility_burden": 0.671257
+    },
+    {
+      "variable": "rotor_figure_of_merit",
+      "overall_score": 0.266378,
+      "rho_gross_mass": -0.264569,
+      "rho_platform_cost": -0.297474,
+      "rho_feasibility_burden": -0.233206
+    },
+    {
+      "variable": "disk_loading_n_m2",
+      "overall_score": 0.25577,
+      "rho_gross_mass": 0.247269,
+      "rho_platform_cost": 0.294135,
+      "rho_feasibility_burden": 0.220448
+    },
+    {
+      "variable": "environment_power_margin",
+      "overall_score": 0.187741,
+      "rho_gross_mass": 0.183642,
+      "rho_platform_cost": 0.212358,
+      "rho_feasibility_burden": 0.164074
+    },
+    {
+      "variable": "battery_specific_energy_wh_kg",
+      "overall_score": 0.18183,
+      "rho_gross_mass": -0.235069,
+      "rho_platform_cost": -0.113624,
+      "rho_feasibility_burden": -0.176122
+    },
+    {
+      "variable": "battery_specific_power_w_kg",
+      "overall_score": 0.175092,
+      "rho_gross_mass": -0.174316,
+      "rho_platform_cost": -0.179205,
+      "rho_feasibility_burden": -0.171671
+    },
+    {
+      "variable": "motor_controller_efficiency",
+      "overall_score": 0.122449,
+      "rho_gross_mass": -0.113388,
+      "rho_platform_cost": -0.145296,
+      "rho_feasibility_burden": -0.104944
+    },
+    {
+      "variable": "battery_cost_usd_per_wh",
+      "overall_score": 0.119175,
+      "rho_gross_mass": -0.00826,
+      "rho_platform_cost": 0.20605,
+      "rho_feasibility_burden": 0.009115
+    },
+    {
+      "variable": "structure_load_fraction",
+      "overall_score": 0.108258,
+      "rho_gross_mass": 0.108876,
+      "rho_platform_cost": 0.11451,
+      "rho_feasibility_burden": 0.100958
+    },
+    {
+      "variable": "reserve_fraction",
+      "overall_score": 0.100994,
+      "rho_gross_mass": 0.110991,
+      "rho_platform_cost": 0.097606,
+      "rho_feasibility_burden": 0.093561
+    },
+    {
+      "variable": "payload_mass_kg",
+      "overall_score": 0.092337,
+      "rho_gross_mass": 0.113297,
+      "rho_platform_cost": 0.087641,
+      "rho_feasibility_burden": 0.071141
+    },
+    {
+      "variable": "propulsion_specific_power_w_kg",
+      "overall_score": 0.07309,
+      "rho_gross_mass": -0.083868,
+      "rho_platform_cost": -0.057044,
+      "rho_feasibility_burden": -0.075754
+    },
+    {
+      "variable": "analysis_cost_boundary_usd",
+      "overall_score": 0.053227,
+      "rho_gross_mass": 0.004353,
+      "rho_platform_cost": 0.004427,
+      "rho_feasibility_burden": -0.091982
+    },
+    {
+      "variable": "structure_base_mass_kg",
+      "overall_score": 0.042852,
+      "rho_gross_mass": 0.040523,
+      "rho_platform_cost": 0.056974,
+      "rho_feasibility_burden": 0.024917
+    },
+    {
+      "variable": "analysis_portability_mass_kg",
+      "overall_score": 0.042314,
+      "rho_gross_mass": 0.00594,
+      "rho_platform_cost": 0.005625,
+      "rho_feasibility_burden": -0.072832
+    },
+    {
+      "variable": "battery_power_margin_ratio",
+      "overall_score": 0.025634,
+      "rho_gross_mass": 0.028466,
+      "rho_platform_cost": 0.026163,
+      "rho_feasibility_burden": 0.021829
+    },
+    {
+      "variable": "payload_power_w",
+      "overall_score": 0.022835,
+      "rho_gross_mass": 0.024586,
+      "rho_platform_cost": 0.025352,
+      "rho_feasibility_burden": 0.017809
+    }
+  ],
+  "middle_point_cost_ranking": [
+    {
+      "category": "propulsion_usd",
+      "cost_usd": 1099.75
+    },
+    {
+      "category": "battery_usd",
+      "cost_usd": 698.36
+    },
+    {
+      "category": "structure_usd",
+      "cost_usd": 578.08
+    },
+    {
+      "category": "avionics_usd",
+      "cost_usd": 350.0
+    },
+    {
+      "category": "other_platform_usd",
+      "cost_usd": 225.0
+    },
+    {
+      "category": "power_electronics_usd",
+      "cost_usd": 150.0
+    },
+    {
+      "category": "mount_usd",
+      "cost_usd": 125.0
+    }
+  ],
+  "limitations": [
+    "No owner-approved numeric target exists; FEASIBLE/MARGINAL/INFEASIBLE labels are conditional on analysis-only boundaries.",
+    "Payload volume, station tolerance, command-link geometry/conformance, detailed environment, and CFG-DOM sourcing are UNDETERMINED.",
+    "Momentum-theory power is corrected by broad efficiency ranges but is not a substitute for rotor or vehicle test data.",
+    "Structural growth and cost are parametric class-level approximations, not a stress model, supplier quote, BOM, or lifecycle-cost estimate.",
+    "Platform cost excludes the black-box relay payload, external systems, labor, integration, and verification.",
+    "No component, RF implementation, build, integration, or flight-test decision is made."
+  ]
+}

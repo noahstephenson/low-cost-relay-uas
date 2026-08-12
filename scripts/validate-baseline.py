@@ -23,6 +23,8 @@ VIEW_GENERATOR = ROOT / "scripts" / "generate-mermaid-views.py"
 BASELINE_REPORT = ROOT / "reports" / "baseline.md"
 ATLAS_REPORT = ROOT / "reports" / "architecture-views.md"
 OWNER_DECISION_PACKAGE = ROOT / "reports" / "architecture-decision-target-package.md"
+FEASIBILITY_REPORT = ROOT / "reports" / "feasibility-analysis.md"
+FEASIBILITY_MODEL = ROOT / "analysis" / "feasibility.py"
 
 CATALOG_PATHS = {
     "system": ROOT / "system.yaml",
@@ -608,7 +610,7 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
 
     for markdown in [
         ROOT / "README.md", ROOT / "architecture.md", ROOT / "trade-studies.md",
-        BASELINE_REPORT, ATLAS_REPORT, OWNER_DECISION_PACKAGE,
+        BASELINE_REPORT, ATLAS_REPORT, OWNER_DECISION_PACKAGE, FEASIBILITY_REPORT,
     ]:
         if not markdown.exists():
             continue
@@ -654,9 +656,10 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
     expected_human_views = [
         "README.md", "architecture.md", "trade-studies.md",
         "reports/architecture-decision-target-package.md",
+        "reports/feasibility-analysis.md",
     ]
     if system.get("human_readable_views") != expected_human_views:
-        errors.append("system.yaml must name the four primary human-readable documents")
+        errors.append("system.yaml must name the five primary human-readable documents")
 
     if system.get("status") != "baseline_candidate_not_approved":
         errors.append("baseline status must remain baseline_candidate_not_approved")
@@ -1420,6 +1423,7 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
     report_files = {path.name for path in (ROOT / "reports").glob("*.md")}
     expected_report_files = {
         "architecture-decision-target-package.md", "architecture-views.md", "baseline.md",
+        "feasibility-analysis.md",
     }
     if report_files != expected_report_files:
         errors.append(f"report set is not consolidated: {sorted(report_files)}")
@@ -1582,6 +1586,20 @@ def main() -> int:
         errors.append("architecture atlas is stale or failed optional syntax validation")
         if view_check.stderr.strip():
             errors.append("Mermaid validator error: " + view_check.stderr.strip())
+
+    if not FEASIBILITY_MODEL.exists():
+        errors.append("analysis/feasibility.py is missing")
+    else:
+        feasibility_check = subprocess.run(
+            [sys.executable, str(FEASIBILITY_MODEL), "--check"], cwd=ROOT,
+            capture_output=True, text=True, check=False,
+        )
+        if feasibility_check.stdout.strip():
+            print(feasibility_check.stdout.strip())
+        if feasibility_check.returncode:
+            errors.append("feasibility analysis artifacts are stale or invalid")
+            if feasibility_check.stderr.strip():
+                errors.append("Feasibility validator error: " + feasibility_check.stderr.strip())
 
     if errors:
         print("MODEL-INVALID FAILURES")

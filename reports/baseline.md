@@ -106,7 +106,7 @@
 | GAP-IFC-001 | interface verification | NARROWED | major | IFC-EXT-001, IFC-EXT-002, IFC-EXT-003, IFC-EXT-004, IFC-EXT-005, IFC-EXT-006, IFC-EXT-007, VER-005, VER-009 |
 | GAP-SOS-001 | proposed system-of-systems thread | FUTURE CONFIGURATION | major | CFG-SOS, SCN-005, OP-004, IX-006, IX-007 |
 | GAP-SOS-002 | proposed system-of-systems thread | FUTURE CONFIGURATION | major | CFG-DIG, CFG-SOS, SCN-006, IX-008 |
-| GAP-BUDGET-001 | mass-cost-endurance coupling | NARROWED | major | REQ-PER-001, REQ-PER-002, REQ-PER-003, REQ-PER-004, TS-001, TS-002, TS-003, TS-004, TS-006 |
+| GAP-BUDGET-001 | mass-cost-endurance coupling | QUANTITATIVELY_NARROWED | major | REQ-PER-001, REQ-PER-002, REQ-PER-003, REQ-PER-004, TS-001, TS-002, TS-003, TS-004, TS-006 |
 | GAP-VER-001 | verification evidence | NARROWED | major | VER-001, VER-002, VER-003, VER-004, VER-005, VER-006, VER-007, VER-008, VER-009, EVD-008, EVD-009, EVD-010, EVD-011, EVD-012, EVD-013 |
 
 ## Remaining work by dependency
@@ -119,13 +119,13 @@
 
 - `GAP-STD-001` - **OWNER DECISION REQUIRED**: Project owner selects one DEC-002 option: retain UAF 1.2 terminology, adopt version-neutral terminology, or authorize a later UAF 1.3 migration. Retain no-conformance posture until then.
 - `GAP-HAZ-001` - **OWNER DECISION REQUIRED**: Project owner selects one DEC-003 safety-objective option. Add a CTL/REQ path only after the exact generic objective is accepted.
+- `GAP-BUDGET-001` - **QUANTITATIVELY_NARROWED**: Project owner supplies payload service, endurance, affordability, portability, environment, reserve, and recovery targets; engineering then reruns the coupled analysis and derives gross mass rather than treating it as an independent owner target.
 
 ### Requires physical or external evidence
 
 - `GAP-REC-001` - **NARROWED**: Restore or register an authoritative DOCX revision, supply missing original evidence if available, and obtain owner review of REC-CHG-002 before adding any recovered-specific carrier-view architecture.
 - `GAP-SRC-001` - **PHYSICAL EVIDENCE REQUIRED**: Project owner supplies and registers the original evidence set and either restores the registered SRC-INT-003 revision or explicitly registers the changed DOCX as a new source revision; otherwise retain document-reported observations at their current evidence level.
 - `GAP-IFC-001` - **NARROWED**: Each external interface authority supplies an authoritative interface basis and accepts a future conformance method before compatibility evidence can be produced.
-- `GAP-BUDGET-001` - **NARROWED**: Project owner selects candidate cost, endurance, mass, and payload target ranges; source-backed component inputs are then required before executing the coupled TS-001/002/003/004/006 analysis.
 - `GAP-VER-001` - **NARROWED**: Preserve the accepted 0.7.0 trail and current 0.8.0 model-review evidence. Designated future physical and external authorities must supply performance, behavior, safety-relevant physical, and interface-conformance evidence before VER-008 or VER-009 can execute.
 
 ### Intentionally deferred or future configuration
@@ -189,7 +189,7 @@
 - `GAP-IFC-001`: Each external interface authority supplies an authoritative interface basis and accepts a future conformance method before compatibility evidence can be produced.
 - `GAP-SOS-001`: A future CFG-SOS owner defines UGV responsibilities, authorized information classes, interface authority, and verification criteria before any current-system allocation.
 - `GAP-SOS-002`: A future CFG-DIG/CFG-SOS owner identifies authorized consumers, service purpose, interface authority, and verification criteria before allocation.
-- `GAP-BUDGET-001`: Project owner selects candidate cost, endurance, mass, and payload target ranges; source-backed component inputs are then required before executing the coupled TS-001/002/003/004/006 analysis.
+- `GAP-BUDGET-001`: Project owner supplies payload service, endurance, affordability, portability, environment, reserve, and recovery targets; engineering then reruns the coupled analysis and derives gross mass rather than treating it as an independent owner target.
 - `GAP-VER-001`: Preserve the accepted 0.7.0 trail and current 0.8.0 model-review evidence. Designated future physical and external authorities must supply performance, behavior, safety-relevant physical, and interface-conformance evidence before VER-008 or VER-009 can execute.
 
 ## Closed or reclassified gaps in this maturation pass

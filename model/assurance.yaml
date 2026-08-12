@@ -1521,7 +1521,7 @@
     {
       "id": "TS-001",
       "name": "Airframe material and construction method",
-      "status": "open",
+      "status": "scoped",
       "evidence_basis": "internal_document",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1530,12 +1530,20 @@
       ],
       "source_ids": [
         "SRC-REPO-007"
-      ]
+      ],
+      "feasibility_analysis": {
+        "artifact": "reports/feasibility-analysis.md",
+        "established": "Structural mass and cost materially affect closure of the coupled mass-power-battery loop.",
+        "ruled_out": "Treating structure as independent of battery mass, rotor area, payload, and affordability.",
+        "remains": "Material, construction method, load basis, damage tolerance, and domestic-sourcing definition.",
+        "readiness": "component_class_research_partially_ready",
+        "next_input": "Owner portability envelope plus payload volume and mount geometry."
+      }
     },
     {
       "id": "TS-002",
       "name": "Propulsion sizing",
-      "status": "open",
+      "status": "scoped",
       "evidence_basis": "internal_document",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1544,12 +1552,20 @@
       ],
       "source_ids": [
         "SRC-REPO-007"
-      ]
+      ],
+      "feasibility_analysis": {
+        "artifact": "reports/feasibility-analysis.md",
+        "established": "Rotor figure of merit and disk loading are the strongest design levers after endurance, and installed power class can be bounded conditionally.",
+        "ruled_out": "High disk loading combined with mediocre rotor efficiency as a robust long-dwell basis.",
+        "remains": "Rotor geometry, thrust distribution, control margin, component ratings, and environmental load.",
+        "readiness": "component_class_research_partially_ready",
+        "next_input": "Owner service/endurance and environmental envelope."
+      }
     },
     {
       "id": "TS-003",
       "name": "Battery architecture",
-      "status": "open",
+      "status": "scoped",
       "evidence_basis": "internal_document",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1558,12 +1574,20 @@
       ],
       "source_ids": [
         "SRC-REPO-007"
-      ]
+      ],
+      "feasibility_analysis": {
+        "artifact": "reports/feasibility-analysis.md",
+        "established": "Battery sizing must satisfy both energy and continuous-power limits, and the controlling regime changes with endurance.",
+        "ruled_out": "Single-pass energy-only sizing and the assumption that shorter dwell always reduces installed battery mass.",
+        "remains": "Chemistry, topology, pack overhead, thermal behavior, cycle and loss policy, safety evidence, and pack performance.",
+        "readiness": "component_class_research_partially_ready",
+        "next_input": "Owner endurance, reserve and recovery policy, cost boundary, and payload-power envelope."
+      }
     },
     {
       "id": "TS-004",
       "name": "Payload power allocation",
-      "status": "open",
+      "status": "scoped",
       "evidence_basis": "internal_document",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1572,7 +1596,15 @@
       ],
       "source_ids": [
         "SRC-REPO-007"
-      ]
+      ],
+      "feasibility_analysis": {
+        "artifact": "reports/feasibility-analysis.md",
+        "established": "Payload electrical demand directly consumes mission energy and rail capacity but is a weaker reference sensitivity than propulsion power.",
+        "ruled_out": "No option is ruled out because the owner electrical-service range is missing.",
+        "remains": "Voltage, current, transient, protection, thermal, and connector envelope.",
+        "readiness": "component_class_research_blocked_by_owner_input",
+        "next_input": "Owner payload electrical-service envelope."
+      }
     },
     {
       "id": "TS-005",
@@ -1586,12 +1618,13 @@
       ],
       "source_ids": [
         "SRC-REPO-007"
-      ]
+      ],
+      "feasibility_implication": "Carrier mass, auxiliary-power, and cost allowances are now bounded conditionally, but navigation, command, I/O, and authority needs remain unresolved; no flight-controller comparison is justified."
     },
     {
       "id": "TS-006",
       "name": "Payload mount interface standard",
-      "status": "open",
+      "status": "scoped",
       "evidence_basis": "internal_document",
       "decision_status": "proposed",
       "applicable_configurations": [
@@ -1600,7 +1633,15 @@
       ],
       "source_ids": [
         "SRC-REPO-007"
-      ]
+      ],
+      "feasibility_analysis": {
+        "artifact": "reports/feasibility-analysis.md",
+        "established": "Mount and structural penalties must scale with payload load and participate in the gross-mass loop.",
+        "ruled_out": "Selecting a mount independently of payload mass, volume, and load basis.",
+        "remains": "Volume, geometry, retention margin, inspection basis, and physical load evidence.",
+        "readiness": "component_class_research_partially_ready",
+        "next_input": "Owner payload mass and volume envelope plus applicable load and margin authority."
+      }
     },
     {
       "id": "TS-007",
@@ -1614,7 +1655,8 @@
       ],
       "source_ids": [
         "SRC-REPO-007"
-      ]
+      ],
+      "feasibility_implication": "Station-keeping tolerance is still missing; propulsion and energy effects can be included in later navigation-concept analysis once that tolerance and environment are authorized."
     },
     {
       "id": "TS-008",
@@ -1628,7 +1670,8 @@
       ],
       "source_ids": [
         "SRC-REPO-007"
-      ]
+      ],
+      "feasibility_implication": "The command-link architecture remains externally blocked; the feasibility sweep introduces no command product, RF parameter, or conformance claim."
     },
     {
       "id": "TS-009",
@@ -1659,7 +1702,8 @@
       ],
       "source_ids": [
         "SRC-REPO-007"
-      ]
+      ],
+      "feasibility_implication": "The generic environment power multiplier is the fourth-ranked sensitivity, demonstrating that an approved environmental envelope is an upstream sizing input rather than a downstream check."
     },
     {
       "id": "TS-011",
@@ -1673,21 +1717,22 @@
       ],
       "source_ids": [
         "SRC-REPO-007"
-      ]
+      ],
+      "feasibility_implication": "Reserve fraction is quantitatively relevant to endurance, mass, and cost, but recovery policy and the associated safety objective remain owner decisions."
     }
   ],
   "tbd_governance": [
-    {"subject_id": "TS-001", "category": "design_tbd", "owner_category": "project_owner_design_decision", "dependency_ids": ["TS-002", "TS-003", "TS-006"], "reason": "Structure cannot be selected independently of gross mass, propulsion geometry, battery mass, and payload mounting.", "verification_implication": "Cost, mass, portability, and component-selection checks remain blocked."},
-    {"subject_id": "TS-002", "category": "design_tbd", "owner_category": "project_owner_design_decision", "dependency_ids": ["TS-001", "TS-003", "TS-010"], "reason": "Propulsion sizing depends on unresolved gross mass, battery feedback, structure, and environment.", "verification_implication": "Performance analysis and physical evidence remain blocked."},
-    {"subject_id": "TS-003", "category": "design_tbd", "owner_category": "project_owner_design_decision", "dependency_ids": ["TS-001", "TS-002", "TS-004", "TS-011"], "reason": "Battery architecture depends on endurance, power, recovery, mass, and cost targets.", "verification_implication": "Endurance, mass, low-battery recovery, and safety verification remain blocked."},
-    {"subject_id": "TS-004", "category": "design_tbd", "owner_category": "project_owner_design_decision", "dependency_ids": ["TS-003", "TS-006"], "reason": "The payload power envelope depends on an unresolved payload envelope and system power budget.", "verification_implication": "REQ-IFC-002 analysis and physical verification remain blocked."},
-    {"subject_id": "TS-005", "category": "design_tbd", "owner_category": "project_owner_design_decision", "dependency_ids": ["TS-007", "TS-008"], "reason": "Flight-controller selection depends on navigation and platform-command architecture choices.", "verification_implication": "REQ-CON-002 inspection remains blocked by selection."},
-    {"subject_id": "TS-006", "category": "design_tbd", "owner_category": "project_owner_design_decision", "dependency_ids": ["TS-001", "TS-004"], "reason": "Payload mounting depends on the unresolved payload, structure, power, and load envelopes.", "verification_implication": "REQ-PER-004, REQ-IFC-001, and REQ-IFC-004 acceptance criteria remain blocked."},
-    {"subject_id": "TS-007", "category": "design_tbd", "owner_category": "project_owner_design_decision", "dependency_ids": ["TS-010"], "reason": "Station-keeping architecture depends on tolerance and environmental assumptions.", "verification_implication": "REQ-FUN-003 and REQ-CON-004 analysis remain blocked."},
+    {"subject_id": "TS-001", "category": "design_tbd", "owner_category": "engineering_trade_study_output", "dependency_ids": ["TS-002", "TS-003", "TS-006"], "reason": "Structure cannot be selected independently of gross mass, propulsion geometry, battery mass, and payload mounting.", "verification_implication": "Cost, mass, portability, and component-selection checks remain blocked."},
+    {"subject_id": "TS-002", "category": "design_tbd", "owner_category": "engineering_trade_study_output", "dependency_ids": ["TS-001", "TS-003", "TS-010"], "reason": "Propulsion sizing depends on unresolved gross mass, battery feedback, structure, and environment.", "verification_implication": "Performance analysis and physical evidence remain blocked."},
+    {"subject_id": "TS-003", "category": "design_tbd", "owner_category": "engineering_trade_study_output", "dependency_ids": ["TS-001", "TS-002", "TS-004", "TS-011"], "reason": "Battery architecture depends on endurance, power, recovery, mass, and cost targets.", "verification_implication": "Endurance, mass, low-battery recovery, and safety verification remain blocked."},
+    {"subject_id": "TS-004", "category": "design_tbd", "owner_category": "engineering_trade_study_output", "dependency_ids": ["TS-003", "TS-006"], "reason": "The payload power envelope depends on an unresolved payload envelope and system power budget.", "verification_implication": "REQ-IFC-002 analysis and physical verification remain blocked."},
+    {"subject_id": "TS-005", "category": "design_tbd", "owner_category": "engineering_trade_study_output", "dependency_ids": ["TS-007", "TS-008"], "reason": "Flight-controller selection depends on navigation and platform-command architecture choices.", "verification_implication": "REQ-CON-002 inspection remains blocked by selection."},
+    {"subject_id": "TS-006", "category": "design_tbd", "owner_category": "engineering_trade_study_output", "dependency_ids": ["TS-001", "TS-004"], "reason": "Payload mounting depends on the unresolved payload, structure, power, and load envelopes.", "verification_implication": "REQ-PER-004, REQ-IFC-001, and REQ-IFC-004 acceptance criteria remain blocked."},
+    {"subject_id": "TS-007", "category": "design_tbd", "owner_category": "engineering_trade_study_output", "dependency_ids": ["TS-010"], "reason": "Station-keeping architecture depends on tolerance and environmental assumptions.", "verification_implication": "REQ-FUN-003 and REQ-CON-004 analysis remain blocked."},
     {"subject_id": "TS-008", "category": "external_authority_tbd", "owner_category": "project_owner_and_external_interface_authority", "dependency_ids": [], "reason": "The platform-command architecture lacks an external conformance authority and approved interface basis.", "verification_implication": "REQ-FUN-004 and IFC-EXT-005 conformance cannot be established."},
     {"subject_id": "TS-009", "category": "intentionally_deferred", "owner_category": "outside_current_project_scope", "dependency_ids": [], "reason": "Relay-payload implementation characterization is explicitly outside this project.", "verification_implication": "CAP-003 and implementation attributes remain unsupported without partial-satisfaction claims."},
-    {"subject_id": "TS-010", "category": "evidence_tbd", "owner_category": "project_owner_then_physical_evidence_authority", "dependency_ids": ["TS-002", "TS-007"], "reason": "No approved environmental envelope or evidence basis exists.", "verification_implication": "Station-keeping and propulsion acceptance criteria remain incomplete."},
-    {"subject_id": "TS-011", "category": "design_tbd", "owner_category": "project_owner_design_decision", "dependency_ids": ["TS-003"], "reason": "Recovery architecture depends on battery behavior, system value, and an owner-selected safety objective.", "verification_implication": "REQ-FUN-005 and recovery evidence remain blocked."}
+    {"subject_id": "TS-010", "category": "evidence_tbd", "owner_category": "project_owner_context_then_external_evidence", "dependency_ids": ["TS-002", "TS-007"], "reason": "No approved environmental envelope or evidence basis exists.", "verification_implication": "Station-keeping and propulsion acceptance criteria remain incomplete."},
+    {"subject_id": "TS-011", "category": "design_tbd", "owner_category": "engineering_trade_study_output", "dependency_ids": ["TS-003"], "reason": "Recovery architecture depends on battery behavior, system value, and an owner-selected safety objective.", "verification_implication": "REQ-FUN-005 and recovery evidence remain blocked."}
   ],
   "decisions": [
     {

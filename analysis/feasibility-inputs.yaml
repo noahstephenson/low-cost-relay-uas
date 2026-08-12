@@ -1,0 +1,214 @@
+{
+  "schema_version": "1.0",
+  "analysis_id": "ANL-FEAS-001",
+  "title": "Relay-UAS coupled physical and economic feasibility sweep",
+  "model_version": "0.8.0-baseline-candidate",
+  "parent_commit": "e7a84d2",
+  "approval_state": "analysis_assumptions_not_owner_approved",
+  "scope": "Architecture-level CFG-REP / CFG-DOM carrier feasibility; excludes relay-payload implementation, RF design, component selection, build instructions, and physical verification.",
+  "owner_target_packages": [
+    {
+      "name": "Relay-payload accommodation envelope",
+      "target_type": "allowable range plus maxima",
+      "governing_requirements": ["REQ-PER-004", "REQ-IFC-002"],
+      "affected_trade_studies": ["TS-004", "TS-006"],
+      "dependent_variables": ["payload_mass_kg", "payload_power_w", "payload_volume_m3"],
+      "owner_value_status": "ANALYSIS BOUNDARY CAN BE EXPLORED",
+      "owner_value_available": false,
+      "quantitative_suitability": "Payload mass and electrical demand are swept as unapproved analysis boundaries. Payload volume remains undetermined because no packaging geometry is authorized."
+    },
+    {
+      "name": "Relay-station service envelope",
+      "target_type": "threshold, objective, and allowable operating range",
+      "governing_requirements": ["REQ-PER-002", "REQ-FUN-003", "REQ-CON-004"],
+      "affected_trade_studies": ["TS-002", "TS-003", "TS-007", "TS-008", "TS-010"],
+      "dependent_variables": ["endurance_min", "environment_power_margin", "station_tolerance", "platform_operating_geometry"],
+      "owner_value_status": "ANALYSIS BOUNDARY CAN BE EXPLORED",
+      "owner_value_available": false,
+      "quantitative_suitability": "Endurance and generic power-margin sensitivity are swept. Station tolerance, operating geometry, and command-link criteria remain undetermined."
+    },
+    {
+      "name": "Affordability, attritability, and loss/recovery policy",
+      "target_type": "maximum plus architecture policy",
+      "governing_requirements": ["REQ-PER-001", "REQ-FUN-005"],
+      "affected_trade_studies": ["TS-003", "TS-011"],
+      "dependent_variables": ["platform_cost_usd", "reserve_fraction", "loss_disposition"],
+      "owner_value_status": "ANALYSIS BOUNDARY CAN BE EXPLORED",
+      "owner_value_available": false,
+      "quantitative_suitability": "Cost and reserve sensitivity are explored against analysis-only boundaries. Recovery/loss policy remains an owner decision."
+    },
+    {
+      "name": "Single-operator portability and handling envelope",
+      "target_type": "categorical policy plus maximum/preferred range",
+      "governing_requirements": ["REQ-PER-005"],
+      "affected_trade_studies": ["TS-001", "TS-002", "TS-006"],
+      "dependent_variables": ["gross_mass_kg", "total_disk_area_m2", "packed_geometry"],
+      "owner_value_status": "ANALYSIS BOUNDARY CAN BE EXPLORED",
+      "owner_value_available": false,
+      "quantitative_suitability": "Gross-mass sensitivity is compared with analysis-only handling boundaries. Packed geometry and actual handling remain undetermined."
+    },
+    {
+      "name": "CFG-DOM sourcing policy",
+      "target_type": "architecture policy and categorical choice",
+      "governing_requirements": [],
+      "affected_trade_studies": ["TS-001", "TS-002", "TS-003", "TS-004", "TS-005", "TS-006", "TS-007", "TS-008"],
+      "dependent_variables": ["supplier_eligibility", "evidence_standard", "exception_policy"],
+      "owner_value_status": "OWNER VALUE NOT YET AVAILABLE",
+      "owner_value_available": false,
+      "quantitative_suitability": "Not suitable for quantitative analysis until the owner defines domestic-content meaning and authority."
+    }
+  ],
+  "decision_assumptions": [
+    {
+      "decision_id": "DEC-002",
+      "analysis_assumption": "No physical-model dependency; current terminology is retained without conformance claim.",
+      "sensitivity": "none"
+    },
+    {
+      "decision_id": "DEC-003",
+      "analysis_assumption": "A generic recovery/containment objective is represented only through a swept reserve fraction; no control behavior or safety credit is assumed.",
+      "sensitivity": "reserve_fraction"
+    },
+    {
+      "decision_id": "DEC-004",
+      "analysis_assumption": "The proposed health/status thread is represented inside the swept avionics mass and auxiliary-power allowances.",
+      "sensitivity": "avionics_mass_kg and auxiliary_power_w"
+    },
+    {
+      "decision_id": "DEC-005",
+      "analysis_assumption": "CAP-004 is treated as a cross-cutting cost and portability constraint for analysis only.",
+      "sensitivity": "platform_cost_usd and gross_mass_kg"
+    }
+  ],
+  "evidence_sources": [
+    {
+      "id": "ANL-SRC-001",
+      "title": "NASA small-UAS conceptual design using test data",
+      "url": "https://ntrs.nasa.gov/api/citations/20180008701/downloads/20180008701.pdf?attachment=true",
+      "supports": "Installed battery specific-energy anchors, combined motor/controller efficiency anchor, and a 1.22 lb/ft^2 small-quadcopter disk-loading reference.",
+      "authority": "primary government technical paper"
+    },
+    {
+      "id": "ANL-SRC-002",
+      "title": "NASA rotorcraft theory manual",
+      "url": "https://rotorcraft.arc.nasa.gov/Publications/files/NASA%20TP-2009-215402-app3.pdf",
+      "supports": "Momentum-theory induced power and hover figure-of-merit definitions.",
+      "authority": "primary government technical reference"
+    },
+    {
+      "id": "ANL-SRC-003",
+      "title": "NASA state-of-the-art small-spacecraft power systems",
+      "url": "https://www.nasa.gov/smallsat-institute/sst-soa/power-subsystems/",
+      "supports": "Observed cell and pack specific-energy ranges and pack overhead context.",
+      "authority": "primary government technical reference"
+    },
+    {
+      "id": "ANL-SRC-004",
+      "title": "Molicel INR-21700-P45B product data sheet",
+      "url": "https://www.molicel.com/wp-content/uploads/INR21700P45B_1.2_Product-Data-Sheet-of-INR-21700-P45B-80109.pdf",
+      "supports": "High-power lithium-ion cell energy and continuous-discharge anchors; used only to bound generic cell-class performance.",
+      "authority": "manufacturer technical data"
+    },
+    {
+      "id": "ANL-SRC-005",
+      "title": "NASA standard-atmosphere reference",
+      "url": "https://appel.nasa.gov/wp-content/uploads/2018/08/NASA-SP-367-Intro-to-Aero-of-Flight.pdf",
+      "supports": "Sea-level standard density and gravitational acceleration.",
+      "authority": "primary government technical reference"
+    },
+    {
+      "id": "ANL-SRC-006",
+      "title": "NASA small multicopter performance test program",
+      "url": "https://rotorcraft.arc.nasa.gov/Research/Programs/UAS_Performance_Test.html",
+      "supports": "Use of measured electrical power and rotor performance to calibrate conceptual small-UAS analysis and the limitation of ideal-only power estimates.",
+      "authority": "primary government test program"
+    },
+    {
+      "id": "ANL-SRC-007",
+      "title": "T-MOTOR official propulsion-system market snapshot",
+      "url": "https://store.tmotor.com/",
+      "supports": "Order-of-magnitude low-volume COTS propulsion cost and power-class anchors; no product is selected.",
+      "authority": "manufacturer/store market data"
+    },
+    {
+      "id": "ANL-SRC-008",
+      "title": "Holybro Pixhawk 6C official store data",
+      "url": "https://holybro.com/products/pixhawk-6c",
+      "supports": "Order-of-magnitude avionics mass and cost anchor; no product is selected.",
+      "authority": "manufacturer/store technical and market data"
+    },
+    {
+      "id": "ANL-SRC-009",
+      "title": "U.S. DOE production-scale lithium-ion pack cost estimate",
+      "url": "https://www.energy.gov/cmei/vehicles/articles/fotw-1354-august-5-2024-electric-vehicle-battery-pack-costs-light-duty",
+      "supports": "Optimistic production-scale battery cost floor; low-volume UAS packs are represented at higher cost in the sweep.",
+      "authority": "primary government cost estimate"
+    }
+  ],
+  "constants": {
+    "gravity_m_s2": {"value": 9.80665, "unit": "m/s^2", "class": "B_exogenous_evidence", "source_ids": ["ANL-SRC-005"]},
+    "air_density_kg_m3": {"value": 1.225, "unit": "kg/m^3", "class": "B_exogenous_evidence", "source_ids": ["ANL-SRC-005"]},
+    "rotor_count": {"value": 4, "unit": "count", "class": "C_engineering_design_variable", "note": "Current quadrotor architecture assumption; not a selected component."}
+  },
+  "ranges": {
+    "payload_mass_kg": {"low": 0.25, "nominal": 1.0, "high": 2.0, "unit": "kg", "class": "A_owner_controlled_target", "approval": "unapproved sensitivity boundary"},
+    "payload_power_w": {"low": 0.0, "nominal": 50.0, "high": 120.0, "unit": "W", "class": "A_owner_controlled_target", "approval": "unapproved sensitivity boundary"},
+    "endurance_min": {"low": 10.0, "nominal": 30.0, "high": 60.0, "unit": "min", "class": "A_owner_controlled_target", "approval": "unapproved sensitivity boundary"},
+    "reserve_fraction": {"low": 0.10, "nominal": 0.20, "high": 0.30, "unit": "fraction of nominal energy held in reserve", "class": "A_owner_controlled_target", "approval": "unapproved recovery-policy sensitivity"},
+    "battery_specific_energy_wh_kg": {"low": 130.0, "nominal": 170.0, "high": 220.0, "unit": "Wh/kg installed pack", "class": "B_exogenous_evidence", "source_ids": ["ANL-SRC-001", "ANL-SRC-003", "ANL-SRC-004"], "limitation": "Upper bound extrapolates high-energy cell data with optimistic pack overhead; it is not a guaranteed COTS pack value."},
+    "battery_specific_power_w_kg": {"low": 400.0, "nominal": 900.0, "high": 1800.0, "unit": "W/kg continuous", "class": "B_exogenous_evidence", "source_ids": ["ANL-SRC-004"], "limitation": "Broad class range captures the energy-versus-power trade and must later be replaced by pack-level data."},
+    "battery_depth_of_discharge": {"low": 0.80, "nominal": 0.90, "high": 0.95, "unit": "fraction", "class": "C_engineering_design_variable", "source_ids": ["ANL-SRC-001"]},
+    "battery_power_margin_ratio": {"low": 1.00, "nominal": 1.15, "high": 1.30, "unit": "installed continuous battery power / calculated peak demand", "class": "C_engineering_design_variable", "limitation": "Architecture power-sizing margin, not an approved requirement."},
+    "rotor_figure_of_merit": {"low": 0.50, "nominal": 0.62, "high": 0.74, "unit": "fraction", "class": "B_exogenous_evidence", "source_ids": ["ANL-SRC-002", "ANL-SRC-006"], "limitation": "Represents rotor aerodynamic performance only; actual electrical input is corrected separately."},
+    "motor_controller_efficiency": {"low": 0.75, "nominal": 0.83, "high": 0.90, "unit": "fraction", "class": "B_exogenous_evidence", "source_ids": ["ANL-SRC-001"]},
+    "disk_loading_n_m2": {"low": 40.0, "nominal": 60.0, "high": 100.0, "unit": "N/m^2 total rotor disk", "class": "C_engineering_design_variable", "source_ids": ["ANL-SRC-001"], "limitation": "Swept architecture variable; 60 N/m^2 is near the cited 1.22 lb/ft^2 small-UAS reference."},
+    "environment_power_margin": {"low": 1.00, "nominal": 1.15, "high": 1.30, "unit": "multiplier on propulsion hover power", "class": "C_engineering_design_variable", "approval": "unapproved TS-010 sensitivity only"},
+    "thrust_margin_ratio": {"low": 1.50, "nominal": 1.75, "high": 2.00, "unit": "installed thrust / weight", "class": "C_engineering_design_variable", "limitation": "Architecture sizing variable, not an approved performance requirement."},
+    "propulsion_specific_power_w_kg": {"low": 1500.0, "nominal": 2300.0, "high": 3100.0, "unit": "W/kg installed motor and controller group", "class": "B_exogenous_evidence", "source_ids": ["ANL-SRC-001", "ANL-SRC-007"]},
+    "rotor_mass_per_disk_area_kg_m2": {"low": 0.08, "nominal": 0.14, "high": 0.24, "unit": "kg/m^2", "class": "C_engineering_design_variable", "limitation": "Parametric rotor-mass allowance; requires candidate-class validation."},
+    "structure_base_mass_kg": {"low": 0.55, "nominal": 0.95, "high": 1.50, "unit": "kg", "class": "C_engineering_design_variable", "limitation": "Parametric airframe and landing-gear allowance, not a component estimate."},
+    "structure_load_fraction": {"low": 0.10, "nominal": 0.18, "high": 0.28, "unit": "kg structure per kg carried payload+battery+propulsion", "class": "C_engineering_design_variable", "limitation": "Simple structural growth factor used only for architecture sensitivity."},
+    "structure_area_penalty_kg_m2": {"low": 0.12, "nominal": 0.22, "high": 0.38, "unit": "kg/m^2 total disk area", "class": "C_engineering_design_variable", "limitation": "Represents longer arms and clearance burden; not a stress-based design."},
+    "avionics_mass_kg": {"low": 0.25, "nominal": 0.40, "high": 0.65, "unit": "kg", "class": "B_exogenous_evidence", "source_ids": ["ANL-SRC-008"], "limitation": "Includes flight control, navigation, command receiver, wiring, and status allowance; no device selected."},
+    "power_electronics_mass_kg": {"low": 0.15, "nominal": 0.28, "high": 0.45, "unit": "kg", "class": "C_engineering_design_variable"},
+    "mount_base_mass_kg": {"low": 0.10, "nominal": 0.20, "high": 0.35, "unit": "kg", "class": "C_engineering_design_variable"},
+    "mount_payload_fraction": {"low": 0.10, "nominal": 0.18, "high": 0.30, "unit": "kg mount per kg payload", "class": "C_engineering_design_variable"},
+    "auxiliary_power_w": {"low": 15.0, "nominal": 25.0, "high": 45.0, "unit": "W", "class": "C_engineering_design_variable", "limitation": "Avionics and non-payload electrical allowance."},
+    "payload_regulator_efficiency": {"low": 0.85, "nominal": 0.92, "high": 0.97, "unit": "fraction", "class": "B_exogenous_evidence", "limitation": "Generic conversion-efficiency range; component-level evidence required later."},
+    "battery_cost_usd_per_wh": {"low": 0.30, "nominal": 0.70, "high": 1.20, "unit": "2026 USD/Wh", "class": "B_exogenous_evidence", "source_ids": ["ANL-SRC-009"], "limitation": "Lower bound is above the DOE high-volume automotive cost floor; upper range represents low-volume UAS pack burden and is not a quote."},
+    "propulsion_cost_usd_per_kw": {"low": 180.0, "nominal": 350.0, "high": 650.0, "unit": "2026 USD/kW installed peak", "class": "B_exogenous_evidence", "source_ids": ["ANL-SRC-007"], "limitation": "Architecture-level market range inferred from representative official-store classes; no product selected."},
+    "structure_cost_usd_per_kg": {"low": 80.0, "nominal": 180.0, "high": 350.0, "unit": "2026 USD/kg", "class": "C_engineering_design_variable"},
+    "avionics_cost_usd": {"low": 200.0, "nominal": 350.0, "high": 600.0, "unit": "2026 USD", "class": "B_exogenous_evidence", "source_ids": ["ANL-SRC-008"]},
+    "power_electronics_cost_usd": {"low": 75.0, "nominal": 150.0, "high": 300.0, "unit": "2026 USD", "class": "C_engineering_design_variable"},
+    "mount_cost_usd": {"low": 50.0, "nominal": 125.0, "high": 275.0, "unit": "2026 USD", "class": "C_engineering_design_variable"},
+    "other_platform_cost_usd": {"low": 100.0, "nominal": 225.0, "high": 450.0, "unit": "2026 USD", "class": "C_engineering_design_variable"},
+    "analysis_portability_mass_kg": {"low": 5.0, "nominal": 10.0, "high": 15.0, "unit": "kg", "class": "A_owner_controlled_target", "approval": "unapproved sensitivity boundary"},
+    "analysis_cost_boundary_usd": {"low": 1000.0, "nominal": 2500.0, "high": 5000.0, "unit": "2026 USD", "class": "A_owner_controlled_target", "approval": "unapproved sensitivity boundary"}
+  },
+  "analysis_acceptance_boundaries": {
+    "status": "exploratory_not_owner_approved",
+    "reference_portability_mass_kg": 10.0,
+    "marginal_portability_mass_kg": 15.0,
+    "reference_platform_cost_usd": 2500.0,
+    "marginal_platform_cost_usd": 5000.0,
+    "reference_battery_mass_fraction": 0.45,
+    "marginal_battery_mass_fraction": 0.60,
+    "minimum_reference_discharge_margin": 1.10,
+    "minimum_marginal_discharge_margin": 1.0,
+    "note": "These boundaries classify the sweep for decision support only. They are not REQ values or owner-approved limits. Platform cost excludes the black-box relay payload, external systems, labor, and integration."
+  },
+  "solver": {
+    "initial_gross_mass_kg": 5.0,
+    "relaxation_factor": 0.55,
+    "relative_mass_tolerance": 1e-7,
+    "max_iterations": 200,
+    "divergence_gross_mass_kg": 50.0
+  },
+  "sweep": {
+    "payload_mass_grid_kg": [0.25, 0.5, 1.0, 1.5, 2.0],
+    "payload_power_grid_w": [0.0, 50.0, 100.0],
+    "endurance_grid_min": [10.0, 20.0, 30.0, 45.0, 60.0],
+    "sensitivity_samples": 4096,
+    "halton_bases": [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59]
+  }
+}

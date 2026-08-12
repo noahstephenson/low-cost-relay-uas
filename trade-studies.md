@@ -10,18 +10,21 @@ plausible value.
 
 ## Status Legend
 
-**Open** — not started · **Scoped** — criteria defined, not evaluated · **Resolved** — decision made and recorded · **Deferred** — out of scope for this project
+**Open** — not yet bounded for evaluation · **Scoped** — criteria defined and
+architecture-level analysis performed, but owner input or evidence still prevents
+a decision · **Resolved** — decision made and recorded · **Deferred** — out of
+scope for this project
 
 ## Register
 
 | TS ID | Decision | Drives | Criteria | Status |
 |---|---|---|---|---|
-| TS-001 | Airframe material and construction method | CMP-AFR-01, CMP-AFR-02 | Cost, mass, manufacturability, damage tolerance | Open |
-| TS-002 | Propulsion sizing (motor class, prop diameter/pitch, ESC rating) | CMP-PRP-01..03 | Thrust margin, efficiency at loiter, cost | Open — iterated, not converged (see below) |
-| TS-003 | Battery chemistry, cell count, capacity | CMP-PWR-01 | Endurance vs. mass vs. cost; REQ-PER-002 | Open — iterated, not converged (see below) |
-| TS-004 | Payload power rail voltage and current allocation | CMP-PWR-03 | Payload-agnostic support without overprovisioning | Open |
+| TS-001 | Airframe material and construction method | CMP-AFR-01, CMP-AFR-02 | Cost, mass, manufacturability, damage tolerance | Scoped — conditional feasible region established |
+| TS-002 | Propulsion sizing (motor class, prop diameter/pitch, ESC rating) | CMP-PRP-01..03 | Thrust margin, efficiency at loiter, cost | Scoped — conditional feasible region established |
+| TS-003 | Battery chemistry, cell count, capacity | CMP-PWR-01 | Endurance vs. mass vs. cost; REQ-PER-002 | Scoped — conditional feasible region established |
+| TS-004 | Payload power rail voltage and current allocation | CMP-PWR-03 | Payload-agnostic support without overprovisioning | Scoped — conditional feasible region established |
 | TS-005 | Flight controller selection | CMP-AVN-01 | Open-source firmware support, cost, I/O | Open |
-| TS-006 | Payload mount interface standard | CMP-MNT-01, CMP-AFR-04 | Modularity, mass, retention under vibration | Open |
+| TS-006 | Payload mount interface standard | CMP-MNT-01, CMP-AFR-04 | Modularity, mass, retention under vibration | Scoped — conditional feasible region established |
 | TS-007 | Station-keeping approach and GNSS dependence | CMP-AVN-03, FUN-FLT-03 | Position hold accuracy without assuming GNSS availability | Open |
 | TS-008 | Platform command link approach | CMP-AVN-04, IFC-EXT-005 | Range, cost — **platform control only, not the relay payload** | Open |
 | TS-009 | Relay payload characterization | CMP-COM-01, CMP-COM-02, all `IFC-EXT-001..004` | — | **Deferred — out of scope** |
@@ -45,10 +48,45 @@ central loop. `CAP-004` constrains this entire set through `REQ-PER-001`,
 selected here. Generated view 9B in `reports/architecture-views.md` provides the
 compact diagram.
 
-TBD governance is explicit in `model/assurance.yaml`: TS-001 through TS-008 and
-TS-011 are design decisions, TS-010 requires an evidence basis before criteria can
-be finalized, and TS-009 is intentionally deferred. External-interface authority is
-tracked separately from design TBDs.
+TBD governance is explicit in `model/assurance.yaml`: owner targets initiate the
+coupled engineering trades, while the resulting structure, propulsion, battery,
+power-allocation, mount, flight-control, station-keeping, and recovery choices are
+engineering trade-study outputs. TS-010 requires owner context followed by an
+external evidence basis, and TS-009 is intentionally deferred. External-interface
+authority is tracked separately from design TBDs.
+
+## Conditional Feasibility Result
+
+The executable model in [`analysis/feasibility.py`](analysis/feasibility.py), its
+versioned inputs in
+[`analysis/feasibility-inputs.yaml`](analysis/feasibility-inputs.yaml), and the
+engineering interpretation in
+[`reports/feasibility-analysis.md`](reports/feasibility-analysis.md) replace the
+earlier qualitative-only loop discussion as the current quantitative basis. The
+model iterates gross mass, hover power, installed propulsion, structure, and the
+greater of energy- or continuous-power-limited battery mass to convergence.
+
+Across 225 deterministic grid cases, the favorable regime contains 73 feasible, 2
+marginal, and no infeasible cases; the reference regime contains 20 feasible, 21
+marginal, and 34 infeasible cases; and the adverse regime contains no feasible or
+marginal cases. These are **conditional classes**, not requirement dispositions,
+because no owner target is approved. In the reference 50 W payload-power slice,
+short-dwell cases are generally feasible or marginal, 30-minute cases cross a
+payload-sensitive knee, and all evaluated 45- and 60-minute cases are infeasible.
+
+The strongest sensitivities are endurance, rotor figure of merit, disk loading,
+environmental power margin, and installed battery specific energy/power. That result
+legitimately scopes TS-001, TS-002, TS-003, TS-004, and TS-006 without choosing a
+material, rotor, motor, controller, battery, rail, or mount. It also sharpens the
+inputs needed by TS-005, TS-007, TS-008, TS-010, and TS-011. TS-009 remains outside
+the analysis.
+
+The central finding is narrow: a modest-payload, short-dwell carrier is physically
+and economically plausible under reference-or-better class assumptions, while
+longer dwell rapidly drives battery feedback, gross mass, installed power, and cost
+outside the analysis boundaries. The next decision-quality step is owner disposition
+of payload service, endurance, affordability, portability, environment, reserve,
+recovery, and sourcing targets—not product selection.
 
 ## TS-009 — Formal Deferral
 
@@ -88,13 +126,12 @@ mount-and-rail question, not a redesign.
 
 ## Worked Trade Studies
 
-TS-002 and TS-003 are worked together below, per `architecture.md`'s own note that
-they "must be worked together rather than in sequence." Neither resolves to a point
-design. What follows is the iteration itself — starting assumption, forward
-calculation, feedback, at least one more pass — shown explicitly rather than
-collapsed into a single converged answer, per this study's own convention that a
-`[TBD]` is a load-bearing statement of what is not yet known, not a placeholder for
-a number borrowed from a comparable system.
+TS-002 and TS-003 are worked together below, per `architecture.md`'s note that they
+"must be worked together rather than in sequence." Neither resolves to a point
+design. This qualitative walk-through explains the causal loop; the executable
+model and feasibility report above are the current quantitative result. A `[TBD]`
+remains a load-bearing statement of what is not owner-approved, not a placeholder
+for a borrowed point value.
 
 ### TS-002 — Propulsion sizing (motor class, prop diameter/pitch, ESC rating)
 
@@ -144,8 +181,8 @@ here that reduces the loop's gain without directly trading against airframe cost
 How far that lean can go — and whether the resulting arm length still fits
 `REQ-PER-005`'s single-operator, no-support-equipment constraint — cannot be pinned
 without TS-001 (structure) and TS-003 (battery) closing at the same time. Status:
-**Open**, not Resolved — this is a genuinely coupled decision, not an
-under-analyzed one.
+**Scoped**, not Resolved — the conditional region is quantified, but this remains a
+genuinely coupled decision awaiting owner targets and candidate-class evidence.
 
 **Consequences / affected IDs.** `CMP-PRP-01..03`, `CMP-AFR-02` (arm length),
 `REQ-PER-002` (endurance, still `[TBD]`), `REQ-PER-003` (gross mass, still `[TBD]`),
@@ -244,16 +281,15 @@ as an iteration rather than collapsed into a single pass:
   explain *why* the iteration above has real gain, not to fill any `[TBD]` in this
   repository with a borrowed figure.
 
-**Decision.** Not resolved to a chemistry, cell count, or capacity. Directional
-lean toward LiPo, given the fit between its discharge characteristics and hover's
-continuous current draw and its better fit with `REQ-CON-001`'s COTS preference —
-but this is secondary and provisional. The real blocker is sequencing, not
-chemistry: capacity cannot be sized until `REQ-PER-002` is set, and — per the
-finding below — `REQ-PER-002` should not be set without first knowing what this
-loop does to mass and cost at the value being considered. Setting the endurance
-requirement first and discovering the loop's consequences afterward is exactly the
-sequencing error `architecture.md` flagged TS-002 and TS-003 to avoid by being
-worked together. Status: **Open**, not Resolved.
+**Decision.** Not resolved to a chemistry, cell count, or capacity, and no chemistry
+lean is retained. The sweep shows that both installed specific energy and continuous
+specific power matter: short-dwell cases can be power-limited while longer-dwell
+cases become energy-limited. The real blocker is therefore a two-dimensional pack
+envelope plus owner targets, not a chemistry label. Setting the endurance requirement
+first and discovering the loop's consequences afterward is exactly the sequencing
+error `architecture.md` flagged TS-002 and TS-003 to avoid by being worked together.
+Status: **Scoped**, not Resolved; the coupled sweep is complete, while chemistry and
+topology selection remain premature.
 
 **Consequences / affected IDs.** `CMP-PWR-01`, `CMP-PWR-03` (rail sizing, TS-004),
 `REQ-PER-002` (endurance), `REQ-PER-003` (gross mass), `REQ-PER-001` (unit cost).
@@ -265,8 +301,10 @@ The capability analysis in `architecture.md` names the falsification condition t
 addresses directly: *"if the endurance-versus-cost loop in TS-003 closes
 unfavourably, a platform cheap enough to be attritable may not hold station long
 enough to be useful, and the intersection is empty for physical reasons rather than
-institutional ones."* The iteration above is a direct evaluation of that condition,
-and the honest answer is: **not resolved, and not confidently favorable.**
+institutional ones."* The executable iteration directly evaluates that condition.
+The answer is **conditionally favorable only for a bounded short-dwell,
+modest-payload region; it is unfavorable across the evaluated long-dwell reference
+region and throughout the adverse regime.**
 
 Three things push toward the unfavorable side, and none of them are addressed by
 making the rest of the platform cheaper:
@@ -301,9 +339,9 @@ few minutes to maintain a link does not obviously deliver `CAP-001`/`CAP-002` in
 operationally useful sense, even if it is cheap.
 
 **This is recorded as a finding, not engineered around.** No value has been chosen
-for `REQ-PER-002` here, and none should be, until the sensitivity this iteration
-describes is actually evaluated against a real target rather than the two
-illustrative candidates used above. What this trade study does establish is that
+for `REQ-PER-002` here, and none should be. The sensitivity has now been evaluated
+over the analysis-only bounds in `analysis/feasibility-inputs.yaml`; it must next be
+rerun against owner-authorized targets. What this trade study establishes is that
 `REQ-PER-002`, `REQ-PER-003`, and `REQ-PER-001` are not three independent `[TBD]`s
 that can be filled in one at a time — they are three views of the same unresolved
 coupling, and setting any one of them first constrains the other two in ways the

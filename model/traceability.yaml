@@ -938,7 +938,7 @@
     {
       "code": "GAP-BUDGET-001",
       "category": "mass-cost-endurance coupling",
-      "statement": "The dependency structure among payload envelope, dry mass, gross mass, propulsion demand, power, battery requirement, endurance, and cost is explicit, but inputs and targets remain unresolved.",
+      "statement": "The dependency structure among payload envelope, dry mass, gross mass, propulsion demand, power, battery requirement, endurance, and cost is explicit and has been executed as a reproducible conditional feasibility sweep. Owner targets, packaging geometry, component-class evidence, and physical evidence remain unresolved.",
       "affected_ids": [
         "REQ-PER-001",
         "REQ-PER-002",
@@ -952,9 +952,9 @@
       ],
       "disposition": "unresolved",
       "severity": "major",
-      "next_action": "Project owner selects candidate cost, endurance, mass, and payload target ranges; source-backed component inputs are then required before executing the coupled TS-001/002/003/004/006 analysis.",
-      "audit_classification": "C_physical_or_external_evidence",
-      "work_package_outcome": "NARROWED"
+      "next_action": "Project owner supplies payload service, endurance, affordability, portability, environment, reserve, and recovery targets; engineering then reruns the coupled analysis and derives gross mass rather than treating it as an independent owner target.",
+      "audit_classification": "B_project_owner_decision",
+      "work_package_outcome": "QUANTITATIVELY_NARROWED"
     },
     {
       "code": "GAP-VER-001",
