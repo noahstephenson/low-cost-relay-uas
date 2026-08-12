@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+<title id="title">How Power Reaches Every Major Load</title>
+<desc id="desc">What powers propulsion, avionics, and the relay payload?</desc>
+<metadata>Generated from authoritative model records: CMP-PWR-01, CMP-PWR-02, CMP-PWR-03, CMP-PRP-02, CMP-PRP-01, CMP-PRP-03, CMP-AVN-01, CMP-COM-01, IFC-INT-001, IFC-INT-002, IFC-INT-003, IFC-INT-011, IFC-INT-013, IFC-INT-014, IFC-INT-015</metadata>
+<defs>
+  <marker id="arrow-neutral" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#435269"/></marker>
+  <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#245f9e"/></marker>
+  <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#247a52"/></marker>
+  <marker id="arrow-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#9a6700"/></marker>
+</defs>
+<style>
+  text { font-family: Arial, Helvetica, sans-serif; fill: #172033; }
+  .title { font-size: 30px; font-weight: 700; }
+  .subtitle { font-size: 17px; fill: #536174; }
+  .section { font-size: 19px; font-weight: 700; }
+  .box-title { font-size: 19px; font-weight: 700; }
+  .body { font-size: 16px; }
+  .small { font-size: 14px; fill: #536174; }
+  .edge-label { font-size: 15px; font-weight: 700; paint-order: stroke; stroke: #ffffff; stroke-width: 5px; stroke-linejoin: round; }
+  .box { stroke: #435269; stroke-width: 2; fill: #f5f7fa; }
+  .box.blue { fill: #e9f2ff; stroke: #245f9e; }
+  .box.green { fill: #eaf7f0; stroke: #247a52; }
+  .box.amber { fill: #fff4d6; stroke: #9a6700; }
+  .box.red { fill: #fdecec; stroke: #b42318; }
+  .box.white { fill: #ffffff; }
+  .box.future { fill: #ffffff; stroke: #6b7280; stroke-dasharray: 9 7; }
+  .boundary { fill: #ffffff; stroke: #26364d; stroke-width: 3; }
+  .group { fill: #f8fafc; stroke: #8a97a8; stroke-width: 1.5; }
+  .arrow { stroke: #435269; stroke-width: 3; fill: none; }
+  .arrow.blue { stroke: #245f9e; }
+  .arrow.green { stroke: #247a52; }
+  .arrow.amber { stroke: #9a6700; }
+  .arrow.dashed { stroke-dasharray: 10 8; }
+  .lane { stroke: #cbd3dd; stroke-width: 1.5; }
+  .divider { stroke: #8a97a8; stroke-width: 2; stroke-dasharray: 8 7; }
+</style>
+<rect width="1200" height="700" fill="#ffffff"/>
+<text x="40" y="48" class="title" text-anchor="start"><tspan x="40" dy="0">How Power Reaches Every Major Load</tspan></text>
+<text x="40" y="78" class="subtitle" text-anchor="start"><tspan x="40" dy="0">Electrical power is shown separately from command and mission data.</tspan></text>
+<rect x="40" y="275" width="170" height="92" rx="14" class="box amber"/>
+<text x="125.0" y="306" class="box-title" text-anchor="middle"><tspan x="125.0" dy="0">Battery</tspan></text>
+<text x="58" y="336" class="body" text-anchor="start"><tspan x="58" dy="0">stored energy</tspan></text>
+<rect x="260" y="275" width="250" height="92" rx="14" class="box amber"/>
+<text x="385.0" y="306" class="box-title" text-anchor="middle"><tspan x="385.0" dy="0">Main Power Distribution</tspan></text>
+<text x="278" y="336" class="body" text-anchor="start"><tspan x="278" dy="0">main bus</tspan></text>
+<rect x="520" y="135" width="190" height="92" rx="14" class="box neutral"/>
+<text x="615.0" y="166" class="box-title" text-anchor="middle"><tspan x="615.0" dy="0">Motor Controllers</tspan></text>
+<text x="538" y="196" class="body" text-anchor="start"><tspan x="538" dy="0">propulsion branch</tspan></text>
+<rect x="800" y="135" width="145" height="92" rx="14" class="box neutral"/>
+<text x="872.5" y="166" class="box-title" text-anchor="middle"><tspan x="872.5" dy="0">Motors</tspan></text>
+<text x="818" y="196" class="body" text-anchor="start"><tspan x="818" dy="0">four corners</tspan></text>
+<rect x="1040" y="135" width="130" height="92" rx="14" class="box neutral"/>
+<text x="1105.0" y="166" class="box-title" text-anchor="middle"><tspan x="1105.0" dy="0">Propellers</tspan></text>
+<text x="1058" y="196" class="body" text-anchor="start"><tspan x="1058" dy="0">thrust</tspan></text>
+<rect x="520" y="420" width="200" height="92" rx="14" class="box amber"/>
+<text x="620.0" y="451" class="box-title" text-anchor="middle"><tspan x="620.0" dy="0">Power Regulators</tspan></text>
+<text x="538" y="481" class="body" text-anchor="start"><tspan x="538" dy="0">regulated branches</tspan></text>
+<rect x="840" y="340" width="250" height="92" rx="14" class="box blue"/>
+<text x="965.0" y="371" class="box-title" text-anchor="middle"><tspan x="965.0" dy="0">Avionics Loads</tspan></text>
+<text x="858" y="401" class="body" text-anchor="start"><tspan x="858" dy="0">flight control + sensors</tspan></text>
+<rect x="840" y="500" width="250" height="92" rx="14" class="box green"/>
+<text x="965.0" y="531" class="box-title" text-anchor="middle"><tspan x="965.0" dy="0">Relay Payload</tspan></text>
+<text x="858" y="561" class="body" text-anchor="start"><tspan x="858" dy="0">regulated payload power</tspan></text>
+<line x1="210" y1="321" x2="260" y2="321" class="arrow amber" marker-end="url(#arrow-amber)"/>
+<text x="235.0" y="260" class="edge-label" text-anchor="middle">source power</text>
+<line x1="510" y1="300" x2="520" y2="181" class="arrow amber" marker-end="url(#arrow-amber)"/>
+<text x="515.0" y="245" class="edge-label" text-anchor="middle">propulsion main bus</text>
+<line x1="710" y1="181" x2="800" y2="181" class="arrow neutral" marker-end="url(#arrow-neutral)"/>
+<text x="755.0" y="116" class="edge-label" text-anchor="middle">controlled power</text>
+<line x1="945" y1="181" x2="1040" y2="181" class="arrow neutral" marker-end="url(#arrow-neutral)"/>
+<text x="992.5" y="116" class="edge-label" text-anchor="middle">mechanical drive</text>
+<line x1="510" y1="342" x2="520" y2="466" class="arrow amber" marker-end="url(#arrow-amber)"/>
+<text x="515.0" y="405" class="edge-label" text-anchor="middle">regulator main bus</text>
+<line x1="720" y1="448" x2="840" y2="386" class="arrow blue" marker-end="url(#arrow-blue)"/>
+<text x="780.0" y="360" class="edge-label" text-anchor="middle">avionics power</text>
+<line x1="720" y1="484" x2="840" y2="546" class="arrow green" marker-end="url(#arrow-green)"/>
+<text x="780.0" y="518" class="edge-label" text-anchor="middle">payload power</text>
+<text x="600" y="650" class="small" text-anchor="middle"><tspan x="600" dy="0">Voltage, current, protection, connectors, and component ratings remain undefined.</tspan></text>
+</svg>

@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+<title id="title">What Is Reference, Current, and Future?</title>
+<desc id="desc">How do the evidence reference, current candidates, and future branches differ?</desc>
+<metadata>Generated from authoritative model records: CFG-REC, CFG-REP, CFG-DOM, CFG-DIG, CFG-SOS</metadata>
+<defs>
+  <marker id="arrow-neutral" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#435269"/></marker>
+  <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#245f9e"/></marker>
+  <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#247a52"/></marker>
+  <marker id="arrow-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#9a6700"/></marker>
+</defs>
+<style>
+  text { font-family: Arial, Helvetica, sans-serif; fill: #172033; }
+  .title { font-size: 30px; font-weight: 700; }
+  .subtitle { font-size: 17px; fill: #536174; }
+  .section { font-size: 19px; font-weight: 700; }
+  .box-title { font-size: 19px; font-weight: 700; }
+  .body { font-size: 16px; }
+  .small { font-size: 14px; fill: #536174; }
+  .edge-label { font-size: 15px; font-weight: 700; paint-order: stroke; stroke: #ffffff; stroke-width: 5px; stroke-linejoin: round; }
+  .box { stroke: #435269; stroke-width: 2; fill: #f5f7fa; }
+  .box.blue { fill: #e9f2ff; stroke: #245f9e; }
+  .box.green { fill: #eaf7f0; stroke: #247a52; }
+  .box.amber { fill: #fff4d6; stroke: #9a6700; }
+  .box.red { fill: #fdecec; stroke: #b42318; }
+  .box.white { fill: #ffffff; }
+  .box.future { fill: #ffffff; stroke: #6b7280; stroke-dasharray: 9 7; }
+  .boundary { fill: #ffffff; stroke: #26364d; stroke-width: 3; }
+  .group { fill: #f8fafc; stroke: #8a97a8; stroke-width: 1.5; }
+  .arrow { stroke: #435269; stroke-width: 3; fill: none; }
+  .arrow.blue { stroke: #245f9e; }
+  .arrow.green { stroke: #247a52; }
+  .arrow.amber { stroke: #9a6700; }
+  .arrow.dashed { stroke-dasharray: 10 8; }
+  .lane { stroke: #cbd3dd; stroke-width: 1.5; }
+  .divider { stroke: #8a97a8; stroke-width: 2; stroke-dasharray: 8 7; }
+</style>
+<rect width="1200" height="700" fill="#ffffff"/>
+<text x="40" y="48" class="title" text-anchor="start"><tspan x="40" dy="0">What Is Reference, Current, and Future?</tspan></text>
+<text x="40" y="78" class="subtitle" text-anchor="start"><tspan x="40" dy="0">Lineage shows influence and planned evolution—not exact inheritance, equivalence, or approval.</tspan></text>
+<text x="160" y="205" class="section" text-anchor="middle"><tspan x="160" dy="0">REFERENCE</tspan></text>
+<text x="615" y="205" class="section" text-anchor="middle"><tspan x="615" dy="0">CURRENT</tspan></text>
+<rect x="45" y="230" width="225" height="130" rx="14" class="box white"/>
+<text x="157.5" y="261" class="box-title" text-anchor="middle"><tspan x="157.5" dy="0">Recovered Reference</tspan></text>
+<text x="63" y="291" class="body" text-anchor="start"><tspan x="63" dy="0">Evidence / reference only</tspan><tspan x="63" dy="22">Incomplete reconstruction</tspan></text>
+<rect x="350" y="230" width="225" height="130" rx="14" class="box blue"/>
+<text x="462.5" y="261" class="box-title" text-anchor="middle"><tspan x="462.5" dy="0">Current Replica</tspan></text>
+<text x="368" y="291" class="body" text-anchor="start"><tspan x="368" dy="0">Current proposed architecture</tspan><tspan x="368" dy="22">Not an exact clone</tspan></text>
+<rect x="655" y="230" width="225" height="130" rx="14" class="box blue"/>
+<text x="767.5" y="261" class="box-title" text-anchor="middle"><tspan x="767.5" dy="0">Domestic Candidate</tspan></text>
+<text x="673" y="291" class="body" text-anchor="start"><tspan x="673" dy="0">Current candidate variant</tspan><tspan x="673" dy="22">Sourcing policy unresolved</tspan></text>
+<text x="910" y="445" class="section" text-anchor="middle"><tspan x="910" dy="0">FUTURE</tspan></text>
+<rect x="655" y="470" width="225" height="130" rx="14" class="box future"/>
+<text x="767.5" y="501" class="box-title" text-anchor="middle"><tspan x="767.5" dy="0">Future Digital Extension</tspan></text>
+<text x="673" y="531" class="body" text-anchor="start"><tspan x="673" dy="0">Future payload-management</tspan><tspan x="673" dy="22">branch</tspan></text>
+<rect x="955" y="470" width="205" height="130" rx="14" class="box future"/>
+<text x="1057.5" y="501" class="box-title" text-anchor="middle"><tspan x="1057.5" dy="0">Future System Context</tspan></text>
+<text x="973" y="531" class="body" text-anchor="start"><tspan x="973" dy="0">Future UGV / radio /</tspan><tspan x="973" dy="22">service context</tspan></text>
+<line x1="270" y1="295" x2="350" y2="295" class="arrow neutral dashed" marker-end="url(#arrow-neutral)"/>
+<text x="310.0" y="280" class="edge-label" text-anchor="middle">informs</text>
+<line x1="575" y1="295" x2="655" y2="295" class="arrow blue" marker-end="url(#arrow-blue)"/>
+<text x="615.0" y="280" class="edge-label" text-anchor="middle">evolves</text>
+<line x1="520" y1="360" x2="655" y2="510" class="arrow neutral dashed" marker-end="url(#arrow-neutral)"/>
+<text x="587.5" y="425" class="edge-label" text-anchor="middle">future branch</text>
+<line x1="880" y1="535" x2="955" y2="535" class="arrow neutral dashed" marker-end="url(#arrow-neutral)"/>
+<text x="600" y="650" class="small" text-anchor="middle"><tspan x="600" dy="0">Recovered evidence does not automatically become candidate architecture; future branches do not alter the current system.</tspan></text>
+</svg>

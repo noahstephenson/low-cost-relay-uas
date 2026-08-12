@@ -10,10 +10,12 @@ The diagrams deliberately omit RF implementation values, build instructions,
 operating procedures, and recovered implementation detail. `CFG-REC` is shown
 only as a descriptive evidence configuration and does not inherit the proposed
 `CFG-REP`/`CFG-DOM` resource decomposition.
+This report is the ID-rich engineering drill-down. Plain-language canonical
+figures are generated separately under `reports/figures/`.
 
 ## Configuration and context views
 
-### 1. Configuration derivation and delta
+### 1. What is current, reference, and future?
 
 Configuration scope: `CFG-REC / CFG-REP / CFG-DOM / CFG-DIG / CFG-SOS`.
 
@@ -33,7 +35,7 @@ flowchart LR
     CFG_DIG -->|"outer system-of-systems context containing the relay UAS as one constituent<br/>derivation is not approval"| CFG_SOS
 ```
 
-### 2. Two-boundary context
+### 2. What is inside the project boundary?
 
 Configuration scope: `CFG-SOS outer context - CFG-REP / CFG-DOM / CFG-DIG inner constituent`.
 
@@ -67,7 +69,7 @@ flowchart LR
     OP_007 -->|"IX-010 / IFC-EXT-006<br/>configuration and maintenance"| OP_002
 ```
 
-### 3. Current three-node operational connectivity
+### 3. How current-system traffic moves
 
 Configuration scope: `CFG-REP / CFG-DOM`.
 
@@ -87,31 +89,9 @@ flowchart LR
     OP_002 -->|"IX-005 / IFC-EXT-004<br/>telemetry"| OP_001
 ```
 
-## Relay-UAS resource views
+## Selected resource connectivity views
 
-### 4A. Structure and payload mounting
-
-Configuration scope: `CFG-REP / CFG-DOM`.
-
-```mermaid
-flowchart LR
-    %% Configuration scope: CFG-REP / CFG-DOM
-    CMP_AFR_01["CMP-AFR-01<br/>Center frame plate"]
-    CMP_AFR_02["CMP-AFR-02<br/>Arm assembly"]
-    CMP_AFR_03["CMP-AFR-03<br/>Landing gear"]
-    CMP_AFR_04["CMP-AFR-04<br/>Payload mount interface"]
-    CMP_AFR_05["CMP-AFR-05<br/>Fastener and hardware set"]
-    CMP_MNT_01["CMP-MNT-01<br/>Modular payload bay"]
-    CMP_COM_01["CMP-COM-01<br/>Relay payload module (black box)"]
-    CMP_AFR_01 -.->|"supports arm assembly"| CMP_AFR_02
-    CMP_AFR_01 -.->|"supports landing gear"| CMP_AFR_03
-    CMP_AFR_01 -.->|"supports payload mount"| CMP_AFR_04
-    CMP_AFR_01 -.->|"uses retention hardware"| CMP_AFR_05
-    CMP_AFR_04 -.->|"supports modular payload bay"| CMP_MNT_01
-    CMP_MNT_01 <-->|"IFC-INT-007<br/>mechanical mounting"| CMP_COM_01
-```
-
-### 4B. Power and propulsion connectivity
+### 4B. How power and propulsion connect
 
 Configuration scope: `CFG-REP / CFG-DOM`.
 
@@ -138,7 +118,7 @@ flowchart LR
     CMP_PRP_01 -->|"IFC-INT-014<br/>mechanical propulsion drive"| CMP_PRP_03
 ```
 
-### 4C. Avionics and platform control connectivity
+### 4C. How platform control works
 
 Configuration scope: `CFG-REP / CFG-DOM`.
 
@@ -160,7 +140,7 @@ flowchart LR
     CMP_AVN_03 -->|"IFC-INT-012<br/>navigation and timing"| CMP_AVN_01
 ```
 
-### 4D. Payload boundary and external traffic
+### 4D. How the relay payload is isolated
 
 Configuration scope: `CFG-REP / CFG-DOM`.
 
@@ -186,40 +166,9 @@ flowchart LR
     CMP_COM_01 -->|"IFC-EXT-004<br/>telemetry<br/>implementation undefined"| OP_001
 ```
 
-### 4E. Maintenance and configuration support
+## Evidence correspondence view
 
-Configuration scope: `CFG-REP / CFG-DOM / CFG-DIG / CFG-SOS`.
-
-This support/governance interface is intentionally omitted from airborne mission-traffic diagrams.
-
-```mermaid
-flowchart LR
-    %% Configuration scope: CFG-REP / CFG-DOM / CFG-DIG / CFG-SOS
-    OP_007["OP-007<br/>Maintenance Personnel"]
-    OP_002["OP-002<br/>Relay UAS / Relay Node"]
-    OP_007 <-->|"IFC-EXT-006<br/>configuration and maintenance<br/>IX-010 support/governance"| OP_002
-```
-
-### 4F. Future digital interface delta
-
-Configuration scope: `CFG-DIG / CFG-SOS only`.
-
-`IFC-INT-008` is not part of the current `CFG-REP`/`CFG-DOM` two-interface payload boundary.
-
-```mermaid
-flowchart LR
-    %% Configuration scope: CFG-DIG / CFG-SOS only
-    CMP_AVN_01["CMP-AVN-01<br/>Flight controller"]
-    CMP_COM_01["CMP-COM-01<br/>Relay payload module (black box)<br/>future payload [PROPOSED]"]
-    CMP_AVN_01 <-->|"IFC-INT-008<br/>payload management and health and status<br/>future / proposed"| CMP_COM_01
-    IX_008["IX-008<br/>Video or sensor-data return candidate<br/>future sensor-data exchange [UNRESOLVED]"]
-    GAP_SOS_002["GAP-SOS-002<br/>Video or sensor-data return has no allocated current interface, function, requirement, hazard set, or verification authority.<br/>realizing interface unresolved"]
-    IX_008 -.->|"deferred to gap"| GAP_SOS_002
-```
-
-## Evidence correspondence views
-
-### 4G. Recovered evidence to candidate role correspondence
+### 4G. How recovered evidence informs candidate roles
 
 Configuration scope: `CFG-REC informs CFG-REP / CFG-DOM - no exact inheritance`.
 
@@ -236,27 +185,9 @@ flowchart LR
     REC_MOUNTING["Recovered payload retention"] -->|"partial role support"| CAND_MOUNTING["CMP-MNT-01"]
 ```
 
-### 4H. Candidate architecture evidence coverage
-
-Configuration scope: `CFG-REP / CFG-DOM current - CFG-DIG future interface classified separately`.
-
-Coverage classification is evidence posture, not approval, identity, or requirement verification.
-
-```mermaid
-flowchart LR
-    %% Configuration scope: CFG-REP / CFG-DOM current - CFG-DIG future interface classified separately
-    COVERAGE["Two-way candidate coverage<br/>19 components / 22 interfaces"]
-    COVERAGE --> DIRECT["Direct source support<br/>components 10 / interfaces 3"]
-    COVERAGE --> INDIRECT["Indirect source support<br/>components 4 / interfaces 8"]
-    COVERAGE --> INFERENCE["Engineering inference<br/>components 2 / interfaces 4"]
-    COVERAGE --> PROPOSED["Proposed architecture only<br/>components 1 / interfaces 4"]
-    COVERAGE --> NONE["No recovered evidence<br/>components 2 / interfaces 2"]
-    COVERAGE --> NA["Not applicable<br/>components 0 / interfaces 1"]
-```
-
 ## Behavioral views
 
-### 5. Operating-mode state
+### 5. How operating modes change
 
 Configuration scope: `CFG-REP / CFG-DOM`.
 
@@ -285,28 +216,7 @@ stateDiagram-v2
     end note
 ```
 
-### 6. Launch and positioning sequence
-
-Configuration scope: `CFG-REP / CFG-DOM`.
-
-```mermaid
-sequenceDiagram
-    %% Configuration scope: CFG-REP / CFG-DOM
-    participant Operator as OP-010 Operator
-    participant Receiver as CMP-AVN-04 Control receiver
-    participant Flight as CMP-AVN-01 Flight-control resource
-    participant Nav as CMP-AVN-02 Navigation/sensor resources
-    participant Propulsion as CMP-PRP-02 Propulsion control
-    participant Relay as OP-002 Relay UAS health/status
-    Operator->>Receiver: IX-001 / IFC-EXT-005 platform command intent
-    Receiver->>Flight: IFC-INT-005 platform control input
-    Nav-->>Flight: IFC-INT-009 navigation/timing information
-    Flight->>Propulsion: IFC-INT-004 propulsion command
-    Relay-->>Operator: IX-009 / IFC-EXT-007 health/status [PROPOSED]
-    Note over Operator,Relay: SCN-002 architecture walkthrough - no procedure defined
-```
-
-### 7. Bidirectional relay sequence
+### 7. How command and telemetry flow
 
 Configuration scope: `CFG-REP / CFG-DOM`.
 
@@ -328,7 +238,7 @@ sequenceDiagram
     Note over Ground,Remote: SCN-003 / SCN-004 logical relay only - external paths undefined
 ```
 
-### 8. Degradation and recovery sequence
+### 8. What happens on relay degradation?
 
 Configuration scope: `CFG-REP / CFG-DOM`.
 
@@ -353,68 +263,7 @@ sequenceDiagram
     end
 ```
 
-### 9. Scenario lifecycle
-
-Configuration scope: `CFG-REP / CFG-DOM current - CFG-DIG / CFG-SOS proposed branches`.
-
-Dashed branches are future proposals without complete activity, interface, requirement, hazard, or verification allocation.
-
-```mermaid
-flowchart LR
-    %% Configuration scope: CFG-REP / CFG-DOM current - CFG-DIG / CFG-SOS proposed branches
-    SCN_001["SCN-001<br/>System setup and initialization<br/>[PROPOSED]"]
-    SCN_002["SCN-002<br/>Relay-UAS launch and positioning<br/>[PROPOSED]"]
-    SCN_003["SCN-003<br/>Remote-UAS command through the relay<br/>[PROPOSED]"]
-    SCN_004["SCN-004<br/>Remote-UAS telemetry return<br/>[PROPOSED]"]
-    SCN_005["SCN-005<br/>UGV command and telemetry through the architecture<br/>[PROPOSED]"]
-    SCN_006["SCN-006<br/>Video or sensor-data return<br/>[PROPOSED]"]
-    SCN_007["SCN-007<br/>Relay degradation, loss, or recovery<br/>[PROPOSED]"]
-    SCN_008["SCN-008<br/>Mission termination and data recovery<br/>[PROPOSED]"]
-    SCN_001 -->|"progression"| SCN_002
-    SCN_002 -->|"outbound relay thread"| SCN_003
-    SCN_002 -->|"return relay thread"| SCN_004
-    SCN_003 -->|"degraded relay condition"| SCN_007
-    SCN_004 -->|"degraded relay condition"| SCN_007
-    SCN_003 -->|"normal termination"| SCN_008
-    SCN_004 -->|"normal termination"| SCN_008
-    SCN_007 -->|"recovery intent"| SCN_008
-    SCN_001 -.->|"future UGV branch / GAP-SOS-001"| SCN_005
-    SCN_001 -.->|"future sensor-data branch / GAP-SOS-002"| SCN_006
-```
-
-### 9A. Health/status logical thread
-
-Configuration scope: `CFG-REP / CFG-DOM`.
-
-The logical status purpose is proposed. Message content, transport, external authority, and physical evidence remain unresolved.
-
-```mermaid
-flowchart LR
-    %% Configuration scope: CFG-REP / CFG-DOM
-    SCN_007["SCN-007<br/>Relay degradation, loss, or recovery<br/>[PROPOSED]"]
-    IX_009["IX-009<br/>Relay-UAS health and status<br/>[PROPOSED]"]
-    IFC_INT_006["IFC-INT-006<br/>Battery-state telemetry<br/>[PROPOSED]"]
-    FUN_HLT_01["FUN-HLT-01<br/>Monitor and report health/status<br/>[PROPOSED]"]
-    CMP_AVN_01["CMP-AVN-01<br/>Flight controller<br/>[PROPOSED]"]
-    IFC_EXT_007["IFC-EXT-007<br/>Health/status return<br/>[PROPOSED]"]
-    OP_010["OP-010<br/>Operator<br/>[PROPOSED]"]
-    REQ_FUN_008["REQ-FUN-008<br/>Provide mode and health/status<br/>[PROPOSED]"]
-    VER_005["VER-005<br/>Interface-catalog inspection<br/>[EXECUTED WITH OPEN GAPS]"]
-    VER_008["VER-008<br/>Deferred physical verification method<br/>[DEFERRED]"]
-    VER_009["VER-009<br/>External conformance verification<br/>[BLOCKED]"]
-    SCN_007 -->|"uses"| IX_009
-    IX_009 -->|"supported by"| FUN_HLT_01
-    IFC_INT_006 -->|"battery-state input only"| FUN_HLT_01
-    FUN_HLT_01 -->|"allocated to"| CMP_AVN_01
-    IX_009 -->|"realized by"| IFC_EXT_007
-    IFC_EXT_007 -->|"made available to"| OP_010
-    REQ_FUN_008 -->|"allocates behavior"| FUN_HLT_01
-    REQ_FUN_008 -->|"model review"| VER_005
-    REQ_FUN_008 -.->|"physical evidence"| VER_008
-    REQ_FUN_008 -.->|"external conformance"| VER_009
-```
-
-### 9B. Mass-cost-power-endurance dependency
+### 9B. Why mass, power, endurance, and cost are coupled
 
 Configuration scope: `CFG-REP / CFG-DOM`.
 
@@ -447,49 +296,7 @@ flowchart LR
 
 ## Assurance and traceability views
 
-### 10. Hazard-control-requirement-verification
-
-Configuration scope: `CFG-REP / CFG-DOM`.
-
-Executed model reviews establish trace consistency only. Deferred physical methods remain unexecuted, and no review provides approval or safety credit.
-
-```mermaid
-flowchart LR
-    %% Configuration scope: CFG-REP / CFG-DOM
-    HAZ_004["HAZ-004<br/>Propeller contact injury<br/>[PROPOSED]"]
-    CTL_001["CTL-001<br/>Ground-safe motor arming inhibit and visible armed-state indication<br/>[PROPOSED]"]
-    HAZ_004 -->|"mitigated by"| CTL_001
-    REQ_FUN_006["REQ-FUN-006<br/>Inhibit arming in Ground Safe<br/>[PROPOSED]"]
-    CTL_001 -->|"implemented by"| REQ_FUN_006
-    VER_004["VER-004<br/>Operational-scenario walkthrough<br/>[EXECUTED WITH OPEN GAPS]"]
-    REQ_FUN_006 -->|"verification allocation"| VER_004
-    GAP_VER_001["GAP-VER-001<br/>Physical and external evidence missing<br/>[OPEN PHYSICAL / EXTERNAL EVIDENCE]"]
-    VER_004 -.->|"model review complete - physical evidence absent"| GAP_VER_001
-    VER_006["VER-006<br/>Hazard-control-requirement cross-reference<br/>[EXECUTED WITH OPEN GAPS]"]
-    REQ_FUN_006 -->|"verification allocation"| VER_006
-    VER_006 -.->|"model review complete - physical evidence absent"| GAP_VER_001
-    REQ_SAF_002["REQ-SAF-002<br/>Show armed state to operator<br/>[PROPOSED]"]
-    CTL_001 -->|"implemented by"| REQ_SAF_002
-    REQ_SAF_002 -->|"verification allocation"| VER_004
-    VER_004 -.->|"model review complete - physical evidence absent"| GAP_VER_001
-    REQ_SAF_002 -->|"verification allocation"| VER_006
-    VER_006 -.->|"model review complete - physical evidence absent"| GAP_VER_001
-    HAZ_008["HAZ-008<br/>Payload separation in flight<br/>[PROPOSED]"]
-    CTL_005["CTL-005<br/>Payload retention under flight loads<br/>[PROPOSED]"]
-    HAZ_008 -->|"mitigated by"| CTL_005
-    REQ_IFC_004["REQ-IFC-004<br/>Retain payload under flight loads<br/>[PROPOSED]"]
-    CTL_005 -->|"implemented by"| REQ_IFC_004
-    VER_005["VER-005<br/>Interface-catalog inspection<br/>[EXECUTED WITH OPEN GAPS]"]
-    REQ_IFC_004 -->|"verification allocation"| VER_005
-    VER_005 -.->|"model review complete - physical evidence absent"| GAP_VER_001
-    REQ_IFC_004 -->|"verification allocation"| VER_006
-    VER_006 -.->|"model review complete - physical evidence absent"| GAP_VER_001
-    VER_008["VER-008<br/>Deferred physical verification method<br/>[DEFERRED]"]
-    REQ_IFC_004 -->|"verification allocation"| VER_008
-    VER_008 -.->|"execution unavailable"| GAP_VER_001
-```
-
-### 10A. Verification execution and remaining readiness
+### 10A. What has been checked and what still needs evidence?
 
 Configuration scope: `CFG-REP / CFG-DOM with project-scope deferrals`.
 
@@ -516,7 +323,7 @@ flowchart LR
     DEFERRED -.->|"outside current scope"| TS_009
 ```
 
-### 11. End-to-end architecture trace
+### 11. Example end-to-end relay trace
 
 Configuration scope: `CFG-REP / CFG-DOM`.
 
@@ -548,34 +355,6 @@ flowchart LR
     REQ_FUN_001 -->|"model analysis"| VER_001
     REQ_FUN_001 -.->|"external conformance"| VER_009
     VER_009 -.->|"authority and evidence unresolved"| GAP_IFC_001
-```
-
-### 12. Evidence and approval governance
-
-Configuration scope: `Project governance - CFG-REC evidence semantics - all configurations remain not approved`.
-
-Evidence supports claims; it does not approve architecture. Proposed decisions require explicit owner action.
-
-```mermaid
-flowchart LR
-    %% Configuration scope: Project governance - CFG-REC evidence semantics - all configurations remain not approved
-    SRC_INT_001["SRC-INT-001<br/>Recovered-article research report<br/>registered source"]
-    EVD_002["EVD-002<br/>EVD-002<br/>registered evidence record"]
-    CLM_REC_001["CLM-REC-001<br/>Recovered-article flight-controller identification record<br/>source-supported claim"]
-    CFG_REC["CFG-REC<br/>Reference evidence<br/>descriptive evidence configuration"]
-    CLM_REC_005["CLM-REC-005<br/>Recovered-to-generic model reconciliation<br/>controlled role mapping demonstrated"]
-    GAP_REC_001["GAP-REC-001<br/>Role mapping complete - exact equivalence unresolved<br/>narrowed - exact equivalence unresolved"]
-    DEC_002["DEC-002<br/>Select UAF terminology and version posture<br/>proposed owner decision"]
-    GAP_STD_001["GAP-STD-001<br/>UAF version decision unresolved<br/>unresolved standards decision"]
-    BASELINE["Baseline Candidate - Not Approved<br/>model-valid may still be gapped"]
-    SRC_INT_001 -->|"registered as"| EVD_002
-    EVD_002 -->|"supports - does not approve"| CLM_REC_001
-    CLM_REC_001 -->|"applicable to evidence configuration"| CFG_REC
-    CLM_REC_005 -->|"records two-way role correspondence"| CFG_REC
-    CFG_REC -.->|"complete reconstruction unresolved"| GAP_REC_001
-    DEC_002 -.->|"owner review required"| GAP_STD_001
-    GAP_REC_001 -->|"gap remains visible"| BASELINE
-    GAP_STD_001 -->|"gap remains visible"| BASELINE
 ```
 
 ## Generated interface inventory
@@ -612,4 +391,4 @@ allocation is distinct from real-world external conformance and execution eviden
 
 - Optional syntax validation expects Mermaid CLI `mmdc` 11.4.1 when installed locally.
 - Absence of Node.js or the pinned CLI does not invalidate standard-library catalog validation.
-- No generated SVG or PNG is required; GitHub-rendered Markdown is the primary artifact.
+- This technical report remains Mermaid-based; canonical SVG figures are generated and validated separately.

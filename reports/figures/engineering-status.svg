@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+<title id="title">What Did the Project Actually Establish?</title>
+<desc id="desc">Which results are established, conditional, pending, externally blocked, deferred, or not approved?</desc>
+<metadata>Generated from authoritative model records: VER-001, VER-007, VER-008, VER-009, TS-009, GAP-BUDGET-001, GAP-IFC-001, GAP-VER-001, DEC-001</metadata>
+<defs>
+  <marker id="arrow-neutral" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#435269"/></marker>
+  <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#245f9e"/></marker>
+  <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#247a52"/></marker>
+  <marker id="arrow-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#9a6700"/></marker>
+</defs>
+<style>
+  text { font-family: Arial, Helvetica, sans-serif; fill: #172033; }
+  .title { font-size: 30px; font-weight: 700; }
+  .subtitle { font-size: 17px; fill: #536174; }
+  .section { font-size: 19px; font-weight: 700; }
+  .box-title { font-size: 19px; font-weight: 700; }
+  .body { font-size: 16px; }
+  .small { font-size: 14px; fill: #536174; }
+  .edge-label { font-size: 15px; font-weight: 700; paint-order: stroke; stroke: #ffffff; stroke-width: 5px; stroke-linejoin: round; }
+  .box { stroke: #435269; stroke-width: 2; fill: #f5f7fa; }
+  .box.blue { fill: #e9f2ff; stroke: #245f9e; }
+  .box.green { fill: #eaf7f0; stroke: #247a52; }
+  .box.amber { fill: #fff4d6; stroke: #9a6700; }
+  .box.red { fill: #fdecec; stroke: #b42318; }
+  .box.white { fill: #ffffff; }
+  .box.future { fill: #ffffff; stroke: #6b7280; stroke-dasharray: 9 7; }
+  .boundary { fill: #ffffff; stroke: #26364d; stroke-width: 3; }
+  .group { fill: #f8fafc; stroke: #8a97a8; stroke-width: 1.5; }
+  .arrow { stroke: #435269; stroke-width: 3; fill: none; }
+  .arrow.blue { stroke: #245f9e; }
+  .arrow.green { stroke: #247a52; }
+  .arrow.amber { stroke: #9a6700; }
+  .arrow.dashed { stroke-dasharray: 10 8; }
+  .lane { stroke: #cbd3dd; stroke-width: 1.5; }
+  .divider { stroke: #8a97a8; stroke-width: 2; stroke-dasharray: 8 7; }
+</style>
+<rect width="1200" height="700" fill="#ffffff"/>
+<text x="40" y="48" class="title" text-anchor="start"><tspan x="40" dy="0">What Did the Project Actually Establish?</tspan></text>
+<text x="40" y="78" class="subtitle" text-anchor="start"><tspan x="40" dy="0">A mature model is not the same thing as a verified aircraft.</tspan></text>
+<text x="55" y="125" class="section" text-anchor="start"><tspan x="55" dy="0">AREA</tspan></text>
+<text x="430" y="125" class="section" text-anchor="start"><tspan x="430" dy="0">STATUS</tspan></text>
+<text x="820" y="125" class="section" text-anchor="start"><tspan x="820" dy="0">WHAT THAT MEANS</tspan></text>
+<rect x="40" y="148" width="1120" height="48" class="box white" rx="4"/>
+<rect x="40" y="148" width="12" height="48" class="box green" rx="0"/>
+<text x="68" y="178" class="body" text-anchor="start"><tspan x="68" dy="0">Architecture structure</tspan></text>
+<text x="430" y="178" class="section" text-anchor="start"><tspan x="430" dy="0">ESTABLISHED</tspan></text>
+<text x="820" y="178" class="body" text-anchor="start"><tspan x="820" dy="0">19 components / 22 interfaces</tspan></text>
+<rect x="40" y="199" width="1120" height="48" class="box white" rx="4"/>
+<rect x="40" y="199" width="12" height="48" class="box green" rx="0"/>
+<text x="68" y="229" class="body" text-anchor="start"><tspan x="68" dy="0">System boundary + current mission</tspan></text>
+<text x="430" y="229" class="section" text-anchor="start"><tspan x="430" dy="0">ESTABLISHED</tspan></text>
+<text x="820" y="229" class="body" text-anchor="start"><tspan x="820" dy="0">Boundary and scenarios defined</tspan></text>
+<rect x="40" y="250" width="1120" height="48" class="box white" rx="4"/>
+<rect x="40" y="250" width="12" height="48" class="box green" rx="0"/>
+<text x="68" y="280" class="body" text-anchor="start"><tspan x="68" dy="0">Requirements + traceability</tspan></text>
+<text x="430" y="280" class="section" text-anchor="start"><tspan x="430" dy="0">ESTABLISHED</tspan></text>
+<text x="820" y="280" class="body" text-anchor="start"><tspan x="820" dy="0">Internally checked; open gaps remain visible</tspan></text>
+<rect x="40" y="301" width="1120" height="48" class="box white" rx="4"/>
+<rect x="40" y="301" width="12" height="48" class="box green" rx="0"/>
+<text x="68" y="331" class="body" text-anchor="start"><tspan x="68" dy="0">Internal model verification</tspan></text>
+<text x="430" y="331" class="section" text-anchor="start"><tspan x="430" dy="0">ESTABLISHED WITH OPEN GAPS</tspan></text>
+<text x="820" y="331" class="body" text-anchor="start"><tspan x="820" dy="0">Model review only—not physical proof</tspan></text>
+<rect x="40" y="352" width="1120" height="48" class="box white" rx="4"/>
+<rect x="40" y="352" width="12" height="48" class="box amber" rx="0"/>
+<text x="68" y="382" class="body" text-anchor="start"><tspan x="68" dy="0">Feasibility analysis</tspan></text>
+<text x="430" y="382" class="section" text-anchor="start"><tspan x="430" dy="0">CONDITIONAL</tspan></text>
+<text x="820" y="382" class="body" text-anchor="start"><tspan x="820" dy="0">Short-dwell region appears plausible</tspan></text>
+<rect x="40" y="403" width="1120" height="48" class="box white" rx="4"/>
+<rect x="40" y="403" width="12" height="48" class="box amber" rx="0"/>
+<text x="68" y="433" class="body" text-anchor="start"><tspan x="68" dy="0">Owner target values</tspan></text>
+<text x="430" y="433" class="section" text-anchor="start"><tspan x="430" dy="0">PENDING OWNER INPUT</tspan></text>
+<text x="820" y="433" class="body" text-anchor="start"><tspan x="820" dy="0">Five owner targets remain TBD</tspan></text>
+<rect x="40" y="454" width="1120" height="48" class="box white" rx="4"/>
+<rect x="40" y="454" width="12" height="48" class="box red" rx="0"/>
+<text x="68" y="484" class="body" text-anchor="start"><tspan x="68" dy="0">Physical verification</tspan></text>
+<text x="430" y="484" class="section" text-anchor="start"><tspan x="430" dy="0">REQUIRES PHYSICAL EVIDENCE</tspan></text>
+<text x="820" y="484" class="body" text-anchor="start"><tspan x="820" dy="0">Physical evidence absent</tspan></text>
+<rect x="40" y="505" width="1120" height="48" class="box white" rx="4"/>
+<rect x="40" y="505" width="12" height="48" class="box red" rx="0"/>
+<text x="68" y="535" class="body" text-anchor="start"><tspan x="68" dy="0">External interface conformance</tspan></text>
+<text x="430" y="535" class="section" text-anchor="start"><tspan x="430" dy="0">REQUIRES EXTERNAL AUTHORITY</tspan></text>
+<text x="820" y="535" class="body" text-anchor="start"><tspan x="820" dy="0">Authority and specification absent</tspan></text>
+<rect x="40" y="556" width="1120" height="48" class="box white" rx="4"/>
+<rect x="40" y="556" width="12" height="48" class="box neutral" rx="0"/>
+<text x="68" y="586" class="body" text-anchor="start"><tspan x="68" dy="0">Relay-payload implementation</tspan></text>
+<text x="430" y="586" class="section" text-anchor="start"><tspan x="430" dy="0">DEFERRED</tspan></text>
+<text x="820" y="586" class="body" text-anchor="start"><tspan x="820" dy="0">Black box; RF details outside project scope</tspan></text>
+<rect x="40" y="607" width="1120" height="48" class="box white" rx="4"/>
+<rect x="40" y="607" width="12" height="48" class="box red" rx="0"/>
+<text x="68" y="637" class="body" text-anchor="start"><tspan x="68" dy="0">Technical baseline approval</tspan></text>
+<text x="430" y="637" class="section" text-anchor="start"><tspan x="430" dy="0">NOT APPROVED</tspan></text>
+<text x="820" y="637" class="body" text-anchor="start"><tspan x="820" dy="0">Penultimate communication pass</tspan></text>
+<text x="600" y="676" class="small" text-anchor="middle"><tspan x="600" dy="0">No row grants safety, airworthiness, interoperability, operational readiness, or technical-baseline approval.</tspan></text>
+</svg>

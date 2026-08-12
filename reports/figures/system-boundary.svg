@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+<title id="title">What Is Inside This Project?</title>
+<desc id="desc">What is inside the Relay UAS product boundary and what remains external?</desc>
+<metadata>Generated from authoritative model records: OP-001, OP-002, OP-003, OP-007, OP-008, OP-010, CMP-COM-01</metadata>
+<defs>
+  <marker id="arrow-neutral" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#435269"/></marker>
+  <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#245f9e"/></marker>
+  <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#247a52"/></marker>
+  <marker id="arrow-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#9a6700"/></marker>
+</defs>
+<style>
+  text { font-family: Arial, Helvetica, sans-serif; fill: #172033; }
+  .title { font-size: 30px; font-weight: 700; }
+  .subtitle { font-size: 17px; fill: #536174; }
+  .section { font-size: 19px; font-weight: 700; }
+  .box-title { font-size: 19px; font-weight: 700; }
+  .body { font-size: 16px; }
+  .small { font-size: 14px; fill: #536174; }
+  .edge-label { font-size: 15px; font-weight: 700; paint-order: stroke; stroke: #ffffff; stroke-width: 5px; stroke-linejoin: round; }
+  .box { stroke: #435269; stroke-width: 2; fill: #f5f7fa; }
+  .box.blue { fill: #e9f2ff; stroke: #245f9e; }
+  .box.green { fill: #eaf7f0; stroke: #247a52; }
+  .box.amber { fill: #fff4d6; stroke: #9a6700; }
+  .box.red { fill: #fdecec; stroke: #b42318; }
+  .box.white { fill: #ffffff; }
+  .box.future { fill: #ffffff; stroke: #6b7280; stroke-dasharray: 9 7; }
+  .boundary { fill: #ffffff; stroke: #26364d; stroke-width: 3; }
+  .group { fill: #f8fafc; stroke: #8a97a8; stroke-width: 1.5; }
+  .arrow { stroke: #435269; stroke-width: 3; fill: none; }
+  .arrow.blue { stroke: #245f9e; }
+  .arrow.green { stroke: #247a52; }
+  .arrow.amber { stroke: #9a6700; }
+  .arrow.dashed { stroke-dasharray: 10 8; }
+  .lane { stroke: #cbd3dd; stroke-width: 1.5; }
+  .divider { stroke: #8a97a8; stroke-width: 2; stroke-dasharray: 8 7; }
+</style>
+<rect width="1200" height="700" fill="#ffffff"/>
+<text x="40" y="48" class="title" text-anchor="start"><tspan x="40" dy="0">What Is Inside This Project?</tspan></text>
+<text x="40" y="78" class="subtitle" text-anchor="start"><tspan x="40" dy="0">The product boundary contains the aircraft and black-box payload; users, other vehicles, and authorities remain external.</tspan></text>
+<rect x="315" y="115" width="570" height="500" rx="24" class="boundary"/>
+<text x="600" y="151" class="section" text-anchor="middle"><tspan x="600" dy="0">Relay UAS Product Boundary</tspan></text>
+<rect x="355" y="190" width="235" height="150" rx="14" class="box neutral"/>
+<text x="472.5" y="221" class="box-title" text-anchor="middle"><tspan x="472.5" dy="0">Aircraft Platform</tspan></text>
+<text x="373" y="251" class="body" text-anchor="start"><tspan x="373" dy="0">Airframe and structure</tspan><tspan x="373" dy="22">Propulsion</tspan><tspan x="373" dy="22">Electrical power</tspan></text>
+<rect x="610" y="190" width="235" height="150" rx="14" class="box blue"/>
+<text x="727.5" y="221" class="box-title" text-anchor="middle"><tspan x="727.5" dy="0">Flight and Control</tspan></text>
+<text x="628" y="251" class="body" text-anchor="start"><tspan x="628" dy="0">Flight avionics</tspan><tspan x="628" dy="22">Platform command receiver</tspan><tspan x="628" dy="22">Health / status</tspan></text>
+<rect x="355" y="370" width="235" height="155" rx="14" class="box neutral"/>
+<text x="472.5" y="401" class="box-title" text-anchor="middle"><tspan x="472.5" dy="0">Payload Support</tspan></text>
+<text x="373" y="431" class="body" text-anchor="start"><tspan x="373" dy="0">Mechanical mounting</tspan><tspan x="373" dy="22">Regulated payload power</tspan><tspan x="373" dy="22">Configuration support</tspan></text>
+<rect x="610" y="370" width="235" height="155" rx="14" class="box green"/>
+<text x="727.5" y="401" class="box-title" text-anchor="middle"><tspan x="727.5" dy="0">Relay Payload</tspan></text>
+<text x="628" y="431" class="body" text-anchor="start"><tspan x="628" dy="0">Black-box payload + antenna</tspan><tspan x="628" dy="22">Internal design unknown</tspan></text>
+<text x="600" y="570" class="small" text-anchor="middle"><tspan x="600" dy="0">Only power and mechanical retention cross from platform to payload.</tspan></text>
+<rect x="35" y="155" width="225" height="100" rx="14" class="box white"/>
+<text x="147.5" y="186" class="box-title" text-anchor="middle"><tspan x="147.5" dy="0">Operator</tspan></text>
+<text x="53" y="216" class="body" text-anchor="start"><tspan x="53" dy="0">External human performer</tspan></text>
+<rect x="35" y="285" width="225" height="100" rx="14" class="box white"/>
+<text x="147.5" y="316" class="box-title" text-anchor="middle"><tspan x="147.5" dy="0">Ground Control</tspan></text>
+<text x="53" y="346" class="body" text-anchor="start"><tspan x="53" dy="0">External control system</tspan></text>
+<rect x="35" y="415" width="225" height="100" rx="14" class="box white"/>
+<text x="147.5" y="446" class="box-title" text-anchor="middle"><tspan x="147.5" dy="0">Maintenance</tspan></text>
+<text x="53" y="476" class="body" text-anchor="start"><tspan x="53" dy="0">External support performer</tspan></text>
+<rect x="940" y="155" width="225" height="100" rx="14" class="box white"/>
+<text x="1052.5" y="186" class="box-title" text-anchor="middle"><tspan x="1052.5" dy="0">Remote UAS</tspan></text>
+<text x="958" y="216" class="body" text-anchor="start"><tspan x="958" dy="0">External vehicle</tspan></text>
+<rect x="940" y="285" width="225" height="100" rx="14" class="box future"/>
+<text x="1052.5" y="316" class="box-title" text-anchor="middle"><tspan x="1052.5" dy="0">Future Platforms</tspan></text>
+<text x="958" y="346" class="body" text-anchor="start"><tspan x="958" dy="0">Future configuration only</tspan></text>
+<rect x="940" y="415" width="225" height="100" rx="14" class="box future"/>
+<text x="1052.5" y="446" class="box-title" text-anchor="middle"><tspan x="1052.5" dy="0">External Authorities</tspan></text>
+<text x="958" y="476" class="body" text-anchor="start"><tspan x="958" dy="0">Spectrum and conformance</tspan></text>
+<line x1="260" y1="335" x2="315" y2="335" class="arrow neutral" marker-end="url(#arrow-neutral)"/>
+<line x1="885" y1="335" x2="940" y2="335" class="arrow neutral" marker-end="url(#arrow-neutral)"/>
+<text x="600" y="660" class="small" text-anchor="middle"><tspan x="600" dy="0">Outside systems remain independently managed; the outer system-of-systems context is future scope.</tspan></text>
+</svg>

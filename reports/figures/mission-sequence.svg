@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+<title id="title">What Happens During a Relay Mission?</title>
+<desc id="desc">What is the normal current-system mission sequence?</desc>
+<metadata>Generated from authoritative model records: SCN-001, SCN-002, SCN-003, SCN-004, SCN-008, OA-007, OA-002, OA-003, OA-004, OA-005, OA-006</metadata>
+<defs>
+  <marker id="arrow-neutral" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#435269"/></marker>
+  <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#245f9e"/></marker>
+  <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#247a52"/></marker>
+  <marker id="arrow-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#9a6700"/></marker>
+</defs>
+<style>
+  text { font-family: Arial, Helvetica, sans-serif; fill: #172033; }
+  .title { font-size: 30px; font-weight: 700; }
+  .subtitle { font-size: 17px; fill: #536174; }
+  .section { font-size: 19px; font-weight: 700; }
+  .box-title { font-size: 19px; font-weight: 700; }
+  .body { font-size: 16px; }
+  .small { font-size: 14px; fill: #536174; }
+  .edge-label { font-size: 15px; font-weight: 700; paint-order: stroke; stroke: #ffffff; stroke-width: 5px; stroke-linejoin: round; }
+  .box { stroke: #435269; stroke-width: 2; fill: #f5f7fa; }
+  .box.blue { fill: #e9f2ff; stroke: #245f9e; }
+  .box.green { fill: #eaf7f0; stroke: #247a52; }
+  .box.amber { fill: #fff4d6; stroke: #9a6700; }
+  .box.red { fill: #fdecec; stroke: #b42318; }
+  .box.white { fill: #ffffff; }
+  .box.future { fill: #ffffff; stroke: #6b7280; stroke-dasharray: 9 7; }
+  .boundary { fill: #ffffff; stroke: #26364d; stroke-width: 3; }
+  .group { fill: #f8fafc; stroke: #8a97a8; stroke-width: 1.5; }
+  .arrow { stroke: #435269; stroke-width: 3; fill: none; }
+  .arrow.blue { stroke: #245f9e; }
+  .arrow.green { stroke: #247a52; }
+  .arrow.amber { stroke: #9a6700; }
+  .arrow.dashed { stroke-dasharray: 10 8; }
+  .lane { stroke: #cbd3dd; stroke-width: 1.5; }
+  .divider { stroke: #8a97a8; stroke-width: 2; stroke-dasharray: 8 7; }
+</style>
+<rect width="1200" height="700" fill="#ffffff"/>
+<text x="40" y="48" class="title" text-anchor="start"><tspan x="40" dy="0">What Happens During a Relay Mission?</tspan></text>
+<text x="40" y="78" class="subtitle" text-anchor="start"><tspan x="40" dy="0">Current-system mission sequence; future UGV and video branches are intentionally omitted.</tspan></text>
+<text x="90" y="125" class="section" text-anchor="middle"><tspan x="90" dy="0">Operator / Ground</tspan></text>
+<line x1="90" y1="145" x2="90" y2="630" class="lane"/>
+<text x="390" y="125" class="section" text-anchor="middle"><tspan x="390" dy="0">Relay Aircraft</tspan></text>
+<line x1="390" y1="145" x2="390" y2="630" class="lane"/>
+<text x="690" y="125" class="section" text-anchor="middle"><tspan x="690" dy="0">Relay Payload</tspan></text>
+<line x1="690" y1="145" x2="690" y2="630" class="lane"/>
+<text x="990" y="125" class="section" text-anchor="middle"><tspan x="990" dy="0">Remote UAS</tspan></text>
+<line x1="990" y1="145" x2="990" y2="630" class="lane"/>
+<line x1="90" y1="180" x2="390" y2="180" class="arrow neutral" marker-end="url(#arrow-neutral)"/>
+<text x="240.0" y="170" class="edge-label" text-anchor="middle">1  Prepare / confirm safe state</text>
+<line x1="90" y1="255" x2="390" y2="255" class="arrow blue" marker-end="url(#arrow-blue)"/>
+<text x="240.0" y="245" class="edge-label" text-anchor="middle">2  Launch, transit, hold station</text>
+<line x1="90" y1="340" x2="690" y2="340" class="arrow green" marker-end="url(#arrow-green)"/>
+<text x="390.0" y="330" class="edge-label" text-anchor="middle">3  Send remote-UAS command</text>
+<line x1="690" y1="415" x2="990" y2="415" class="arrow green" marker-end="url(#arrow-green)"/>
+<text x="840.0" y="405" class="edge-label" text-anchor="middle">4  Relay command onward</text>
+<line x1="990" y1="490" x2="690" y2="490" class="arrow green dashed" marker-end="url(#arrow-green)"/>
+<text x="840.0" y="480" class="edge-label" text-anchor="middle">5  Return telemetry</text>
+<line x1="690" y1="565" x2="90" y2="565" class="arrow green dashed" marker-end="url(#arrow-green)"/>
+<text x="390.0" y="555" class="edge-label" text-anchor="middle">6  Relay telemetry to ground</text>
+<line x1="390" y1="620" x2="90" y2="620" class="arrow blue" marker-end="url(#arrow-blue)"/>
+<text x="240.0" y="610" class="edge-label" text-anchor="middle">7  Recover and return to Ground Safe</text>
+<text x="600" y="653" class="small" text-anchor="middle"><tspan x="600" dy="0">Health/status informs recovery decisions; exact criteria remain unresolved.</tspan></text>
+<text x="600" y="682" class="small" text-anchor="middle"><tspan x="600" dy="0">This is an architecture sequence, not an operating procedure or verified flight behavior.</tspan></text>
+</svg>

@@ -4,6 +4,7 @@
     {
       "id": "CFG-REC",
       "name": "Recovered Reference Article",
+      "display_name": "Recovered Reference",
       "purpose": "Record the recovered or reference article as represented by available teardown records without treating inference as observation.",
       "system_boundary": "Relay UAS",
       "maturity": "observed_record_with_gaps",
@@ -36,6 +37,7 @@
     {
       "id": "CFG-REP",
       "name": "Safe Functional-Replica Architecture",
+      "display_name": "Current Replica Candidate",
       "purpose": "Describe a non-deployable, architecture-level functional replica derived from the reference article while preserving black-box payload and safety constraints.",
       "system_boundary": "Relay UAS",
       "maturity": "proposed_architecture",
@@ -69,6 +71,7 @@
     {
       "id": "CFG-DOM",
       "name": "Domestic Low-Cost Relay-UAS Architecture",
+      "display_name": "Domestic Candidate",
       "purpose": "Describe a domestically sourced low-cost relay-UAS architecture at system and interface level.",
       "system_boundary": "Relay UAS",
       "maturity": "proposed_architecture",
@@ -100,6 +103,7 @@
     {
       "id": "CFG-DIG",
       "name": "Future Digital Multi-Platform Relay Architecture",
+      "display_name": "Future Digital Extension",
       "purpose": "Describe a future architecture-level digital relay capable of serving more than one external platform type.",
       "system_boundary": "Relay UAS",
       "maturity": "concept_candidate",
@@ -130,6 +134,7 @@
     {
       "id": "CFG-SOS",
       "name": "UAS-UGV-Radio C2 System-of-Systems Architecture",
+      "display_name": "Future System-of-Systems",
       "purpose": "Describe the complete architecture context connecting operator, ground control, relay UAS, remote UAS, UGV, radio users, services, authorities, and support infrastructure.",
       "system_boundary": "C2 Ecosystem",
       "maturity": "context_and_scenario_candidate",
@@ -274,6 +279,7 @@
     {
       "id": "OP-001",
       "name": "Ground Control Node",
+      "display_name": "Ground Control",
       "management": "independently managed external system",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
@@ -290,6 +296,7 @@
     {
       "id": "OP-002",
       "name": "Relay UAS / Relay Node",
+      "display_name": "Relay UAS",
       "management": "system under study within the proposed inner boundary",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
@@ -306,6 +313,7 @@
     {
       "id": "OP-003",
       "name": "Remote UAS Node",
+      "display_name": "Remote UAS",
       "management": "independently managed external system",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
@@ -361,6 +369,7 @@
     {
       "id": "OP-007",
       "name": "Maintenance Personnel",
+      "display_name": "Maintenance",
       "management": "external supporting performer",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
@@ -408,6 +417,7 @@
     {
       "id": "OP-010",
       "name": "Operator",
+      "display_name": "Operator",
       "management": "human performer outside the Relay UAS product boundary",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
@@ -1380,6 +1390,7 @@
     {
       "id": "CMP-AFR-01",
       "name": "Center frame plate",
+      "display_name": "Airframe Center",
       "architecture_role": "Primary structural hub that supports the arm, landing, payload-mount, and hardware relationships.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
@@ -1394,6 +1405,7 @@
     {
       "id": "CMP-AFR-02",
       "name": "Arm assembly",
+      "display_name": "Arms",
       "architecture_role": "Passive structural member that carries propulsion resources away from the center frame.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
@@ -1408,6 +1420,7 @@
     {
       "id": "CMP-AFR-03",
       "name": "Landing gear",
+      "display_name": "Landing Gear",
       "architecture_role": "Passive structural resource that supports the platform during ground contact.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
@@ -1422,6 +1435,7 @@
     {
       "id": "CMP-AFR-04",
       "name": "Payload mount interface",
+      "display_name": "Airframe Payload Mount",
       "architecture_role": "Airframe-side structural attachment that supports the modular payload bay.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
@@ -1436,6 +1450,7 @@
     {
       "id": "CMP-AFR-05",
       "name": "Fastener and hardware set",
+      "display_name": "Structural Hardware",
       "architecture_role": "Passive retention hardware used by the candidate airframe structure.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
@@ -1450,6 +1465,7 @@
     {
       "id": "CMP-PRP-01",
       "name": "Brushless motor",
+      "display_name": "Motors",
       "architecture_role": "Converts propulsion-controller electrical output into mechanical drive for the propeller.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
@@ -1464,6 +1480,7 @@
     {
       "id": "CMP-PRP-02",
       "name": "Electronic speed controller",
+      "display_name": "Motor Controllers",
       "architecture_role": "Receives main-bus power and flight-control commands and supplies controlled electrical drive to the motor.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
@@ -1478,6 +1495,7 @@
     {
       "id": "CMP-PRP-03",
       "name": "Propeller",
+      "display_name": "Propellers",
       "architecture_role": "Converts motor mechanical drive into aerodynamic force at the platform level.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
@@ -1492,6 +1510,7 @@
     {
       "id": "CMP-PWR-01",
       "name": "Battery pack",
+      "display_name": "Battery",
       "architecture_role": "Stores the candidate platform energy supply and feeds the main distribution interface.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
@@ -1506,6 +1525,7 @@
     {
       "id": "CMP-PWR-02",
       "name": "Power distribution board",
+      "display_name": "Main Power Distribution",
       "architecture_role": "Accepts source power, distributes the main bus, and supplies battery-state information to flight control.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
@@ -1520,6 +1540,7 @@
     {
       "id": "CMP-PWR-03",
       "name": "Step-down regulator(s)",
+      "display_name": "Power Regulators",
       "architecture_role": "Receives distributed power and provides regulated architecture-level power to avionics and the relay payload.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
@@ -1534,6 +1555,7 @@
     {
       "id": "CMP-PWR-04",
       "name": "Battery connector",
+      "display_name": "Battery Connection",
       "architecture_role": "Passive physical connection resource participating in the battery-to-distribution power interface.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
@@ -1548,6 +1570,7 @@
     {
       "id": "CMP-AVN-01",
       "name": "Flight controller",
+      "display_name": "Flight Controller",
       "architecture_role": "Central platform-control resource for stable flight, navigation, station keeping, recovery, and health/status logic.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
@@ -1562,6 +1585,7 @@
     {
       "id": "CMP-AVN-02",
       "name": "IMU / sensor suite",
+      "display_name": "Flight Sensors",
       "architecture_role": "Provides inertial and supporting sensor information to the flight controller.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
@@ -1576,6 +1600,7 @@
     {
       "id": "CMP-AVN-03",
       "name": "GNSS / compass module",
+      "display_name": "Navigation Sensor",
       "architecture_role": "Provides position and heading information to the flight controller through a distinct navigation interface.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
@@ -1590,6 +1615,7 @@
     {
       "id": "CMP-AVN-04",
       "name": "Control link receiver",
+      "display_name": "Platform Command Receiver",
       "architecture_role": "Terminates the independent external platform-command link and passes control input to the flight controller.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
@@ -1604,6 +1630,7 @@
     {
       "id": "CMP-COM-01",
       "name": "Relay payload module (black box)",
+      "display_name": "Relay Payload (Black Box)",
       "architecture_role": "Performs logical outbound and return traffic relay while its internal implementation remains intentionally undefined.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
@@ -1618,6 +1645,7 @@
     {
       "id": "CMP-COM-02",
       "name": "Antenna physical-resource envelope",
+      "display_name": "Payload Antenna Envelope",
       "architecture_role": "Represents payload-internal antenna physical resources without asserting RF design or implementation characteristics.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
@@ -1632,6 +1660,7 @@
     {
       "id": "CMP-MNT-01",
       "name": "Modular payload bay",
+      "display_name": "Modular Payload Bay",
       "architecture_role": "Platform-side bay that retains the black-box relay payload and transfers its loads to the airframe mount.",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",

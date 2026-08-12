@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+<title id="title">What Is On the Relay UAS?</title>
+<desc id="desc">What are the major physical subsystem groups?</desc>
+<metadata>Generated from authoritative model records: CMP-AFR-01, CMP-PRP-01, CMP-PWR-01, CMP-AVN-01, CMP-MNT-01, CMP-COM-01</metadata>
+<defs>
+  <marker id="arrow-neutral" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#435269"/></marker>
+  <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#245f9e"/></marker>
+  <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#247a52"/></marker>
+  <marker id="arrow-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#9a6700"/></marker>
+</defs>
+<style>
+  text { font-family: Arial, Helvetica, sans-serif; fill: #172033; }
+  .title { font-size: 30px; font-weight: 700; }
+  .subtitle { font-size: 17px; fill: #536174; }
+  .section { font-size: 19px; font-weight: 700; }
+  .box-title { font-size: 19px; font-weight: 700; }
+  .body { font-size: 16px; }
+  .small { font-size: 14px; fill: #536174; }
+  .edge-label { font-size: 15px; font-weight: 700; paint-order: stroke; stroke: #ffffff; stroke-width: 5px; stroke-linejoin: round; }
+  .box { stroke: #435269; stroke-width: 2; fill: #f5f7fa; }
+  .box.blue { fill: #e9f2ff; stroke: #245f9e; }
+  .box.green { fill: #eaf7f0; stroke: #247a52; }
+  .box.amber { fill: #fff4d6; stroke: #9a6700; }
+  .box.red { fill: #fdecec; stroke: #b42318; }
+  .box.white { fill: #ffffff; }
+  .box.future { fill: #ffffff; stroke: #6b7280; stroke-dasharray: 9 7; }
+  .boundary { fill: #ffffff; stroke: #26364d; stroke-width: 3; }
+  .group { fill: #f8fafc; stroke: #8a97a8; stroke-width: 1.5; }
+  .arrow { stroke: #435269; stroke-width: 3; fill: none; }
+  .arrow.blue { stroke: #245f9e; }
+  .arrow.green { stroke: #247a52; }
+  .arrow.amber { stroke: #9a6700; }
+  .arrow.dashed { stroke-dasharray: 10 8; }
+  .lane { stroke: #cbd3dd; stroke-width: 1.5; }
+  .divider { stroke: #8a97a8; stroke-width: 2; stroke-dasharray: 8 7; }
+</style>
+<rect width="1200" height="700" fill="#ffffff"/>
+<text x="40" y="48" class="title" text-anchor="start"><tspan x="40" dy="0">What Is On the Relay UAS?</tspan></text>
+<text x="40" y="78" class="subtitle" text-anchor="start"><tspan x="40" dy="0">Nineteen component records are grouped into six understandable subsystem roles.</tspan></text>
+<rect x="45" y="125" width="350" height="205" rx="14" class="box neutral"/>
+<text x="220.0" y="156" class="box-title" text-anchor="middle"><tspan x="220.0" dy="0">Airframe and Structure</tspan></text>
+<text x="63" y="186" class="body" text-anchor="start"><tspan x="63" dy="0">• Airframe Center</tspan><tspan x="63" dy="22">• Arms</tspan><tspan x="63" dy="22">• Landing Gear</tspan><tspan x="63" dy="22">• Structural Hardware</tspan></text>
+<rect x="425" y="125" width="350" height="205" rx="14" class="box neutral"/>
+<text x="600.0" y="156" class="box-title" text-anchor="middle"><tspan x="600.0" dy="0">Propulsion</tspan></text>
+<text x="443" y="186" class="body" text-anchor="start"><tspan x="443" dy="0">• Motors</tspan><tspan x="443" dy="22">• Motor Controllers</tspan><tspan x="443" dy="22">• Propellers</tspan></text>
+<rect x="805" y="125" width="350" height="205" rx="14" class="box amber"/>
+<text x="980.0" y="156" class="box-title" text-anchor="middle"><tspan x="980.0" dy="0">Electrical Power</tspan></text>
+<text x="823" y="186" class="body" text-anchor="start"><tspan x="823" dy="0">• Battery</tspan><tspan x="823" dy="22">• Main Power Distribution</tspan><tspan x="823" dy="22">• Power Regulators</tspan><tspan x="823" dy="22">• Battery Connection</tspan></text>
+<rect x="45" y="390" width="350" height="205" rx="14" class="box blue"/>
+<text x="220.0" y="421" class="box-title" text-anchor="middle"><tspan x="220.0" dy="0">Flight Avionics</tspan></text>
+<text x="63" y="451" class="body" text-anchor="start"><tspan x="63" dy="0">• Flight Controller</tspan><tspan x="63" dy="22">• Flight Sensors</tspan><tspan x="63" dy="22">• Navigation Sensor</tspan><tspan x="63" dy="22">• Platform Command Receiver</tspan></text>
+<rect x="425" y="390" width="350" height="205" rx="14" class="box neutral"/>
+<text x="600.0" y="421" class="box-title" text-anchor="middle"><tspan x="600.0" dy="0">Payload Support</tspan></text>
+<text x="443" y="451" class="body" text-anchor="start"><tspan x="443" dy="0">• Airframe Payload Mount</tspan><tspan x="443" dy="22">• Modular Payload Bay</tspan></text>
+<rect x="805" y="390" width="350" height="205" rx="14" class="box green"/>
+<text x="980.0" y="421" class="box-title" text-anchor="middle"><tspan x="980.0" dy="0">Relay Payload</tspan></text>
+<text x="823" y="451" class="body" text-anchor="start"><tspan x="823" dy="0">• Relay Payload (Black Box)</tspan><tspan x="823" dy="22">• Payload Antenna Envelope</tspan></text>
+<line x1="805" y1="228" x2="775" y2="228" class="arrow amber" marker-end="url(#arrow-amber)"/>
+<line x1="395" y1="425" x2="425" y2="330" class="arrow blue" marker-end="url(#arrow-blue)"/>
+<line x1="980" y1="330" x2="980" y2="390" class="arrow amber" marker-end="url(#arrow-amber)"/>
+<line x1="775" y1="493" x2="805" y2="493" class="arrow neutral" marker-end="url(#arrow-neutral)"/>
+<text x="600" y="626" class="section" text-anchor="middle"><tspan x="600" dy="0">Avionics → propulsion control  •  Power → propulsion and payload  •  Payload support → relay payload</tspan></text>
+<text x="600" y="660" class="small" text-anchor="middle"><tspan x="600" dy="0">Component choice, geometry, ratings, and fabrication remain unresolved trade-study outputs.</tspan></text>
+</svg>

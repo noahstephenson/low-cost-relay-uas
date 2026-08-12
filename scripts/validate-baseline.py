@@ -14,16 +14,19 @@ import json
 import re
 import subprocess
 import sys
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any, Iterable
 
 
 ROOT = Path(__file__).resolve().parents[1]
 VIEW_GENERATOR = ROOT / "scripts" / "generate-mermaid-views.py"
+COMMUNICATION_GENERATOR = ROOT / "scripts" / "generate-communication-views.py"
 BASELINE_REPORT = ROOT / "reports" / "baseline.md"
 ATLAS_REPORT = ROOT / "reports" / "architecture-views.md"
 OWNER_DECISION_PACKAGE = ROOT / "reports" / "architecture-decision-target-package.md"
 FEASIBILITY_REPORT = ROOT / "reports" / "feasibility-analysis.md"
+COMMUNICATION_REPORT = ROOT / "reports" / "architecture-communication-pass.md"
 FEASIBILITY_MODEL = ROOT / "analysis" / "feasibility.py"
 
 CATALOG_PATHS = {
@@ -508,12 +511,12 @@ def validate_mermaid_documents(definitions: set[str], gap_codes: set[str]) -> li
             continue
         blocks, fence_errors = extract_mermaid_blocks(path.read_text(encoding="utf-8-sig"))
         errors.extend(f"{path.relative_to(ROOT)}: {item}" for item in fence_errors)
-        if path == ROOT / "README.md" and len(blocks) != 1:
-            errors.append(f"README.md must contain exactly one Mermaid diagram, found {len(blocks)}")
-        if path == ROOT / "architecture.md" and not 8 <= len(blocks) <= 13:
-            errors.append(f"architecture.md must contain 8-13 Mermaid diagrams, found {len(blocks)}")
-        if path == ATLAS_REPORT and not 14 <= len(blocks) <= 22:
-            errors.append(f"architecture atlas must contain 14-22 Mermaid diagrams, found {len(blocks)}")
+        if path == ROOT / "README.md" and blocks:
+            errors.append(f"README.md must use canonical generated figures rather than Mermaid, found {len(blocks)} Mermaid diagrams")
+        if path == ROOT / "architecture.md" and blocks:
+            errors.append(f"architecture.md must use canonical generated figures rather than Mermaid, found {len(blocks)} Mermaid diagrams")
+        if path == ATLAS_REPORT and not 10 <= len(blocks) <= 16:
+            errors.append(f"architecture atlas must contain 10-16 selected audit diagrams, found {len(blocks)}")
         for title, block in blocks:
             lines = [line for line in block.splitlines() if line.strip()]
             if not lines:
@@ -565,6 +568,94 @@ def validate_mermaid_documents(definitions: set[str], gap_codes: set[str]) -> li
     return errors
 
 
+def validate_communication_figures(
+    catalogs: dict[str, dict[str, Any]], definitions: set[str], gap_codes: set[str]
+) -> list[str]:
+    """Check deterministic outsider views without policing subjective layout."""
+    errors: list[str] = []
+    system = catalogs["system"]
+    manifest = system.get("communication_views", [])
+    generated = system.get("generated_figures", [])
+    expected_slugs = {
+        "project-in-one-picture", "system-boundary", "physical-architecture",
+        "power-resource-flow", "command-data-flow", "mission-sequence",
+        "degraded-behavior", "configuration-evolution", "engineering-status",
+    }
+    slugs = [item.get("slug") for item in manifest]
+    if set(slugs) != expected_slugs or len(slugs) != len(set(slugs)):
+        errors.append("communication-view manifest must contain exactly the nine canonical view slugs")
+    expected_paths = {f"reports/figures/{slug}.svg" for slug in expected_slugs}
+    if set(generated) != expected_paths:
+        errors.append("generated_figures must match the nine canonical communication views")
+
+    for record in catalogs["architecture"].get("configurations", []) + catalogs["architecture"].get("performers", []) + catalogs["architecture"].get("components", []):
+        alias = record.get("display_name")
+        if alias is None:
+            continue
+        if not isinstance(alias, str) or not alias.strip() or len(alias) > 36:
+            errors.append(f"{record['id']} has an invalid human-readable display_name")
+        if ID_TOKEN_RE.search(alias) or GAP_TOKEN_RE.search(alias):
+            errors.append(f"{record['id']} display_name leaks a technical identifier")
+
+    for view in manifest:
+        slug = view.get("slug", "<missing>")
+        required = {"title", "audience", "question", "object_refs"}
+        if not required.issubset(view):
+            errors.append(f"communication view {slug} lacks presentation or provenance fields")
+            continue
+        path = ROOT / "reports" / "figures" / f"{slug}.svg"
+        if not path.exists():
+            errors.append(f"canonical communication figure missing: {path.relative_to(ROOT)}")
+            continue
+        try:
+            root = ET.parse(path).getroot()
+        except ET.ParseError as exc:
+            errors.append(f"{path.relative_to(ROOT)} is not valid SVG XML: {exc}")
+            continue
+        namespace = {"svg": "http://www.w3.org/2000/svg"}
+        title = root.find("svg:title", namespace)
+        desc = root.find("svg:desc", namespace)
+        metadata = root.find("svg:metadata", namespace)
+        if title is None or not (title.text or "").strip():
+            errors.append(f"{path.relative_to(ROOT)} lacks an accessible title")
+        if desc is None or not (desc.text or "").strip():
+            errors.append(f"{path.relative_to(ROOT)} lacks an accessible description")
+        metadata_text = "" if metadata is None else "".join(metadata.itertext())
+        for item_id in view["object_refs"]:
+            if item_id.startswith("GAP-"):
+                known = item_id in gap_codes
+            else:
+                known = item_id in definitions
+            if not known:
+                errors.append(f"communication view {slug} references unknown record {item_id}")
+            if item_id not in metadata_text:
+                errors.append(f"{path.relative_to(ROOT)} metadata omits source record {item_id}")
+        visible_text = " ".join(
+            "".join(element.itertext()) for element in root.findall(".//svg:text", namespace)
+        )
+        if ID_TOKEN_RE.search(visible_text) or GAP_TOKEN_RE.search(visible_text):
+            errors.append(f"{path.relative_to(ROOT)} exposes raw model IDs in the primary visible labels")
+
+    readme = (ROOT / "README.md").read_text(encoding="utf-8-sig")
+    architecture = (ROOT / "architecture.md").read_text(encoding="utf-8-sig")
+    for required_link in (
+        "reports/figures/project-in-one-picture.svg",
+        "reports/figures/engineering-status.svg",
+        "analysis/results/feasible-region.svg",
+    ):
+        if required_link not in readme:
+            errors.append(f"README.md lacks primary communication figure {required_link}")
+    for relative in generated:
+        if relative not in architecture:
+            errors.append(f"architecture.md does not expose canonical figure {relative}")
+    if "analysis/results/feasible-region.svg" not in architecture:
+        errors.append("architecture.md lacks the high-level feasibility result")
+    orientation = readme.split("## Engineering detail and traceability", 1)[0]
+    if ID_TOKEN_RE.search(orientation) or GAP_TOKEN_RE.search(orientation):
+        errors.append("README five-minute orientation exposes raw architecture IDs before meaning")
+    return errors
+
+
 def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str], list[str]]:
     errors: list[str] = []
     records = definition_records(catalogs)
@@ -611,6 +702,7 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
     for markdown in [
         ROOT / "README.md", ROOT / "architecture.md", ROOT / "trade-studies.md",
         BASELINE_REPORT, ATLAS_REPORT, OWNER_DECISION_PACKAGE, FEASIBILITY_REPORT,
+        COMMUNICATION_REPORT,
     ]:
         if not markdown.exists():
             continue
@@ -657,9 +749,10 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
         "README.md", "architecture.md", "trade-studies.md",
         "reports/architecture-decision-target-package.md",
         "reports/feasibility-analysis.md",
+        "reports/architecture-communication-pass.md",
     ]
     if system.get("human_readable_views") != expected_human_views:
-        errors.append("system.yaml must name the five primary human-readable documents")
+        errors.append("system.yaml must name the six primary human-readable documents")
 
     if system.get("status") != "baseline_candidate_not_approved":
         errors.append("baseline status must remain baseline_candidate_not_approved")
@@ -1423,12 +1516,14 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
     report_files = {path.name for path in (ROOT / "reports").glob("*.md")}
     expected_report_files = {
         "architecture-decision-target-package.md", "architecture-views.md", "baseline.md",
-        "feasibility-analysis.md",
+        "feasibility-analysis.md", "architecture-communication-pass.md",
     }
     if report_files != expected_report_files:
         errors.append(f"report set is not consolidated: {sorted(report_files)}")
     script_files = {path.name for path in (ROOT / "scripts").glob("*.py")}
-    if script_files != {"generate-mermaid-views.py", "validate-baseline.py"}:
+    if script_files != {
+        "generate-communication-views.py", "generate-mermaid-views.py", "validate-baseline.py",
+    }:
         errors.append(f"supporting Python toolchain is not minimal: {sorted(script_files)}")
 
     for path in [BASELINE_REPORT, ATLAS_REPORT]:
@@ -1470,26 +1565,18 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
 
     readme_text = (ROOT / "README.md").read_text(encoding="utf-8-sig")
     required_readme_sections = (
-        "## System in 60 seconds",
-        "## Current, reference, and future configurations",
-        "## Maturity in one minute",
-        "## Model authority",
+        "## What this project is",
+        "## The project in one picture",
+        "## How the system works",
+        "## What is on the drone",
+        "## What the project found",
+        "## What is not finished",
+        "## Engineering status at a glance",
+        "## Engineering detail and traceability",
     )
     section_positions = [readme_text.find(section) for section in required_readme_sections]
     if any(position < 0 for position in section_positions) or section_positions != sorted(section_positions):
         errors.append("README first-five-minute orientation sections are missing or out of order")
-    readme_blocks, _ = extract_mermaid_blocks(readme_text)
-    if readme_blocks:
-        orientation_block = readme_blocks[0][1]
-        required_orientation_interfaces = {
-            "IFC-EXT-005", "IFC-INT-003", "IFC-INT-007", "IFC-EXT-001",
-            "IFC-EXT-002", "IFC-EXT-003", "IFC-EXT-004",
-        }
-        for interface_id in required_orientation_interfaces:
-            if orientation_block.count(interface_id) != 1:
-                errors.append(
-                    f"README orientation must show {interface_id} exactly once from authoritative interface data"
-                )
         shown_interfaces = set(re.findall(r"IFC-(?:INT|EXT)-\d{3}", orientation_block))
         if shown_interfaces != required_orientation_interfaces:
             errors.append("README orientation contains an unexpected or missing interface")
@@ -1498,6 +1585,7 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
     if not re.search(r"python-version:\s*['\"]3\.12['\"]", workflow_text) or "python scripts/validate-baseline.py --check-generated" not in workflow_text:
         errors.append("CI workflow no longer runs the pinned generated-baseline validation")
     errors.extend(validate_mermaid_documents(set(definitions), gap_codes))
+    errors.extend(validate_communication_figures(catalogs, set(definitions), gap_codes))
 
     implementation_patterns = [
         re.compile(r"\b\d+(?:\.\d+)?\s*(?:kHz|MHz|GHz|dBm|mW)\b", re.IGNORECASE),
@@ -1538,7 +1626,7 @@ def generated_outputs_current(catalogs: dict[str, dict[str, Any]]) -> list[str]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--write-reports", action="store_true", help="regenerate both derived reports")
+    parser.add_argument("--write-reports", action="store_true", help="regenerate derived reports and canonical figures")
     parser.add_argument(
         "--check-generated", action="store_true",
         help="explicitly check generated freshness (also performed by the default command)",
@@ -1569,6 +1657,17 @@ def main() -> int:
                 print(generated.stderr.strip())
             print("MODEL-INVALID: architecture-view generation failed")
             return 1
+        communication_generated = subprocess.run(
+            [sys.executable, str(COMMUNICATION_GENERATOR)], cwd=ROOT,
+            capture_output=True, text=True, check=False,
+        )
+        if communication_generated.stdout.strip():
+            print(communication_generated.stdout.strip())
+        if communication_generated.returncode:
+            if communication_generated.stderr.strip():
+                print(communication_generated.stderr.strip())
+            print("MODEL-INVALID: communication-view generation failed")
+            return 1
         print("GENERATED-BASELINE-WRITTEN: reports/baseline.md")
 
     errors, active_gaps, deferrals = validate(catalogs)
@@ -1586,6 +1685,17 @@ def main() -> int:
         errors.append("architecture atlas is stale or failed optional syntax validation")
         if view_check.stderr.strip():
             errors.append("Mermaid validator error: " + view_check.stderr.strip())
+
+    communication_check = subprocess.run(
+        [sys.executable, str(COMMUNICATION_GENERATOR), "--check"], cwd=ROOT,
+        capture_output=True, text=True, check=False,
+    )
+    if communication_check.stdout.strip():
+        print(communication_check.stdout.strip())
+    if communication_check.returncode:
+        errors.append("canonical communication figures are stale or invalid")
+        if communication_check.stderr.strip():
+            errors.append("Communication-view validator error: " + communication_check.stderr.strip())
 
     if not FEASIBILITY_MODEL.exists():
         errors.append("analysis/feasibility.py is missing")

@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+<title id="title">The Relay UAS in One Picture</title>
+<desc id="desc">What is the system doing, and why are platform control and relayed traffic separate?</desc>
+<metadata>Generated from authoritative model records: OP-001, OP-002, OP-003, OP-010, IX-001, IX-002, IX-003, IX-004, IX-005, CMP-COM-01, CMP-AVN-04</metadata>
+<defs>
+  <marker id="arrow-neutral" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#435269"/></marker>
+  <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#245f9e"/></marker>
+  <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#247a52"/></marker>
+  <marker id="arrow-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#9a6700"/></marker>
+</defs>
+<style>
+  text { font-family: Arial, Helvetica, sans-serif; fill: #172033; }
+  .title { font-size: 30px; font-weight: 700; }
+  .subtitle { font-size: 17px; fill: #536174; }
+  .section { font-size: 19px; font-weight: 700; }
+  .box-title { font-size: 19px; font-weight: 700; }
+  .body { font-size: 16px; }
+  .small { font-size: 14px; fill: #536174; }
+  .edge-label { font-size: 15px; font-weight: 700; paint-order: stroke; stroke: #ffffff; stroke-width: 5px; stroke-linejoin: round; }
+  .box { stroke: #435269; stroke-width: 2; fill: #f5f7fa; }
+  .box.blue { fill: #e9f2ff; stroke: #245f9e; }
+  .box.green { fill: #eaf7f0; stroke: #247a52; }
+  .box.amber { fill: #fff4d6; stroke: #9a6700; }
+  .box.red { fill: #fdecec; stroke: #b42318; }
+  .box.white { fill: #ffffff; }
+  .box.future { fill: #ffffff; stroke: #6b7280; stroke-dasharray: 9 7; }
+  .boundary { fill: #ffffff; stroke: #26364d; stroke-width: 3; }
+  .group { fill: #f8fafc; stroke: #8a97a8; stroke-width: 1.5; }
+  .arrow { stroke: #435269; stroke-width: 3; fill: none; }
+  .arrow.blue { stroke: #245f9e; }
+  .arrow.green { stroke: #247a52; }
+  .arrow.amber { stroke: #9a6700; }
+  .arrow.dashed { stroke-dasharray: 10 8; }
+  .lane { stroke: #cbd3dd; stroke-width: 1.5; }
+  .divider { stroke: #8a97a8; stroke-width: 2; stroke-dasharray: 8 7; }
+</style>
+<rect width="1200" height="700" fill="#ffffff"/>
+<text x="40" y="48" class="title" text-anchor="start"><tspan x="40" dy="0">The Relay UAS in One Picture</tspan></text>
+<text x="40" y="78" class="subtitle" text-anchor="start"><tspan x="40" dy="0">One aircraft, two separate communication paths</tspan></text>
+<rect x="350" y="100" width="500" height="470" rx="24" class="boundary"/>
+<text x="600" y="136" class="section" text-anchor="middle"><tspan x="600" dy="0">Relay UAS</tspan></text>
+<text x="600" y="163" class="small" text-anchor="middle"><tspan x="600" dy="0">Aircraft carries and positions the relay payload</tspan></text>
+<rect x="40" y="190" width="240" height="82" rx="14" class="box blue"/>
+<text x="160.0" y="221" class="box-title" text-anchor="middle"><tspan x="160.0" dy="0">Operator</tspan></text>
+<text x="58" y="251" class="body" text-anchor="start"><tspan x="58" dy="0">Controls the Relay UAS</tspan></text>
+<rect x="420" y="190" width="360" height="82" rx="14" class="box blue"/>
+<text x="600.0" y="221" class="box-title" text-anchor="middle"><tspan x="600.0" dy="0">Platform Command Receiver</tspan></text>
+<text x="438" y="251" class="body" text-anchor="start"><tspan x="438" dy="0">Separate platform-control path</tspan></text>
+<rect x="420" y="300" width="360" height="82" rx="14" class="box neutral"/>
+<text x="600.0" y="331" class="box-title" text-anchor="middle"><tspan x="600.0" dy="0">Aircraft Support</tspan></text>
+<text x="438" y="361" class="body" text-anchor="start"><tspan x="438" dy="0">Airframe + propulsion + power + avionics</tspan></text>
+<rect x="440" y="420" width="320" height="105" rx="14" class="box green"/>
+<text x="600.0" y="451" class="box-title" text-anchor="middle"><tspan x="600.0" dy="0">Relay Payload</tspan></text>
+<text x="458" y="481" class="body" text-anchor="start"><tspan x="458" dy="0">Passes mission traffic</tspan><tspan x="458" dy="22">Internal RF design is out of scope</tspan></text>
+<rect x="40" y="415" width="240" height="110" rx="14" class="box white"/>
+<text x="160.0" y="446" class="box-title" text-anchor="middle"><tspan x="160.0" dy="0">Ground Control</tspan></text>
+<text x="58" y="476" class="body" text-anchor="start"><tspan x="58" dy="0">Sends remote-UAS command</tspan><tspan x="58" dy="22">Receives its telemetry</tspan></text>
+<rect x="920" y="415" width="240" height="110" rx="14" class="box white"/>
+<text x="1040.0" y="446" class="box-title" text-anchor="middle"><tspan x="1040.0" dy="0">Remote UAS</tspan></text>
+<text x="938" y="476" class="body" text-anchor="start"><tspan x="938" dy="0">Receives relayed command</tspan><tspan x="938" dy="22">Returns telemetry</tspan></text>
+<line x1="280" y1="215" x2="420" y2="215" class="arrow blue" marker-end="url(#arrow-blue)"/>
+<text x="350.0" y="202" class="edge-label" text-anchor="middle">Platform Command</text>
+<line x1="420" y1="247" x2="280" y2="247" class="arrow blue dashed" marker-end="url(#arrow-blue)"/>
+<text x="350.0" y="270" class="edge-label" text-anchor="middle">Health / Status</text>
+<line x1="280" y1="446" x2="440" y2="446" class="arrow green" marker-end="url(#arrow-green)"/>
+<text x="360.0" y="432" class="edge-label" text-anchor="middle">Relayed Command</text>
+<line x1="760" y1="446" x2="920" y2="446" class="arrow green" marker-end="url(#arrow-green)"/>
+<text x="840.0" y="432" class="edge-label" text-anchor="middle">Relayed Command</text>
+<line x1="920" y1="494" x2="760" y2="494" class="arrow green dashed" marker-end="url(#arrow-green)"/>
+<text x="840.0" y="517" class="edge-label" text-anchor="middle">Relayed Telemetry</text>
+<line x1="440" y1="494" x2="280" y2="494" class="arrow green dashed" marker-end="url(#arrow-green)"/>
+<text x="360.0" y="517" class="edge-label" text-anchor="middle">Relayed Telemetry</text>
+<text x="600" y="605" class="section" text-anchor="middle"><tspan x="600" dy="0">The aircraft&#x27;s control link never passes through the black-box relay payload.</tspan></text>
+<text x="600" y="634" class="small" text-anchor="middle"><tspan x="600" dy="0">The model defines the paths and boundaries—not waveform, frequency, protocol, hardware, or interoperability.</tspan></text>
+</svg>

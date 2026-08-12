@@ -233,12 +233,89 @@
     "reports/baseline.md",
     "reports/architecture-views.md"
   ],
+  "generated_figures": [
+    "reports/figures/project-in-one-picture.svg",
+    "reports/figures/system-boundary.svg",
+    "reports/figures/physical-architecture.svg",
+    "reports/figures/power-resource-flow.svg",
+    "reports/figures/command-data-flow.svg",
+    "reports/figures/mission-sequence.svg",
+    "reports/figures/degraded-behavior.svg",
+    "reports/figures/configuration-evolution.svg",
+    "reports/figures/engineering-status.svg"
+  ],
+  "communication_views": [
+    {
+      "slug": "project-in-one-picture",
+      "title": "The Relay UAS in One Picture",
+      "audience": "outsider and project owner",
+      "question": "What is the system doing, and why are platform control and relayed traffic separate?",
+      "object_refs": ["OP-001", "OP-002", "OP-003", "OP-010", "IX-001", "IX-002", "IX-003", "IX-004", "IX-005", "CMP-COM-01", "CMP-AVN-04"]
+    },
+    {
+      "slug": "system-boundary",
+      "title": "What Is Inside This Project?",
+      "audience": "outsider and systems engineer",
+      "question": "What is inside the Relay UAS product boundary and what remains external?",
+      "object_refs": ["OP-001", "OP-002", "OP-003", "OP-007", "OP-008", "OP-010", "CMP-COM-01"]
+    },
+    {
+      "slug": "physical-architecture",
+      "title": "What Is On the Relay UAS?",
+      "audience": "outsider and systems engineer",
+      "question": "What are the major physical subsystem groups?",
+      "object_refs": ["CMP-AFR-01", "CMP-PRP-01", "CMP-PWR-01", "CMP-AVN-01", "CMP-MNT-01", "CMP-COM-01"]
+    },
+    {
+      "slug": "power-resource-flow",
+      "title": "How Power Reaches Every Major Load",
+      "audience": "technically literate outsider and systems engineer",
+      "question": "What powers propulsion, avionics, and the relay payload?",
+      "object_refs": ["CMP-PWR-01", "CMP-PWR-02", "CMP-PWR-03", "CMP-PRP-02", "CMP-PRP-01", "CMP-PRP-03", "CMP-AVN-01", "CMP-COM-01", "IFC-INT-001", "IFC-INT-002", "IFC-INT-003", "IFC-INT-011", "IFC-INT-013", "IFC-INT-014", "IFC-INT-015"]
+    },
+    {
+      "slug": "command-data-flow",
+      "title": "How Command and Telemetry Move",
+      "audience": "outsider and systems engineer",
+      "question": "Which information controls the Relay UAS and which information passes through its payload?",
+      "object_refs": ["OP-001", "OP-003", "OP-010", "CMP-AVN-01", "CMP-AVN-04", "CMP-COM-01", "IX-001", "IX-002", "IX-003", "IX-004", "IX-005", "IX-009", "IFC-EXT-005", "IFC-INT-005", "IFC-EXT-007"]
+    },
+    {
+      "slug": "mission-sequence",
+      "title": "What Happens During a Relay Mission?",
+      "audience": "outsider and project owner",
+      "question": "What is the normal current-system mission sequence?",
+      "object_refs": ["SCN-001", "SCN-002", "SCN-003", "SCN-004", "SCN-008", "OA-007", "OA-002", "OA-003", "OA-004", "OA-005", "OA-006"]
+    },
+    {
+      "slug": "degraded-behavior",
+      "title": "What Happens When the Relay Is Lost?",
+      "audience": "outsider, project owner, and systems engineer",
+      "question": "How does the architecture distinguish payload degradation from loss of platform control?",
+      "object_refs": ["SCN-007", "MODE-002", "MODE-003", "MODE-004", "MODE-005", "REQ-FUN-007", "REQ-FUN-008", "GAP-HAZ-001", "GAP-VER-001"]
+    },
+    {
+      "slug": "configuration-evolution",
+      "title": "What Is Reference, Current, and Future?",
+      "audience": "outsider and systems engineer",
+      "question": "How do the evidence reference, current candidates, and future branches differ?",
+      "object_refs": ["CFG-REC", "CFG-REP", "CFG-DOM", "CFG-DIG", "CFG-SOS"]
+    },
+    {
+      "slug": "engineering-status",
+      "title": "What Did the Project Actually Establish?",
+      "audience": "outsider, project owner, and model auditor",
+      "question": "Which results are established, conditional, pending, externally blocked, deferred, or not approved?",
+      "object_refs": ["VER-001", "VER-007", "VER-008", "VER-009", "TS-009", "GAP-BUDGET-001", "GAP-IFC-001", "GAP-VER-001", "DEC-001"]
+    }
+  ],
   "human_readable_views": [
     "README.md",
     "architecture.md",
     "trade-studies.md",
     "reports/architecture-decision-target-package.md",
-    "reports/feasibility-analysis.md"
+    "reports/feasibility-analysis.md",
+    "reports/architecture-communication-pass.md"
   ],
   "id_scheme": {
     "CFG": "configuration baseline",

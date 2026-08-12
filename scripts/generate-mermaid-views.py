@@ -228,6 +228,8 @@ def generated_header() -> list[str]:
         "operating procedures, and recovered implementation detail. `CFG-REC` is shown",
         "only as a descriptive evidence configuration and does not inherit the proposed",
         "`CFG-REP`/`CFG-DOM` resource decomposition.",
+        "This report is the ID-rich engineering drill-down. Plain-language canonical",
+        "figures are generated separately under `reports/figures/`.",
         "",
         "## Configuration and context views",
         "",
@@ -255,7 +257,7 @@ def configuration_view(catalogs: dict[str, dict[str, Any]], index: dict[str, dic
             )
     return flow_diagram(
         "1",
-        "Configuration derivation and delta",
+        "What is current, reference, and future?",
         "CFG-REC / CFG-REP / CFG-DOM / CFG-DIG / CFG-SOS",
         body,
         "Derivation denotes lineage, not exact inheritance, equivalence, or approval. Future context is outside the current implementation baseline.",
@@ -298,7 +300,7 @@ def boundary_view(
         )
     return flow_diagram(
         "2",
-        "Two-boundary context",
+        "What is inside the project boundary?",
         "CFG-SOS outer context - CFG-REP / CFG-DOM / CFG-DIG inner constituent",
         body,
         "External constituents remain independently managed. Only catalogued information exchanges are drawn; unconnected future actors remain context, not implied interfaces.",
@@ -329,7 +331,7 @@ def operational_connectivity_view(
         )
     return flow_diagram(
         "3",
-        "Current three-node operational connectivity",
+        "How current-system traffic moves",
         "CFG-REP / CFG-DOM",
         body,
         "`IX-001` is independent Relay-UAS platform command. `IX-002` through `IX-005` are relayed mission traffic.",
@@ -368,7 +370,7 @@ def resource_diagrams(catalogs: dict[str, dict[str, Any]], index: dict[str, dict
         edge_for_interface(interfaces["IFC-INT-013"]),
         edge_for_interface(interfaces["IFC-INT-014"]),
     ])
-    lines.extend(flow_diagram("4B", "Power and propulsion connectivity", "CFG-REP / CFG-DOM", body))
+    lines.extend(flow_diagram("4B", "How power and propulsion connect", "CFG-REP / CFG-DOM", body))
 
     avionics_ids = ["OP-010", "CMP-AVN-01", "CMP-AVN-02", "CMP-AVN-03", "CMP-AVN-04", "CMP-PRP-02", "CMP-PWR-02"]
     body = ["    " + node(index, item_id) for item_id in avionics_ids]
@@ -380,7 +382,7 @@ def resource_diagrams(catalogs: dict[str, dict[str, Any]], index: dict[str, dict
         edge_for_interface(interfaces["IFC-INT-009"]),
         edge_for_interface(interfaces["IFC-INT-012"]),
     ])
-    lines.extend(flow_diagram("4C", "Avionics and platform control connectivity", "CFG-REP / CFG-DOM", body))
+    lines.extend(flow_diagram("4C", "How platform control works", "CFG-REP / CFG-DOM", body))
 
     body = [
         "    " + node(index, "OP-001"),
@@ -401,7 +403,7 @@ def resource_diagrams(catalogs: dict[str, dict[str, Any]], index: dict[str, dict
     ]
     lines.extend(flow_diagram(
         "4D",
-        "Payload boundary and external traffic",
+        "How the relay payload is isolated",
         "CFG-REP / CFG-DOM",
         body,
         "`IFC-INT-010` stays inside the payload black-box envelope. Only `IFC-INT-003` and `IFC-INT-007` cross from platform to payload.",
@@ -464,7 +466,7 @@ def reconciliation_views(catalogs: dict[str, dict[str, Any]]) -> list[str]:
     ]
     lines.extend(flow_diagram(
         "4G",
-        "Recovered evidence to candidate role correspondence",
+        "How recovered evidence informs candidate roles",
         "CFG-REC informs CFG-REP / CFG-DOM - no exact inheritance",
         body,
         "This is a grouped view of the controlled record-level mapping. Five recovered records remain unmatched and one remains unknown; no contradiction was found.",
@@ -518,7 +520,7 @@ def mode_view(
     ])
     return state_diagram(
         "5",
-        "Operating-mode state",
+        "How operating modes change",
         "CFG-REP / CFG-DOM",
         body,
         "Only transitions supported by current scenarios or requirements are shown; all remain candidate unless stated otherwise.",
@@ -559,7 +561,7 @@ def relay_sequence(index: dict[str, dict[str, Any]]) -> list[str]:
         "    end",
         "    Note over Ground,Remote: SCN-003 / SCN-004 logical relay only - external paths undefined",
     ]
-    return sequence_diagram("7", "Bidirectional relay sequence", "CFG-REP / CFG-DOM", body)
+    return sequence_diagram("7", "How command and telemetry flow", "CFG-REP / CFG-DOM", body)
 
 
 def degradation_sequence(index: dict[str, dict[str, Any]]) -> list[str]:
@@ -581,7 +583,7 @@ def degradation_sequence(index: dict[str, dict[str, Any]]) -> list[str]:
     ]
     return sequence_diagram(
         "8",
-        "Degradation and recovery sequence",
+        "What happens on relay degradation?",
         "CFG-REP / CFG-DOM",
         body,
         "The second path terminates at explicit gaps; it does not invent a recovery behavior.",
@@ -655,7 +657,7 @@ def design_dependency_view(
         )
     return flow_diagram(
         "9B",
-        "Mass-cost-power-endurance dependency",
+        "Why mass, power, endurance, and cost are coupled",
         "CFG-REP / CFG-DOM",
         body,
         "This is one coupled design problem. The diagram adds no values and does not resolve any trade study.",
@@ -719,7 +721,7 @@ def verification_readiness_view(index: dict[str, dict[str, Any]]) -> list[str]:
     ]
     return flow_diagram(
         "10A",
-        "Verification execution and remaining readiness",
+        "What has been checked and what still needs evidence?",
         "CFG-REP / CFG-DOM with project-scope deferrals",
         body,
         "VER-001 through VER-007 have current 0.8.0 model-level evidence in EVD-013 but no new owner acceptance. EVD-008 through EVD-012 preserve the accepted 0.7.0 work package. VER-008 remains deferred and VER-009 remains blocked; neither review constitutes physical verification, external conformance, safety approval, or technical-baseline approval.",
@@ -748,7 +750,7 @@ def trace_view(index: dict[str, dict[str, Any]]) -> list[str]:
     ])
     return flow_diagram(
         "11",
-        "End-to-end architecture trace",
+        "Example end-to-end relay trace",
         "CFG-REP / CFG-DOM",
         body,
         "The thread is readable end to end, but candidate relationships and evidence gaps remain visible.",
@@ -823,10 +825,31 @@ def interface_inventory(catalogs: dict[str, dict[str, Any]]) -> list[str]:
     lines.extend([
         f"- Optional syntax validation expects Mermaid CLI `mmdc` {PINNED_MERMAID_CLI} when installed locally.",
         "- Absence of Node.js or the pinned CLI does not invalidate standard-library catalog validation.",
-        "- No generated SVG or PNG is required; GitHub-rendered Markdown is the primary artifact.",
+        "- This technical report remains Mermaid-based; canonical SVG figures are generated and validated separately.",
         "",
     ])
     return lines
+
+
+def select_numbered_views(lines: list[str], keep: set[str], section_title: str) -> list[str]:
+    """Keep selected generated subviews without duplicating their rendering logic."""
+    result = [section_title, ""]
+    current_number: str | None = None
+    current: list[str] = []
+
+    def flush() -> None:
+        if current_number in keep:
+            result.extend(current)
+
+    for line in lines:
+        if line.startswith("### "):
+            flush()
+            current = [line]
+            current_number = line.split()[1].rstrip(".")
+        elif current_number is not None:
+            current.append(line)
+    flush()
+    return result
 
 
 def render(catalogs: dict[str, dict[str, Any]]) -> str:
@@ -835,21 +858,21 @@ def render(catalogs: dict[str, dict[str, Any]]) -> str:
     lines.extend(configuration_view(catalogs, index))
     lines.extend(boundary_view(catalogs, index))
     lines.extend(operational_connectivity_view(catalogs, index))
-    lines.extend(resource_diagrams(catalogs, index))
-    lines.extend(reconciliation_views(catalogs))
+    lines.extend(select_numbered_views(
+        resource_diagrams(catalogs, index), {"4B", "4C", "4D"},
+        "## Selected resource connectivity views",
+    ))
+    lines.extend(select_numbered_views(
+        reconciliation_views(catalogs), {"4G"}, "## Evidence correspondence view",
+    ))
     lines.extend(["## Behavioral views", ""])
     lines.extend(mode_view(catalogs, index))
-    lines.extend(launch_sequence(index))
     lines.extend(relay_sequence(index))
     lines.extend(degradation_sequence(index))
-    lines.extend(lifecycle_view(catalogs, index))
-    lines.extend(health_status_view(index))
     lines.extend(design_dependency_view(catalogs, index))
     lines.extend(["## Assurance and traceability views", ""])
-    lines.extend(hazard_view(catalogs, index))
     lines.extend(verification_readiness_view(index))
     lines.extend(trace_view(index))
-    lines.extend(governance_view(index))
     lines.extend(interface_inventory(catalogs))
     return "\n".join(lines).rstrip() + "\n"
 

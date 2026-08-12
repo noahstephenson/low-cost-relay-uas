@@ -369,15 +369,15 @@ def region_svg(rows: list[dict[str, Any]], payload_power: float = 50.0) -> str:
     endurances = sorted({float(row["endurance_min"]) for row in subset})
     lookup = {(float(row["payload_mass_kg"]), float(row["endurance_min"])): row for row in subset}
     colors = {"FEASIBLE": "#2f9e68", "MARGINAL": "#e6a43a", "INFEASIBLE": "#c95757"}
-    left, top, cell_w, cell_h = 95, 65, 88, 54
-    width = left + cell_w * len(endurances) + 35
-    height = top + cell_h * len(payloads) + 90
+    left, top, cell_w, cell_h = 105, 110, 118, 54
+    width = left + cell_w * len(endurances) + 40
+    height = top + cell_h * len(payloads) + 118
     parts = [f'<rect width="{width}" height="{height}" fill="#ffffff"/>']
     parts.append('<text x="20" y="28" class="title">Conditional feasibility at 50 W payload demand</text>')
-    parts.append('<text x="20" y="47" class="small">Analysis-only 10 kg / $2,500 reference boundaries; not owner-approved requirements</text>')
+    parts.append('<text x="20" y="52" class="small">Exploratory 10 kg / $2,500 boundaries; owner requirements remain undecided</text>')
     for column, endurance in enumerate(endurances):
         x = left + column * cell_w
-        parts.append(f'<text x="{x + cell_w/2}" y="{top - 12}" text-anchor="middle" class="label">{endurance:g} min</text>')
+        parts.append(f'<text x="{x + cell_w/2}" y="{top - 14}" text-anchor="middle" class="label">{endurance:g} min</text>')
     for row_index, payload in enumerate(payloads):
         y = top + row_index * cell_h
         parts.append(f'<text x="{left - 10}" y="{y + cell_h/2 + 4}" text-anchor="end" class="label">{payload:g} kg</text>')
@@ -388,7 +388,8 @@ def region_svg(rows: list[dict[str, Any]], payload_power: float = 50.0) -> str:
             parts.append(f'<rect x="{x}" y="{y}" width="{cell_w-2}" height="{cell_h-2}" rx="4" fill="{colors[category]}"/>')
             parts.append(f'<text x="{x + cell_w/2}" y="{y + 21}" text-anchor="middle" fill="#ffffff" style="font-size:11px;font-weight:700">{category[0]}</text>')
             parts.append(f'<text x="{x + cell_w/2}" y="{y + 39}" text-anchor="middle" fill="#ffffff" style="font-size:10px">{float(item["gross_mass_kg"]):.1f} kg</text>')
-    parts.append(f'<text x="20" y="{height-28}" class="small">F = feasible, M = marginal, I = infeasible under exploratory boundaries. All owner-requirement dispositions remain UNDETERMINED.</text>')
+    parts.append(f'<text x="20" y="{height-48}" class="small">F = feasible · M = marginal · I = infeasible under exploratory boundaries.</text>')
+    parts.append(f'<text x="20" y="{height-28}" class="small">Every owner-requirement disposition remains UNDETERMINED.</text>')
     return svg_document(width, height, "\n".join(parts), "Conditional payload-endurance feasibility region")
 
 
