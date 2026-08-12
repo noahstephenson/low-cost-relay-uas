@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
-<title id="title">What Happens When the Relay Is Lost?</title>
+<title id="title">What Happens If the Relay Degrades?</title>
 <desc id="desc">How does the architecture distinguish payload degradation from loss of platform control?</desc>
-<metadata>Generated from authoritative model records: SCN-007, MODE-002, MODE-003, MODE-004, MODE-005, REQ-FUN-007, REQ-FUN-008, GAP-HAZ-001, GAP-VER-001</metadata>
+<metadata>Generated from authoritative model records: SCN-007, MODE-001, MODE-002, MODE-003, MODE-004, MODE-005, REQ-FUN-007, REQ-FUN-008, GAP-HAZ-001, GAP-VER-001</metadata>
 <defs>
   <marker id="arrow-neutral" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#435269"/></marker>
   <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#245f9e"/></marker>
@@ -24,6 +24,14 @@
   .box.red { fill: #fdecec; stroke: #b42318; }
   .box.white { fill: #ffffff; }
   .box.future { fill: #ffffff; stroke: #6b7280; stroke-dasharray: 9 7; }
+  .platform { fill: #f4f7fb; stroke: #26364d; stroke-width: 2.5; }
+  .chip { fill: #ffffff; stroke: #8a97a8; stroke-width: 1.5; }
+  .chip.blue { fill: #e9f2ff; stroke: #245f9e; }
+  .chip-title { font-size: 15px; font-weight: 700; }
+  .payload-black { fill: #26364d; stroke: #172033; stroke-width: 3; }
+  .payload-title { font-size: 20px; font-weight: 700; fill: #ffffff; }
+  .payload-body { font-size: 15px; fill: #eef3f8; }
+  .current-zone { fill: #f2f7ff; stroke: #245f9e; stroke-width: 2.5; }
   .boundary { fill: #ffffff; stroke: #26364d; stroke-width: 3; }
   .group { fill: #f8fafc; stroke: #8a97a8; stroke-width: 1.5; }
   .arrow { stroke: #435269; stroke-width: 3; fill: none; }
@@ -35,36 +43,45 @@
   .divider { stroke: #8a97a8; stroke-width: 2; stroke-dasharray: 8 7; }
 </style>
 <rect width="1200" height="700" fill="#ffffff"/>
-<text x="40" y="48" class="title" text-anchor="start"><tspan x="40" dy="0">What Happens When the Relay Is Lost?</tspan></text>
-<text x="40" y="78" class="subtitle" text-anchor="start"><tspan x="40" dy="0">Loss of relay service does not automatically mean loss of aircraft control.</tspan></text>
-<rect x="55" y="245" width="220" height="100" rx="14" class="box green"/>
-<text x="165.0" y="276" class="box-title" text-anchor="middle"><tspan x="165.0" dy="0">Station Keeping</tspan></text>
-<text x="73" y="306" class="body" text-anchor="start"><tspan x="73" dy="0">Normal relay position</tspan></text>
-<rect x="355" y="245" width="220" height="100" rx="14" class="box amber"/>
-<text x="465.0" y="276" class="box-title" text-anchor="middle"><tspan x="465.0" dy="0">Relay Degraded</tspan></text>
-<text x="373" y="306" class="body" text-anchor="start"><tspan x="373" dy="0">Relay function unavailable</tspan><tspan x="373" dy="22">Platform assessed separately</tspan></text>
-<polygon points="690,235 810,295 690,355 570,295" class="box blue"/>
-<text x="690" y="288" class="box-title" text-anchor="middle"><tspan x="690" dy="0">Platform control</tspan><tspan x="690" dy="22">still available?</tspan></text>
-<rect x="900" y="145" width="235" height="105" rx="14" class="box blue"/>
-<text x="1017.5" y="176" class="box-title" text-anchor="middle"><tspan x="1017.5" dy="0">Return / Recovery</tspan></text>
-<text x="918" y="206" class="body" text-anchor="start"><tspan x="918" dy="0">Recovery intent only</tspan><tspan x="918" dy="22">Criteria remain unresolved</tspan></text>
-<rect x="900" y="300" width="235" height="105" rx="14" class="box neutral"/>
-<text x="1017.5" y="331" class="box-title" text-anchor="middle"><tspan x="1017.5" dy="0">Ground Safe</tspan></text>
-<text x="918" y="361" class="body" text-anchor="start"><tspan x="918" dy="0">After recovery</tspan></text>
-<rect x="900" y="500" width="235" height="112" rx="14" class="box red"/>
-<text x="1017.5" y="531" class="box-title" text-anchor="middle"><tspan x="1017.5" dy="0">Unresolved Safety Gap</tspan></text>
-<text x="918" y="561" class="body" text-anchor="start"><tspan x="918" dy="0">No modeled response for</tspan><tspan x="918" dy="22">impaired platform control</tspan></text>
-<line x1="275" y1="295" x2="355" y2="295" class="arrow amber" marker-end="url(#arrow-amber)"/>
-<text x="315.0" y="286.0" class="edge-label" text-anchor="middle">relay degraded</text>
-<line x1="575" y1="295" x2="570" y2="295" class="arrow blue" marker-end="url(#arrow-blue)"/>
-<line x1="810" y1="268" x2="900" y2="198" class="arrow blue" marker-end="url(#arrow-blue)"/>
-<text x="855.0" y="224.0" class="edge-label" text-anchor="middle">YES</text>
-<line x1="810" y1="322" x2="900" y2="556" class="arrow amber" marker-end="url(#arrow-amber)"/>
-<text x="855.0" y="430.0" class="edge-label" text-anchor="middle">NO / IMPAIRED</text>
-<line x1="1018" y1="250" x2="1018" y2="300" class="arrow blue" marker-end="url(#arrow-blue)"/>
-<text x="1018.0" y="278" class="edge-label" text-anchor="middle">recover / land</text>
-<text x="55" y="430" class="section" text-anchor="start"><tspan x="55" dy="0">Defined in the model:</tspan></text>
-<text x="55" y="460" class="body" text-anchor="start"><tspan x="55" dy="0">• Relay payload is separate from platform command</tspan><tspan x="55" dy="22">• Degraded mode and recovery intent exist</tspan><tspan x="55" dy="22">• Health/status purpose is proposed</tspan></text>
-<text x="55" y="560" class="section" text-anchor="start"><tspan x="55" dy="0">Still unknown:</tspan></text>
-<text x="55" y="590" class="body" text-anchor="start"><tspan x="55" dy="0">• Exact detection and decision logic</tspan><tspan x="55" dy="22">• Recovery criteria or physical behavior</tspan><tspan x="55" dy="22">• Safety acceptance or test evidence</tspan></text>
+<text x="40" y="48" class="title" text-anchor="start"><tspan x="40" dy="0">What Happens If the Relay Degrades?</tspan></text>
+<text x="40" y="78" class="subtitle" text-anchor="start"><tspan x="40" dy="0">Relay loss is one branch in the aircraft state story—not detailed flight-control logic.</tspan></text>
+<rect x="35" y="160" width="165" height="92" rx="14" class="box neutral"/>
+<text x="117.5" y="191" class="box-title" text-anchor="middle"><tspan x="117.5" dy="0">Ground Safe</tspan></text>
+<text x="53" y="221" class="body" text-anchor="start"><tspan x="53" dy="0">Arming inhibited</tspan></text>
+<rect x="250" y="160" width="165" height="92" rx="14" class="box blue"/>
+<text x="332.5" y="191" class="box-title" text-anchor="middle"><tspan x="332.5" dy="0">Transit</tspan></text>
+<text x="268" y="221" class="body" text-anchor="start"><tspan x="268" dy="0">Move to station</tspan></text>
+<rect x="465" y="160" width="180" height="92" rx="14" class="box green"/>
+<text x="555.0" y="191" class="box-title" text-anchor="middle"><tspan x="555.0" dy="0">Station Keeping</tspan></text>
+<text x="483" y="221" class="body" text-anchor="start"><tspan x="483" dy="0">Hold relay geometry</tspan></text>
+<rect x="695" y="160" width="180" height="92" rx="14" class="box amber"/>
+<text x="785.0" y="191" class="box-title" text-anchor="middle"><tspan x="785.0" dy="0">Relay Degraded</tspan></text>
+<text x="713" y="221" class="body" text-anchor="start"><tspan x="713" dy="0">Relay service impaired</tspan></text>
+<polygon points="1010,145 1140,206 1010,267 880,206" class="box blue"/>
+<text x="1010" y="198" class="box-title" text-anchor="middle"><tspan x="1010" dy="0">Platform control</tspan><tspan x="1010" dy="22">still available?</tspan></text>
+<line x1="200" y1="206" x2="250" y2="206" class="arrow blue" marker-end="url(#arrow-blue)"/>
+<text x="225.0" y="197.0" class="edge-label" text-anchor="middle">launch</text>
+<line x1="415" y1="206" x2="465" y2="206" class="arrow blue" marker-end="url(#arrow-blue)"/>
+<text x="440.0" y="197.0" class="edge-label" text-anchor="middle">station reached</text>
+<line x1="645" y1="206" x2="695" y2="206" class="arrow amber" marker-end="url(#arrow-amber)"/>
+<text x="670.0" y="197.0" class="edge-label" text-anchor="middle">relay degrades</text>
+<line x1="875" y1="206" x2="880" y2="206" class="arrow blue" marker-end="url(#arrow-blue)"/>
+<rect x="900" y="350" width="235" height="105" rx="14" class="box blue"/>
+<text x="1017.5" y="381" class="box-title" text-anchor="middle"><tspan x="1017.5" dy="0">Return / Recovery</tspan></text>
+<text x="918" y="411" class="body" text-anchor="start"><tspan x="918" dy="0">Recovery intent only</tspan><tspan x="918" dy="22">Criteria remain unresolved</tspan></text>
+<rect x="585" y="500" width="270" height="110" rx="14" class="box red"/>
+<text x="720.0" y="531" class="box-title" text-anchor="middle"><tspan x="720.0" dy="0">Unresolved Safety Gap</tspan></text>
+<text x="603" y="561" class="body" text-anchor="start"><tspan x="603" dy="0">No modeled response for</tspan><tspan x="603" dy="22">impaired platform control</tspan></text>
+<line x1="1035" y1="267" x2="1035" y2="350" class="arrow blue" marker-end="url(#arrow-blue)"/>
+<text x="1035.0" y="320" class="edge-label" text-anchor="middle">YES</text>
+<line x1="985" y1="267" x2="720" y2="500" class="arrow amber" marker-end="url(#arrow-amber)"/>
+<text x="852.5" y="400" class="edge-label" text-anchor="middle">NO / IMPAIRED</text>
+<path d="M 555 252 V 315 H 900" class="arrow blue dashed" marker-end="url(#arrow-blue)"/>
+<text x="720" y="305" class="edge-label" text-anchor="middle"><tspan x="720" dy="0">normal end / low battery</tspan></text>
+<path d="M 1018 455 V 640 H 20 V 206 H 35" class="arrow blue" marker-end="url(#arrow-blue)"/>
+<text x="555" y="630" class="edge-label" text-anchor="middle"><tspan x="555" dy="0">land, recover, and return to Ground Safe</tspan></text>
+<text x="40" y="405" class="section" text-anchor="start"><tspan x="40" dy="0">Defined:</tspan></text>
+<text x="40" y="435" class="body" text-anchor="start"><tspan x="40" dy="0">• Independent platform control</tspan><tspan x="40" dy="22">• Degraded and recovery states</tspan><tspan x="40" dy="22">• Normal recovery path</tspan></text>
+<text x="40" y="535" class="section" text-anchor="start"><tspan x="40" dy="0">Not yet defined:</tspan></text>
+<text x="40" y="565" class="body" text-anchor="start"><tspan x="40" dy="0">• Detection thresholds</tspan><tspan x="40" dy="22">• Recovery criteria and physical behavior</tspan><tspan x="40" dy="22">• Safety acceptance evidence</tspan></text>
 </svg>

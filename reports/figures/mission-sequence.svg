@@ -24,6 +24,14 @@
   .box.red { fill: #fdecec; stroke: #b42318; }
   .box.white { fill: #ffffff; }
   .box.future { fill: #ffffff; stroke: #6b7280; stroke-dasharray: 9 7; }
+  .platform { fill: #f4f7fb; stroke: #26364d; stroke-width: 2.5; }
+  .chip { fill: #ffffff; stroke: #8a97a8; stroke-width: 1.5; }
+  .chip.blue { fill: #e9f2ff; stroke: #245f9e; }
+  .chip-title { font-size: 15px; font-weight: 700; }
+  .payload-black { fill: #26364d; stroke: #172033; stroke-width: 3; }
+  .payload-title { font-size: 20px; font-weight: 700; fill: #ffffff; }
+  .payload-body { font-size: 15px; fill: #eef3f8; }
+  .current-zone { fill: #f2f7ff; stroke: #245f9e; stroke-width: 2.5; }
   .boundary { fill: #ffffff; stroke: #26364d; stroke-width: 3; }
   .group { fill: #f8fafc; stroke: #8a97a8; stroke-width: 1.5; }
   .arrow { stroke: #435269; stroke-width: 3; fill: none; }
@@ -36,7 +44,7 @@
 </style>
 <rect width="1200" height="700" fill="#ffffff"/>
 <text x="40" y="48" class="title" text-anchor="start"><tspan x="40" dy="0">What Happens During a Relay Mission?</tspan></text>
-<text x="40" y="78" class="subtitle" text-anchor="start"><tspan x="40" dy="0">Current-system mission sequence; future UGV and video branches are intentionally omitted.</tspan></text>
+<text x="40" y="78" class="subtitle" text-anchor="start"><tspan x="40" dy="0">Current-system mission sequence; future ground-vehicle and video branches are intentionally omitted.</tspan></text>
 <text x="90" y="125" class="section" text-anchor="middle"><tspan x="90" dy="0">Operator / Ground</tspan></text>
 <line x1="90" y1="145" x2="90" y2="640" class="lane"/>
 <text x="390" y="125" class="section" text-anchor="middle"><tspan x="390" dy="0">Relay Aircraft</tspan></text>

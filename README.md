@@ -1,18 +1,21 @@
 # Low-Cost Attritable Communications Relay UAS
 
-A Relay UAS is a small multirotor that holds a useful airborne position and carries
-a black-box communications payload to extend command and telemetry reach.
+A small multirotor uncrewed aircraft system—the Relay UAS—carries a communications
+relay to a useful airborne position, extending command and telemetry reach when
+distance or terrain obstructs a direct link.
 
-> **Architecture baseline candidate — not an approved aircraft.** This repository
-> defines and analyzes a system concept. It is not a build specification, safety
-> case, flight-test plan, deployable communications design, or readiness claim.
+**Study result:** a plausible short-dwell, modest-payload design region exists under
+exploratory assumptions; longer dwell creates a reinforcing battery–mass–power
+penalty. **Current maturity:** coherent architecture and reproducible analysis, but
+no verified or approved physical aircraft.
 
 ## The project in one picture
 
 ![The Relay UAS in one picture](reports/figures/project-in-one-picture.svg)
 
-The blue path controls the Relay UAS itself. The green paths carry command and
-telemetry for the remote aircraft. They are separate by design.
+The aircraft has its own blue command-and-health path. Green mission traffic passes
+through a separate black-box relay payload, so the payload does not control the
+aircraft carrying it.
 
 ## What this project is
 
@@ -24,9 +27,9 @@ That platform-control link is deliberately separate from the mission traffic pas
 through the relay payload. Losing relay service therefore does not automatically
 mean losing control of the relay aircraft.
 
-This project studies the aircraft, its boundaries, major subsystems, information and
-power flows, mission behavior, requirements, evidence, and feasibility. It treats the
-internal radio-frequency implementation of the relay payload as a black box.
+This project defines the carrier aircraft, its boundary with the payload, its major
+subsystems and interfaces, its mission behavior, and its feasibility. It deliberately
+leaves the payload's internal radio design outside the current architecture.
 
 ## How the system works
 
@@ -57,14 +60,13 @@ The proposed platform-to-payload boundary has only two crossings: regulated powe
 and mechanical retention. No platform-to-payload data connection is part of the
 current candidate.
 
-## What the project found
+## What the project learned
 
 ### Architecture result
 
-The current candidate has a coherent system boundary, mission thread, subsystem
-decomposition, power and information paths, modes, requirements, hazards,
-verification methods, evidence lineage, and end-to-end traceability. Internal model
-reviews found no structural model failure, while retaining known gaps.
+The current candidate has a coherent boundary, mission thread, subsystem
+decomposition, power and information paths, modes, requirements, and traceability.
+Internal model review found no structural failure while keeping known gaps visible.
 
 ### Feasibility result
 
@@ -80,52 +82,50 @@ This is not an exact aircraft prediction. The boundaries are exploratory, owner
 targets remain unset, packaging geometry is unresolved, and the model uses broad
 component-class ranges rather than selected hardware.
 
-### Verification result
-
-The repository has undergone documented internal architecture verification and a
-reproducible feasibility analysis. It has **not** undergone physical aircraft
-verification or external-interface conformance testing.
-
 ## Engineering status at a glance
 
 ![What the project actually established](reports/figures/engineering-status.svg)
 
-“Established in the model” means the architecture is internally coherent and
-traceable. It does not mean the aircraft is physically proven or approved.
+The architecture and analysis are established project results. Detailed radio design
+and future system-of-systems concepts are deliberate scope limits. Physical aircraft
+verification, external-interface conformance, owner targets, and baseline approval
+still require future work.
 
-## What is not finished
+## What comes next
 
-- Owner targets for payload service, endurance, affordability, portability,
-  operating environment, reserve/recovery policy, and domestic sourcing.
-- Physical evidence for flight behavior, performance, structural retention,
-  electrical behavior, recovery, or safety.
-- External authority, specifications, and evidence for interface compatibility.
-- Detailed relay-payload implementation, including RF parameters and antenna design.
-- Exact reconstruction of the recovered reference article from incomplete source
-  evidence.
-- Future digital-payload, UGV, radio-user, network-service, and broader
-  system-of-systems branches.
-- Technical-baseline, safety, airworthiness, interoperability, or operational
-  approval.
+### Requires decisions or evidence
+
+- Set quantitative targets for payload service, endurance, affordability,
+  portability, operating conditions, and recovery policy.
+- Select and size hardware, then verify flight behavior, performance, power,
+  retention, recovery, and safety-relevant claims on a physical aircraft.
+- Obtain external specifications and authority before claiming endpoint or spectrum
+  conformance.
+- Approve a technical baseline only after those decisions and evidence exist.
+
+### Deliberately outside the current project
+
+- Internal relay waveform, radio-frequency, and antenna implementation.
+- Future digital-payload, uncrewed-ground-vehicle, network-service, and broader
+  command-and-control system-of-systems implementation.
 
 ---
 
-## Engineering detail and traceability
+## Technical detail and traceability
 
 The sections above are the five-minute orientation. From here, names remain primary
 but stable model identifiers are shown for engineering audit and handoff.
 
 ### Reference, current, and future configurations
 
-| Role | Configuration | Meaning |
-|---|---|---|
-| Reference evidence | Recovered Reference (`CFG-REC`) | Records what the available teardown sources support. It is not the design baseline and does not automatically pass architecture into the candidate. |
-| Current candidate | Current Replica Candidate (`CFG-REP`) | Proposed architecture-level functional replica; not an exact clone and not approved. |
-| Current variant | Domestic Candidate (`CFG-DOM`) | Proposed low-cost sourcing variant; domestic-content rules and substitutions remain unresolved. |
-| Future branch | Digital Extension (`CFG-DIG`) | Possible payload-management and multi-platform extension; not part of the current candidate. |
-| Future context | System-of-Systems (`CFG-SOS`) | Possible UGV, radio-user, service, authority, and infrastructure context; not current implementation scope. |
+- **Recovered reference:** evidence from the disassembled system; incomplete and not
+  the design baseline.
+- **Current candidates:** a functional-replica architecture and a domestic-sourcing
+  variant. Both remain proposed and unapproved.
+- **Future concepts:** digital-payload and wider command-and-control ecosystem
+  extensions. They do not change the current candidate.
 
-### Requirement intent in ordinary language
+### Requirement intent
 
 The detailed catalog contains 28 stable `REQ-*` records. At a glance, they require
 the candidate to relay command and telemetry, maintain and recover the aircraft,
@@ -138,7 +138,7 @@ review remain deferred or externally owned.
 See [architecture.md](architecture.md#8-key-requirements) for the grouped translation
 and `model/assurance.yaml` for authoritative wording and metadata.
 
-### One traceability example
+### Traceability example
 
 In plain language:
 
@@ -181,48 +181,29 @@ defective.
 - [`reports/baseline.md`](reports/baseline.md): generated status, decisions, gaps,
   verification, and traceability summary.
 
-## Repository map
-
-```text
-README.md                 five-minute entry point
-architecture.md           progressive engineering explanation
-trade-studies.md          engineering trade reasoning
-system.yaml               model and presentation manifest
-model/                    authoritative architecture and assurance catalogs
-.seal/                    authoritative source, claim, and evidence catalogs
-analysis/                 feasibility inputs, executable model, data, and plots
-reports/figures/          generated human-readable architecture figures
-reports/                   detailed human and generated reports
-scripts/                   validation and deterministic view generators
-.github/workflows/         CI validation
-```
-
-## Validation and regeneration
+## Reproduce and validate
 
 ```bash
 python scripts/generate-communication-views.py
 python scripts/generate-mermaid-views.py
-python scripts/validate-baseline.py --write-reports
 python scripts/validate-baseline.py --check-generated
 python analysis/feasibility.py --check
 ```
 
-Optional Mermaid rendering uses a locally installed pinned Mermaid CLI:
-
-```bash
-python scripts/validate-baseline.py --validate-mermaid
-```
+Continuous integration runs the same generated-file, model, and feasibility checks.
 
 ## Explicit scope boundaries
 
 This repository does not provide RF implementation parameters, antenna design,
 component selection, fabrication, assembly, integration, operating instructions,
 flight-test instructions, weapons content, exact recovered-component replication,
-or claims of MOSA compliance, interoperability, resilience, security, airworthiness,
-safety, operational readiness, or UAF conformance.
+or claims of Modular Open Systems Approach compliance, interoperability, resilience,
+security, airworthiness, safety, operational readiness, or Unified Architecture
+Framework conformance.
 
-The model uses selected UAF terminology but does not claim full UAF or DoDAF
-conformance. The terminology/version decision remains open.
+The model uses selected Unified Architecture Framework terminology but does not claim
+full UAF or Department of Defense Architecture Framework conformance. The
+terminology/version decision remains open.
 
 ## License
 

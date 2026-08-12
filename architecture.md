@@ -6,10 +6,11 @@
 
 ## 1. System overview
 
-The system under study is a small multirotor that carries a communications relay
-payload to a useful airborne position. Ground control sends remote-aircraft command
-through the payload, and remote-aircraft telemetry returns through it. The aircraft
-does not interpret that mission traffic at this architecture level.
+The system under study is a small multirotor uncrewed aircraft system (UAS) that
+carries a communications relay payload to a useful airborne position. Ground control
+sends remote-aircraft command through the payload, and remote-aircraft telemetry
+returns through it. The aircraft does not interpret that mission traffic at this
+architecture level.
 
 The Relay UAS also needs its own independent control path. An operator uses that
 path to launch, position, monitor, and recover the carrier aircraft. This separation
@@ -21,7 +22,10 @@ black-box payload. The project defines their relationships and analyzes whether 
 credible mass–power–endurance–cost region exists. It does not design the payload's
 internal RF implementation or select aircraft hardware.
 
-![The Relay UAS in one picture](reports/figures/project-in-one-picture.svg)
+The cover view matters because it shows the central architecture choice before the
+reader encounters any model identifiers:
+
+![How the Relay UAS extends communications](reports/figures/project-in-one-picture.svg)
 
 The figure derives from the current actors and information exchanges: Operator,
 Ground Control, Relay UAS, Remote UAS, platform command, relayed command, and relayed
@@ -29,6 +33,9 @@ telemetry. IDs are intentionally absent from the visible figure; they remain in 
 generated metadata and the structured model.
 
 ## 2. System context
+
+The boundary view answers one question: which responsibilities belong to the Relay
+UAS product, and which remain with people, remote systems, or external authorities?
 
 ![What is inside this project](reports/figures/system-boundary.svg)
 
@@ -44,9 +51,9 @@ mission platforms, external services, and authorities remain outside the product
 boundary. They are independently managed unless a structured source establishes
 otherwise.
 
-The model also contains a broader future C2 ecosystem context. That outer context
-does not imply current interoperability, responsibility, authority, or interface
-conformance.
+The model also contains a broader future command-and-control ecosystem context. That
+outer context does not imply current interoperability, responsibility, authority, or
+interface conformance.
 
 **Engineering references:** inner/outer boundaries in `system.yaml`; Relay UAS
 performer `OP-002`; current external performers `OP-001`, `OP-003`, `OP-007`, and
@@ -54,18 +61,15 @@ performer `OP-002`; current external performers `OP-001`, `OP-003`, `OP-007`, an
 
 ## 3. Current physical architecture
 
+The physical view emphasizes hierarchy. The carrier platform provides flight,
+power, structure, command, and mounting support around a separately bounded payload.
+
 ![What is on the Relay UAS](reports/figures/physical-architecture.svg)
 
-The 19 authoritative component records group naturally into six subsystem roles:
-
-| Group | Architecture content | Design state |
-|---|---|---|
-| Airframe and structure | Center structure, arms, landing gear, payload-side structure, and hardware (`CMP-AFR-*`) | Architecture role defined; material, geometry, loads, and construction remain trade outputs. |
-| Propulsion | Motors, motor controllers, and propellers (`CMP-PRP-*`) | Functional chain defined; sizing and hardware remain unresolved. |
-| Electrical power | Battery, distribution, regulators, and source connection (`CMP-PWR-*`) | Resource paths defined; voltage, current, capacity, protection, and hardware remain unresolved. |
-| Flight avionics | Flight controller, flight sensors, navigation sensor, and platform-command receiver (`CMP-AVN-*`) | Roles and key interfaces defined; device and implementation choices remain unresolved. |
-| Payload support | Airframe mount and modular payload bay (`CMP-AFR-04`, `CMP-MNT-01`) | Mounting role defined; envelope, geometry, margin, and evidence remain unresolved. |
-| Relay payload | Payload module and antenna resource envelope (`CMP-COM-*`) | Black-box boundary defined; internal implementation deliberately deferred. |
+The 19 component records roll up into six readable roles: structure, propulsion,
+power, avionics, platform communications, and payload support. The relay payload is
+shown separately because the current project defines only its mission role and its
+two platform crossings—regulated power and mechanical retention.
 
 Four-corner propulsion symmetry is part of the candidate concept, but no motor,
 controller, propeller, battery, frame, flight controller, mount, radio, or antenna is
@@ -75,6 +79,9 @@ connectivity remains in the generated architecture views.
 ## 4. How information and power move
 
 ### Power and physical resource flow
+
+This view follows stored energy from source to loads. It keeps electrical and
+mechanical energy distinct from command and telemetry.
 
 ![How power reaches every major load](reports/figures/power-resource-flow.svg)
 
@@ -89,6 +96,9 @@ Those interfaces establish architecture connectivity and failure meaning without
 assigning electrical values or implementation details.
 
 ### Command, status, and mission data
+
+This view separates the aircraft's own command-and-health path from the mission
+traffic carried by the relay payload.
 
 ![How command and telemetry move](reports/figures/command-data-flow.svg)
 
@@ -108,6 +118,9 @@ antenna characteristics, endpoint compatibility, or external conformance authori
 
 ## 5. How the mission works
 
+The mission view follows the normal operational story from preparation through
+recovery; degraded behavior is intentionally handled in the next section.
+
 ![What happens during a relay mission](reports/figures/mission-sequence.svg)
 
 The current mission is a sequence of architecture outcomes rather than an operating
@@ -126,20 +139,14 @@ procedure:
 6. **Recover.** Normal termination or a defined low-battery condition transitions
    the aircraft toward return, recovery, and Ground Safe (`SCN-008`).
 
-The future UGV and video/sensor-data scenarios are intentionally absent from this
-current-system mission picture.
+The future uncrewed-ground-vehicle and video/sensor-data scenarios are intentionally
+absent from this current-system mission picture.
 
 ## 6. Modes and degradation behavior
 
-The current candidate uses five modes:
-
-| Plain-language state | Model record | Meaning |
-|---|---|---|
-| Ground Safe | `MODE-005` | Aircraft is not in an active flight mode; arming inhibition is a proposed requirement. |
-| Transit | `MODE-001` | Aircraft moves toward or away from its relay station. |
-| Station Keeping | `MODE-002` | Aircraft holds the intended relay geometry; tolerance remains unset. |
-| Relay Degraded | `MODE-003` | Relay service is lost or degraded while platform control is treated separately. |
-| Return / Recovery | `MODE-004` | Architecture expresses recovery intent; exact criteria and behavior remain unresolved. |
+The degraded view places relay loss in the full five-state aircraft story: Ground
+Safe, Transit, Station Keeping, Relay Degraded, and Return / Recovery. It deliberately
+stops where detailed detection, recovery logic, and physical evidence are missing.
 
 ![What happens when the relay is lost](reports/figures/degraded-behavior.svg)
 
@@ -154,6 +161,10 @@ unapproved consequence-management behavior.
 absence of physical recovery evidence.
 
 ## 7. Configurations: reference, current, and future
+
+The roadmap gives the current candidates the greatest visual weight. Reference
+evidence informs the work without becoming an inherited design, and future concepts
+remain visibly secondary.
 
 ![What is reference, current, and future](reports/figures/configuration-evolution.svg)
 
@@ -180,25 +191,25 @@ approved design.
 ### Future branches
 
 The Digital Extension (`CFG-DIG`) introduces a possible payload-management path.
-The System-of-Systems context (`CFG-SOS`) adds possible UGV, radio-user, network,
-authority, and infrastructure relationships. These branches do not modify the
-current candidate unless future owner action and engineering work explicitly do so.
+The System-of-Systems context (`CFG-SOS`) adds possible uncrewed ground vehicle,
+radio-user, network, authority, and infrastructure relationships. These branches do
+not modify the current candidate unless future owner action and engineering work
+explicitly do so.
 
 ## 8. Key requirements
 
 The authoritative catalog contains 28 requirement records. This translation groups
 their intent so readers understand the design before inspecting individual IDs.
 
-| Requirement area | Plain-language intent | Authoritative records |
+| Design intent | What the architecture must support | Records |
 |---|---|---|
-| Perform the relay mission | Carry outbound remote-UAS command and return telemetry through the airborne payload. | `REQ-FUN-001`, `REQ-FUN-002` |
-| Fly and hold position | Accept aircraft command, navigate, hold a station, and return on an owner-defined low-battery condition without assuming continuous GNSS availability. | `REQ-FUN-003..005`, `REQ-CON-004` |
-| Support the relay payload | Provide a payload-independent mount, defined accommodation envelope, regulated power, a two-crossing platform boundary, and retention under future load criteria. | `REQ-PER-004`, `REQ-IFC-001..004` |
-| Provide power | Support regulated payload service and basic battery protection/retention. Values and evidence remain unresolved. | `REQ-IFC-002`, `REQ-SAF-001` |
-| Maintain platform command and status | Keep platform command independent of the relay payload and make proposed aircraft mode/health information available to the operator. | `REQ-FUN-004`, `REQ-FUN-008` |
-| Remain portable and affordable | Remain compatible with owner-set cost, endurance, gross-mass, payload, and single-operator handling objectives while preferring commercially available components. | `REQ-PER-001..005`, `REQ-CON-001`, `REQ-CON-002` |
-| Recover safely | Inhibit arming in Ground Safe, show armed state, preserve recovery intent after relay loss, retain stored energy and payload, and exclude weapons. | `REQ-FUN-005..007`, `REQ-SAF-001..002`, `REQ-IFC-004`, `REQ-CON-003` |
-| Interface with external systems | Leave RF design, antennas, spectrum authorization, contested-spectrum mechanisms, and export review outside current technical definition. | `REQ-DEF-001..005` |
+| Relay mission | Carry outbound command and return telemetry through the airborne payload. | `REQ-FUN-001..002` |
+| Vehicle positioning | Accept aircraft command, navigate, hold station, and recover on an owner-defined low-battery condition. | `REQ-FUN-003..005`, `REQ-CON-004` |
+| Payload support | Provide a replaceable mount, accommodation envelope, regulated power, and retention. | `REQ-PER-004`, `REQ-IFC-001..004` |
+| Platform control | Keep aircraft command independent of the payload and expose proposed health/status. | `REQ-FUN-004`, `REQ-FUN-008` |
+| Portability and affordability | Meet owner-set cost, mass, endurance, payload, and handling targets using commercial components where practical. | `REQ-PER-001..005`, `REQ-CON-001..002` |
+| Safe recovery | Preserve ground-safe, recovery, energy-retention, payload-retention, and non-weapon intent. | `REQ-FUN-005..007`, `REQ-SAF-001..002`, `REQ-IFC-004`, `REQ-CON-003` |
+| External boundaries | Leave radio implementation, spectrum authorization, contested-spectrum mechanisms, and export review externally owned or deferred. | `REQ-DEF-001..005` |
 
 Bracketed `[TBD]` values are controlled unknowns, not placeholders for values copied
 from another aircraft. Requirement wording, classification, provenance, allocation,
@@ -240,6 +251,9 @@ orientation language.
 
 ## 10. Feasibility implications
 
+The feasibility heatmap is the principal quantitative result. It shows the credible
+region first; the detailed report contains equations, sensitivities, and all cases.
+
 ![Conditional payload-endurance feasibility region](analysis/results/feasible-region.svg)
 
 The deterministic analysis iterated gross mass, induced hover power, propulsion
@@ -264,6 +278,9 @@ selection. See `reports/feasibility-analysis.md` for equations, sources, ranges,
 limitations, plots, and complete trade-study implications.
 
 ## 11. Verification and maturity
+
+The status view separates completed architecture work, deliberate scope limits, and
+evidence still required before anyone can claim a verified or approved aircraft.
 
 ![What the project actually established](reports/figures/engineering-status.svg)
 
@@ -306,6 +323,8 @@ applicability, verification results, or approval state. Generated communication
 figures carry their source record IDs in SVG metadata and are checked against the
 catalogs during generation and repository validation.
 
-The repository uses selected UAF terminology to connect strategic intent,
-operational context, resources, and assurance. It does not claim full UAF, DoDAF,
-SysML, MOSA, safety, airworthiness, interoperability, or operational conformance.
+The repository uses selected Unified Architecture Framework (UAF) terminology to
+connect strategic intent, operational context, resources, and assurance. It does not
+claim full UAF, Department of Defense Architecture Framework, Systems Modeling
+Language, Modular Open Systems Approach, safety, airworthiness, interoperability, or
+operational conformance.

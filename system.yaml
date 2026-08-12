@@ -247,10 +247,10 @@
   "communication_views": [
     {
       "slug": "project-in-one-picture",
-      "title": "The Relay UAS in One Picture",
+      "title": "How the Relay UAS Extends Communications",
       "audience": "outsider and project owner",
       "question": "What is the system doing, and why are platform control and relayed traffic separate?",
-      "object_refs": ["OP-001", "OP-002", "OP-003", "OP-010", "IX-001", "IX-002", "IX-003", "IX-004", "IX-005", "CMP-COM-01", "CMP-AVN-04"]
+      "object_refs": ["OP-001", "OP-002", "OP-003", "OP-010", "IX-001", "IX-002", "IX-003", "IX-004", "IX-005", "CMP-COM-01", "CMP-AVN-04", "CMP-PWR-03", "CMP-MNT-01", "IFC-EXT-005", "IFC-INT-003", "IFC-INT-007"]
     },
     {
       "slug": "system-boundary",
@@ -289,10 +289,10 @@
     },
     {
       "slug": "degraded-behavior",
-      "title": "What Happens When the Relay Is Lost?",
+      "title": "What Happens If the Relay Degrades?",
       "audience": "outsider, project owner, and systems engineer",
       "question": "How does the architecture distinguish payload degradation from loss of platform control?",
-      "object_refs": ["SCN-007", "MODE-002", "MODE-003", "MODE-004", "MODE-005", "REQ-FUN-007", "REQ-FUN-008", "GAP-HAZ-001", "GAP-VER-001"]
+      "object_refs": ["SCN-007", "MODE-001", "MODE-002", "MODE-003", "MODE-004", "MODE-005", "REQ-FUN-007", "REQ-FUN-008", "GAP-HAZ-001", "GAP-VER-001"]
     },
     {
       "slug": "configuration-evolution",
@@ -303,7 +303,7 @@
     },
     {
       "slug": "engineering-status",
-      "title": "What Did the Project Actually Establish?",
+      "title": "What Has This Project Established?",
       "audience": "outsider, project owner, and model auditor",
       "question": "Which results are established, conditional, pending, externally blocked, deferred, or not approved?",
       "object_refs": ["VER-001", "VER-007", "VER-008", "VER-009", "TS-009", "CFG-DIG", "CFG-SOS", "GAP-REC-001", "GAP-BUDGET-001", "GAP-IFC-001", "GAP-VER-001", "DEC-001"]

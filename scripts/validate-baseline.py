@@ -650,7 +650,7 @@ def validate_communication_figures(
             errors.append(f"architecture.md does not expose canonical figure {relative}")
     if "analysis/results/feasible-region.svg" not in architecture:
         errors.append("architecture.md lacks the high-level feasibility result")
-    orientation = readme.split("## Engineering detail and traceability", 1)[0]
+    orientation = readme.split("## Technical detail and traceability", 1)[0]
     if ID_TOKEN_RE.search(orientation) or GAP_TOKEN_RE.search(orientation):
         errors.append("README five-minute orientation exposes raw architecture IDs before meaning")
     return errors
@@ -1569,10 +1569,10 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
         "## What this project is",
         "## How the system works",
         "## What is on the drone",
-        "## What the project found",
+        "## What the project learned",
         "## Engineering status at a glance",
-        "## What is not finished",
-        "## Engineering detail and traceability",
+        "## What comes next",
+        "## Technical detail and traceability",
     )
     section_positions = [readme_text.find(section) for section in required_readme_sections]
     if any(position < 0 for position in section_positions) or section_positions != sorted(section_positions):

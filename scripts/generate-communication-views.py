@@ -137,6 +137,14 @@ def svg_document(title: str, description: str, body: str, sources: Iterable[str]
   .box.red {{ fill: #fdecec; stroke: #b42318; }}
   .box.white {{ fill: #ffffff; }}
   .box.future {{ fill: #ffffff; stroke: #6b7280; stroke-dasharray: 9 7; }}
+  .platform {{ fill: #f4f7fb; stroke: #26364d; stroke-width: 2.5; }}
+  .chip {{ fill: #ffffff; stroke: #8a97a8; stroke-width: 1.5; }}
+  .chip.blue {{ fill: #e9f2ff; stroke: #245f9e; }}
+  .chip-title {{ font-size: 15px; font-weight: 700; }}
+  .payload-black {{ fill: #26364d; stroke: #172033; stroke-width: 3; }}
+  .payload-title {{ font-size: 20px; font-weight: 700; fill: #ffffff; }}
+  .payload-body {{ font-size: 15px; fill: #eef3f8; }}
+  .current-zone {{ fill: #f2f7ff; stroke: #245f9e; stroke-width: 2.5; }}
   .boundary {{ fill: #ffffff; stroke: #26364d; stroke-width: 3; }}
   .group {{ fill: #f8fafc; stroke: #8a97a8; stroke-width: 1.5; }}
   .arrow {{ stroke: #435269; stroke-width: 3; fill: none; }}
@@ -172,26 +180,44 @@ def project_picture(model: dict[str, Any], index: dict[str, dict[str, Any]], vie
         ("IX-005", "OP-002", "OP-001"),
     ]:
         assert_exchange(model, *item)
+    assert_interface(model, "IFC-EXT-005", "OP-010", "CMP-AVN-04")
+    assert_interface(model, "IFC-INT-003", "CMP-PWR-03", "CMP-COM-01")
+    assert_interface(model, "IFC-INT-007", "CMP-MNT-01", "CMP-COM-01")
     parts = [
         lines_text(40, 48, [view["title"]], "title"),
-        lines_text(40, 78, ["One aircraft, two separate communication paths"], "subtitle"),
-        '<rect x="350" y="100" width="500" height="470" rx="24" class="boundary"/>',
-        lines_text(600, 136, [display(index, "OP-002")], "section", "middle"),
-        lines_text(600, 163, ["Aircraft carries and positions the relay payload"], "small", "middle"),
-        box(40, 190, 240, 82, display(index, "OP-010"), ["Controls the Relay UAS"], "blue"),
-        box(420, 190, 360, 82, display(index, "CMP-AVN-04"), ["Separate platform-control path"], "blue"),
-        box(420, 300, 360, 82, "Aircraft Support", ["Airframe + propulsion + power + avionics"], "neutral"),
-        box(440, 420, 320, 105, "Relay Payload", ["Passes mission traffic", "Internal RF design is out of scope"], "green"),
-        box(40, 415, 240, 110, display(index, "OP-001"), ["Sends remote-UAS command", "Receives its telemetry"], "white"),
-        box(920, 415, 240, 110, display(index, "OP-003"), ["Receives relayed command", "Returns telemetry"], "white"),
-        arrow(280, 215, 420, 215, "Platform Command", "blue", False, 202),
-        arrow(420, 247, 280, 247, "Health / Status", "blue", True, 270),
-        arrow(280, 446, 440, 446, "Relayed Command", "green", False, 432),
-        arrow(760, 446, 920, 446, "Relayed Command", "green", False, 432),
-        arrow(920, 494, 760, 494, "Relayed Telemetry", "green", True, 517),
-        arrow(440, 494, 280, 494, "Relayed Telemetry", "green", True, 517),
-        lines_text(600, 605, ["The aircraft's control link never passes through the black-box relay payload."], "section", "middle"),
-        lines_text(600, 634, ["The model defines the paths and boundaries—not waveform, frequency, protocol, hardware, or interoperability."], "small", "middle"),
+        lines_text(40, 78, ["The carrier aircraft has its own control link; mission traffic uses a separate black-box payload."], "subtitle"),
+        '<rect x="325" y="105" width="550" height="485" rx="26" class="boundary"/>',
+        lines_text(600, 138, [display(index, "OP-002") + " Product Boundary"], "section", "middle"),
+        '<rect x="365" y="165" width="470" height="195" rx="18" class="platform"/>',
+        lines_text(600, 195, ["VEHICLE PLATFORM"], "section", "middle"),
+        '<rect x="385" y="215" width="180" height="48" rx="10" class="chip blue"/>',
+        lines_text(475, 244, ["Platform Communications"], "chip-title", "middle"),
+        '<rect x="600" y="215" width="180" height="48" rx="10" class="chip blue"/>',
+        lines_text(690, 244, ["Flight Avionics"], "chip-title", "middle"),
+        '<rect x="385" y="285" width="125" height="48" rx="10" class="chip"/>',
+        lines_text(447.5, 314, ["Airframe + Structure"], "chip-title", "middle"),
+        '<rect x="525" y="285" width="125" height="48" rx="10" class="chip"/>',
+        lines_text(587.5, 314, ["Propulsion"], "chip-title", "middle"),
+        '<rect x="665" y="285" width="125" height="48" rx="10" class="chip"/>',
+        lines_text(727.5, 314, ["Electrical Power"], "chip-title", "middle"),
+        '<rect x="440" y="420" width="320" height="105" rx="15" class="payload-black"/>',
+        lines_text(600, 454, ["RELAY PAYLOAD — BLACK BOX"], "payload-title", "middle"),
+        lines_text(600, 482, ["Passes command and telemetry"], "payload-body", "middle"),
+        lines_text(600, 505, ["Internal radio design is outside project scope"], "payload-body", "middle"),
+        box(35, 180, 225, 92, display(index, "OP-010"), ["Controls and monitors the aircraft"], "blue"),
+        box(35, 415, 225, 110, display(index, "OP-001"), ["Sends remote-aircraft command", "Receives return telemetry"], "white"),
+        box(940, 415, 225, 110, display(index, "OP-003"), ["Receives relayed command", "Returns telemetry"], "white"),
+        arrow(260, 230, 385, 230, "Platform Command", "blue", False, 215),
+        arrow(385, 255, 260, 255, "Health / Status", "blue", True, 280),
+        arrow(260, 445, 440, 445, "Relayed Command", "green", False, 431),
+        arrow(760, 445, 940, 445, "Relayed Command", "green", False, 431),
+        arrow(940, 493, 760, 493, "Relayed Telemetry", "green", True, 516),
+        arrow(440, 493, 260, 493, "Relayed Telemetry", "green", True, 516),
+        arrow(727.5, 333, 680, 420, "Regulated Power", "amber", False, 378),
+        '<line x1="447.5" y1="333" x2="520" y2="420" class="arrow"/>',
+        lines_text(480, 378, ["Mounting"], "edge-label", "middle"),
+        lines_text(600, 625, ["The relay payload carries mission traffic; it does not control the aircraft."], "section", "middle"),
+        lines_text(600, 655, ["Waveform, frequency, protocol, hardware, and endpoint compatibility remain outside this view."], "small", "middle"),
     ]
     return svg_document(view["title"], view["question"], "\n".join(parts), view["object_refs"])
 
@@ -226,31 +252,45 @@ def physical_architecture(model: dict[str, Any], index: dict[str, dict[str, Any]
     assert_interface(model, "IFC-INT-001", "CMP-PWR-02", "CMP-PRP-02")
     assert_interface(model, "IFC-INT-003", "CMP-PWR-03", "CMP-COM-01")
     assert_interface(model, "IFC-INT-007", "CMP-MNT-01", "CMP-COM-01")
-    groups = [
-        ("Airframe and Structure", ["CMP-AFR-01", "CMP-AFR-02", "CMP-AFR-03", "CMP-AFR-05"], ["Carries aircraft and payload loads", "Frame • arms • landing gear"], "neutral"),
-        ("Propulsion", ["CMP-PRP-01", "CMP-PRP-02", "CMP-PRP-03"], ["Produces controlled lift", "Controllers • motors • propellers"], "neutral"),
-        ("Electrical Power", ["CMP-PWR-01", "CMP-PWR-02", "CMP-PWR-03", "CMP-PWR-04"], ["Stores and distributes energy", "Battery • distribution • regulators"], "amber"),
-        ("Flight Avionics", ["CMP-AVN-01", "CMP-AVN-02", "CMP-AVN-03", "CMP-AVN-04"], ["Stabilizes, navigates, and holds station", "Receives platform command"], "blue"),
-        ("Payload Support", ["CMP-AFR-04", "CMP-MNT-01"], ["Mounts the relay payload", "Provides regulated payload power"], "neutral"),
-        ("Relay Payload", ["CMP-COM-01", "CMP-COM-02"], ["Relays command and telemetry", "Internal RF design remains a black box"], "green"),
-    ]
-    positions = [(45, 125), (425, 125), (805, 125), (45, 390), (425, 390), (805, 390)]
+    groups = {
+        "airframe": ["CMP-AFR-01", "CMP-AFR-02", "CMP-AFR-03", "CMP-AFR-05"],
+        "propulsion": ["CMP-PRP-01", "CMP-PRP-02", "CMP-PRP-03"],
+        "power": ["CMP-PWR-01", "CMP-PWR-02", "CMP-PWR-03", "CMP-PWR-04"],
+        "avionics": ["CMP-AVN-01", "CMP-AVN-02", "CMP-AVN-03"],
+        "platform_comms": ["CMP-AVN-04"],
+        "payload_support": ["CMP-AFR-04", "CMP-MNT-01"],
+        "payload": ["CMP-COM-01", "CMP-COM-02"],
+    }
     parts = [
         lines_text(40, 48, [view["title"]], "title"),
-        lines_text(40, 78, ["Six subsystem groups explain the aircraft without turning the figure into a component inventory."], "subtitle"),
+        lines_text(40, 78, ["The vehicle platform surrounds and supports a separate relay-payload black box."], "subtitle"),
+        '<rect x="45" y="105" width="1110" height="505" rx="24" class="boundary"/>',
+        lines_text(600, 138, ["RELAY UAS"], "section", "middle"),
+        '<rect x="80" y="160" width="740" height="405" rx="20" class="platform"/>',
+        lines_text(450, 192, ["VEHICLE PLATFORM"], "section", "middle"),
+        box(110, 220, 205, 105, "Propulsion", ["Controlled lift", "Controllers • motors • propellers"], "neutral"),
+        box(347, 220, 205, 105, "Electrical Power", ["Energy storage and distribution", "Battery • bus • regulators"], "amber"),
+        box(585, 220, 205, 105, "Flight Avionics", ["Stabilize • navigate • hold", "Health and recovery support"], "blue"),
+        box(110, 365, 275, 105, "Platform Communications", ["Independent aircraft command", "Health / status return"], "blue"),
+        box(430, 365, 360, 105, "Payload Support", ["Mechanical retention", "Regulated payload power"], "neutral"),
+        box(110, 500, 680, 48, "Airframe and Structure", [], "neutral"),
+        '<rect x="875" y="270" width="235" height="210" rx="18" class="payload-black"/>',
+        lines_text(992.5, 313, ["RELAY PAYLOAD"], "payload-title", "middle"),
+        lines_text(992.5, 342, ["BLACK BOX"], "payload-title", "middle"),
+        lines_text(992.5, 385, ["Relays command"], "payload-body", "middle"),
+        lines_text(992.5, 409, ["and telemetry"], "payload-body", "middle"),
+        lines_text(992.5, 451, ["Internal design undefined"], "payload-body", "middle"),
     ]
-    for (title, ids, details, kind), (x, y) in zip(groups, positions):
+    for ids in groups.values():
         for item_id in ids:
             if item_id not in index:
                 raise ValueError(f"physical view references missing {item_id}")
-        parts.append(box(x, y, 350, 205, title, details, kind))
     parts.extend([
-        arrow(805, 228, 775, 228, kind="amber"),
-        arrow(395, 425, 425, 330, kind="blue"),
-        arrow(980, 330, 980, 390, kind="amber"),
-        arrow(775, 493, 805, 493, kind="neutral"),
-        lines_text(600, 632, ["Arrows show control, power, and mechanical support between subsystem groups."], "section", "middle"),
-        lines_text(600, 662, ["Hardware, geometry, ratings, and fabrication remain unresolved."], "small", "middle"),
+        arrow(790, 397, 875, 397, "regulated power", "amber", False, 382),
+        '<line x1="790" y1="445" x2="875" y2="445" class="arrow"/>',
+        lines_text(832, 468, ["mechanical retention"], "edge-label", "middle"),
+        lines_text(600, 645, ["Only regulated power and mechanical retention cross from platform to payload."], "section", "middle"),
+        lines_text(600, 675, ["Hardware, geometry, ratings, and fabrication remain unresolved."], "small", "middle"),
     ])
     return svg_document(view["title"], view["question"], "\n".join(parts), view["object_refs"])
 
@@ -334,7 +374,7 @@ def mission_sequence(model: dict[str, Any], index: dict[str, dict[str, Any]], vi
     assert_exchange(model, "IX-009", "OP-002", "OP-010")
     parts = [
         lines_text(40, 48, [view["title"]], "title"),
-        lines_text(40, 78, ["Current-system mission sequence; future UGV and video branches are intentionally omitted."], "subtitle"),
+        lines_text(40, 78, ["Current-system mission sequence; future ground-vehicle and video branches are intentionally omitted."], "subtitle"),
     ]
     lanes = [("Operator / Ground", 90), ("Relay Aircraft", 390), ("Relay Payload", 690), ("Remote UAS", 990)]
     for name, x in lanes:
@@ -359,28 +399,38 @@ def mission_sequence(model: dict[str, Any], index: dict[str, dict[str, Any]], vi
 
 def degraded_behavior(model: dict[str, Any], index: dict[str, dict[str, Any]], view: dict[str, Any]) -> str:
     transitions = {(x["from"], x["to"]): x for x in model["architecture"]["mode_transitions"]}
-    for pair in [("MODE-002", "MODE-003"), ("MODE-003", "MODE-004"), ("MODE-004", "MODE-005")]:
+    for pair in [
+        ("MODE-005", "MODE-001"), ("MODE-001", "MODE-002"),
+        ("MODE-002", "MODE-003"), ("MODE-003", "MODE-004"),
+        ("MODE-002", "MODE-004"), ("MODE-004", "MODE-005"),
+    ]:
         if pair not in transitions:
             raise ValueError(f"mode transition {pair} missing")
     parts = [
         lines_text(40, 48, [view["title"]], "title"),
-        lines_text(40, 78, ["Loss of relay service does not automatically mean loss of aircraft control."], "subtitle"),
-        box(55, 245, 220, 100, display(index, "MODE-002"), ["Normal relay position"], "green"),
-        box(355, 245, 220, 100, display(index, "MODE-003"), ["Relay function unavailable", "Platform assessed separately"], "amber"),
-        '<polygon points="690,235 810,295 690,355 570,295" class="box blue"/>',
-        lines_text(690, 288, ["Platform control", "still available?"], "box-title", "middle"),
-        box(900, 145, 235, 105, display(index, "MODE-004"), ["Recovery intent only", "Criteria remain unresolved"], "blue"),
-        box(900, 300, 235, 105, display(index, "MODE-005"), ["After recovery"], "neutral"),
-        box(900, 500, 235, 112, "Unresolved Safety Gap", ["No modeled response for", "impaired platform control"], "red"),
-        arrow(275, 295, 355, 295, "relay degraded", "amber"),
-        arrow(575, 295, 570, 295, kind="blue"),
-        arrow(810, 268, 900, 198, "YES", "blue"),
-        arrow(810, 322, 900, 556, "NO / IMPAIRED", "amber"),
-        arrow(1018, 250, 1018, 300, "recover / land", "blue", False, 278),
-        lines_text(55, 430, ["Defined in the model:"], "section"),
-        lines_text(55, 460, ["• Relay payload is separate from platform command", "• Degraded mode and recovery intent exist", "• Health/status purpose is proposed"], "body"),
-        lines_text(55, 560, ["Still unknown:"], "section"),
-        lines_text(55, 590, ["• Exact detection and decision logic", "• Recovery criteria or physical behavior", "• Safety acceptance or test evidence"], "body"),
+        lines_text(40, 78, ["Relay loss is one branch in the aircraft state story—not detailed flight-control logic."], "subtitle"),
+        box(35, 160, 165, 92, display(index, "MODE-005"), ["Arming inhibited"], "neutral"),
+        box(250, 160, 165, 92, display(index, "MODE-001"), ["Move to station"], "blue"),
+        box(465, 160, 180, 92, display(index, "MODE-002"), ["Hold relay geometry"], "green"),
+        box(695, 160, 180, 92, display(index, "MODE-003"), ["Relay service impaired"], "amber"),
+        '<polygon points="1010,145 1140,206 1010,267 880,206" class="box blue"/>',
+        lines_text(1010, 198, ["Platform control", "still available?"], "box-title", "middle"),
+        arrow(200, 206, 250, 206, "launch", "blue"),
+        arrow(415, 206, 465, 206, "station reached", "blue"),
+        arrow(645, 206, 695, 206, "relay degrades", "amber"),
+        arrow(875, 206, 880, 206, kind="blue"),
+        box(900, 350, 235, 105, display(index, "MODE-004"), ["Recovery intent only", "Criteria remain unresolved"], "blue"),
+        box(585, 500, 270, 110, "Unresolved Safety Gap", ["No modeled response for", "impaired platform control"], "red"),
+        arrow(1035, 267, 1035, 350, "YES", "blue", False, 320),
+        arrow(985, 267, 720, 500, "NO / IMPAIRED", "amber", False, 400),
+        '<path d="M 555 252 V 315 H 900" class="arrow blue dashed" marker-end="url(#arrow-blue)"/>',
+        lines_text(720, 305, ["normal end / low battery"], "edge-label", "middle"),
+        '<path d="M 1018 455 V 640 H 20 V 206 H 35" class="arrow blue" marker-end="url(#arrow-blue)"/>',
+        lines_text(555, 630, ["land, recover, and return to Ground Safe"], "edge-label", "middle"),
+        lines_text(40, 405, ["Defined:"], "section"),
+        lines_text(40, 435, ["• Independent platform control", "• Degraded and recovery states", "• Normal recovery path"], "body"),
+        lines_text(40, 535, ["Not yet defined:"], "section"),
+        lines_text(40, 565, ["• Detection thresholds", "• Recovery criteria and physical behavior", "• Safety acceptance evidence"], "body"),
     ]
     return svg_document(view["title"], view["question"], "\n".join(parts), view["object_refs"])
 
@@ -397,20 +447,23 @@ def configuration_evolution(model: dict[str, Any], index: dict[str, dict[str, An
             raise ValueError(f"configuration lineage changed for {item_id}")
     parts = [
         lines_text(40, 48, [view["title"]], "title"),
-        lines_text(40, 78, ["Reference evidence informs the candidates; it does not define, approve, or transfer into them."], "subtitle"),
-        lines_text(160, 205, ["REFERENCE"], "section", "middle"),
-        lines_text(615, 205, ["CURRENT"], "section", "middle"),
-        box(45, 230, 225, 130, display(index, "CFG-REC"), ["Reference evidence only", "Not the design baseline"], "white"),
-        box(350, 230, 225, 130, "Replica Candidate", ["Current proposed architecture", "Not an exact clone"], "blue"),
-        box(655, 230, 225, 130, "Domestic Candidate", ["Current candidate variant", "Sourcing policy unresolved"], "blue"),
-        lines_text(910, 445, ["FUTURE"], "section", "middle"),
-        box(655, 470, 225, 130, "Digital Extension", ["Future payload-management", "branch"], "future"),
-        box(955, 470, 205, 130, "Future C2 Context", ["System-of-systems branch", "UGV + radio + services"], "future"),
-        arrow(270, 295, 350, 295, "informs only", "neutral", True, 280),
-        arrow(575, 295, 655, 295, "current variant", "blue", False, 280),
-        arrow(520, 360, 655, 510, "future branch", "neutral", True, 425),
-        arrow(880, 535, 955, 535, kind="neutral", dashed=True),
-        lines_text(600, 650, ["Dashed boxes are future scope; neither reference evidence nor future scope is an approved current design."], "small", "middle"),
+        lines_text(40, 78, ["The current design space is primary; reference evidence and future concepts remain separate."], "subtitle"),
+        lines_text(145, 145, ["REFERENCE EVIDENCE"], "section", "middle"),
+        box(40, 175, 220, 180, display(index, "CFG-REC"), ["Describes teardown evidence", "Incomplete reconstruction", "Not a design baseline"], "white"),
+        '<rect x="315" y="115" width="555" height="440" rx="22" class="current-zone"/>',
+        lines_text(592.5, 150, ["CURRENT DESIGN SPACE"], "section", "middle"),
+        lines_text(592.5, 177, ["Architecture under study—not approved"], "small", "middle"),
+        box(360, 215, 465, 135, "Functional Replica Candidate", ["Current proposed architecture", "Reproduces roles—not exact hardware"], "blue"),
+        box(430, 395, 325, 110, "Domestic Candidate", ["Current sourcing variant", "Policy and substitutions unresolved"], "blue"),
+        arrow(592.5, 350, 592.5, 395, "current variant", "blue", False, 382),
+        lines_text(1035, 145, ["FUTURE CONCEPTS"], "section", "middle"),
+        box(930, 180, 220, 125, "Digital Extension", ["Payload management", "and multi-platform branch"], "future"),
+        box(930, 365, 220, 125, "System-of-Systems", ["Ground vehicles, radio users,", "services, and authorities"], "future"),
+        arrow(260, 265, 315, 265, "informs only", "neutral", True, 245),
+        arrow(870, 265, 930, 242, "possible later work", "neutral", True, 225),
+        arrow(1040, 305, 1040, 365, kind="neutral", dashed=True),
+        lines_text(600, 620, ["Reference correspondence is not inheritance; future concepts do not change the current candidate."], "section", "middle"),
+        lines_text(600, 654, ["No configuration shown here is an approved technical baseline."], "small", "middle"),
     ]
     return svg_document(view["title"], view["question"], "\n".join(parts), view["object_refs"])
 
@@ -440,43 +493,52 @@ def engineering_status(model: dict[str, Any], index: dict[str, dict[str, Any]], 
         raise ValueError("recovered-source limitation gap missing")
 
     established = [
-        ("Architecture structure", "DEFINED", f"{len(architecture['components'])} components in six subsystem groups"),
-        ("Product boundary", "DEFINED", "Aircraft content is separated from external actors"),
-        ("Interfaces", "DEFINED", f"{len(architecture['interfaces'])} architecture-level interface records"),
-        ("Mission scenarios", "DEFINED", "Nominal and degraded mission behavior is modeled"),
-        ("Requirements + traceability", "INTERNALLY CHECKED", "Open gaps remain visible"),
-        ("Internal model verification", "COMPLETE WITH GAPS", "Model review only—not physical proof"),
-        ("Feasibility analysis", "CONDITIONAL", "A short-dwell region appears plausible"),
+        ("System architecture and boundary", "DEFINED"),
+        ("Mission and degraded scenarios", "DEFINED"),
+        ("Interfaces and subsystem roles", "DEFINED"),
+        ("Requirements and traceability", "CHECKED"),
+        ("Internal model verification", "COMPLETE WITH GAPS"),
+        ("Feasibility design-space analysis", "CONDITIONAL"),
     ]
-    open_items = [
-        ("Owner quantitative targets", "PENDING", "Acceptance values have not been selected", "amber"),
-        ("Recovered-source completeness", "INCOMPLETE", "Exact reconstruction is not supported", "amber"),
-        ("Physical verification", "NO EVIDENCE", "Test and demonstration have not been executed", "red"),
-        ("External conformance", "BLOCKED", "Authority and specifications are absent", "red"),
-        ("Relay-payload implementation", "DEFERRED", "Internal RF design remains a black box", "neutral"),
-        ("Future configurations", "FUTURE", "Digital and C2 contexts are not current scope", "neutral"),
-        ("Technical baseline", "NOT APPROVED", "Owner approval has not been granted", "red"),
+    outside_scope = [
+        ("Relay-payload internal radio design", "DEFERRED"),
+        ("Future digital and system-of-systems concepts", "FUTURE"),
+    ]
+    future_evidence = [
+        ("Owner quantitative targets", "PENDING", "amber"),
+        ("Recovered-reference completeness", "INCOMPLETE", "amber"),
+        ("Physical aircraft verification", "NO EVIDENCE", "red"),
+        ("External interface conformance", "BLOCKED", "red"),
+        ("Approved technical baseline", "NOT APPROVED", "red"),
     ]
     parts = [
         lines_text(40, 48, [view["title"]], "title"),
-        lines_text(40, 78, ["Architecture maturity and physical-system maturity are deliberately shown separately."], "subtitle"),
-        '<rect x="40" y="112" width="540" height="510" rx="18" class="group"/>',
-        '<rect x="620" y="112" width="540" height="510" rx="18" class="group"/>',
-        box(55, 125, 510, 70, "ESTABLISHED IN THE MODEL", ["Architecture, traceability, and analysis"], "green"),
-        box(635, 125, 510, 70, "STILL OPEN", ["Owner decisions and real-world evidence"], "red"),
+        lines_text(40, 78, ["Completed architecture work, deliberate scope limits, and missing real-world evidence are different things."], "subtitle"),
+        '<rect x="40" y="112" width="520" height="530" rx="18" class="group"/>',
+        '<rect x="600" y="112" width="560" height="205" rx="18" class="group"/>',
+        '<rect x="600" y="342" width="560" height="300" rx="18" class="group"/>',
+        box(55, 128, 490, 70, "ESTABLISHED BY THIS PROJECT", ["Architecture, traceability, and analysis"], "green"),
+        box(615, 128, 530, 70, "DELIBERATELY OUTSIDE THIS PROJECT", ["Not defects in the current architecture study"], "neutral"),
+        box(615, 358, 530, 70, "REQUIRES FUTURE DECISION OR EVIDENCE", ["Needed before a verified or approved aircraft claim"], "red"),
     ]
-    for column_x, rows, default_kind in ((55, established, "green"), (635, open_items, None)):
-        for row_index, row in enumerate(rows):
-            name, status, meaning = row[:3]
-            kind = default_kind or row[3]
-            y = 212 + row_index * 56
-            parts.append(f'<rect x="{column_x}" y="{y}" width="510" height="50" class="box white" rx="5"/>')
-            parts.append(f'<rect x="{column_x}" y="{y}" width="10" height="50" class="box {kind}" rx="0"/>')
-            parts.append(lines_text(column_x + 22, y + 21, [name], "body"))
-            parts.append(f'<text x="{column_x + 495}" y="{y + 21}" class="small" text-anchor="end" font-weight="700">{escape(status)}</text>')
-            parts.append(lines_text(column_x + 22, y + 41, [meaning], "small"))
-    parts.append(lines_text(600, 655, ["MODEL MATURITY ≠ VERIFIED AIRCRAFT"], "section", "middle"))
-    parts.append(lines_text(600, 682, ["No safety, airworthiness, interoperability, operational-readiness, or technical-baseline approval is claimed."], "small", "middle"))
+    for row_index, (name, status) in enumerate(established):
+        y = 215 + row_index * 57
+        parts.append(f'<rect x="55" y="{y}" width="490" height="47" class="box white" rx="5"/>')
+        parts.append(f'<rect x="55" y="{y}" width="10" height="47" class="box green" rx="0"/>')
+        parts.append(lines_text(77, y + 29, [name], "body"))
+        parts.append(f'<text x="530" y="{y + 29}" class="small" text-anchor="end" font-weight="700">{escape(status)}</text>')
+    for row_index, (name, status) in enumerate(outside_scope):
+        y = 215 + row_index * 48
+        parts.append(lines_text(635, y + 20, ["• " + name], "body"))
+        parts.append(f'<text x="1125" y="{y + 20}" class="small" text-anchor="end" font-weight="700">{escape(status)}</text>')
+    for row_index, (name, status, kind) in enumerate(future_evidence):
+        y = 442 + row_index * 40
+        parts.append(f'<rect x="625" y="{y}" width="510" height="34" class="box white" rx="4"/>')
+        parts.append(f'<rect x="625" y="{y}" width="9" height="34" class="box {kind}" rx="0"/>')
+        parts.append(lines_text(647, y + 23, [name], "body"))
+        parts.append(f'<text x="1120" y="{y + 23}" class="small" text-anchor="end" font-weight="700">{escape(status)}</text>')
+    parts.append(lines_text(600, 666, ["MODEL MATURITY ≠ VERIFIED AIRCRAFT"], "section", "middle"))
+    parts.append(lines_text(600, 691, ["No safety, airworthiness, interoperability, operational-readiness, or technical-baseline approval is claimed."], "small", "middle"))
     return svg_document(view["title"], view["question"], "\n".join(parts), view["object_refs"])
 
 
