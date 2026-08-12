@@ -36,7 +36,7 @@
 </style>
 <rect width="1200" height="700" fill="#ffffff"/>
 <text x="40" y="48" class="title" text-anchor="start"><tspan x="40" dy="0">What Happens When the Relay Is Lost?</tspan></text>
-<text x="40" y="78" class="subtitle" text-anchor="start"><tspan x="40" dy="0">The model separates loss of relay service from loss of aircraft control.</tspan></text>
+<text x="40" y="78" class="subtitle" text-anchor="start"><tspan x="40" dy="0">Loss of relay service does not automatically mean loss of aircraft control.</tspan></text>
 <rect x="55" y="245" width="220" height="100" rx="14" class="box green"/>
 <text x="165.0" y="276" class="box-title" text-anchor="middle"><tspan x="165.0" dy="0">Station Keeping</tspan></text>
 <text x="73" y="306" class="body" text-anchor="start"><tspan x="73" dy="0">Normal relay position</tspan></text>
@@ -63,8 +63,8 @@
 <text x="855.0" y="430.0" class="edge-label" text-anchor="middle">NO / IMPAIRED</text>
 <line x1="1018" y1="250" x2="1018" y2="300" class="arrow blue" marker-end="url(#arrow-blue)"/>
 <text x="1018.0" y="278" class="edge-label" text-anchor="middle">recover / land</text>
-<text x="55" y="430" class="section" text-anchor="start"><tspan x="55" dy="0">Established at architecture level:</tspan></text>
+<text x="55" y="430" class="section" text-anchor="start"><tspan x="55" dy="0">Defined in the model:</tspan></text>
 <text x="55" y="460" class="body" text-anchor="start"><tspan x="55" dy="0">• Relay payload is separate from platform command</tspan><tspan x="55" dy="22">• Degraded mode and recovery intent exist</tspan><tspan x="55" dy="22">• Health/status purpose is proposed</tspan></text>
-<text x="55" y="560" class="section" text-anchor="start"><tspan x="55" dy="0">Not established:</tspan></text>
+<text x="55" y="560" class="section" text-anchor="start"><tspan x="55" dy="0">Still unknown:</tspan></text>
 <text x="55" y="590" class="body" text-anchor="start"><tspan x="55" dy="0">• Exact detection and decision logic</tspan><tspan x="55" dy="22">• Recovery criteria or physical behavior</tspan><tspan x="55" dy="22">• Safety acceptance or test evidence</tspan></text>
 </svg>

@@ -369,27 +369,58 @@ def region_svg(rows: list[dict[str, Any]], payload_power: float = 50.0) -> str:
     endurances = sorted({float(row["endurance_min"]) for row in subset})
     lookup = {(float(row["payload_mass_kg"]), float(row["endurance_min"])): row for row in subset}
     colors = {"FEASIBLE": "#2f9e68", "MARGINAL": "#e6a43a", "INFEASIBLE": "#c95757"}
-    left, top, cell_w, cell_h = 105, 110, 118, 54
+    text_colors = {"FEASIBLE": "#ffffff", "MARGINAL": "#172033", "INFEASIBLE": "#ffffff"}
+    borders = {
+        "FEASIBLE": 'stroke="#247a52" stroke-width="2"',
+        "MARGINAL": 'stroke="#8a5b00" stroke-width="2" stroke-dasharray="7 4"',
+        "INFEASIBLE": 'stroke="#9f2d2d" stroke-width="3"',
+    }
+
+    feasible_dwell = [
+        endurance for endurance in endurances
+        if any(lookup[(payload, endurance)]["conditional_class"] == "FEASIBLE" for payload in payloads)
+    ]
+    infeasible_dwell = [
+        endurance for endurance in endurances
+        if all(lookup[(payload, endurance)]["conditional_class"] == "INFEASIBLE" for payload in payloads)
+    ]
+
+    def dwell_span(values: list[float]) -> str:
+        if not values:
+            return "No tested dwell"
+        if len(values) == 1:
+            return f"{values[0]:g} min"
+        return f"{min(values):g}–{max(values):g} min"
+
+    finding = (
+        f"{dwell_span(feasible_dwell)} includes feasible cases; "
+        f"{dwell_span(infeasible_dwell)} is infeasible across the tested payload range."
+    )
+    left, top, cell_w, cell_h = 150, 175, 132, 64
     width = left + cell_w * len(endurances) + 40
-    height = top + cell_h * len(payloads) + 118
+    height = top + cell_h * len(payloads) + 115
     parts = [f'<rect width="{width}" height="{height}" fill="#ffffff"/>']
-    parts.append('<text x="20" y="28" class="title">Conditional feasibility at 50 W payload demand</text>')
-    parts.append('<text x="20" y="52" class="small">Exploratory 10 kg / $2,500 boundaries; owner requirements remain undecided</text>')
+    parts.append('<text x="25" y="38" style="font-size:28px;font-weight:700">Exploratory Feasibility: Dwell vs Payload</text>')
+    parts.append(f'<text x="25" y="74" style="font-size:17px;font-weight:700">{finding}</text>')
+    parts.append('<text x="25" y="102" style="font-size:14px;fill:#536174">50 W payload demand · exploratory 10 kg / $2,500 boundaries · no hardware selected</text>')
+    parts.append(f'<text x="{left + cell_w * len(endurances) / 2}" y="138" text-anchor="middle" style="font-size:16px;font-weight:700">Required on-station dwell</text>')
+    parts.append(f'<text x="{left - 14}" y="160" text-anchor="end" style="font-size:14px;font-weight:700">Payload mass</text>')
     for column, endurance in enumerate(endurances):
         x = left + column * cell_w
-        parts.append(f'<text x="{x + cell_w/2}" y="{top - 14}" text-anchor="middle" class="label">{endurance:g} min</text>')
+        parts.append(f'<text x="{x + cell_w/2}" y="160" text-anchor="middle" style="font-size:14px;font-weight:700">{endurance:g} min</text>')
     for row_index, payload in enumerate(payloads):
         y = top + row_index * cell_h
-        parts.append(f'<text x="{left - 10}" y="{y + cell_h/2 + 4}" text-anchor="end" class="label">{payload:g} kg</text>')
+        parts.append(f'<text x="{left - 14}" y="{y + cell_h/2 + 5}" text-anchor="end" style="font-size:14px">{payload:g} kg</text>')
         for column, endurance in enumerate(endurances):
             x = left + column * cell_w
             item = lookup[(payload, endurance)]
             category = item["conditional_class"]
-            parts.append(f'<rect x="{x}" y="{y}" width="{cell_w-2}" height="{cell_h-2}" rx="4" fill="{colors[category]}"/>')
-            parts.append(f'<text x="{x + cell_w/2}" y="{y + 21}" text-anchor="middle" fill="#ffffff" style="font-size:11px;font-weight:700">{category[0]}</text>')
-            parts.append(f'<text x="{x + cell_w/2}" y="{y + 39}" text-anchor="middle" fill="#ffffff" style="font-size:10px">{float(item["gross_mass_kg"]):.1f} kg</text>')
-    parts.append(f'<text x="20" y="{height-48}" class="small">F = feasible · M = marginal · I = infeasible under exploratory boundaries.</text>')
-    parts.append(f'<text x="20" y="{height-28}" class="small">Every owner-requirement disposition remains UNDETERMINED.</text>')
+            parts.append(f'<rect x="{x}" y="{y}" width="{cell_w-3}" height="{cell_h-3}" rx="5" fill="{colors[category]}" {borders[category]}/>')
+            parts.append(f'<text x="{x + cell_w/2}" y="{y + 27}" text-anchor="middle" style="font-size:12px;font-weight:700;fill:{text_colors[category]}">{category}</text>')
+            parts.append(f'<text x="{x + cell_w/2}" y="{y + 48}" text-anchor="middle" style="font-size:12px;fill:{text_colors[category]}">{float(item["gross_mass_kg"]):.1f} kg gross</text>')
+    parts.append(f'<text x="25" y="{height-64}" style="font-size:13px;font-weight:700">Cells show conditional class and converged gross mass.</text>')
+    parts.append(f'<text x="25" y="{height-40}" style="font-size:13px">Solid = feasible · dashed = marginal · heavy border = infeasible.</text>')
+    parts.append(f'<text x="25" y="{height-18}" style="font-size:13px;fill:#536174">Owner requirements remain undecided; this is an exploratory design-space result.</text>')
     return svg_document(width, height, "\n".join(parts), "Conditional payload-endurance feasibility region")
 
 

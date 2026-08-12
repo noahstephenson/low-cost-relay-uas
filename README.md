@@ -1,15 +1,23 @@
 # Low-Cost Attritable Communications Relay UAS
 
+A Relay UAS is a small multirotor that holds a useful airborne position and carries
+a black-box communications payload to extend command and telemetry reach.
+
 > **Architecture baseline candidate — not an approved aircraft.** This repository
 > defines and analyzes a system concept. It is not a build specification, safety
 > case, flight-test plan, deployable communications design, or readiness claim.
 
+## The project in one picture
+
+![The Relay UAS in one picture](reports/figures/project-in-one-picture.svg)
+
+The blue path controls the Relay UAS itself. The green paths carry command and
+telemetry for the remote aircraft. They are separate by design.
+
 ## What this project is
 
-A Relay UAS is a multirotor aircraft that carries a communications relay payload.
-It flies to a useful position and holds that geometry so a ground-control system can
-exchange command and telemetry with a remote aircraft when the direct path is too
-long or blocked by terrain.
+The aircraft positions the relay between ground control and a remote aircraft when
+the direct path is too long or blocked by terrain.
 
 The aircraft has its own command link so an operator can position and recover it.
 That platform-control link is deliberately separate from the mission traffic passing
@@ -19,13 +27,6 @@ mean losing control of the relay aircraft.
 This project studies the aircraft, its boundaries, major subsystems, information and
 power flows, mission behavior, requirements, evidence, and feasibility. It treats the
 internal radio-frequency implementation of the relay payload as a black box.
-
-## The project in one picture
-
-![The Relay UAS in one picture](reports/figures/project-in-one-picture.svg)
-
-The blue path controls the Relay UAS itself. The green paths carry command and
-telemetry for the remote aircraft. They are separate by design.
 
 ## How the system works
 
@@ -85,6 +86,13 @@ The repository has undergone documented internal architecture verification and a
 reproducible feasibility analysis. It has **not** undergone physical aircraft
 verification or external-interface conformance testing.
 
+## Engineering status at a glance
+
+![What the project actually established](reports/figures/engineering-status.svg)
+
+“Established in the model” means the architecture is internally coherent and
+traceable. It does not mean the aircraft is physically proven or approved.
+
 ## What is not finished
 
 - Owner targets for payload service, endurance, affordability, portability,
@@ -99,13 +107,6 @@ verification or external-interface conformance testing.
   system-of-systems branches.
 - Technical-baseline, safety, airworthiness, interoperability, or operational
   approval.
-
-## Engineering status at a glance
-
-![What the project actually established](reports/figures/engineering-status.svg)
-
-“Model established” means the architecture is internally coherent and traceable. It
-does not mean the aircraft is physically proven or approved.
 
 ---
 

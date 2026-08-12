@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
 <title id="title">What Did the Project Actually Establish?</title>
 <desc id="desc">Which results are established, conditional, pending, externally blocked, deferred, or not approved?</desc>
-<metadata>Generated from authoritative model records: VER-001, VER-007, VER-008, VER-009, TS-009, GAP-BUDGET-001, GAP-IFC-001, GAP-VER-001, DEC-001</metadata>
+<metadata>Generated from authoritative model records: VER-001, VER-007, VER-008, VER-009, TS-009, CFG-DIG, CFG-SOS, GAP-REC-001, GAP-BUDGET-001, GAP-IFC-001, GAP-VER-001, DEC-001</metadata>
 <defs>
   <marker id="arrow-neutral" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#435269"/></marker>
   <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#245f9e"/></marker>
@@ -36,59 +36,85 @@
 </style>
 <rect width="1200" height="700" fill="#ffffff"/>
 <text x="40" y="48" class="title" text-anchor="start"><tspan x="40" dy="0">What Did the Project Actually Establish?</tspan></text>
-<text x="40" y="78" class="subtitle" text-anchor="start"><tspan x="40" dy="0">A mature model is not the same thing as a verified aircraft.</tspan></text>
-<text x="55" y="125" class="section" text-anchor="start"><tspan x="55" dy="0">AREA</tspan></text>
-<text x="430" y="125" class="section" text-anchor="start"><tspan x="430" dy="0">STATUS</tspan></text>
-<text x="820" y="125" class="section" text-anchor="start"><tspan x="820" dy="0">WHAT THAT MEANS</tspan></text>
-<rect x="40" y="148" width="1120" height="48" class="box white" rx="4"/>
-<rect x="40" y="148" width="12" height="48" class="box green" rx="0"/>
-<text x="68" y="178" class="body" text-anchor="start"><tspan x="68" dy="0">Architecture structure</tspan></text>
-<text x="430" y="178" class="section" text-anchor="start"><tspan x="430" dy="0">ESTABLISHED</tspan></text>
-<text x="820" y="178" class="body" text-anchor="start"><tspan x="820" dy="0">19 components / 22 interfaces</tspan></text>
-<rect x="40" y="199" width="1120" height="48" class="box white" rx="4"/>
-<rect x="40" y="199" width="12" height="48" class="box green" rx="0"/>
-<text x="68" y="229" class="body" text-anchor="start"><tspan x="68" dy="0">System boundary + current mission</tspan></text>
-<text x="430" y="229" class="section" text-anchor="start"><tspan x="430" dy="0">ESTABLISHED</tspan></text>
-<text x="820" y="229" class="body" text-anchor="start"><tspan x="820" dy="0">Boundary and scenarios defined</tspan></text>
-<rect x="40" y="250" width="1120" height="48" class="box white" rx="4"/>
-<rect x="40" y="250" width="12" height="48" class="box green" rx="0"/>
-<text x="68" y="280" class="body" text-anchor="start"><tspan x="68" dy="0">Requirements + traceability</tspan></text>
-<text x="430" y="280" class="section" text-anchor="start"><tspan x="430" dy="0">ESTABLISHED</tspan></text>
-<text x="820" y="280" class="body" text-anchor="start"><tspan x="820" dy="0">Internally checked; open gaps remain visible</tspan></text>
-<rect x="40" y="301" width="1120" height="48" class="box white" rx="4"/>
-<rect x="40" y="301" width="12" height="48" class="box green" rx="0"/>
-<text x="68" y="331" class="body" text-anchor="start"><tspan x="68" dy="0">Internal model verification</tspan></text>
-<text x="430" y="331" class="section" text-anchor="start"><tspan x="430" dy="0">ESTABLISHED WITH OPEN GAPS</tspan></text>
-<text x="820" y="331" class="body" text-anchor="start"><tspan x="820" dy="0">Model review only—not physical proof</tspan></text>
-<rect x="40" y="352" width="1120" height="48" class="box white" rx="4"/>
-<rect x="40" y="352" width="12" height="48" class="box amber" rx="0"/>
-<text x="68" y="382" class="body" text-anchor="start"><tspan x="68" dy="0">Feasibility analysis</tspan></text>
-<text x="430" y="382" class="section" text-anchor="start"><tspan x="430" dy="0">CONDITIONAL</tspan></text>
-<text x="820" y="382" class="body" text-anchor="start"><tspan x="820" dy="0">Short-dwell region appears plausible</tspan></text>
-<rect x="40" y="403" width="1120" height="48" class="box white" rx="4"/>
-<rect x="40" y="403" width="12" height="48" class="box amber" rx="0"/>
-<text x="68" y="433" class="body" text-anchor="start"><tspan x="68" dy="0">Owner target values</tspan></text>
-<text x="430" y="433" class="section" text-anchor="start"><tspan x="430" dy="0">PENDING OWNER INPUT</tspan></text>
-<text x="820" y="433" class="body" text-anchor="start"><tspan x="820" dy="0">Five owner targets remain TBD</tspan></text>
-<rect x="40" y="454" width="1120" height="48" class="box white" rx="4"/>
-<rect x="40" y="454" width="12" height="48" class="box red" rx="0"/>
-<text x="68" y="484" class="body" text-anchor="start"><tspan x="68" dy="0">Physical verification</tspan></text>
-<text x="430" y="484" class="section" text-anchor="start"><tspan x="430" dy="0">REQUIRES PHYSICAL EVIDENCE</tspan></text>
-<text x="820" y="484" class="body" text-anchor="start"><tspan x="820" dy="0">Physical evidence absent</tspan></text>
-<rect x="40" y="505" width="1120" height="48" class="box white" rx="4"/>
-<rect x="40" y="505" width="12" height="48" class="box red" rx="0"/>
-<text x="68" y="535" class="body" text-anchor="start"><tspan x="68" dy="0">External interface conformance</tspan></text>
-<text x="430" y="535" class="section" text-anchor="start"><tspan x="430" dy="0">REQUIRES EXTERNAL AUTHORITY</tspan></text>
-<text x="820" y="535" class="body" text-anchor="start"><tspan x="820" dy="0">Authority and specification absent</tspan></text>
-<rect x="40" y="556" width="1120" height="48" class="box white" rx="4"/>
-<rect x="40" y="556" width="12" height="48" class="box neutral" rx="0"/>
-<text x="68" y="586" class="body" text-anchor="start"><tspan x="68" dy="0">Relay-payload implementation</tspan></text>
-<text x="430" y="586" class="section" text-anchor="start"><tspan x="430" dy="0">DEFERRED</tspan></text>
-<text x="820" y="586" class="body" text-anchor="start"><tspan x="820" dy="0">Black box; RF details outside project scope</tspan></text>
-<rect x="40" y="607" width="1120" height="48" class="box white" rx="4"/>
-<rect x="40" y="607" width="12" height="48" class="box red" rx="0"/>
-<text x="68" y="637" class="body" text-anchor="start"><tspan x="68" dy="0">Technical baseline approval</tspan></text>
-<text x="430" y="637" class="section" text-anchor="start"><tspan x="430" dy="0">NOT APPROVED</tspan></text>
-<text x="820" y="637" class="body" text-anchor="start"><tspan x="820" dy="0">Penultimate communication pass</tspan></text>
-<text x="600" y="676" class="small" text-anchor="middle"><tspan x="600" dy="0">No row grants safety, airworthiness, interoperability, operational readiness, or technical-baseline approval.</tspan></text>
+<text x="40" y="78" class="subtitle" text-anchor="start"><tspan x="40" dy="0">Architecture maturity and physical-system maturity are deliberately shown separately.</tspan></text>
+<rect x="40" y="112" width="540" height="510" rx="18" class="group"/>
+<rect x="620" y="112" width="540" height="510" rx="18" class="group"/>
+<rect x="55" y="125" width="510" height="70" rx="14" class="box green"/>
+<text x="310.0" y="156" class="box-title" text-anchor="middle"><tspan x="310.0" dy="0">ESTABLISHED IN THE MODEL</tspan></text>
+<text x="73" y="186" class="body" text-anchor="start"><tspan x="73" dy="0">Architecture, traceability, and analysis</tspan></text>
+<rect x="635" y="125" width="510" height="70" rx="14" class="box red"/>
+<text x="890.0" y="156" class="box-title" text-anchor="middle"><tspan x="890.0" dy="0">STILL OPEN</tspan></text>
+<text x="653" y="186" class="body" text-anchor="start"><tspan x="653" dy="0">Owner decisions and real-world evidence</tspan></text>
+<rect x="55" y="212" width="510" height="50" class="box white" rx="5"/>
+<rect x="55" y="212" width="10" height="50" class="box green" rx="0"/>
+<text x="77" y="233" class="body" text-anchor="start"><tspan x="77" dy="0">Architecture structure</tspan></text>
+<text x="550" y="233" class="small" text-anchor="end" font-weight="700">DEFINED</text>
+<text x="77" y="253" class="small" text-anchor="start"><tspan x="77" dy="0">19 components in six subsystem groups</tspan></text>
+<rect x="55" y="268" width="510" height="50" class="box white" rx="5"/>
+<rect x="55" y="268" width="10" height="50" class="box green" rx="0"/>
+<text x="77" y="289" class="body" text-anchor="start"><tspan x="77" dy="0">Product boundary</tspan></text>
+<text x="550" y="289" class="small" text-anchor="end" font-weight="700">DEFINED</text>
+<text x="77" y="309" class="small" text-anchor="start"><tspan x="77" dy="0">Aircraft content is separated from external actors</tspan></text>
+<rect x="55" y="324" width="510" height="50" class="box white" rx="5"/>
+<rect x="55" y="324" width="10" height="50" class="box green" rx="0"/>
+<text x="77" y="345" class="body" text-anchor="start"><tspan x="77" dy="0">Interfaces</tspan></text>
+<text x="550" y="345" class="small" text-anchor="end" font-weight="700">DEFINED</text>
+<text x="77" y="365" class="small" text-anchor="start"><tspan x="77" dy="0">22 architecture-level interface records</tspan></text>
+<rect x="55" y="380" width="510" height="50" class="box white" rx="5"/>
+<rect x="55" y="380" width="10" height="50" class="box green" rx="0"/>
+<text x="77" y="401" class="body" text-anchor="start"><tspan x="77" dy="0">Mission scenarios</tspan></text>
+<text x="550" y="401" class="small" text-anchor="end" font-weight="700">DEFINED</text>
+<text x="77" y="421" class="small" text-anchor="start"><tspan x="77" dy="0">Nominal and degraded mission behavior is modeled</tspan></text>
+<rect x="55" y="436" width="510" height="50" class="box white" rx="5"/>
+<rect x="55" y="436" width="10" height="50" class="box green" rx="0"/>
+<text x="77" y="457" class="body" text-anchor="start"><tspan x="77" dy="0">Requirements + traceability</tspan></text>
+<text x="550" y="457" class="small" text-anchor="end" font-weight="700">INTERNALLY CHECKED</text>
+<text x="77" y="477" class="small" text-anchor="start"><tspan x="77" dy="0">Open gaps remain visible</tspan></text>
+<rect x="55" y="492" width="510" height="50" class="box white" rx="5"/>
+<rect x="55" y="492" width="10" height="50" class="box green" rx="0"/>
+<text x="77" y="513" class="body" text-anchor="start"><tspan x="77" dy="0">Internal model verification</tspan></text>
+<text x="550" y="513" class="small" text-anchor="end" font-weight="700">COMPLETE WITH GAPS</text>
+<text x="77" y="533" class="small" text-anchor="start"><tspan x="77" dy="0">Model review only—not physical proof</tspan></text>
+<rect x="55" y="548" width="510" height="50" class="box white" rx="5"/>
+<rect x="55" y="548" width="10" height="50" class="box green" rx="0"/>
+<text x="77" y="569" class="body" text-anchor="start"><tspan x="77" dy="0">Feasibility analysis</tspan></text>
+<text x="550" y="569" class="small" text-anchor="end" font-weight="700">CONDITIONAL</text>
+<text x="77" y="589" class="small" text-anchor="start"><tspan x="77" dy="0">A short-dwell region appears plausible</tspan></text>
+<rect x="635" y="212" width="510" height="50" class="box white" rx="5"/>
+<rect x="635" y="212" width="10" height="50" class="box amber" rx="0"/>
+<text x="657" y="233" class="body" text-anchor="start"><tspan x="657" dy="0">Owner quantitative targets</tspan></text>
+<text x="1130" y="233" class="small" text-anchor="end" font-weight="700">PENDING</text>
+<text x="657" y="253" class="small" text-anchor="start"><tspan x="657" dy="0">Acceptance values have not been selected</tspan></text>
+<rect x="635" y="268" width="510" height="50" class="box white" rx="5"/>
+<rect x="635" y="268" width="10" height="50" class="box amber" rx="0"/>
+<text x="657" y="289" class="body" text-anchor="start"><tspan x="657" dy="0">Recovered-source completeness</tspan></text>
+<text x="1130" y="289" class="small" text-anchor="end" font-weight="700">INCOMPLETE</text>
+<text x="657" y="309" class="small" text-anchor="start"><tspan x="657" dy="0">Exact reconstruction is not supported</tspan></text>
+<rect x="635" y="324" width="510" height="50" class="box white" rx="5"/>
+<rect x="635" y="324" width="10" height="50" class="box red" rx="0"/>
+<text x="657" y="345" class="body" text-anchor="start"><tspan x="657" dy="0">Physical verification</tspan></text>
+<text x="1130" y="345" class="small" text-anchor="end" font-weight="700">NO EVIDENCE</text>
+<text x="657" y="365" class="small" text-anchor="start"><tspan x="657" dy="0">Test and demonstration have not been executed</tspan></text>
+<rect x="635" y="380" width="510" height="50" class="box white" rx="5"/>
+<rect x="635" y="380" width="10" height="50" class="box red" rx="0"/>
+<text x="657" y="401" class="body" text-anchor="start"><tspan x="657" dy="0">External conformance</tspan></text>
+<text x="1130" y="401" class="small" text-anchor="end" font-weight="700">BLOCKED</text>
+<text x="657" y="421" class="small" text-anchor="start"><tspan x="657" dy="0">Authority and specifications are absent</tspan></text>
+<rect x="635" y="436" width="510" height="50" class="box white" rx="5"/>
+<rect x="635" y="436" width="10" height="50" class="box neutral" rx="0"/>
+<text x="657" y="457" class="body" text-anchor="start"><tspan x="657" dy="0">Relay-payload implementation</tspan></text>
+<text x="1130" y="457" class="small" text-anchor="end" font-weight="700">DEFERRED</text>
+<text x="657" y="477" class="small" text-anchor="start"><tspan x="657" dy="0">Internal RF design remains a black box</tspan></text>
+<rect x="635" y="492" width="510" height="50" class="box white" rx="5"/>
+<rect x="635" y="492" width="10" height="50" class="box neutral" rx="0"/>
+<text x="657" y="513" class="body" text-anchor="start"><tspan x="657" dy="0">Future configurations</tspan></text>
+<text x="1130" y="513" class="small" text-anchor="end" font-weight="700">FUTURE</text>
+<text x="657" y="533" class="small" text-anchor="start"><tspan x="657" dy="0">Digital and C2 contexts are not current scope</tspan></text>
+<rect x="635" y="548" width="510" height="50" class="box white" rx="5"/>
+<rect x="635" y="548" width="10" height="50" class="box red" rx="0"/>
+<text x="657" y="569" class="body" text-anchor="start"><tspan x="657" dy="0">Technical baseline</tspan></text>
+<text x="1130" y="569" class="small" text-anchor="end" font-weight="700">NOT APPROVED</text>
+<text x="657" y="589" class="small" text-anchor="start"><tspan x="657" dy="0">Owner approval has not been granted</tspan></text>
+<text x="600" y="655" class="section" text-anchor="middle"><tspan x="600" dy="0">MODEL MATURITY ≠ VERIFIED AIRCRAFT</tspan></text>
+<text x="600" y="682" class="small" text-anchor="middle"><tspan x="600" dy="0">No safety, airworthiness, interoperability, operational-readiness, or technical-baseline approval is claimed.</tspan></text>
 </svg>

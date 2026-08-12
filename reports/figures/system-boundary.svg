@@ -36,7 +36,7 @@
 </style>
 <rect width="1200" height="700" fill="#ffffff"/>
 <text x="40" y="48" class="title" text-anchor="start"><tspan x="40" dy="0">What Is Inside This Project?</tspan></text>
-<text x="40" y="78" class="subtitle" text-anchor="start"><tspan x="40" dy="0">The product boundary contains the aircraft and black-box payload; users, other vehicles, and authorities remain external.</tspan></text>
+<text x="40" y="78" class="subtitle" text-anchor="start"><tspan x="40" dy="0">Aircraft and payload are inside; people, other vehicles, and authorities are outside.</tspan></text>
 <rect x="315" y="115" width="570" height="500" rx="24" class="boundary"/>
 <text x="600" y="151" class="section" text-anchor="middle"><tspan x="600" dy="0">Relay UAS Product Boundary</tspan></text>
 <rect x="355" y="190" width="235" height="150" rx="14" class="box neutral"/>
@@ -54,23 +54,23 @@
 <text x="600" y="570" class="small" text-anchor="middle"><tspan x="600" dy="0">Only power and mechanical retention cross from platform to payload.</tspan></text>
 <rect x="35" y="155" width="225" height="100" rx="14" class="box white"/>
 <text x="147.5" y="186" class="box-title" text-anchor="middle"><tspan x="147.5" dy="0">Operator</tspan></text>
-<text x="53" y="216" class="body" text-anchor="start"><tspan x="53" dy="0">External human performer</tspan></text>
+<text x="53" y="216" class="body" text-anchor="start"><tspan x="53" dy="0">Controls the Relay UAS</tspan></text>
 <rect x="35" y="285" width="225" height="100" rx="14" class="box white"/>
 <text x="147.5" y="316" class="box-title" text-anchor="middle"><tspan x="147.5" dy="0">Ground Control</tspan></text>
-<text x="53" y="346" class="body" text-anchor="start"><tspan x="53" dy="0">External control system</tspan></text>
+<text x="53" y="346" class="body" text-anchor="start"><tspan x="53" dy="0">Sends and receives</tspan><tspan x="53" dy="22">mission traffic</tspan></text>
 <rect x="35" y="415" width="225" height="100" rx="14" class="box white"/>
 <text x="147.5" y="446" class="box-title" text-anchor="middle"><tspan x="147.5" dy="0">Maintenance</tspan></text>
-<text x="53" y="476" class="body" text-anchor="start"><tspan x="53" dy="0">External support performer</tspan></text>
+<text x="53" y="476" class="body" text-anchor="start"><tspan x="53" dy="0">Supports aircraft</tspan><tspan x="53" dy="22">and configuration</tspan></text>
 <rect x="940" y="155" width="225" height="100" rx="14" class="box white"/>
 <text x="1052.5" y="186" class="box-title" text-anchor="middle"><tspan x="1052.5" dy="0">Remote UAS</tspan></text>
-<text x="958" y="216" class="body" text-anchor="start"><tspan x="958" dy="0">External vehicle</tspan></text>
+<text x="958" y="216" class="body" text-anchor="start"><tspan x="958" dy="0">Remote mission endpoint</tspan></text>
 <rect x="940" y="285" width="225" height="100" rx="14" class="box future"/>
 <text x="1052.5" y="316" class="box-title" text-anchor="middle"><tspan x="1052.5" dy="0">Future Platforms</tspan></text>
-<text x="958" y="346" class="body" text-anchor="start"><tspan x="958" dy="0">Future configuration only</tspan></text>
+<text x="958" y="346" class="body" text-anchor="start"><tspan x="958" dy="0">Future use only</tspan></text>
 <rect x="940" y="415" width="225" height="100" rx="14" class="box future"/>
 <text x="1052.5" y="446" class="box-title" text-anchor="middle"><tspan x="1052.5" dy="0">External Authorities</tspan></text>
-<text x="958" y="476" class="body" text-anchor="start"><tspan x="958" dy="0">Spectrum and conformance</tspan></text>
+<text x="958" y="476" class="body" text-anchor="start"><tspan x="958" dy="0">Spectrum and compatibility</tspan></text>
 <line x1="260" y1="335" x2="315" y2="335" class="arrow neutral" marker-end="url(#arrow-neutral)"/>
 <line x1="885" y1="335" x2="940" y2="335" class="arrow neutral" marker-end="url(#arrow-neutral)"/>
-<text x="600" y="660" class="small" text-anchor="middle"><tspan x="600" dy="0">Outside systems remain independently managed; the outer system-of-systems context is future scope.</tspan></text>
+<text x="600" y="660" class="small" text-anchor="middle"><tspan x="600" dy="0">Everything outside the boundary remains external to the aircraft design; future context is dashed.</tspan></text>
 </svg>

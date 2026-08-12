@@ -1565,21 +1565,18 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
 
     readme_text = (ROOT / "README.md").read_text(encoding="utf-8-sig")
     required_readme_sections = (
-        "## What this project is",
         "## The project in one picture",
+        "## What this project is",
         "## How the system works",
         "## What is on the drone",
         "## What the project found",
-        "## What is not finished",
         "## Engineering status at a glance",
+        "## What is not finished",
         "## Engineering detail and traceability",
     )
     section_positions = [readme_text.find(section) for section in required_readme_sections]
     if any(position < 0 for position in section_positions) or section_positions != sorted(section_positions):
         errors.append("README first-five-minute orientation sections are missing or out of order")
-        shown_interfaces = set(re.findall(r"IFC-(?:INT|EXT)-\d{3}", orientation_block))
-        if shown_interfaces != required_orientation_interfaces:
-            errors.append("README orientation contains an unexpected or missing interface")
     workflow = ROOT / ".github" / "workflows" / "check.yml"
     workflow_text = workflow.read_text(encoding="utf-8-sig") if workflow.exists() else ""
     if not re.search(r"python-version:\s*['\"]3\.12['\"]", workflow_text) or "python scripts/validate-baseline.py --check-generated" not in workflow_text:

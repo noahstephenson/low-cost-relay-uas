@@ -200,7 +200,7 @@ def system_boundary(model: dict[str, Any], index: dict[str, dict[str, Any]], vie
     inner = model["system"]["system_boundaries"]["inner"]
     parts = [
         lines_text(40, 48, [view["title"]], "title"),
-        lines_text(40, 78, ["The product boundary contains the aircraft and black-box payload; users, other vehicles, and authorities remain external."], "subtitle"),
+        lines_text(40, 78, ["Aircraft and payload are inside; people, other vehicles, and authorities are outside."], "subtitle"),
         '<rect x="315" y="115" width="570" height="500" rx="24" class="boundary"/>',
         lines_text(600, 151, [inner["name"] + " Product Boundary"], "section", "middle"),
         box(355, 190, 235, 150, "Aircraft Platform", ["Airframe and structure", "Propulsion", "Electrical power"], "neutral"),
@@ -208,15 +208,15 @@ def system_boundary(model: dict[str, Any], index: dict[str, dict[str, Any]], vie
         box(355, 370, 235, 155, "Payload Support", ["Mechanical mounting", "Regulated payload power", "Configuration support"], "neutral"),
         box(610, 370, 235, 155, "Relay Payload", ["Black-box payload + antenna", "Internal design unknown"], "green"),
         lines_text(600, 570, ["Only power and mechanical retention cross from platform to payload."], "small", "middle"),
-        box(35, 155, 225, 100, display(index, "OP-010"), ["External human performer"], "white"),
-        box(35, 285, 225, 100, display(index, "OP-001"), ["External control system"], "white"),
-        box(35, 415, 225, 100, display(index, "OP-007"), ["External support performer"], "white"),
-        box(940, 155, 225, 100, display(index, "OP-003"), ["External vehicle"], "white"),
-        box(940, 285, 225, 100, "Future Platforms", ["Future configuration only"], "future"),
-        box(940, 415, 225, 100, "External Authorities", ["Spectrum and conformance"], "future"),
+        box(35, 155, 225, 100, display(index, "OP-010"), ["Controls the Relay UAS"], "white"),
+        box(35, 285, 225, 100, display(index, "OP-001"), ["Sends and receives", "mission traffic"], "white"),
+        box(35, 415, 225, 100, display(index, "OP-007"), ["Supports aircraft", "and configuration"], "white"),
+        box(940, 155, 225, 100, display(index, "OP-003"), ["Remote mission endpoint"], "white"),
+        box(940, 285, 225, 100, "Future Platforms", ["Future use only"], "future"),
+        box(940, 415, 225, 100, "External Authorities", ["Spectrum and compatibility"], "future"),
         arrow(260, 335, 315, 335, kind="neutral"),
         arrow(885, 335, 940, 335, kind="neutral"),
-        lines_text(600, 660, ["Outside systems remain independently managed; the outer system-of-systems context is future scope."], "small", "middle"),
+        lines_text(600, 660, ["Everything outside the boundary remains external to the aircraft design; future context is dashed."], "small", "middle"),
     ]
     return svg_document(view["title"], view["question"], "\n".join(parts), view["object_refs"])
 
@@ -227,30 +227,30 @@ def physical_architecture(model: dict[str, Any], index: dict[str, dict[str, Any]
     assert_interface(model, "IFC-INT-003", "CMP-PWR-03", "CMP-COM-01")
     assert_interface(model, "IFC-INT-007", "CMP-MNT-01", "CMP-COM-01")
     groups = [
-        ("Airframe and Structure", ["CMP-AFR-01", "CMP-AFR-02", "CMP-AFR-03", "CMP-AFR-05"], "neutral"),
-        ("Propulsion", ["CMP-PRP-01", "CMP-PRP-02", "CMP-PRP-03"], "neutral"),
-        ("Electrical Power", ["CMP-PWR-01", "CMP-PWR-02", "CMP-PWR-03", "CMP-PWR-04"], "amber"),
-        ("Flight Avionics", ["CMP-AVN-01", "CMP-AVN-02", "CMP-AVN-03", "CMP-AVN-04"], "blue"),
-        ("Payload Support", ["CMP-AFR-04", "CMP-MNT-01"], "neutral"),
-        ("Relay Payload", ["CMP-COM-01", "CMP-COM-02"], "green"),
+        ("Airframe and Structure", ["CMP-AFR-01", "CMP-AFR-02", "CMP-AFR-03", "CMP-AFR-05"], ["Carries aircraft and payload loads", "Frame • arms • landing gear"], "neutral"),
+        ("Propulsion", ["CMP-PRP-01", "CMP-PRP-02", "CMP-PRP-03"], ["Produces controlled lift", "Controllers • motors • propellers"], "neutral"),
+        ("Electrical Power", ["CMP-PWR-01", "CMP-PWR-02", "CMP-PWR-03", "CMP-PWR-04"], ["Stores and distributes energy", "Battery • distribution • regulators"], "amber"),
+        ("Flight Avionics", ["CMP-AVN-01", "CMP-AVN-02", "CMP-AVN-03", "CMP-AVN-04"], ["Stabilizes, navigates, and holds station", "Receives platform command"], "blue"),
+        ("Payload Support", ["CMP-AFR-04", "CMP-MNT-01"], ["Mounts the relay payload", "Provides regulated payload power"], "neutral"),
+        ("Relay Payload", ["CMP-COM-01", "CMP-COM-02"], ["Relays command and telemetry", "Internal RF design remains a black box"], "green"),
     ]
     positions = [(45, 125), (425, 125), (805, 125), (45, 390), (425, 390), (805, 390)]
     parts = [
         lines_text(40, 48, [view["title"]], "title"),
-        lines_text(40, 78, ["Nineteen component records are grouped into six understandable subsystem roles."], "subtitle"),
+        lines_text(40, 78, ["Six subsystem groups explain the aircraft without turning the figure into a component inventory."], "subtitle"),
     ]
-    for (title, ids, kind), (x, y) in zip(groups, positions):
+    for (title, ids, details, kind), (x, y) in zip(groups, positions):
         for item_id in ids:
             if item_id not in index:
                 raise ValueError(f"physical view references missing {item_id}")
-        parts.append(box(x, y, 350, 205, title, ["• " + display(index, item_id) for item_id in ids], kind))
+        parts.append(box(x, y, 350, 205, title, details, kind))
     parts.extend([
         arrow(805, 228, 775, 228, kind="amber"),
         arrow(395, 425, 425, 330, kind="blue"),
         arrow(980, 330, 980, 390, kind="amber"),
         arrow(775, 493, 805, 493, kind="neutral"),
-        lines_text(600, 626, ["Avionics → propulsion control  •  Power → propulsion and payload  •  Payload support → relay payload"], "section", "middle"),
-        lines_text(600, 660, ["Component choice, geometry, ratings, and fabrication remain unresolved trade-study outputs."], "small", "middle"),
+        lines_text(600, 632, ["Arrows show control, power, and mechanical support between subsystem groups."], "section", "middle"),
+        lines_text(600, 662, ["Hardware, geometry, ratings, and fabrication remain unresolved."], "small", "middle"),
     ])
     return svg_document(view["title"], view["question"], "\n".join(parts), view["object_refs"])
 
@@ -302,7 +302,7 @@ def command_data_flow(model: dict[str, Any], index: dict[str, dict[str, Any]], v
     assert_interface(model, "IFC-EXT-007", "CMP-AVN-01", "OP-010")
     parts = [
         lines_text(40, 48, [view["title"]], "title"),
-        lines_text(40, 78, ["Four information flows share the aircraft but not the same internal path."], "subtitle"),
+        lines_text(40, 78, ["Aircraft control stays in the blue lane; remote-mission traffic stays in the green lane."], "subtitle"),
         lines_text(35, 143, ["PLATFORM CONTROL"], "section"),
         '<line x1="35" y1="160" x2="1165" y2="160" class="lane"/>',
         box(55, 185, 190, 78, display(index, "OP-010"), [], "blue"),
@@ -321,7 +321,7 @@ def command_data_flow(model: dict[str, Any], index: dict[str, dict[str, Any]], v
         arrow(735, 438, 955, 438, "Relayed Command", "green"),
         arrow(955, 477, 735, 477, "Relayed Telemetry", "green", True),
         arrow(465, 477, 245, 477, "Relayed Telemetry", "green", True),
-        lines_text(600, 568, ["Mission traffic is logically transparent to the aircraft platform."], "section", "middle"),
+        lines_text(600, 568, ["The aircraft carries the payload but does not process the relayed mission traffic."], "section", "middle"),
         lines_text(600, 600, ["External compatibility, message formats, protocols, frequency, waveform, and data rate are unresolved."], "small", "middle"),
     ]
     return svg_document(view["title"], view["question"], "\n".join(parts), view["object_refs"])
@@ -331,6 +331,7 @@ def mission_sequence(model: dict[str, Any], index: dict[str, dict[str, Any]], vi
     scenario_ids = ["SCN-001", "SCN-002", "SCN-003", "SCN-004", "SCN-008"]
     if any(item_id not in index for item_id in scenario_ids):
         raise ValueError("normal mission scenario record missing")
+    assert_exchange(model, "IX-009", "OP-002", "OP-010")
     parts = [
         lines_text(40, 48, [view["title"]], "title"),
         lines_text(40, 78, ["Current-system mission sequence; future UGV and video branches are intentionally omitted."], "subtitle"),
@@ -338,20 +339,21 @@ def mission_sequence(model: dict[str, Any], index: dict[str, dict[str, Any]], vi
     lanes = [("Operator / Ground", 90), ("Relay Aircraft", 390), ("Relay Payload", 690), ("Remote UAS", 990)]
     for name, x in lanes:
         parts.append(lines_text(x, 125, [name], "section", "middle"))
-        parts.append(f'<line x1="{x}" y1="145" x2="{x}" y2="630" class="lane"/>')
+        parts.append(f'<line x1="{x}" y1="145" x2="{x}" y2="640" class="lane"/>')
     steps = [
-        (180, 90, 390, "1  Prepare / confirm safe state", "neutral"),
-        (255, 90, 390, "2  Launch, transit, hold station", "blue"),
-        (340, 90, 690, "3  Send remote-UAS command", "green"),
-        (415, 690, 990, "4  Relay command onward", "green"),
-        (490, 990, 690, "5  Return telemetry", "green"),
-        (565, 690, 90, "6  Relay telemetry to ground", "green"),
+        (170, 90, 390, "1  Prepare / confirm safe state", "neutral"),
+        (220, 90, 390, "2  Launch", "blue"),
+        (270, 90, 390, "3  Position and hold station", "blue"),
+        (335, 90, 690, "4  Send remote-UAS command", "green"),
+        (390, 690, 990, "5  Relay command onward", "green"),
+        (445, 990, 690, "6  Return telemetry", "green"),
+        (500, 690, 90, "7  Relay telemetry to ground", "green"),
     ]
     for y, x1, x2, label, kind in steps:
         parts.append(arrow(x1, y, x2, y, label, kind, kind == "green" and x1 > x2, y - 10))
-    parts.append(arrow(390, 620, 90, 620, "7  Recover and return to Ground Safe", "blue", False, 610))
-    parts.append(lines_text(600, 653, ["Health/status informs recovery decisions; exact criteria remain unresolved."], "small", "middle"))
-    parts.append(lines_text(600, 682, ["This is an architecture sequence, not an operating procedure or verified flight behavior."], "small", "middle"))
+    parts.append(arrow(390, 560, 90, 560, "8  Monitor health / status", "blue", True, 550))
+    parts.append(arrow(390, 620, 90, 620, "9  Recover and return to Ground Safe", "blue", False, 610))
+    parts.append(lines_text(600, 680, ["Architecture sequence only; exact readiness and recovery criteria remain unresolved."], "small", "middle"))
     return svg_document(view["title"], view["question"], "\n".join(parts), view["object_refs"])
 
 
@@ -362,7 +364,7 @@ def degraded_behavior(model: dict[str, Any], index: dict[str, dict[str, Any]], v
             raise ValueError(f"mode transition {pair} missing")
     parts = [
         lines_text(40, 48, [view["title"]], "title"),
-        lines_text(40, 78, ["The model separates loss of relay service from loss of aircraft control."], "subtitle"),
+        lines_text(40, 78, ["Loss of relay service does not automatically mean loss of aircraft control."], "subtitle"),
         box(55, 245, 220, 100, display(index, "MODE-002"), ["Normal relay position"], "green"),
         box(355, 245, 220, 100, display(index, "MODE-003"), ["Relay function unavailable", "Platform assessed separately"], "amber"),
         '<polygon points="690,235 810,295 690,355 570,295" class="box blue"/>',
@@ -375,9 +377,9 @@ def degraded_behavior(model: dict[str, Any], index: dict[str, dict[str, Any]], v
         arrow(810, 268, 900, 198, "YES", "blue"),
         arrow(810, 322, 900, 556, "NO / IMPAIRED", "amber"),
         arrow(1018, 250, 1018, 300, "recover / land", "blue", False, 278),
-        lines_text(55, 430, ["Established at architecture level:"], "section"),
+        lines_text(55, 430, ["Defined in the model:"], "section"),
         lines_text(55, 460, ["• Relay payload is separate from platform command", "• Degraded mode and recovery intent exist", "• Health/status purpose is proposed"], "body"),
-        lines_text(55, 560, ["Not established:"], "section"),
+        lines_text(55, 560, ["Still unknown:"], "section"),
         lines_text(55, 590, ["• Exact detection and decision logic", "• Recovery criteria or physical behavior", "• Safety acceptance or test evidence"], "body"),
     ]
     return svg_document(view["title"], view["question"], "\n".join(parts), view["object_refs"])
@@ -395,20 +397,20 @@ def configuration_evolution(model: dict[str, Any], index: dict[str, dict[str, An
             raise ValueError(f"configuration lineage changed for {item_id}")
     parts = [
         lines_text(40, 48, [view["title"]], "title"),
-        lines_text(40, 78, ["Lineage shows influence and planned evolution—not exact inheritance, equivalence, or approval."], "subtitle"),
+        lines_text(40, 78, ["Reference evidence informs the candidates; it does not define, approve, or transfer into them."], "subtitle"),
         lines_text(160, 205, ["REFERENCE"], "section", "middle"),
         lines_text(615, 205, ["CURRENT"], "section", "middle"),
-        box(45, 230, 225, 130, display(index, "CFG-REC"), ["Evidence / reference only", "Incomplete reconstruction"], "white"),
-        box(350, 230, 225, 130, "Current Replica", ["Current proposed architecture", "Not an exact clone"], "blue"),
+        box(45, 230, 225, 130, display(index, "CFG-REC"), ["Reference evidence only", "Not the design baseline"], "white"),
+        box(350, 230, 225, 130, "Replica Candidate", ["Current proposed architecture", "Not an exact clone"], "blue"),
         box(655, 230, 225, 130, "Domestic Candidate", ["Current candidate variant", "Sourcing policy unresolved"], "blue"),
         lines_text(910, 445, ["FUTURE"], "section", "middle"),
-        box(655, 470, 225, 130, "Future Digital Extension", ["Future payload-management", "branch"], "future"),
-        box(955, 470, 205, 130, "Future System Context", ["Future UGV / radio /", "service context"], "future"),
-        arrow(270, 295, 350, 295, "informs", "neutral", True, 280),
-        arrow(575, 295, 655, 295, "evolves", "blue", False, 280),
+        box(655, 470, 225, 130, "Digital Extension", ["Future payload-management", "branch"], "future"),
+        box(955, 470, 205, 130, "Future C2 Context", ["System-of-systems branch", "UGV + radio + services"], "future"),
+        arrow(270, 295, 350, 295, "informs only", "neutral", True, 280),
+        arrow(575, 295, 655, 295, "current variant", "blue", False, 280),
         arrow(520, 360, 655, 510, "future branch", "neutral", True, 425),
         arrow(880, 535, 955, 535, kind="neutral", dashed=True),
-        lines_text(600, 650, ["Recovered evidence does not automatically become candidate architecture; future branches do not alter the current system."], "small", "middle"),
+        lines_text(600, 650, ["Dashed boxes are future scope; neither reference evidence nor future scope is an approved current design."], "small", "middle"),
     ]
     return svg_document(view["title"], view["question"], "\n".join(parts), view["object_refs"])
 
@@ -427,34 +429,54 @@ def engineering_status(model: dict[str, Any], index: dict[str, dict[str, Any]], 
         raise ValueError("physical verification status changed")
     if verification["VER-009"]["status"] != "blocked_by_external_authority":
         raise ValueError("external conformance status changed")
-    rows = [
-        ("Architecture structure", "ESTABLISHED", f"{len(architecture['components'])} components / {len(architecture['interfaces'])} interfaces", "green"),
-        ("System boundary + current mission", "ESTABLISHED", "Boundary and scenarios defined", "green"),
-        ("Requirements + traceability", "ESTABLISHED", "Internally checked; open gaps remain visible", "green"),
-        ("Internal model verification", "ESTABLISHED WITH OPEN GAPS", "Model review only—not physical proof", "green"),
-        ("Feasibility analysis", "CONDITIONAL", "Short-dwell region appears plausible", "amber"),
-        ("Owner target values", "PENDING OWNER INPUT", "Five owner targets remain TBD", "amber"),
-        ("Physical verification", "REQUIRES PHYSICAL EVIDENCE", "Physical evidence absent", "red"),
-        ("External interface conformance", "REQUIRES EXTERNAL AUTHORITY", "Authority and specification absent", "red"),
-        ("Relay-payload implementation", "DEFERRED", "Black box; RF details outside project scope", "neutral"),
-        ("Technical baseline approval", "NOT APPROVED", "Penultimate communication pass", "red"),
+    trade_studies = {item["id"]: item for item in assurance["trade_studies"]}
+    configurations = {item["id"]: item for item in architecture["configurations"]}
+    if trade_studies["TS-009"]["status"] != "deferred_out_of_scope":
+        raise ValueError("relay-payload implementation status changed")
+    for config_id in ("CFG-DIG", "CFG-SOS"):
+        if configurations[config_id]["approval_status"] != "not_approved":
+            raise ValueError(f"future configuration approval changed for {config_id}")
+    if "GAP-REC-001" not in index:
+        raise ValueError("recovered-source limitation gap missing")
+
+    established = [
+        ("Architecture structure", "DEFINED", f"{len(architecture['components'])} components in six subsystem groups"),
+        ("Product boundary", "DEFINED", "Aircraft content is separated from external actors"),
+        ("Interfaces", "DEFINED", f"{len(architecture['interfaces'])} architecture-level interface records"),
+        ("Mission scenarios", "DEFINED", "Nominal and degraded mission behavior is modeled"),
+        ("Requirements + traceability", "INTERNALLY CHECKED", "Open gaps remain visible"),
+        ("Internal model verification", "COMPLETE WITH GAPS", "Model review only—not physical proof"),
+        ("Feasibility analysis", "CONDITIONAL", "A short-dwell region appears plausible"),
+    ]
+    open_items = [
+        ("Owner quantitative targets", "PENDING", "Acceptance values have not been selected", "amber"),
+        ("Recovered-source completeness", "INCOMPLETE", "Exact reconstruction is not supported", "amber"),
+        ("Physical verification", "NO EVIDENCE", "Test and demonstration have not been executed", "red"),
+        ("External conformance", "BLOCKED", "Authority and specifications are absent", "red"),
+        ("Relay-payload implementation", "DEFERRED", "Internal RF design remains a black box", "neutral"),
+        ("Future configurations", "FUTURE", "Digital and C2 contexts are not current scope", "neutral"),
+        ("Technical baseline", "NOT APPROVED", "Owner approval has not been granted", "red"),
     ]
     parts = [
         lines_text(40, 48, [view["title"]], "title"),
-        lines_text(40, 78, ["A mature model is not the same thing as a verified aircraft."], "subtitle"),
-        lines_text(55, 125, ["AREA"], "section"),
-        lines_text(430, 125, ["STATUS"], "section"),
-        lines_text(820, 125, ["WHAT THAT MEANS"], "section"),
+        lines_text(40, 78, ["Architecture maturity and physical-system maturity are deliberately shown separately."], "subtitle"),
+        '<rect x="40" y="112" width="540" height="510" rx="18" class="group"/>',
+        '<rect x="620" y="112" width="540" height="510" rx="18" class="group"/>',
+        box(55, 125, 510, 70, "ESTABLISHED IN THE MODEL", ["Architecture, traceability, and analysis"], "green"),
+        box(635, 125, 510, 70, "STILL OPEN", ["Owner decisions and real-world evidence"], "red"),
     ]
-    y = 148
-    for name, status, meaning, kind in rows:
-        parts.append(f'<rect x="40" y="{y}" width="1120" height="48" class="box white" rx="4"/>')
-        parts.append(f'<rect x="40" y="{y}" width="12" height="48" class="box {kind}" rx="0"/>')
-        parts.append(lines_text(68, y + 30, [name], "body"))
-        parts.append(lines_text(430, y + 30, [status], "section"))
-        parts.append(lines_text(820, y + 30, [meaning], "body"))
-        y += 51
-    parts.append(lines_text(600, 676, ["No row grants safety, airworthiness, interoperability, operational readiness, or technical-baseline approval."], "small", "middle"))
+    for column_x, rows, default_kind in ((55, established, "green"), (635, open_items, None)):
+        for row_index, row in enumerate(rows):
+            name, status, meaning = row[:3]
+            kind = default_kind or row[3]
+            y = 212 + row_index * 56
+            parts.append(f'<rect x="{column_x}" y="{y}" width="510" height="50" class="box white" rx="5"/>')
+            parts.append(f'<rect x="{column_x}" y="{y}" width="10" height="50" class="box {kind}" rx="0"/>')
+            parts.append(lines_text(column_x + 22, y + 21, [name], "body"))
+            parts.append(f'<text x="{column_x + 495}" y="{y + 21}" class="small" text-anchor="end" font-weight="700">{escape(status)}</text>')
+            parts.append(lines_text(column_x + 22, y + 41, [meaning], "small"))
+    parts.append(lines_text(600, 655, ["MODEL MATURITY ≠ VERIFIED AIRCRAFT"], "section", "middle"))
+    parts.append(lines_text(600, 682, ["No safety, airworthiness, interoperability, operational-readiness, or technical-baseline approval is claimed."], "small", "middle"))
     return svg_document(view["title"], view["question"], "\n".join(parts), view["object_refs"])
 
 

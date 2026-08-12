@@ -285,7 +285,7 @@
       "title": "What Happens During a Relay Mission?",
       "audience": "outsider and project owner",
       "question": "What is the normal current-system mission sequence?",
-      "object_refs": ["SCN-001", "SCN-002", "SCN-003", "SCN-004", "SCN-008", "OA-007", "OA-002", "OA-003", "OA-004", "OA-005", "OA-006"]
+      "object_refs": ["SCN-001", "SCN-002", "SCN-003", "SCN-004", "SCN-008", "OA-007", "OA-002", "OA-003", "OA-004", "OA-005", "OA-006", "IX-009"]
     },
     {
       "slug": "degraded-behavior",
@@ -306,7 +306,7 @@
       "title": "What Did the Project Actually Establish?",
       "audience": "outsider, project owner, and model auditor",
       "question": "Which results are established, conditional, pending, externally blocked, deferred, or not approved?",
-      "object_refs": ["VER-001", "VER-007", "VER-008", "VER-009", "TS-009", "GAP-BUDGET-001", "GAP-IFC-001", "GAP-VER-001", "DEC-001"]
+      "object_refs": ["VER-001", "VER-007", "VER-008", "VER-009", "TS-009", "CFG-DIG", "CFG-SOS", "GAP-REC-001", "GAP-BUDGET-001", "GAP-IFC-001", "GAP-VER-001", "DEC-001"]
     }
   ],
   "human_readable_views": [

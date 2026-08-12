@@ -191,14 +191,14 @@ their intent so readers understand the design before inspecting individual IDs.
 
 | Requirement area | Plain-language intent | Authoritative records |
 |---|---|---|
-| Relay function | Carry outbound remote-UAS command and return telemetry through the airborne payload. | `REQ-FUN-001`, `REQ-FUN-002` |
-| Flight and positioning | Accept aircraft command, navigate, hold a station, and return on an owner-defined low-battery condition without assuming continuous GNSS availability. | `REQ-FUN-003..005`, `REQ-CON-004` |
-| Payload support | Provide a payload-independent mount, defined accommodation envelope, regulated power, a two-crossing platform boundary, and retention under future load criteria. | `REQ-PER-004`, `REQ-IFC-001..004` |
-| Electrical power | Support regulated payload service and basic battery protection/retention. Values and evidence remain unresolved. | `REQ-IFC-002`, `REQ-SAF-001` |
-| Command and status | Keep platform command independent of the relay payload and make proposed aircraft mode/health information available to the operator. | `REQ-FUN-004`, `REQ-FUN-008` |
-| Portability and affordability | Remain compatible with owner-set cost, endurance, gross-mass, payload, and single-operator handling objectives while preferring commercially available components. | `REQ-PER-001..005`, `REQ-CON-001`, `REQ-CON-002` |
-| Safety and recovery | Inhibit arming in Ground Safe, show armed state, preserve recovery intent after relay loss, retain stored energy and payload, and exclude weapons. | `REQ-FUN-005..007`, `REQ-SAF-001..002`, `REQ-IFC-004`, `REQ-CON-003` |
-| Deferred or external topics | Leave RF design, antennas, spectrum authorization, contested-spectrum mechanisms, and export review outside current technical definition. | `REQ-DEF-001..005` |
+| Perform the relay mission | Carry outbound remote-UAS command and return telemetry through the airborne payload. | `REQ-FUN-001`, `REQ-FUN-002` |
+| Fly and hold position | Accept aircraft command, navigate, hold a station, and return on an owner-defined low-battery condition without assuming continuous GNSS availability. | `REQ-FUN-003..005`, `REQ-CON-004` |
+| Support the relay payload | Provide a payload-independent mount, defined accommodation envelope, regulated power, a two-crossing platform boundary, and retention under future load criteria. | `REQ-PER-004`, `REQ-IFC-001..004` |
+| Provide power | Support regulated payload service and basic battery protection/retention. Values and evidence remain unresolved. | `REQ-IFC-002`, `REQ-SAF-001` |
+| Maintain platform command and status | Keep platform command independent of the relay payload and make proposed aircraft mode/health information available to the operator. | `REQ-FUN-004`, `REQ-FUN-008` |
+| Remain portable and affordable | Remain compatible with owner-set cost, endurance, gross-mass, payload, and single-operator handling objectives while preferring commercially available components. | `REQ-PER-001..005`, `REQ-CON-001`, `REQ-CON-002` |
+| Recover safely | Inhibit arming in Ground Safe, show armed state, preserve recovery intent after relay loss, retain stored energy and payload, and exclude weapons. | `REQ-FUN-005..007`, `REQ-SAF-001..002`, `REQ-IFC-004`, `REQ-CON-003` |
+| Interface with external systems | Leave RF design, antennas, spectrum authorization, contested-spectrum mechanisms, and export review outside current technical definition. | `REQ-DEF-001..005` |
 
 Bracketed `[TBD]` values are controlled unknowns, not placeholders for values copied
 from another aircraft. Requirement wording, classification, provenance, allocation,
