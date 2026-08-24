@@ -112,6 +112,18 @@ def parameters_for_case(inputs: dict[str, Any], case: str) -> dict[str, float]:
     return {name: range_value(inputs["ranges"], name, case) for name in inputs["ranges"]}
 
 
+def stable_float_tree(value: Any, significant_digits: int = 12) -> Any:
+    """Normalize reported floats so generated JSON is stable across OS math libraries."""
+    if isinstance(value, float):
+        normalized = float(f"{value:.{significant_digits}g}")
+        return 0.0 if normalized == 0.0 else normalized
+    if isinstance(value, list):
+        return [stable_float_tree(item, significant_digits) for item in value]
+    if isinstance(value, dict):
+        return {key: stable_float_tree(item, significant_digits) for key, item in value.items()}
+    return value
+
+
 def solve_point(
     inputs: dict[str, Any],
     parameters: dict[str, float],
@@ -603,7 +615,7 @@ def build_outputs(inputs: dict[str, Any]) -> dict[Path, str]:
         "sensitivity_samples": sample_count,
         "conditional_class_counts": class_counts,
         "all_owner_requirement_dispositions": "UNDETERMINED",
-        "representative_points": representative_results,
+        "representative_points": stable_float_tree(representative_results),
         "sensitivity_ranking": sensitivity_rows,
         "middle_point_cost_ranking": [
             {"category": category, "cost_usd": round(value, 2)} for category, value in cost_ranking
