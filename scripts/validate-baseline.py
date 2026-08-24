@@ -17,20 +17,24 @@ import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any, Iterable
+from urllib.parse import unquote
 
 
 ROOT = Path(__file__).resolve().parents[1]
 VIEW_GENERATOR = ROOT / "scripts" / "generate-mermaid-views.py"
 COMMUNICATION_GENERATOR = ROOT / "scripts" / "generate-communication-views.py"
-BASELINE_REPORT = ROOT / "reports" / "baseline.md"
-ATLAS_REPORT = ROOT / "reports" / "architecture-views.md"
-OWNER_DECISION_PACKAGE = ROOT / "reports" / "architecture-decision-target-package.md"
-FEASIBILITY_REPORT = ROOT / "reports" / "feasibility-analysis.md"
-COMMUNICATION_REPORT = ROOT / "reports" / "architecture-communication-pass.md"
+BASELINE_REPORT = ROOT / "docs" / "reference" / "baseline.md"
+ATLAS_REPORT = ROOT / "docs" / "reference" / "architecture-atlas.md"
+DECISIONS_REFERENCE = ROOT / "docs" / "reference" / "decisions-and-gaps.md"
+FEASIBILITY_REPORT = ROOT / "docs" / "reference" / "feasibility-analysis.md"
+REQUIREMENTS_REFERENCE = ROOT / "docs" / "reference" / "requirements.md"
+INTERFACES_REFERENCE = ROOT / "docs" / "reference" / "interfaces.md"
+TRACEABILITY_REFERENCE = ROOT / "docs" / "reference" / "traceability.md"
+VERIFICATION_REFERENCE = ROOT / "docs" / "reference" / "verification.md"
 FEASIBILITY_MODEL = ROOT / "analysis" / "feasibility.py"
 
 CATALOG_PATHS = {
-    "system": ROOT / "system.yaml",
+    "system": ROOT / "model" / "system.yaml",
     "sources": ROOT / ".seal" / "sources.yaml",
     "proof": ROOT / ".seal" / "proof.yaml",
     "architecture": ROOT / "model" / "architecture.yaml",
@@ -47,14 +51,14 @@ DEFINITION_CONTAINERS = {
         "functions", "components", "interfaces", "modes",
     ),
     "assurance": (
-        "requirements", "hazards", "controls", "verifications",
+        "requirements", "deferred_topics", "hazards", "controls", "verifications",
         "trade_studies", "decisions",
     ),
 }
 
 PREFIXES = (
     "CFG", "NEED", "CAP", "SCN", "OA", "OP", "IX", "FUN", "CMP", "IFC",
-    "REQ", "HAZ", "CTL", "VER", "EVD", "TS", "MODE", "CLM", "SRC", "DEC",
+    "REQ", "DEF", "HAZ", "CTL", "VER", "EVD", "TS", "MODE", "CLM", "SRC", "DEC",
 )
 ID_RE = re.compile(r"^(?:" + "|".join(PREFIXES) + r")-[A-Z0-9][A-Z0-9.-]*$")
 ID_TOKEN_RE = re.compile(
@@ -66,6 +70,9 @@ MODEL_OR_GAP_TOKEN_RE = re.compile(
 )
 GAP_RE = re.compile(r"^GAP-[A-Z0-9]+(?:-[A-Z0-9]+)*$")
 GAP_TOKEN_RE = re.compile(r"\bGAP-[A-Z0-9]+(?:-[A-Z0-9]+)*\b")
+REQUIREMENT_ID_RE = re.compile(r"^REQ-\d{3}$")
+DEFERRED_TOPIC_ID_RE = re.compile(r"^DEF-\d{3}$")
+LEGACY_REQUIREMENT_ID_RE = re.compile(r"\bREQ-(?:FUN|PER|IFC|SAF|CON|DEF)-\d+\b")
 MERMAID_HEADERS = {"flowchart", "sequenceDiagram", "stateDiagram-v2"}
 
 # Minimum prefix counts from the accepted consolidated baseline. New proposed elements
@@ -73,7 +80,7 @@ MERMAID_HEADERS = {"flowchart", "sequenceDiagram", "stateDiagram-v2"}
 PRESERVED_ID_MINIMUMS = {
     "CAP": 5, "CFG": 5, "CLM": 14, "CMP": 19, "CTL": 5, "DEC": 2,
     "EVD": 4, "FUN": 9, "HAZ": 12, "IFC": 16, "IX": 10, "MODE": 5,
-    "NEED": 1, "OA": 6, "OP": 10, "REQ": 27, "SCN": 8, "SRC": 17,
+    "NEED": 1, "OA": 6, "OP": 10, "REQ": 23, "DEF": 5, "SCN": 8, "SRC": 17,
     "TS": 11, "VER": 8,
 }
 
@@ -94,16 +101,17 @@ REFERENCE_KEYS = {
 }
 SINGULAR_REFERENCE_KEYS = {
     "claim_id", "decision_id", "gap_id", "endpoint_a", "endpoint_b", "from", "to",
-    "requirement_id", "subject_id", "initial_mode",
+    "requirement_id", "deferred_topic_id", "subject_id", "initial_mode",
 }
 REFERENCE_SENTINELS = {"TBD", "All", "External", "None"}
 
 AUTHORITY_RULE = (
-    "system.yaml is the manifest. The structured catalogs referenced by it are "
+    "model/system.yaml is the manifest. The structured catalogs referenced by it are "
     "authoritative model data. Markdown documents and generated reports are views of that model."
 )
 
 RETIRED_CORE_PATHS = {
+    "system.yaml", "architecture.md", "trade-studies.md", "reports",
     ".seal/README.md",
     "model/configurations.yaml", "model/elements.yaml", "model/claims.yaml",
     "model/operational-scenarios.yaml", "model/interfaces.yaml", "model/requirements.yaml",
@@ -192,7 +200,7 @@ def render_baseline(catalogs: dict[str, dict[str, Any]]) -> str:
     traceability = catalogs["traceability"]
 
     lines = generated_header([
-        "system.yaml", "model/architecture.yaml", "model/assurance.yaml",
+        "model/system.yaml", "model/architecture.yaml", "model/assurance.yaml",
         "model/traceability.yaml", ".seal/sources.yaml", ".seal/proof.yaml",
     ])
     lines.extend([
@@ -213,11 +221,11 @@ def render_baseline(catalogs: dict[str, dict[str, Any]]) -> str:
         "- Technical baseline: `not_approved`; physical verification and external-interface conformance: `not_established`; safety approval: `not_approved`.",
         f"- Unresolved decisions remain proposed: {', '.join(f'`{item}`' for item in system['internal_verification_baseline']['unresolved_decisions'])}.",
         "",
-        "## Current model-review status",
+        "## Model-review status",
         "",
-        f"- Current semantic model: `{system['current_model_review']['model_version']}`.",
-        f"- Current review: `{system['current_model_review']['review_status']}` in `{system['current_model_review']['evidence_refs'][0]}` under `{system['current_model_review']['source_refs'][0]}`.",
-        "- The accepted 0.7.0 work package remains preserved; the 0.8.0 model-level review is not owner acceptance or technical-baseline approval.",
+        f"- Current semantic model: `{system['model_version']}`.",
+        f"- Latest recorded review: `{system['latest_recorded_model_review']['model_version']}` with status `{system['latest_recorded_model_review']['review_status']}` in `{system['latest_recorded_model_review']['evidence_refs'][0]}` under `{system['latest_recorded_model_review']['source_refs'][0]}`.",
+        "- The accepted 0.7.0 work package remains preserved; the 0.8.0 model-level review is not owner acceptance or technical-baseline approval. The 0.9.0 identifier and documentation refactor has no new evidence record.",
         "- Physical verification, safety approval, and external-interface conformance remain not established.",
         "",
         "## Configuration summary",
@@ -394,10 +402,10 @@ def render_baseline(catalogs: dict[str, dict[str, Any]]) -> str:
         "",
         "### Requirement-level review summary",
         "",
-        f"- Requirements reviewed: {len(assurance['requirements'])}; model-level review passed: 2 (`REQ-IFC-003`, `REQ-CON-003`); architecture review passed with open limitations: {len(assurance['requirements']) - 2}.",
+        f"- Requirements reviewed: {len(assurance['requirements'])}; model-level review passed: 2 (`REQ-016`, `REQ-022`); architecture review passed with open limitations: {len(assurance['requirements']) - 2}.",
         f"- Readiness: {', '.join(f'{key}: {value}' for key, value in sorted(verification_status.items()))}.",
-        "- `REQ-DEF-*` records remain explicit scope/deferral records rather than requirements claimed satisfied.",
-        "- `EVD-001` through `EVD-004` remain historical. `EVD-008` through `EVD-012` preserve the accepted 0.7.0 review and acceptance trail; `EVD-013` records the current 0.8.0 model-level review without owner acceptance.",
+        f"- Deferred/external topics: {len(assurance['deferred_topics'])}; these `DEF-*` records are not counted as system requirements.",
+        "- `EVD-001` through `EVD-004` remain historical. `EVD-008` through `EVD-012` preserve the accepted 0.7.0 review and acceptance trail; `EVD-013` records the latest 0.8.0 model-level review without owner acceptance.",
         "- Internal review does not establish physical requirement satisfaction, external conformance, safety, or technical approval (`GAP-VER-001`).",
     ])
     objective_corrections = [
@@ -423,13 +431,13 @@ def render_baseline(catalogs: dict[str, dict[str, Any]]) -> str:
         "",
         "## Concise traceability summary",
         "",
-        "- Mission relay: `NEED-001 -> CAP-001 -> SCN-003 -> OA-004 -> IX-002 / IX-003 -> FUN-REL-01 -> CMP-COM-01 -> IFC-EXT-001 / IFC-EXT-002 -> REQ-FUN-001 -> VER-001 / VER-009`.",
-        "- Return telemetry: `SCN-004 -> OA-005 -> IX-004 / IX-005 -> FUN-REL-02 -> CMP-COM-01 -> IFC-EXT-003 / IFC-EXT-004 -> REQ-FUN-002 -> VER-001 / VER-009`.",
-        "- Station keeping: `CAP-002 -> SCN-002 -> OA-003 -> FUN-FLT-03 -> CMP-AVN-01 / CMP-AVN-02 / CMP-AVN-03 -> REQ-FUN-003 / REQ-CON-004`.",
-        "- Setup and ground safety: `SCN-001 -> OA-007 -> MODE-005 -> HAZ-004 -> CTL-001 -> REQ-FUN-006 / REQ-SAF-002 -> VER-006`.",
-        "- Health/status: `SCN-007 -> IX-009 -> FUN-HLT-01 -> CMP-AVN-01 -> IFC-EXT-007 -> REQ-FUN-008 -> VER-005 / VER-008 / VER-009`.",
-        "- `HAZ-004 -> CTL-001 -> REQ-FUN-006 / REQ-SAF-002 -> VER-004 / VER-006 -> GAP-VER-001`.",
-        "- `HAZ-008 -> CTL-005 -> REQ-IFC-004 -> VER-005 / VER-008 -> GAP-VER-001`.",
+        "- Mission relay: `NEED-001 -> CAP-001 -> SCN-003 -> OA-004 -> IX-002 / IX-003 -> FUN-REL-01 -> CMP-COM-01 -> IFC-EXT-001 / IFC-EXT-002 -> REQ-001 -> VER-001 / VER-009`.",
+        "- Return telemetry: `SCN-004 -> OA-005 -> IX-004 / IX-005 -> FUN-REL-02 -> CMP-COM-01 -> IFC-EXT-003 / IFC-EXT-004 -> REQ-002 -> VER-001 / VER-009`.",
+        "- Station keeping: `CAP-002 -> SCN-002 -> OA-003 -> FUN-FLT-03 -> CMP-AVN-01 / CMP-AVN-02 / CMP-AVN-03 -> REQ-003 / REQ-023`.",
+        "- Setup and ground safety: `SCN-001 -> OA-007 -> MODE-005 -> HAZ-004 -> CTL-001 -> REQ-006 / REQ-019 -> VER-006`.",
+        "- Health/status: `SCN-007 -> IX-009 -> FUN-HLT-01 -> CMP-AVN-01 -> IFC-EXT-007 -> REQ-008 -> VER-005 / VER-008 / VER-009`.",
+        "- `HAZ-004 -> CTL-001 -> REQ-006 / REQ-019 -> VER-004 / VER-006 -> GAP-VER-001`.",
+        "- `HAZ-008 -> CTL-005 -> REQ-017 -> VER-005 / VER-008 -> GAP-VER-001`.",
         "- Current platform-to-payload crossings are only `IFC-INT-003` and `IFC-INT-007`; `IFC-INT-010` is payload-internal.",
         "- The complete relationship database remains in `model/traceability.yaml`.",
         "",
@@ -475,6 +483,205 @@ def render_baseline(catalogs: dict[str, dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
+def reference_header(title: str, purpose: str, sources: list[str]) -> list[str]:
+    return [
+        "<!-- GENERATED VIEW - DO NOT EDIT. -->", "", f"# {title}", "",
+        "[Overview](../../README.md) · [Architecture](../architecture.md) · "
+        "[Feasibility](../feasibility.md) · [Engineering Status](../engineering-status.md) · "
+        "[Reference index](README.md)", "", purpose, "",
+        "Generated from " + ", ".join(f"`{source}`" for source in sources) + ". "
+        "The structured catalogs remain authoritative.", "",
+    ]
+
+
+def render_requirements(catalogs: dict[str, dict[str, Any]]) -> str:
+    assurance = catalogs["assurance"]
+    requirements = {item["id"]: item for item in assurance["requirements"]}
+    groups = [
+        ("Relay mission", ["REQ-001", "REQ-002"]),
+        ("Flight and positioning", ["REQ-003", "REQ-010", "REQ-011", "REQ-023"]),
+        ("Recovery and aircraft control", ["REQ-004", "REQ-005", "REQ-006", "REQ-007", "REQ-008"]),
+        ("Payload support and interfaces", ["REQ-012", "REQ-014", "REQ-015", "REQ-016", "REQ-017"]),
+        ("Power and safety", ["REQ-018", "REQ-019", "REQ-022"]),
+        ("Portability and affordability", ["REQ-009", "REQ-013", "REQ-020", "REQ-021"]),
+    ]
+    lines = reference_header(
+        "Requirements",
+        "The current assurance set contains 23 system requirements. Neutral IDs are durable keys; classification remains metadata and names carry the human meaning.",
+        ["model/assurance.yaml"],
+    )
+    for heading, identifiers in groups:
+        lines.extend([f"## {heading}", "", "| ID | Requirement | Status | Verification |", "|---|---|---|---|"])
+        for item_id in identifiers:
+            item = requirements[item_id]
+            requirement = f"**{pipe(item['display_name'])}** — {pipe(item['text'])}"
+            status = f"{item['decision_status']} / {item['verification_status']}"
+            verification = f"{item['verification_method']}: {pipe(item['verification_ids'])}"
+            lines.append(f"| {item_id} | {requirement} | {status} | {verification} |")
+        lines.append("")
+    lines.extend([
+        "## Deferred / externally owned topics", "",
+        "These records preserve scope, provenance, applicability, and ownership without presenting the topics as system requirements.", "",
+        "| ID | Topic | Disposition | Related model records |", "|---|---|---|---|",
+    ])
+    for topic in assurance["deferred_topics"]:
+        related = topic.get("upstream_refs", []) + topic.get("allocation_refs", [])
+        lines.append(
+            f"| {topic['id']} | **{pipe(topic['display_name'])}** — {pipe(topic['text'])} | "
+            f"{topic['verification_status']} | {pipe(related)} |"
+        )
+    lines.extend([
+        "", "For allocation, provenance, applicability, TBD ownership, and source fields, inspect "
+        "[`model/assurance.yaml`](../../model/assurance.yaml) and the [traceability reference](traceability.md).",
+    ])
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def render_interfaces(catalogs: dict[str, dict[str, Any]]) -> str:
+    architecture = catalogs["architecture"]
+    index = {
+        item["id"]: item.get("display_name") or item.get("name") or item["id"]
+        for collection in ("components", "performers") for item in architecture[collection]
+    }
+    groups: dict[str, list[dict[str, Any]]] = collections.OrderedDict((
+        ("External interfaces", []), ("Platform-to-payload interfaces", []),
+        ("Payload-internal interfaces", []), ("Other internal interfaces", []),
+        ("Future-only interfaces", []),
+    ))
+    current = {"CFG-REP", "CFG-DOM"}
+    for interface in architecture["interfaces"]:
+        configs = set(interface.get("applicable_configurations", []))
+        if not current.intersection(configs):
+            group = "Future-only interfaces"
+        elif interface["id"] in {"IFC-INT-003", "IFC-INT-007"}:
+            group = "Platform-to-payload interfaces"
+        elif "payload-internal" in interface.get("interface_type", ""):
+            group = "Payload-internal interfaces"
+        elif interface["id"].startswith("IFC-EXT-"):
+            group = "External interfaces"
+        else:
+            group = "Other internal interfaces"
+        groups[group].append(interface)
+    lines = reference_header(
+        "Interfaces",
+        "This inventory shows logical architecture interfaces. It does not establish connector design, electrical ratings, protocol compatibility, or external conformance.",
+        ["model/architecture.yaml"],
+    )
+    for heading, interfaces in groups.items():
+        lines.extend([
+            f"## {heading}", "", "| Interface | Endpoints | Flow | Configuration / maturity | Open attributes |",
+            "|---|---|---|---|---|",
+        ])
+        for interface in interfaces:
+            a = f"{index.get(interface['endpoint_a'], interface['endpoint_a'])} ({interface['endpoint_a']})"
+            b = f"{index.get(interface['endpoint_b'], interface['endpoint_b'])} ({interface['endpoint_b']})"
+            maturity = f"{pipe(interface['applicable_configurations'])}; {interface['decision_status']}"
+            lines.append(
+                f"| **{pipe(interface['name'])}** ({interface['id']}) | {pipe(a)} → {pipe(b)} | "
+                f"{pipe(interface['flow_class'])}; {pipe(interface['direction'])} | {maturity} | "
+                f"{pipe(interface.get('unknown_attributes'))} |"
+            )
+        lines.append("")
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def render_traceability(catalogs: dict[str, dict[str, Any]]) -> str:
+    relationships = catalogs["traceability"]["relationships"]
+    lines = reference_header(
+        "Traceability",
+        "Representative traces explain engineering cause and effect first. The complete relationship register follows for audit.",
+        ["model/architecture.yaml", "model/assurance.yaml", "model/traceability.yaml"],
+    )
+    lines.extend([
+        "## Representative traces", "",
+        "**Extend remote command reach**", "",
+        "Need → airborne-relay capability → outbound-relay scenario → relay behavior → black-box payload → external relay path → **Relay outbound traffic (REQ-001)** → architecture review now; external conformance later.", "",
+        "**Return remote-aircraft telemetry**", "",
+        "Relay scenario → return-traffic behavior → black-box payload → return external path → **Relay return traffic (REQ-002)** → architecture review now; external conformance later.", "",
+        "**Hold a useful relay position**", "",
+        "Station-keeping capability → position-and-hold scenario → flight behavior → avionics and navigation → **Maintain commanded station position (REQ-003)** → analysis after owner tolerance; physical evidence later.", "",
+        "**Recover after payload loss**", "",
+        "Degraded scenario → independent aircraft control → recovery mode → **Recover after payload loss (REQ-007)** → model review recorded; physical recovery evidence absent.", "",
+        "## Complete relationship register", "", f"The model contains {len(relationships)} explicit relationships.", "",
+        "<details>", "<summary>Open complete relationship table</summary>", "",
+        "| From | Relationship | To | Status | Gap |", "|---|---|---|---|---|",
+    ])
+    for relationship in relationships:
+        lines.append(
+            f"| {relationship['from']} | {pipe(relationship['relation'])} | {relationship['to']} | "
+            f"{pipe(relationship['status'])} | {pipe(relationship.get('gap'))} |"
+        )
+    lines.extend(["", "</details>", "", "See [Decisions & gaps](decisions-and-gaps.md) for the human interpretation of unresolved relationships."])
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def render_verification(catalogs: dict[str, dict[str, Any]]) -> str:
+    assurance = catalogs["assurance"]
+    system = catalogs["system"]
+    lines = reference_header(
+        "Verification",
+        "Model verification, quantitative analysis, physical verification, and external conformance are separate evidence classes. A passing repository check is not a verified aircraft.",
+        ["model/assurance.yaml", ".seal/proof.yaml"],
+    )
+    lines.extend([
+        "## Evidence boundary", "", "| Evidence class | What it can establish | Current position |", "|---|---|---|",
+        "| Internal model review | Structure, reference integrity, allocation, and consistency | Latest recorded review is 0.8.0; not owner acceptance |",
+        "| Reproducible analysis | Conditional mass, power, endurance, and cost behavior | Executed with exploratory assumptions |",
+        "| Physical verification | Aircraft behavior and measured performance | Not performed |",
+        "| External conformance | Endpoint, spectrum, and authority-controlled compatibility | Blocked by missing authority/specifications |",
+        "| Technical baseline approval | Owner acceptance of a design baseline | Not approved |", "",
+        "## Verification activities", "", "| Activity | Method | Readiness | Execution | Evidence | Residual gaps |",
+        "|---|---|---|---|---|---|",
+    ])
+    for verification in assurance["verifications"]:
+        lines.append(
+            f"| **{pipe(verification['name'])}** ({verification['id']}) | {pipe(verification['method'])} | "
+            f"{pipe(verification['readiness'])} | {pipe(verification['execution_status'])} | "
+            f"{pipe(verification['evidence_ids'])} | {pipe(verification['residual_gap_ids'])} |"
+        )
+    lines.extend([
+        "", "The current semantic model is `" + system["model_version"] + "`. The latest recorded review evidence remains tied to `" + system["latest_recorded_model_review"]["model_version"] + "`; the identifier/documentation migration does not rewrite that evidence.",
+    ])
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def render_decisions_and_gaps(catalogs: dict[str, dict[str, Any]]) -> str:
+    assurance = catalogs["assurance"]
+    gaps = catalogs["traceability"]["gaps"]
+    lines = reference_header(
+        "Decisions and Gaps",
+        "This page consolidates unresolved owner choices, evidence dependencies, deliberate deferrals, and future-configuration work without changing their model dispositions.",
+        ["model/assurance.yaml", "model/traceability.yaml"],
+    )
+    lines.extend(["## Decisions", "", "| Decision | Status | Authority | Remaining issue |", "|---|---|---|---|"])
+    for decision in assurance["decisions"]:
+        review = decision.get("verification_review", {})
+        remaining = review.get("remaining_unresolved") or decision.get("statement")
+        lines.append(
+            f"| **{pipe(decision['name'])}** ({decision['id']}) | {pipe(decision['decision_status'])} | "
+            f"{pipe(decision['authority'])} | {pipe(remaining)} |"
+        )
+    groups = collections.OrderedDict((
+        ("Requires project-owner decision", {"B_project_owner_decision"}),
+        ("Requires physical or external evidence", {"C_physical_or_external_evidence"}),
+        ("Deliberately deferred", {"D_intentional_deferral"}),
+        ("Future configuration", {"E_future_configuration"}),
+        ("Closed or reclassified model work", {"A_closeable_by_model_work", "F_false_positive_model_health_gap"}),
+    ))
+    for heading, classifications in groups.items():
+        lines.extend(["", f"## {heading}", "", "| Gap | Outcome | Meaning | Next action |", "|---|---|---|---|"])
+        for gap in gaps:
+            if gap.get("audit_classification") in classifications:
+                lines.append(
+                    f"| {gap['code']} | {pipe(gap['work_package_outcome'])} | {pipe(gap['statement'])} | {pipe(gap['next_action'])} |"
+                )
+    lines.extend([
+        "", "The earlier detailed owner-target package is retained in the "
+        "[archive](../archive/architecture-decision-target-package.md) as project history. Current dispositions come from the structured catalogs above.",
+    ])
+    return "\n".join(lines).rstrip() + "\n"
+
+
 def extract_mermaid_blocks(markdown: str) -> tuple[list[tuple[str, str]], list[str]]:
     blocks: list[tuple[str, str]] = []
     errors: list[str] = []
@@ -502,9 +709,58 @@ def extract_mermaid_blocks(markdown: str) -> tuple[list[tuple[str, str]], list[s
     return blocks, errors
 
 
+MARKDOWN_LINK_RE = re.compile(
+    r"!?\[[^\]]*\]\((?P<target><[^>]+>|[^)\s]+)(?:\s+['\"][^'\"]*['\"])?\)"
+)
+
+
+def markdown_anchors(text: str) -> set[str]:
+    anchors: set[str] = set()
+    counts: collections.Counter[str] = collections.Counter()
+    for heading in re.findall(r"^#{1,6}\s+(.+?)\s*$", text, flags=re.MULTILINE):
+        plain = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", heading)
+        plain = re.sub(r"[`*_~]", "", plain).strip().lower()
+        slug = re.sub(r"[^\w\s-]", "", plain, flags=re.UNICODE)
+        slug = re.sub(r"[\s-]+", "-", slug).strip("-")
+        suffix = counts[slug]
+        counts[slug] += 1
+        anchors.add(f"{slug}-{suffix}" if suffix else slug)
+    return anchors
+
+
+def validate_markdown_links() -> list[str]:
+    """Validate local Markdown targets and heading anchors across active and archive docs."""
+    errors: list[str] = []
+    markdown_files = [ROOT / "README.md"] + sorted((ROOT / "docs").rglob("*.md"))
+    anchor_cache: dict[Path, set[str]] = {}
+    for source in markdown_files:
+        text = source.read_text(encoding="utf-8-sig")
+        for match in MARKDOWN_LINK_RE.finditer(text):
+            raw_target = match.group("target").strip("<>")
+            if raw_target.startswith(("http://", "https://", "mailto:")):
+                continue
+            path_part, separator, anchor = raw_target.partition("#")
+            target = source if not path_part else (source.parent / unquote(path_part)).resolve()
+            try:
+                target.relative_to(ROOT)
+            except ValueError:
+                errors.append(f"{source.relative_to(ROOT)} link escapes the repository: {raw_target}")
+                continue
+            if not target.exists():
+                errors.append(f"{source.relative_to(ROOT)} has missing link target {raw_target}")
+                continue
+            if separator and target.suffix.lower() == ".md":
+                anchors = anchor_cache.setdefault(
+                    target, markdown_anchors(target.read_text(encoding="utf-8-sig"))
+                )
+                if unquote(anchor).lower() not in anchors:
+                    errors.append(f"{source.relative_to(ROOT)} has missing anchor {raw_target}")
+    return errors
+
+
 def validate_mermaid_documents(definitions: set[str], gap_codes: set[str]) -> list[str]:
     errors: list[str] = []
-    paths = [ROOT / "README.md", ROOT / "architecture.md", ATLAS_REPORT]
+    paths = [ROOT / "README.md", ROOT / "docs" / "architecture.md", ATLAS_REPORT]
     for path in paths:
         if not path.exists():
             errors.append(f"missing Mermaid-bearing document: {path.relative_to(ROOT)}")
@@ -513,8 +769,8 @@ def validate_mermaid_documents(definitions: set[str], gap_codes: set[str]) -> li
         errors.extend(f"{path.relative_to(ROOT)}: {item}" for item in fence_errors)
         if path == ROOT / "README.md" and blocks:
             errors.append(f"README.md must use canonical generated figures rather than Mermaid, found {len(blocks)} Mermaid diagrams")
-        if path == ROOT / "architecture.md" and blocks:
-            errors.append(f"architecture.md must use canonical generated figures rather than Mermaid, found {len(blocks)} Mermaid diagrams")
+        if path == ROOT / "docs" / "architecture.md" and blocks:
+            errors.append(f"docs/architecture.md must use canonical generated figures rather than Mermaid, found {len(blocks)} Mermaid diagrams")
         if path == ATLAS_REPORT and not 10 <= len(blocks) <= 16:
             errors.append(f"architecture atlas must contain 10-16 selected audit diagrams, found {len(blocks)}")
         for title, block in blocks:
@@ -584,11 +840,21 @@ def validate_communication_figures(
     slugs = [item.get("slug") for item in manifest]
     if set(slugs) != expected_slugs or len(slugs) != len(set(slugs)):
         errors.append("communication-view manifest must contain exactly the nine canonical view slugs")
-    expected_paths = {f"reports/figures/{slug}.svg" for slug in expected_slugs}
+    primary_views = [item for item in manifest if item.get("tier") == "primary"]
+    if len(primary_views) != 5:
+        errors.append(f"communication-view manifest must identify five primary views, found {len(primary_views)}")
+    expected_paths = {f"docs/figures/{slug}.svg" for slug in expected_slugs}
     if set(generated) != expected_paths:
         errors.append("generated_figures must match the nine canonical communication views")
 
-    for record in catalogs["architecture"].get("configurations", []) + catalogs["architecture"].get("performers", []) + catalogs["architecture"].get("components", []):
+    display_records = (
+        catalogs["architecture"].get("configurations", [])
+        + catalogs["architecture"].get("performers", [])
+        + catalogs["architecture"].get("components", [])
+        + catalogs["assurance"].get("requirements", [])
+        + catalogs["assurance"].get("deferred_topics", [])
+    )
+    for record in display_records:
         alias = record.get("display_name")
         if alias is None:
             continue
@@ -599,11 +865,16 @@ def validate_communication_figures(
 
     for view in manifest:
         slug = view.get("slug", "<missing>")
-        required = {"title", "audience", "question", "object_refs"}
+        required = {"title", "audience", "question", "object_refs", "tier", "major_node_count"}
         if not required.issubset(view):
             errors.append(f"communication view {slug} lacks presentation or provenance fields")
             continue
-        path = ROOT / "reports" / "figures" / f"{slug}.svg"
+        tier = view.get("tier")
+        if tier not in {"primary", "reference"}:
+            errors.append(f"communication view {slug} has invalid tier {tier!r}")
+        if tier == "primary" and not 1 <= view.get("major_node_count", 0) <= 8:
+            errors.append(f"primary communication view {slug} exceeds the eight-node comprehension limit")
+        path = ROOT / "docs" / "figures" / f"{slug}.svg"
         if not path.exists():
             errors.append(f"canonical communication figure missing: {path.relative_to(ROOT)}")
             continue
@@ -633,26 +904,41 @@ def validate_communication_figures(
         visible_text = " ".join(
             "".join(element.itertext()) for element in root.findall(".//svg:text", namespace)
         )
-        if ID_TOKEN_RE.search(visible_text) or GAP_TOKEN_RE.search(visible_text):
-            errors.append(f"{path.relative_to(ROOT)} exposes raw model IDs in the primary visible labels")
+        if tier == "primary" and (ID_TOKEN_RE.search(visible_text) or GAP_TOKEN_RE.search(visible_text)):
+            errors.append(f"{path.relative_to(ROOT)} exposes raw model IDs in primary visible labels")
+        metadata_lower = metadata_text.lower()
+        if f"view tier: {tier}" not in metadata_lower or view["audience"].lower() not in metadata_lower:
+            errors.append(f"{path.relative_to(ROOT)} metadata omits declared tier or audience")
+        if tier == "primary":
+            width = int(root.get("width", "0"))
+            height = int(root.get("height", "0"))
+            if width < 1200 or height < 600:
+                errors.append(f"{path.relative_to(ROOT)} has unexpectedly small primary-view dimensions")
+            sizes = [int(value) for value in re.findall(r"font-size:\s*(\d+)px", path.read_text(encoding="utf-8-sig"))]
+            if not sizes or min(sizes) < 15:
+                errors.append(f"{path.relative_to(ROOT)} uses primary-view text below 15 px")
 
     readme = (ROOT / "README.md").read_text(encoding="utf-8-sig")
-    architecture = (ROOT / "architecture.md").read_text(encoding="utf-8-sig")
-    for required_link in (
-        "reports/figures/project-in-one-picture.svg",
-        "reports/figures/engineering-status.svg",
-        "analysis/results/feasible-region.svg",
+    architecture = (ROOT / "docs" / "architecture.md").read_text(encoding="utf-8-sig")
+    feasibility = (ROOT / "docs" / "feasibility.md").read_text(encoding="utf-8-sig")
+    engineering_status = (ROOT / "docs" / "engineering-status.md").read_text(encoding="utf-8-sig")
+    if "docs/figures/project-in-one-picture.svg" not in readme:
+        errors.append("README.md lacks the primary system-concept figure")
+    if len(re.findall(r"!\[[^\]]*\]\([^)]*\)", readme)) != 1:
+        errors.append("README.md must contain exactly one hero figure")
+    for relative in (
+        "figures/physical-architecture.svg",
+        "figures/command-data-flow.svg",
+        "figures/degraded-behavior.svg",
     ):
-        if required_link not in readme:
-            errors.append(f"README.md lacks primary communication figure {required_link}")
-    for relative in generated:
         if relative not in architecture:
-            errors.append(f"architecture.md does not expose canonical figure {relative}")
-    if "analysis/results/feasible-region.svg" not in architecture:
-        errors.append("architecture.md lacks the high-level feasibility result")
-    orientation = readme.split("## Technical detail and traceability", 1)[0]
-    if ID_TOKEN_RE.search(orientation) or GAP_TOKEN_RE.search(orientation):
-        errors.append("README five-minute orientation exposes raw architecture IDs before meaning")
+            errors.append(f"docs/architecture.md lacks primary communication figure {relative}")
+    if "../analysis/results/feasible-region.svg" not in feasibility:
+        errors.append("docs/feasibility.md lacks the primary feasibility result")
+    if "figures/engineering-status.svg" not in engineering_status:
+        errors.append("docs/engineering-status.md lacks the primary engineering-status figure")
+    if ID_TOKEN_RE.search(readme) or GAP_TOKEN_RE.search(readme):
+        errors.append("README orientation exposes raw architecture identifiers")
     return errors
 
 
@@ -699,11 +985,8 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
             elif ID_RE.fullmatch(reference) and reference not in definitions:
                 errors.append(f"{ref_path} references undefined ID {reference}")
 
-    for markdown in [
-        ROOT / "README.md", ROOT / "architecture.md", ROOT / "trade-studies.md",
-        BASELINE_REPORT, ATLAS_REPORT, OWNER_DECISION_PACKAGE, FEASIBILITY_REPORT,
-        COMMUNICATION_REPORT,
-    ]:
+    active_markdown = [ROOT / "README.md"] + sorted((ROOT / "docs").rglob("*.md"))
+    for markdown in active_markdown:
         if not markdown.exists():
             continue
         text = markdown.read_text(encoding="utf-8-sig")
@@ -711,6 +994,7 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
             token = match.group(0)
             if (
                 token == "TS-XXX"
+                or markdown.name == "requirement-id-migration.md" and LEGACY_REQUIREMENT_ID_RE.fullmatch(token)
                 or text[match.end():].startswith("-*")
                 or text[max(0, match.start() - 4):match.start()] == "GAP-"
             ):
@@ -735,29 +1019,33 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
     decision_values = set(system["enumerations"]["decision_status"])
 
     if system.get("authority") != {"rule": AUTHORITY_RULE}:
-        errors.append("system.yaml does not contain the single required authority rule")
+        errors.append("model/system.yaml does not contain the single required authority rule")
     expected_catalogs = {
         "sources": ".seal/sources.yaml", "proof": ".seal/proof.yaml",
         "architecture": "model/architecture.yaml", "assurance": "model/assurance.yaml",
         "traceability": "model/traceability.yaml",
     }
     if system.get("catalogs") != expected_catalogs:
-        errors.append("system.yaml catalog map does not match the consolidated authority model")
-    if system.get("generated_reports") != ["reports/baseline.md", "reports/architecture-views.md"]:
-        errors.append("system.yaml must name exactly the two generated reports")
+        errors.append("model/system.yaml catalog map does not match the consolidated authority model")
+    expected_generated_reports = [
+        "docs/reference/baseline.md", "docs/reference/architecture-atlas.md",
+        "docs/reference/requirements.md", "docs/reference/interfaces.md",
+        "docs/reference/traceability.md", "docs/reference/verification.md",
+        "docs/reference/decisions-and-gaps.md",
+    ]
+    if system.get("generated_reports") != expected_generated_reports:
+        errors.append("model/system.yaml generated-reference manifest is incomplete or out of order")
     expected_human_views = [
-        "README.md", "architecture.md", "trade-studies.md",
-        "reports/architecture-decision-target-package.md",
-        "reports/feasibility-analysis.md",
-        "reports/architecture-communication-pass.md",
+        "README.md", "docs/architecture.md", "docs/feasibility.md",
+        "docs/engineering-status.md", "docs/reference/README.md",
     ]
     if system.get("human_readable_views") != expected_human_views:
-        errors.append("system.yaml must name the six primary human-readable documents")
+        errors.append("model/system.yaml must name the orientation, primary narrative, and reference index")
 
     if system.get("status") != "baseline_candidate_not_approved":
         errors.append("baseline status must remain baseline_candidate_not_approved")
-    if system.get("model_version") != "0.8.0-baseline-candidate":
-        errors.append("model version must match the current 0.8.0 semantic baseline")
+    if system.get("model_version") != "0.9.0-baseline-candidate":
+        errors.append("model version must match the 0.9.0 identifier-migration baseline candidate")
     if system.get("baseline", {}).get("approval_state") != "not_approved":
         errors.append("technical baseline approval must remain not_approved")
     if sources.get("baseline_status") != "candidate_not_approved" or proof.get("baseline_status") != "candidate_not_approved":
@@ -782,8 +1070,8 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
     }
     if internal_verification != expected_internal_verification:
         errors.append("internal verification work-package disposition or approval boundary changed")
-    expected_current_review = {
-        "model_version": system["model_version"],
+    expected_latest_review = {
+        "model_version": "0.8.0-baseline-candidate",
         "review_status": "executed_not_owner_accepted",
         "review_date": "2026-08-11",
         "source_refs": ["SRC-DEC-006"],
@@ -798,8 +1086,8 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
         "safety_approval": "not_approved",
         "external_interface_conformance": "not_established",
     }
-    if system.get("current_model_review") != expected_current_review:
-        errors.append("current-model review record or its non-approval boundary changed")
+    if system.get("latest_recorded_model_review") != expected_latest_review:
+        errors.append("latest recorded model review or its non-approval boundary changed")
 
     reconciliation = architecture.get("configuration_reconciliation")
     if not isinstance(reconciliation, dict):
@@ -990,8 +1278,8 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
         classification = review.get("classification")
         if classification not in freshness_values:
             errors.append(f"{claim_id} has invalid freshness-review classification")
-        if review.get("reviewed_model_version") != system["model_version"]:
-            errors.append(f"{claim_id} freshness review does not identify the current model version")
+        if review.get("reviewed_model_version") != system["latest_recorded_model_review"]["model_version"]:
+            errors.append(f"{claim_id} freshness review does not identify the latest recorded review version")
         if classification == "CURRENT_MODEL_CLAIM_REVIEWED":
             if not review.get("evidence_ids"):
                 errors.append(f"{claim_id} current-model freshness review lacks evidence")
@@ -1142,13 +1430,40 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
 
     classifications = set(system["enumerations"]["requirement_classification"])
     readiness_values = set(system["enumerations"]["verification_readiness"])
-    requirement_ids = {item["id"] for item in assurance["requirements"]}
+    requirements = assurance["requirements"]
+    deferred_topics = assurance.get("deferred_topics", [])
+    requirement_ids = {item["id"] for item in requirements}
+    deferred_topic_ids = {item["id"] for item in deferred_topics}
+    expected_requirement_ids = {f"REQ-{number:03d}" for number in range(1, 24)}
+    expected_deferred_topic_ids = {f"DEF-{number:03d}" for number in range(1, 6)}
+    if requirement_ids != expected_requirement_ids or len(requirements) != 23:
+        errors.append("active requirements must be exactly REQ-001 through REQ-023")
+    if deferred_topic_ids != expected_deferred_topic_ids or len(deferred_topics) != 5:
+        errors.append("deferred topics must be exactly DEF-001 through DEF-005")
+    for catalog_name in ("system", "architecture", "assurance", "traceability", "sources", "proof"):
+        serialized = json.dumps(catalogs[catalog_name], sort_keys=True)
+        match = LEGACY_REQUIREMENT_ID_RE.search(serialized)
+        if match:
+            errors.append(f"{catalog_name} contains prohibited legacy requirement ID {match.group(0)}")
     quality_audits = assurance.get("requirement_quality_audit", [])
     audit_ids = [item.get("requirement_id") for item in quality_audits]
     if set(audit_ids) != requirement_ids or len(audit_ids) != len(set(audit_ids)):
         errors.append("requirement quality audit must contain exactly one entry for every requirement")
     audit_by_requirement = {item.get("requirement_id"): item for item in quality_audits}
-    for requirement in assurance["requirements"]:
+    requirement_names: set[str] = set()
+    for requirement in requirements:
+        if not REQUIREMENT_ID_RE.fullmatch(requirement.get("id", "")):
+            errors.append(f"{requirement.get('id')} does not use the neutral REQ-NNN scheme")
+        display_name = requirement.get("display_name")
+        if not isinstance(display_name, str) or not display_name.strip():
+            errors.append(f"{requirement['id']} lacks a human-readable display_name")
+        elif display_name.casefold() in requirement_names:
+            errors.append(f"duplicate requirement display_name {display_name!r}")
+        else:
+            requirement_names.add(display_name.casefold())
+        for field in ("text", "classification", "applicable_configurations", "verification_ids"):
+            if not requirement.get(field):
+                errors.append(f"{requirement['id']} lacks required field {field}")
         if requirement.get("classification") not in classifications:
             errors.append(f"{requirement['id']} has invalid requirement classification")
         if not requirement.get("upstream_refs") and not requirement.get("provenance_gap"):
@@ -1164,10 +1479,32 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
             if not isinstance(governance, dict) or not required_tbd_fields.issubset(governance):
                 errors.append(f"{requirement['id']} has an ungoverned substantive TBD")
         if not requirement.get("allocation_refs") and audit.get("quality_result") not in {
-            "cross_cutting_constraint", "scope_control", "deferred_topic",
-            "honest_coverage_gap", "external_authority_topic", "pass_with_open_tbd",
+            "cross_cutting_constraint", "scope_control", "pass_with_open_tbd",
         }:
             errors.append(f"{requirement['id']} lacks downward allocation or a semantic exception")
+
+    deferred_audits = assurance.get("deferred_topic_quality_audit", [])
+    deferred_audit_ids = [item.get("deferred_topic_id") for item in deferred_audits]
+    if set(deferred_audit_ids) != deferred_topic_ids or len(deferred_audit_ids) != len(set(deferred_audit_ids)):
+        errors.append("deferred-topic quality audit must contain exactly one entry per deferred topic")
+    deferred_names: set[str] = set()
+    for topic in deferred_topics:
+        if not DEFERRED_TOPIC_ID_RE.fullmatch(topic.get("id", "")):
+            errors.append(f"{topic.get('id')} does not use the DEF-NNN scheme")
+        display_name = topic.get("display_name")
+        if not isinstance(display_name, str) or not display_name.strip():
+            errors.append(f"{topic['id']} lacks a human-readable display_name")
+        elif display_name.casefold() in deferred_names:
+            errors.append(f"duplicate deferred-topic display_name {display_name!r}")
+        else:
+            deferred_names.add(display_name.casefold())
+        for field in ("text", "classification", "applicable_configurations", "decision_status"):
+            if not topic.get(field):
+                errors.append(f"{topic['id']} lacks required field {field}")
+        if topic.get("classification") not in classifications:
+            errors.append(f"{topic['id']} has invalid deferred-topic classification")
+        if topic.get("decision_status") != "not_applicable":
+            errors.append(f"{topic['id']} must remain explicitly non-requirement scope")
 
     execution_values = set(system["enumerations"]["verification_execution_status"])
     evidence_by_id = {item["id"]: item for item in proof["evidence"]}
@@ -1196,18 +1533,19 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
     ):
         if boundary not in acceptance_text:
             errors.append(f"EVD-012 does not preserve the {boundary} acceptance boundary")
-    current_review_evidence = evidence_by_id.get("EVD-013", {})
-    if current_review_evidence.get("source_refs", [None])[0] != "SRC-DEC-006":
+    latest_review = system["latest_recorded_model_review"]
+    latest_review_evidence = evidence_by_id.get("EVD-013", {})
+    if latest_review_evidence.get("source_refs", [None])[0] != "SRC-DEC-006":
         errors.append("EVD-013 must derive from SRC-DEC-006")
-    if current_review_evidence.get("reviewed_model_version") != system["model_version"]:
-        errors.append("EVD-013 must identify the current model version")
-    if current_review_evidence.get("evidence_level") != "model_level_only":
+    if latest_review_evidence.get("reviewed_model_version") != latest_review["model_version"]:
+        errors.append("EVD-013 must preserve the latest recorded model-review version")
+    if latest_review_evidence.get("evidence_level") != "model_level_only":
         errors.append("EVD-013 must remain model-level evidence only")
-    if set(current_review_evidence.get("verification_ids", [])) != {
+    if set(latest_review_evidence.get("verification_ids", [])) != {
         "VER-001", "VER-002", "VER-003", "VER-004", "VER-005", "VER-006", "VER-007"
     }:
         errors.append("EVD-013 must record the full current internal model-review cycle")
-    review_limitations = " ".join(current_review_evidence.get("limitations", [])).lower()
+    review_limitations = " ".join(latest_review_evidence.get("limitations", [])).lower()
     for boundary in (
         "not owner-accepted", "does not establish physical", "does not approve dec-002 through dec-005",
     ):
@@ -1228,15 +1566,15 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
         if execution_status not in execution_values:
             errors.append(f"{verification['id']} has invalid execution status")
         if execution_status in {"executed_pass", "executed_with_open_gaps"}:
-            if not verification.get("execution_date") or verification.get("reviewed_model_version") != system["model_version"]:
-                errors.append(f"{verification['id']} executed review lacks current date/version metadata")
+            if not verification.get("execution_date") or verification.get("reviewed_model_version") != latest_review["model_version"]:
+                errors.append(f"{verification['id']} executed review lacks latest recorded date/version metadata")
             if not verification.get("evidence_ids"):
                 errors.append(f"{verification['id']} executed review lacks evidence")
             for evidence_id in verification.get("evidence_ids", []):
                 evidence = evidence_by_id.get(evidence_id, {})
                 if verification["id"] not in evidence.get("verification_ids", []):
                     errors.append(f"{verification['id']} evidence {evidence_id} does not record its execution")
-                if evidence.get("reviewed_model_version") != system["model_version"]:
+                if evidence.get("reviewed_model_version") != latest_review["model_version"]:
                     errors.append(f"{verification['id']} evidence {evidence_id} targets another model version")
                 if execution_status == "executed_pass" and "fail" in evidence.get("result", "").lower():
                     errors.append(f"{verification['id']} is executed_pass but {evidence_id} reports failure")
@@ -1259,7 +1597,7 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
         item["requirement_id"] for item in quality_audits
         if item.get("verification_readiness") == "physical_evidence_required"
     }
-    for requirement in assurance["requirements"]:
+    for requirement in requirements:
         if requirement["id"] in physical_requirement_ids and any(
             requirement.get(field) is True for field in ("verified", "satisfied", "compliant")
         ):
@@ -1372,10 +1710,10 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
                 errors.append(f"current function {function['id']} lacks resource allocation")
     required_relationships = {
         ("HAZ-004", "mitigated_by", "CTL-001"),
-        ("CTL-001", "implemented_by", "REQ-FUN-006"),
-        ("CTL-001", "implemented_by", "REQ-SAF-002"),
+        ("CTL-001", "implemented_by", "REQ-006"),
+        ("CTL-001", "implemented_by", "REQ-019"),
         ("HAZ-008", "mitigated_by", "CTL-005"),
-        ("CTL-005", "implemented_by", "REQ-IFC-004"),
+        ("CTL-005", "implemented_by", "REQ-017"),
     }
     for relation in required_relationships:
         if relation not in relationships or relationships[relation].get("gap"):
@@ -1411,7 +1749,7 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
     recovered = next(item for item in architecture["configurations"] if item["id"] == "CFG-REC")
     if "descriptive evidence" not in recovered.get("boundary_semantics", "").lower():
         errors.append("CFG-REC lacks descriptive-evidence boundary semantics")
-    for record in assurance["requirements"] + assurance["controls"] + architecture["interfaces"] + architecture["modes"]:
+    for record in requirements + deferred_topics + assurance["controls"] + architecture["interfaces"] + architecture["modes"]:
         if "CFG-REC" in record.get("applicable_configurations", []):
             errors.append(f"{record['id']} incorrectly applies proposed design semantics to CFG-REC")
     ts_009 = next(item for item in assurance["trade_studies"] if item["id"] == "TS-009")
@@ -1439,13 +1777,13 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
     component = next(item for item in architecture["components"] if item["id"] == "CMP-COM-02")
     if component.get("name") != "Antenna physical-resource envelope":
         errors.append("CMP-COM-02 display name changed")
-    req_ifc_003 = next(item for item in assurance["requirements"] if item["id"] == "REQ-IFC-003")
+    req_ifc_003 = next(item for item in requirements if item["id"] == "REQ-016")
     expected_requirement = (
         "The platform-to-payload interface shall be limited to power (IFC-INT-003) "
         "and mechanical retention (IFC-INT-007)."
     )
     if req_ifc_003.get("text") != expected_requirement:
-        errors.append("REQ-IFC-003 wording changed")
+        errors.append("REQ-016 wording changed")
 
     expected_completion_interfaces = {
         "IFC-INT-011": ("CMP-PWR-01", "CMP-PWR-02", "a_to_b"),
@@ -1484,8 +1822,8 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
         if decision_by_id.get(decision_id, {}).get("decision_status") != "proposed":
             errors.append(f"{decision_id} must remain proposed after work-package acceptance")
         review = decision_by_id.get(decision_id, {}).get("verification_review", {})
-        if review.get("reviewed_model_version") != system["model_version"] or review.get("evidence_ids") != ["EVD-013"]:
-            errors.append(f"{decision_id} lacks a current non-approval consistency review")
+        if review.get("reviewed_model_version") != latest_review["model_version"] or review.get("evidence_ids") != ["EVD-013"]:
+            errors.append(f"{decision_id} lacks the latest recorded non-approval consistency review")
     std_decision = decision_by_id["DEC-002"]
     if std_decision.get("decision_status") != "proposed" or "GAP-STD-001" not in gap_codes:
         errors.append("DEC-002 / GAP-STD-001 standards decision must remain unresolved")
@@ -1511,22 +1849,27 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
         if (ROOT / relative).exists():
             errors.append(f"retired architecture file still exists: {relative}")
     model_files = {path.name for path in (ROOT / "model").glob("*.yaml")}
-    if model_files != {"architecture.yaml", "assurance.yaml", "traceability.yaml"}:
+    if model_files != {"system.yaml", "architecture.yaml", "assurance.yaml", "traceability.yaml"}:
         errors.append(f"model catalog set is not consolidated: {sorted(model_files)}")
-    report_files = {path.name for path in (ROOT / "reports").glob("*.md")}
-    expected_report_files = {
-        "architecture-decision-target-package.md", "architecture-views.md", "baseline.md",
-        "feasibility-analysis.md", "architecture-communication-pass.md",
+    required_reference_files = {
+        "README.md", "requirements.md", "interfaces.md", "traceability.md",
+        "verification.md", "decisions-and-gaps.md", "trade-studies.md",
+        "feasibility-analysis.md", "architecture-atlas.md", "baseline.md",
+        "requirement-id-migration.md",
     }
-    if report_files != expected_report_files:
-        errors.append(f"report set is not consolidated: {sorted(report_files)}")
+    reference_files = {path.name for path in (ROOT / "docs" / "reference").glob("*.md")}
+    if not required_reference_files.issubset(reference_files):
+        errors.append(f"technical reference layer is incomplete: {sorted(reference_files)}")
     script_files = {path.name for path in (ROOT / "scripts").glob("*.py")}
     if script_files != {
         "generate-communication-views.py", "generate-mermaid-views.py", "validate-baseline.py",
     }:
         errors.append(f"supporting Python toolchain is not minimal: {sorted(script_files)}")
 
-    for path in [BASELINE_REPORT, ATLAS_REPORT]:
+    for path in [
+        BASELINE_REPORT, ATLAS_REPORT, REQUIREMENTS_REFERENCE, INTERFACES_REFERENCE,
+        TRACEABILITY_REFERENCE, VERIFICATION_REFERENCE, DECISIONS_REFERENCE,
+    ]:
         if not path.exists():
             errors.append(f"generated report missing: {path.relative_to(ROOT)}")
         elif "GENERATED VIEW" not in "\n".join(path.read_text(encoding="utf-8-sig").splitlines()[:6]):
@@ -1546,7 +1889,7 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
         "propulsion association",
         "MODE_005 --> MODE_001: SCN-002 transition",
         'SCN_001 -->|"progression"| SCN_002',
-        'TS_006 -->|"defines payload envelope"| REQ_PER_004',
+        'TS_006 -->|"defines payload envelope"| REQ_012',
         "future relationship unresolved",
     )
     for semantic_literal in forbidden_renderer_semantics:
@@ -1565,32 +1908,33 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
 
     readme_text = (ROOT / "README.md").read_text(encoding="utf-8-sig")
     required_readme_sections = (
-        "## The project in one picture",
-        "## What this project is",
-        "## How the system works",
-        "## What is on the drone",
-        "## What the project learned",
-        "## Engineering status at a glance",
-        "## What comes next",
-        "## Technical detail and traceability",
+        "## What the system does",
+        "## What the study found",
+        "## Engineering status",
+        "## Explore the engineering",
+        "## Reproduce and validate",
+        "## Scope note",
     )
     section_positions = [readme_text.find(section) for section in required_readme_sections]
     if any(position < 0 for position in section_positions) or section_positions != sorted(section_positions):
-        errors.append("README first-five-minute orientation sections are missing or out of order")
+        errors.append("README orientation sections are missing or out of order")
+    word_count = len(re.findall(r"\b[\w’-]+\b", re.sub(r"```.*?```", "", readme_text, flags=re.DOTALL)))
+    if not 500 <= word_count <= 1000:
+        errors.append(f"README orientation length is {word_count} words; expected approximately 600-900")
     workflow = ROOT / ".github" / "workflows" / "check.yml"
     workflow_text = workflow.read_text(encoding="utf-8-sig") if workflow.exists() else ""
     if not re.search(r"python-version:\s*['\"]3\.12['\"]", workflow_text) or "python scripts/validate-baseline.py --check-generated" not in workflow_text:
         errors.append("CI workflow no longer runs the pinned generated-baseline validation")
     errors.extend(validate_mermaid_documents(set(definitions), gap_codes))
     errors.extend(validate_communication_figures(catalogs, set(definitions), gap_codes))
+    errors.extend(validate_markdown_links())
 
     implementation_patterns = [
         re.compile(r"\b\d+(?:\.\d+)?\s*(?:kHz|MHz|GHz|dBm|mW)\b", re.IGNORECASE),
         re.compile(r"\b(?:QPSK|QAM|OFDM|FHSS|DSSS)\b", re.IGNORECASE),
     ]
     guarded = [
-        ROOT / "system.yaml", ROOT / "model", ROOT / ".seal",
-        ROOT / "README.md", ROOT / "architecture.md", ROOT / "trade-studies.md", ROOT / "reports",
+        ROOT / "model", ROOT / ".seal", ROOT / "README.md", ROOT / "docs",
     ]
     for root in guarded:
         paths = [root] if root.is_file() else list(root.rglob("*"))
@@ -1615,9 +1959,17 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
 
 def generated_outputs_current(catalogs: dict[str, dict[str, Any]]) -> list[str]:
     errors: list[str] = []
-    expected_baseline = render_baseline(catalogs)
-    if not BASELINE_REPORT.exists() or BASELINE_REPORT.read_text(encoding="utf-8-sig") != expected_baseline:
-        errors.append("reports/baseline.md is stale; run --write-reports")
+    outputs = {
+        BASELINE_REPORT: render_baseline(catalogs),
+        REQUIREMENTS_REFERENCE: render_requirements(catalogs),
+        INTERFACES_REFERENCE: render_interfaces(catalogs),
+        TRACEABILITY_REFERENCE: render_traceability(catalogs),
+        VERIFICATION_REFERENCE: render_verification(catalogs),
+        DECISIONS_REFERENCE: render_decisions_and_gaps(catalogs),
+    }
+    for path, expected in outputs.items():
+        if not path.exists() or path.read_text(encoding="utf-8-sig") != expected:
+            errors.append(f"{path.relative_to(ROOT)} is stale; run --write-reports")
     return errors
 
 
@@ -1641,8 +1993,17 @@ def main() -> int:
         return 1
 
     if args.write_reports:
-        BASELINE_REPORT.parent.mkdir(parents=True, exist_ok=True)
-        BASELINE_REPORT.write_text(render_baseline(catalogs), encoding="utf-8", newline="\n")
+        reference_outputs = {
+            BASELINE_REPORT: render_baseline(catalogs),
+            REQUIREMENTS_REFERENCE: render_requirements(catalogs),
+            INTERFACES_REFERENCE: render_interfaces(catalogs),
+            TRACEABILITY_REFERENCE: render_traceability(catalogs),
+            VERIFICATION_REFERENCE: render_verification(catalogs),
+            DECISIONS_REFERENCE: render_decisions_and_gaps(catalogs),
+        }
+        for path, content in reference_outputs.items():
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(content, encoding="utf-8", newline="\n")
         generated = subprocess.run(
             [sys.executable, str(VIEW_GENERATOR)], cwd=ROOT,
             capture_output=True, text=True, check=False,
@@ -1665,7 +2026,7 @@ def main() -> int:
                 print(communication_generated.stderr.strip())
             print("MODEL-INVALID: communication-view generation failed")
             return 1
-        print("GENERATED-BASELINE-WRITTEN: reports/baseline.md")
+        print(f"GENERATED-REFERENCE-VIEWS-WRITTEN: {len(reference_outputs) + 1} documents")
 
     errors, active_gaps, deferrals = validate(catalogs)
     errors.extend(generated_outputs_current(catalogs))

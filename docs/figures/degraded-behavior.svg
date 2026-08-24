@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
 <title id="title">What Happens If the Relay Degrades?</title>
 <desc id="desc">How does the architecture distinguish payload degradation from loss of platform control?</desc>
-<metadata>Generated from authoritative model records: SCN-007, MODE-001, MODE-002, MODE-003, MODE-004, MODE-005, REQ-FUN-007, REQ-FUN-008, GAP-HAZ-001, GAP-VER-001</metadata>
+<metadata>View tier: primary. Audience: outsider, project owner, and systems engineer. Generated from authoritative model records: SCN-007, MODE-001, MODE-002, MODE-003, MODE-004, MODE-005, REQ-007, REQ-008, GAP-HAZ-001, GAP-VER-001</metadata>
 <defs>
   <marker id="arrow-neutral" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#435269"/></marker>
   <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#245f9e"/></marker>
@@ -12,11 +12,11 @@
   text { font-family: Arial, Helvetica, sans-serif; fill: #172033; }
   .title { font-size: 30px; font-weight: 700; }
   .subtitle { font-size: 17px; fill: #536174; }
-  .section { font-size: 19px; font-weight: 700; }
+  .section { font-size: 20px; font-weight: 700; }
   .box-title { font-size: 19px; font-weight: 700; }
-  .body { font-size: 16px; }
-  .small { font-size: 14px; fill: #536174; }
-  .edge-label { font-size: 15px; font-weight: 700; paint-order: stroke; stroke: #ffffff; stroke-width: 5px; stroke-linejoin: round; }
+  .body { font-size: 17px; }
+  .small { font-size: 15px; fill: #536174; }
+  .edge-label { font-size: 16px; font-weight: 700; paint-order: stroke; stroke: #ffffff; stroke-width: 5px; stroke-linejoin: round; }
   .box { stroke: #435269; stroke-width: 2; fill: #f5f7fa; }
   .box.blue { fill: #e9f2ff; stroke: #245f9e; }
   .box.green { fill: #eaf7f0; stroke: #247a52; }
@@ -27,10 +27,10 @@
   .platform { fill: #f4f7fb; stroke: #26364d; stroke-width: 2.5; }
   .chip { fill: #ffffff; stroke: #8a97a8; stroke-width: 1.5; }
   .chip.blue { fill: #e9f2ff; stroke: #245f9e; }
-  .chip-title { font-size: 15px; font-weight: 700; }
+  .chip-title { font-size: 16px; font-weight: 700; }
   .payload-black { fill: #26364d; stroke: #172033; stroke-width: 3; }
   .payload-title { font-size: 20px; font-weight: 700; fill: #ffffff; }
-  .payload-body { font-size: 15px; fill: #eef3f8; }
+  .payload-body { font-size: 16px; fill: #eef3f8; }
   .current-zone { fill: #f2f7ff; stroke: #245f9e; stroke-width: 2.5; }
   .boundary { fill: #ffffff; stroke: #26364d; stroke-width: 3; }
   .group { fill: #f8fafc; stroke: #8a97a8; stroke-width: 1.5; }
@@ -58,30 +58,30 @@
 <text x="785.0" y="191" class="box-title" text-anchor="middle"><tspan x="785.0" dy="0">Relay Degraded</tspan></text>
 <text x="713" y="221" class="body" text-anchor="start"><tspan x="713" dy="0">Relay service impaired</tspan></text>
 <polygon points="1010,145 1140,206 1010,267 880,206" class="box blue"/>
-<text x="1010" y="198" class="box-title" text-anchor="middle"><tspan x="1010" dy="0">Platform control</tspan><tspan x="1010" dy="22">still available?</tspan></text>
+<text x="1010" y="198" class="box-title" text-anchor="middle"><tspan x="1010" dy="0">Platform control</tspan><tspan x="1010" dy="23">still available?</tspan></text>
+<text x="225" y="137" class="edge-label" text-anchor="middle"><tspan x="225" dy="0">launch</tspan></text>
+<text x="440" y="137" class="edge-label" text-anchor="middle"><tspan x="440" dy="0">station reached</tspan></text>
+<text x="670" y="137" class="edge-label" text-anchor="middle"><tspan x="670" dy="0">relay degrades</tspan></text>
 <line x1="200" y1="206" x2="250" y2="206" class="arrow blue" marker-end="url(#arrow-blue)"/>
-<text x="225.0" y="197.0" class="edge-label" text-anchor="middle">launch</text>
 <line x1="415" y1="206" x2="465" y2="206" class="arrow blue" marker-end="url(#arrow-blue)"/>
-<text x="440.0" y="197.0" class="edge-label" text-anchor="middle">station reached</text>
 <line x1="645" y1="206" x2="695" y2="206" class="arrow amber" marker-end="url(#arrow-amber)"/>
-<text x="670.0" y="197.0" class="edge-label" text-anchor="middle">relay degrades</text>
 <line x1="875" y1="206" x2="880" y2="206" class="arrow blue" marker-end="url(#arrow-blue)"/>
 <rect x="900" y="350" width="235" height="105" rx="14" class="box blue"/>
 <text x="1017.5" y="381" class="box-title" text-anchor="middle"><tspan x="1017.5" dy="0">Return / Recovery</tspan></text>
-<text x="918" y="411" class="body" text-anchor="start"><tspan x="918" dy="0">Recovery intent only</tspan><tspan x="918" dy="22">Criteria remain unresolved</tspan></text>
+<text x="918" y="411" class="body" text-anchor="start"><tspan x="918" dy="0">Recovery intent only</tspan><tspan x="918" dy="23">Criteria remain unresolved</tspan></text>
 <rect x="585" y="500" width="270" height="110" rx="14" class="box red"/>
 <text x="720.0" y="531" class="box-title" text-anchor="middle"><tspan x="720.0" dy="0">Unresolved Safety Gap</tspan></text>
-<text x="603" y="561" class="body" text-anchor="start"><tspan x="603" dy="0">No modeled response for</tspan><tspan x="603" dy="22">impaired platform control</tspan></text>
+<text x="603" y="561" class="body" text-anchor="start"><tspan x="603" dy="0">No modeled response for</tspan><tspan x="603" dy="23">impaired platform control</tspan></text>
 <line x1="1035" y1="267" x2="1035" y2="350" class="arrow blue" marker-end="url(#arrow-blue)"/>
 <text x="1035.0" y="320" class="edge-label" text-anchor="middle">YES</text>
-<line x1="985" y1="267" x2="720" y2="500" class="arrow amber" marker-end="url(#arrow-amber)"/>
-<text x="852.5" y="400" class="edge-label" text-anchor="middle">NO / IMPAIRED</text>
-<path d="M 555 252 V 315 H 900" class="arrow blue dashed" marker-end="url(#arrow-blue)"/>
-<text x="720" y="305" class="edge-label" text-anchor="middle"><tspan x="720" dy="0">normal end / low battery</tspan></text>
+<path d="M 985 267 L 985 290 L 720 290 L 720 500" class="arrow amber" marker-end="url(#arrow-amber)"/>
+<text x="845" y="282" class="edge-label" text-anchor="middle"><tspan x="845" dy="0">NO / IMPAIRED</tspan></text>
+<path d="M 555 252 L 555 325 L 875 325 L 875 402 L 900 402" class="arrow blue dashed" marker-end="url(#arrow-blue)"/>
+<text x="700" y="317" class="edge-label" text-anchor="middle"><tspan x="700" dy="0">normal end / low battery</tspan></text>
 <path d="M 1018 455 V 640 H 20 V 206 H 35" class="arrow blue" marker-end="url(#arrow-blue)"/>
 <text x="555" y="630" class="edge-label" text-anchor="middle"><tspan x="555" dy="0">land, recover, and return to Ground Safe</tspan></text>
 <text x="40" y="405" class="section" text-anchor="start"><tspan x="40" dy="0">Defined:</tspan></text>
-<text x="40" y="435" class="body" text-anchor="start"><tspan x="40" dy="0">• Independent platform control</tspan><tspan x="40" dy="22">• Degraded and recovery states</tspan><tspan x="40" dy="22">• Normal recovery path</tspan></text>
+<text x="40" y="435" class="body" text-anchor="start"><tspan x="40" dy="0">• Independent platform control</tspan><tspan x="40" dy="23">• Degraded and recovery states</tspan><tspan x="40" dy="23">• Normal recovery path</tspan></text>
 <text x="40" y="535" class="section" text-anchor="start"><tspan x="40" dy="0">Not yet defined:</tspan></text>
-<text x="40" y="565" class="body" text-anchor="start"><tspan x="40" dy="0">• Detection thresholds</tspan><tspan x="40" dy="22">• Recovery criteria and physical behavior</tspan><tspan x="40" dy="22">• Safety acceptance evidence</tspan></text>
+<text x="40" y="565" class="body" text-anchor="start"><tspan x="40" dy="0">• Detection thresholds</tspan><tspan x="40" dy="23">• Recovery criteria and physical behavior</tspan><tspan x="40" dy="23">• Safety acceptance evidence</tspan></text>
 </svg>

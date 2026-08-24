@@ -21,11 +21,11 @@ from typing import Any, Iterable
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT = ROOT / "reports" / "architecture-views.md"
+OUTPUT = ROOT / "docs" / "reference" / "architecture-atlas.md"
 PINNED_MERMAID_CLI = "11.4.1"
 
 CATALOG_PATHS = {
-    "system": ROOT / "system.yaml",
+    "system": ROOT / "model" / "system.yaml",
     "sources": ROOT / ".seal" / "sources.yaml",
     "proof": ROOT / ".seal" / "proof.yaml",
     "architecture": ROOT / "model" / "architecture.yaml",
@@ -51,13 +51,13 @@ SHORT_LABELS = {
     "FUN-CFG-01": "Establish configuration and readiness",
     "FUN-HLT-01": "Monitor and report health/status",
     "IFC-EXT-007": "Health/status return",
-    "REQ-FUN-001": "Relay outbound traffic",
-    "REQ-FUN-006": "Inhibit arming in Ground Safe",
-    "REQ-FUN-007": "Remain controllable after payload loss",
-    "REQ-FUN-008": "Provide mode and health/status",
-    "REQ-IFC-004": "Retain payload under flight loads",
-    "REQ-SAF-001": "Protect and retain battery",
-    "REQ-SAF-002": "Show armed state to operator",
+    "REQ-001": "Relay outbound traffic",
+    "REQ-006": "Inhibit arming in Ground Safe",
+    "REQ-007": "Recover after payload loss",
+    "REQ-008": "Provide mode and health/status",
+    "REQ-017": "Retain payload under flight loads",
+    "REQ-018": "Protect and retain battery",
+    "REQ-019": "Show armed state to operator",
     "VER-009": "External conformance verification",
     "DEC-003": "Select HAZ-001 safety objective",
     "DEC-004": "Accept health/status architecture",
@@ -106,7 +106,8 @@ def record_name(record: dict[str, Any]) -> str:
     if record.get("id") in SHORT_LABELS:
         return SHORT_LABELS[record["id"]]
     return clean_label(
-        record.get("name")
+        record.get("display_name")
+        or record.get("name")
         or record.get("title")
         or record.get("subject")
         or record.get("text")
@@ -149,9 +150,9 @@ def flow_diagram(number: str, title: str, scope: str, body: Iterable[str], note:
     lines = [f"### {number}. {title}", "", f"Configuration scope: `{scope}`."]
     if note:
         lines.extend(["", note])
-    lines.extend(["", "```mermaid", "flowchart LR", f"    %% Configuration scope: {scope}"])
+    lines.extend(["", "<details>", f"<summary>Open {title.lower()} diagram</summary>", "", "```mermaid", "flowchart LR", f"    %% Configuration scope: {scope}"])
     lines.extend(body)
-    lines.extend(["```", ""])
+    lines.extend(["```", "", "</details>", ""])
     return lines
 
 
@@ -159,9 +160,9 @@ def sequence_diagram(number: str, title: str, scope: str, body: Iterable[str], n
     lines = [f"### {number}. {title}", "", f"Configuration scope: `{scope}`."]
     if note:
         lines.extend(["", note])
-    lines.extend(["", "```mermaid", "sequenceDiagram", f"    %% Configuration scope: {scope}"])
+    lines.extend(["", "<details>", f"<summary>Open {title.lower()} diagram</summary>", "", "```mermaid", "sequenceDiagram", f"    %% Configuration scope: {scope}"])
     lines.extend(body)
-    lines.extend(["```", ""])
+    lines.extend(["```", "", "</details>", ""])
     return lines
 
 
@@ -169,9 +170,9 @@ def state_diagram(number: str, title: str, scope: str, body: Iterable[str], note
     lines = [f"### {number}. {title}", "", f"Configuration scope: `{scope}`."]
     if note:
         lines.extend(["", note])
-    lines.extend(["", "```mermaid", "stateDiagram-v2", f"    %% Configuration scope: {scope}"])
+    lines.extend(["", "<details>", f"<summary>Open {title.lower()} diagram</summary>", "", "```mermaid", "stateDiagram-v2", f"    %% Configuration scope: {scope}"])
     lines.extend(body)
-    lines.extend(["```", ""])
+    lines.extend(["```", "", "</details>", ""])
     return lines
 
 
@@ -217,10 +218,10 @@ def edge_for_resource_relationship(relationship: dict[str, Any], *, indent: str 
 def generated_header() -> list[str]:
     return [
         "<!-- GENERATED VIEW: DO NOT EDIT. Run python scripts/generate-mermaid-views.py -->",
-        "# Generated Architecture Views",
+        "# Architecture Atlas",
         "",
         "> **Baseline Candidate - Not Approved.** These diagrams are generated from",
-        "> `system.yaml`, catalogs under `model/`, and `.seal/proof.yaml`. They have no",
+        "> `model/system.yaml`, catalogs under `model/`, and `.seal/proof.yaml`. They have no",
         "> independent architecture authority. Candidate, proposed, deferred, and",
         "> unresolved labels do not imply approval or executed verification.",
         "",
@@ -229,7 +230,7 @@ def generated_header() -> list[str]:
         "only as a descriptive evidence configuration and does not inherit the proposed",
         "`CFG-REP`/`CFG-DOM` resource decomposition.",
         "This report is the ID-rich engineering drill-down. Plain-language canonical",
-        "figures are generated separately under `reports/figures/`.",
+        "figures are generated separately under `docs/figures/`.",
         "",
         "## Configuration and context views",
         "",
@@ -514,7 +515,7 @@ def mode_view(
         "    note right of MODE_003",
         "      Payload function degraded",
         "      Platform control may remain available",
-        "      REQ-FUN-007 [PROPOSED]",
+        "      REQ-007 [PROPOSED]",
         "      Evidence [DEFERRED]",
         "    end note",
     ])
@@ -574,7 +575,7 @@ def degradation_sequence(index: dict[str, dict[str, Any]]) -> list[str]:
         "    Relay-->>Operator: IX-009 / IFC-EXT-007 health/status [PROPOSED]",
         "    Operator->>Relay: IX-001 / IFC-EXT-005 independent platform command",
         "    alt Payload lost and platform remains controllable",
-        "        Note over Payload,Relay: MODE-003 - CTL-004 / REQ-FUN-007 [PROPOSED]",
+        "        Note over Payload,Relay: MODE-003 - CTL-004 / REQ-007 [PROPOSED]",
         "        Relay-->>Operator: transition intent toward MODE-004 Return / Recovery",
         "    else Platform control also impaired",
         "        Note over Relay,Operator: HAZ-001 / GAP-HAZ-001 - no modeled consequence-management behavior",
@@ -614,7 +615,7 @@ def lifecycle_view(
 def health_status_view(index: dict[str, dict[str, Any]]) -> list[str]:
     item_ids = [
         "SCN-007", "IX-009", "IFC-INT-006", "FUN-HLT-01", "CMP-AVN-01",
-        "IFC-EXT-007", "OP-010", "REQ-FUN-008", "VER-005", "VER-008", "VER-009",
+        "IFC-EXT-007", "OP-010", "REQ-008", "VER-005", "VER-008", "VER-009",
     ]
     body = ["    " + node(index, item_id, status_of(index, item_id)) for item_id in item_ids]
     body.extend([
@@ -642,8 +643,8 @@ def design_dependency_view(
     catalogs: dict[str, dict[str, Any]], index: dict[str, dict[str, Any]]
 ) -> list[str]:
     item_ids = [
-        "REQ-PER-004", "TS-006", "TS-001", "REQ-PER-003", "TS-002",
-        "TS-004", "REQ-PER-002", "TS-003", "REQ-PER-001", "GAP-BUDGET-001",
+        "REQ-012", "TS-006", "TS-001", "REQ-011", "TS-002",
+        "TS-004", "REQ-010", "TS-003", "REQ-009", "GAP-BUDGET-001",
     ]
     body = ["    " + node(index, item_id, status_of(index, item_id)) for item_id in item_ids]
     for relationship in catalogs["traceability"]["relationships"]:
@@ -703,12 +704,12 @@ def hazard_view(catalogs: dict[str, dict[str, Any]], index: dict[str, dict[str, 
 def verification_readiness_view(index: dict[str, dict[str, Any]]) -> list[str]:
     body = [
         '    ACCEPTED["PRESERVED OWNER-ACCEPTED REVIEW<br/>0.7.0 / EVD-008 through EVD-012"]',
-        '    EXECUTED["CURRENT MODEL REVIEW<br/>0.8.0 / VER-001 through VER-007<br/>EVD-013 - not owner accepted"]',
+        '    EXECUTED["LATEST RECORDED MODEL REVIEW<br/>0.8.0 / VER-001 through VER-007<br/>EVD-013 - not owner accepted"]',
         '    PASS["EXECUTED PASS<br/>VER-002 / VER-007"]',
         '    OPEN["EXECUTED WITH OPEN GAPS<br/>VER-001 / VER-003 through VER-006"]',
-        '    PHYSICAL["PHYSICAL-EVIDENCE-REQUIRED<br/>REQ-FUN-006 / REQ-FUN-008<br/>GAP-VER-001"]',
-        '    EXTERNAL["EXTERNAL-AUTHORITY-REQUIRED<br/>REQ-FUN-001 / REQ-FUN-004<br/>GAP-IFC-001"]',
-        '    DEFERRED["INTENTIONALLY-DEFERRED<br/>REQ-DEF-001 / REQ-DEF-004"]',
+        '    PHYSICAL["PHYSICAL-EVIDENCE-REQUIRED<br/>REQ-006 / REQ-008<br/>GAP-VER-001"]',
+        '    EXTERNAL["EXTERNAL-AUTHORITY-REQUIRED<br/>REQ-001 / REQ-004<br/>GAP-IFC-001"]',
+        '    DEFERRED["INTENTIONALLY-DEFERRED<br/>DEF-001 / DEF-004"]',
         "    " + node(index, "VER-008", "future physical evidence"),
         "    " + node(index, "VER-009", "external authority required"),
         "    " + node(index, "TS-009", "formal deferral"),
@@ -724,7 +725,7 @@ def verification_readiness_view(index: dict[str, dict[str, Any]]) -> list[str]:
         "What has been checked and what still needs evidence?",
         "CFG-REP / CFG-DOM with project-scope deferrals",
         body,
-        "VER-001 through VER-007 have current 0.8.0 model-level evidence in EVD-013 but no new owner acceptance. EVD-008 through EVD-012 preserve the accepted 0.7.0 work package. VER-008 remains deferred and VER-009 remains blocked; neither review constitutes physical verification, external conformance, safety approval, or technical-baseline approval.",
+        "VER-001 through VER-007 have 0.8.0 model-level evidence in EVD-013 but no owner acceptance. The current 0.9.0 identifier and documentation refactor has no new evidence record. EVD-008 through EVD-012 preserve the accepted 0.7.0 work package. VER-008 remains deferred and VER-009 remains blocked; none of these records constitutes physical verification, external conformance, safety approval, or technical-baseline approval.",
     )
 
 
@@ -732,7 +733,7 @@ def trace_view(index: dict[str, dict[str, Any]]) -> list[str]:
     ids = [
         "NEED-001", "CAP-001", "SCN-003", "OA-004", "IX-002",
         "FUN-REL-01", "CMP-COM-01", "IFC-EXT-001",
-        "REQ-FUN-001", "VER-001", "VER-009", "GAP-IFC-001",
+        "REQ-001", "VER-001", "VER-009", "GAP-IFC-001",
     ]
     body = ["    " + node(index, item_id, status_of(index, item_id)) for item_id in ids]
     body.extend([
@@ -971,11 +972,11 @@ def main() -> int:
             print(f"GENERATED-VIEWS-STALE: run {Path(__file__).name}")
             result = 1
         else:
-            print("GENERATED-VIEWS-CURRENT: reports/architecture-views.md")
+            print("GENERATED-VIEWS-CURRENT: docs/reference/architecture-atlas.md")
     else:
         OUTPUT.parent.mkdir(parents=True, exist_ok=True)
         OUTPUT.write_text(expected, encoding="utf-8", newline="\n")
-        print("GENERATED-VIEWS-WRITTEN: reports/architecture-views.md")
+        print("GENERATED-VIEWS-WRITTEN: docs/reference/architecture-atlas.md")
 
     if args.validate_syntax:
         result = max(result, validate_mermaid_syntax(expected))

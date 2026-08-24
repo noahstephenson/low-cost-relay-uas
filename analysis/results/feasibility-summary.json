@@ -1,6 +1,6 @@
 {
   "analysis_id": "ANL-FEAS-001",
-  "model_version": "0.8.0-baseline-candidate",
+  "model_version": "0.9.0-baseline-candidate",
   "parent_commit": "e7a84d2",
   "approval_state": "analysis_assumptions_not_owner_approved",
   "grid_points": 225,

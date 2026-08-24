@@ -14,6 +14,7 @@ import json
 import sys
 from html import escape
 from pathlib import Path
+from textwrap import wrap
 from typing import Any, Callable, Iterable
 
 
@@ -21,8 +22,19 @@ ROOT = Path(__file__).resolve().parents[1]
 ARCHITECTURE_PATH = ROOT / "model" / "architecture.yaml"
 ASSURANCE_PATH = ROOT / "model" / "assurance.yaml"
 TRACEABILITY_PATH = ROOT / "model" / "traceability.yaml"
-SYSTEM_PATH = ROOT / "system.yaml"
+SYSTEM_PATH = ROOT / "model" / "system.yaml"
 FEASIBILITY_PATH = ROOT / "analysis" / "results" / "feasibility-summary.json"
+
+TYPOGRAPHY = {
+    "title": 30,
+    "subtitle": 17,
+    "section": 20,
+    "box_title": 19,
+    "body": 17,
+    "small": 15,
+    "edge_label": 16,
+}
+SPACING = {"line_gap": 23, "box_padding": 18, "box_radius": 14}
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -58,7 +70,27 @@ def display(index: dict[str, dict[str, Any]], item_id: str) -> str:
     return str(item.get("display_name") or item.get("name") or item.get("statement") or item_id)
 
 
-def lines_text(x: float, y: float, values: Iterable[str], css: str = "body", anchor: str = "start", gap: int = 22) -> str:
+def wrap_text(value: str, max_chars: int) -> list[str]:
+    """Wrap labels deterministically without splitting engineering terms."""
+    lines = wrap(
+        str(value), width=max_chars, break_long_words=False,
+        break_on_hyphens=False, replace_whitespace=True,
+    ) or [""]
+    if len(lines) > 1 and len(lines[-1].split()) == 1:
+        candidate = f"{lines[-2]} {lines[-1]}"
+        if len(candidate) <= max_chars + 6:
+            lines[-2:] = [candidate]
+    return lines
+
+
+def lines_text(
+    x: float,
+    y: float,
+    values: Iterable[str],
+    css: str = "body",
+    anchor: str = "start",
+    gap: int = SPACING["line_gap"],
+) -> str:
     parts = [f'<text x="{x}" y="{y}" class="{css}" text-anchor="{anchor}">']
     for number, value in enumerate(values):
         dy = 0 if number == 0 else gap
@@ -77,14 +109,20 @@ def box(
     kind: str = "neutral",
     shape: str = "round",
 ) -> str:
-    radius = 14 if shape == "round" else 2
+    radius = SPACING["box_radius"] if shape == "round" else 2
+    title_lines = wrap_text(title, max(12, int(width / 10)))
     parts = [
         f'<rect x="{x}" y="{y}" width="{width}" height="{height}" rx="{radius}" class="box {kind}"/>',
-        lines_text(x + width / 2, y + 31, [title], "box-title", "middle"),
+        lines_text(x + width / 2, y + 31, title_lines, "box-title", "middle"),
     ]
-    detail_list = list(details)
+    detail_list = [
+        wrapped
+        for detail in details
+        for wrapped in wrap_text(detail, max(14, int((width - 2 * SPACING["box_padding"]) / 9)))
+    ]
     if detail_list:
-        parts.append(lines_text(x + 18, y + 61, detail_list, "body"))
+        detail_y = y + 61 + (len(title_lines) - 1) * SPACING["line_gap"]
+        parts.append(lines_text(x + SPACING["box_padding"], detail_y, detail_list, "body"))
     return "\n".join(parts)
 
 
@@ -109,12 +147,46 @@ def arrow(
     return "\n".join(parts)
 
 
-def svg_document(title: str, description: str, body: str, sources: Iterable[str], width: int = 1200, height: int = 700) -> str:
+def orthogonal_arrow(
+    points: Iterable[tuple[float, float]],
+    label: str = "",
+    kind: str = "neutral",
+    dashed: bool = False,
+    label_position: tuple[float, float] | None = None,
+) -> str:
+    """Route a connector through explicit horizontal/vertical lanes."""
+    point_list = list(points)
+    if len(point_list) < 2:
+        raise ValueError("orthogonal connector requires at least two points")
+    commands = [f"M {point_list[0][0]} {point_list[0][1]}"]
+    for previous, current in zip(point_list, point_list[1:]):
+        if previous[0] != current[0] and previous[1] != current[1]:
+            raise ValueError("orthogonal connector contains a diagonal segment")
+        commands.append(f"L {current[0]} {current[1]}")
+    dash = " dashed" if dashed else ""
+    parts = [
+        f'<path d="{" ".join(commands)}" class="arrow {kind}{dash}" marker-end="url(#arrow-{kind})"/>'
+    ]
+    if label and label_position:
+        parts.append(lines_text(*label_position, [label], "edge-label", "middle"))
+    return "\n".join(parts)
+
+
+def svg_document(
+    title: str,
+    description: str,
+    body: str,
+    sources: Iterable[str],
+    tier: str,
+    audience: str,
+    width: int = 1200,
+    height: int = 700,
+) -> str:
     source_text = ", ".join(sources)
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="title desc">
 <title id="title">{escape(title)}</title>
 <desc id="desc">{escape(description)}</desc>
-<metadata>Generated from authoritative model records: {escape(source_text)}</metadata>
+<metadata>View tier: {escape(tier)}. Audience: {escape(audience)}. Generated from authoritative model records: {escape(source_text)}</metadata>
 <defs>
   <marker id="arrow-neutral" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#435269"/></marker>
   <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#245f9e"/></marker>
@@ -123,13 +195,13 @@ def svg_document(title: str, description: str, body: str, sources: Iterable[str]
 </defs>
 <style>
   text {{ font-family: Arial, Helvetica, sans-serif; fill: #172033; }}
-  .title {{ font-size: 30px; font-weight: 700; }}
-  .subtitle {{ font-size: 17px; fill: #536174; }}
-  .section {{ font-size: 19px; font-weight: 700; }}
-  .box-title {{ font-size: 19px; font-weight: 700; }}
-  .body {{ font-size: 16px; }}
-  .small {{ font-size: 14px; fill: #536174; }}
-  .edge-label {{ font-size: 15px; font-weight: 700; paint-order: stroke; stroke: #ffffff; stroke-width: 5px; stroke-linejoin: round; }}
+  .title {{ font-size: {TYPOGRAPHY['title']}px; font-weight: 700; }}
+  .subtitle {{ font-size: {TYPOGRAPHY['subtitle']}px; fill: #536174; }}
+  .section {{ font-size: {TYPOGRAPHY['section']}px; font-weight: 700; }}
+  .box-title {{ font-size: {TYPOGRAPHY['box_title']}px; font-weight: 700; }}
+  .body {{ font-size: {TYPOGRAPHY['body']}px; }}
+  .small {{ font-size: {TYPOGRAPHY['small']}px; fill: #536174; }}
+  .edge-label {{ font-size: {TYPOGRAPHY['edge_label']}px; font-weight: 700; paint-order: stroke; stroke: #ffffff; stroke-width: 5px; stroke-linejoin: round; }}
   .box {{ stroke: #435269; stroke-width: 2; fill: #f5f7fa; }}
   .box.blue {{ fill: #e9f2ff; stroke: #245f9e; }}
   .box.green {{ fill: #eaf7f0; stroke: #247a52; }}
@@ -140,10 +212,10 @@ def svg_document(title: str, description: str, body: str, sources: Iterable[str]
   .platform {{ fill: #f4f7fb; stroke: #26364d; stroke-width: 2.5; }}
   .chip {{ fill: #ffffff; stroke: #8a97a8; stroke-width: 1.5; }}
   .chip.blue {{ fill: #e9f2ff; stroke: #245f9e; }}
-  .chip-title {{ font-size: 15px; font-weight: 700; }}
+  .chip-title {{ font-size: 16px; font-weight: 700; }}
   .payload-black {{ fill: #26364d; stroke: #172033; stroke-width: 3; }}
   .payload-title {{ font-size: 20px; font-weight: 700; fill: #ffffff; }}
-  .payload-body {{ font-size: 15px; fill: #eef3f8; }}
+  .payload-body {{ font-size: 16px; fill: #eef3f8; }}
   .current-zone {{ fill: #f2f7ff; stroke: #245f9e; stroke-width: 2.5; }}
   .boundary {{ fill: #ffffff; stroke: #26364d; stroke-width: 3; }}
   .group {{ fill: #f8fafc; stroke: #8a97a8; stroke-width: 1.5; }}
@@ -213,13 +285,21 @@ def project_picture(model: dict[str, Any], index: dict[str, dict[str, Any]], vie
         arrow(760, 445, 940, 445, "Relayed Command", "green", False, 431),
         arrow(940, 493, 760, 493, "Relayed Telemetry", "green", True, 516),
         arrow(440, 493, 260, 493, "Relayed Telemetry", "green", True, 516),
-        arrow(727.5, 333, 680, 420, "Regulated Power", "amber", False, 378),
-        '<line x1="447.5" y1="333" x2="520" y2="420" class="arrow"/>',
-        lines_text(480, 378, ["Mounting"], "edge-label", "middle"),
+        orthogonal_arrow(
+            [(727.5, 333), (727.5, 378), (680, 378), (680, 420)],
+            "Regulated Power", "amber", label_position=(748, 372),
+        ),
+        orthogonal_arrow(
+            [(447.5, 333), (447.5, 378), (520, 378), (520, 420)],
+            "Mounting", label_position=(474, 372),
+        ),
         lines_text(600, 625, ["The relay payload carries mission traffic; it does not control the aircraft."], "section", "middle"),
         lines_text(600, 655, ["Waveform, frequency, protocol, hardware, and endpoint compatibility remain outside this view."], "small", "middle"),
     ]
-    return svg_document(view["title"], view["question"], "\n".join(parts), view["object_refs"])
+    return svg_document(
+        view["title"], view["question"], "\n".join(parts), view["object_refs"],
+        view["tier"], view["audience"],
+    )
 
 
 def system_boundary(model: dict[str, Any], index: dict[str, dict[str, Any]], view: dict[str, Any]) -> str:
@@ -244,7 +324,10 @@ def system_boundary(model: dict[str, Any], index: dict[str, dict[str, Any]], vie
         arrow(885, 335, 940, 335, kind="neutral"),
         lines_text(600, 660, ["Everything outside the boundary remains external to the aircraft design; future context is dashed."], "small", "middle"),
     ]
-    return svg_document(view["title"], view["question"], "\n".join(parts), view["object_refs"])
+    return svg_document(
+        view["title"], view["question"], "\n".join(parts), view["object_refs"],
+        view["tier"], view["audience"],
+    )
 
 
 def physical_architecture(model: dict[str, Any], index: dict[str, dict[str, Any]], view: dict[str, Any]) -> str:
@@ -268,12 +351,12 @@ def physical_architecture(model: dict[str, Any], index: dict[str, dict[str, Any]
         lines_text(600, 138, ["RELAY UAS"], "section", "middle"),
         '<rect x="80" y="160" width="740" height="405" rx="20" class="platform"/>',
         lines_text(450, 192, ["VEHICLE PLATFORM"], "section", "middle"),
-        box(110, 220, 205, 105, "Propulsion", ["Controlled lift", "Controllers • motors • propellers"], "neutral"),
-        box(347, 220, 205, 105, "Electrical Power", ["Energy storage and distribution", "Battery • bus • regulators"], "amber"),
-        box(585, 220, 205, 105, "Flight Avionics", ["Stabilize • navigate • hold", "Health and recovery support"], "blue"),
-        box(110, 365, 275, 105, "Platform Communications", ["Independent aircraft command", "Health / status return"], "blue"),
-        box(430, 365, 360, 105, "Payload Support", ["Mechanical retention", "Regulated payload power"], "neutral"),
-        box(110, 500, 680, 48, "Airframe and Structure", [], "neutral"),
+        box(110, 210, 205, 130, "Propulsion", ["Controlled lift", "Controllers • motors • propellers"], "neutral"),
+        box(347, 210, 205, 130, "Electrical Power", ["Energy storage and distribution", "Battery • bus • regulators"], "amber"),
+        box(585, 210, 205, 130, "Flight Avionics", ["Stabilize • navigate • hold", "Health and recovery support"], "blue"),
+        box(110, 375, 275, 110, "Platform Communications", ["Independent aircraft command", "Health / status return"], "blue"),
+        box(430, 375, 360, 110, "Payload Support", ["Mechanical retention", "Regulated payload power"], "neutral"),
+        box(110, 515, 680, 48, "Airframe and Structure", [], "neutral"),
         '<rect x="875" y="270" width="235" height="210" rx="18" class="payload-black"/>',
         lines_text(992.5, 313, ["RELAY PAYLOAD"], "payload-title", "middle"),
         lines_text(992.5, 342, ["BLACK BOX"], "payload-title", "middle"),
@@ -286,13 +369,16 @@ def physical_architecture(model: dict[str, Any], index: dict[str, dict[str, Any]
             if item_id not in index:
                 raise ValueError(f"physical view references missing {item_id}")
     parts.extend([
-        arrow(790, 397, 875, 397, "regulated power", "amber", False, 382),
-        '<line x1="790" y1="445" x2="875" y2="445" class="arrow"/>',
-        lines_text(832, 468, ["mechanical retention"], "edge-label", "middle"),
+        arrow(790, 407, 875, 407, "regulated power", "amber", False, 392),
+        '<line x1="790" y1="455" x2="875" y2="455" class="arrow"/>',
+        lines_text(832, 478, ["mechanical retention"], "edge-label", "middle"),
         lines_text(600, 645, ["Only regulated power and mechanical retention cross from platform to payload."], "section", "middle"),
         lines_text(600, 675, ["Hardware, geometry, ratings, and fabrication remain unresolved."], "small", "middle"),
     ])
-    return svg_document(view["title"], view["question"], "\n".join(parts), view["object_refs"])
+    return svg_document(
+        view["title"], view["question"], "\n".join(parts), view["object_refs"],
+        view["tier"], view["audience"],
+    )
 
 
 def power_flow(model: dict[str, Any], index: dict[str, dict[str, Any]], view: dict[str, Any]) -> str:
@@ -327,7 +413,10 @@ def power_flow(model: dict[str, Any], index: dict[str, dict[str, Any]], view: di
         arrow(720, 484, 840, 546, "payload power", "green", False, 518),
         lines_text(600, 650, ["Voltage, current, protection, connectors, and component ratings remain undefined."], "small", "middle"),
     ]
-    return svg_document(view["title"], view["question"], "\n".join(parts), view["object_refs"])
+    return svg_document(
+        view["title"], view["question"], "\n".join(parts), view["object_refs"],
+        view["tier"], view["audience"],
+    )
 
 
 def command_data_flow(model: dict[str, Any], index: dict[str, dict[str, Any]], view: dict[str, Any]) -> str:
@@ -364,7 +453,10 @@ def command_data_flow(model: dict[str, Any], index: dict[str, dict[str, Any]], v
         lines_text(600, 568, ["The aircraft carries the payload but does not process the relayed mission traffic."], "section", "middle"),
         lines_text(600, 600, ["External compatibility, message formats, protocols, frequency, waveform, and data rate are unresolved."], "small", "middle"),
     ]
-    return svg_document(view["title"], view["question"], "\n".join(parts), view["object_refs"])
+    return svg_document(
+        view["title"], view["question"], "\n".join(parts), view["object_refs"],
+        view["tier"], view["audience"],
+    )
 
 
 def mission_sequence(model: dict[str, Any], index: dict[str, dict[str, Any]], view: dict[str, Any]) -> str:
@@ -394,7 +486,10 @@ def mission_sequence(model: dict[str, Any], index: dict[str, dict[str, Any]], vi
     parts.append(arrow(390, 560, 90, 560, "8  Monitor health / status", "blue", True, 550))
     parts.append(arrow(390, 620, 90, 620, "9  Recover and return to Ground Safe", "blue", False, 610))
     parts.append(lines_text(600, 680, ["Architecture sequence only; exact readiness and recovery criteria remain unresolved."], "small", "middle"))
-    return svg_document(view["title"], view["question"], "\n".join(parts), view["object_refs"])
+    return svg_document(
+        view["title"], view["question"], "\n".join(parts), view["object_refs"],
+        view["tier"], view["audience"],
+    )
 
 
 def degraded_behavior(model: dict[str, Any], index: dict[str, dict[str, Any]], view: dict[str, Any]) -> str:
@@ -415,16 +510,24 @@ def degraded_behavior(model: dict[str, Any], index: dict[str, dict[str, Any]], v
         box(695, 160, 180, 92, display(index, "MODE-003"), ["Relay service impaired"], "amber"),
         '<polygon points="1010,145 1140,206 1010,267 880,206" class="box blue"/>',
         lines_text(1010, 198, ["Platform control", "still available?"], "box-title", "middle"),
-        arrow(200, 206, 250, 206, "launch", "blue"),
-        arrow(415, 206, 465, 206, "station reached", "blue"),
-        arrow(645, 206, 695, 206, "relay degrades", "amber"),
+        lines_text(225, 137, ["launch"], "edge-label", "middle"),
+        lines_text(440, 137, ["station reached"], "edge-label", "middle"),
+        lines_text(670, 137, ["relay degrades"], "edge-label", "middle"),
+        arrow(200, 206, 250, 206, kind="blue"),
+        arrow(415, 206, 465, 206, kind="blue"),
+        arrow(645, 206, 695, 206, kind="amber"),
         arrow(875, 206, 880, 206, kind="blue"),
         box(900, 350, 235, 105, display(index, "MODE-004"), ["Recovery intent only", "Criteria remain unresolved"], "blue"),
         box(585, 500, 270, 110, "Unresolved Safety Gap", ["No modeled response for", "impaired platform control"], "red"),
         arrow(1035, 267, 1035, 350, "YES", "blue", False, 320),
-        arrow(985, 267, 720, 500, "NO / IMPAIRED", "amber", False, 400),
-        '<path d="M 555 252 V 315 H 900" class="arrow blue dashed" marker-end="url(#arrow-blue)"/>',
-        lines_text(720, 305, ["normal end / low battery"], "edge-label", "middle"),
+        orthogonal_arrow(
+            [(985, 267), (985, 290), (720, 290), (720, 500)],
+            "NO / IMPAIRED", "amber", label_position=(845, 282),
+        ),
+        orthogonal_arrow(
+            [(555, 252), (555, 325), (875, 325), (875, 402), (900, 402)],
+            "normal end / low battery", "blue", dashed=True, label_position=(700, 317),
+        ),
         '<path d="M 1018 455 V 640 H 20 V 206 H 35" class="arrow blue" marker-end="url(#arrow-blue)"/>',
         lines_text(555, 630, ["land, recover, and return to Ground Safe"], "edge-label", "middle"),
         lines_text(40, 405, ["Defined:"], "section"),
@@ -432,7 +535,10 @@ def degraded_behavior(model: dict[str, Any], index: dict[str, dict[str, Any]], v
         lines_text(40, 535, ["Not yet defined:"], "section"),
         lines_text(40, 565, ["• Detection thresholds", "• Recovery criteria and physical behavior", "• Safety acceptance evidence"], "body"),
     ]
-    return svg_document(view["title"], view["question"], "\n".join(parts), view["object_refs"])
+    return svg_document(
+        view["title"], view["question"], "\n".join(parts), view["object_refs"],
+        view["tier"], view["audience"],
+    )
 
 
 def configuration_evolution(model: dict[str, Any], index: dict[str, dict[str, Any]], view: dict[str, Any]) -> str:
@@ -465,7 +571,10 @@ def configuration_evolution(model: dict[str, Any], index: dict[str, dict[str, An
         lines_text(600, 620, ["Reference correspondence is not inheritance; future concepts do not change the current candidate."], "section", "middle"),
         lines_text(600, 654, ["No configuration shown here is an approved technical baseline."], "small", "middle"),
     ]
-    return svg_document(view["title"], view["question"], "\n".join(parts), view["object_refs"])
+    return svg_document(
+        view["title"], view["question"], "\n".join(parts), view["object_refs"],
+        view["tier"], view["audience"],
+    )
 
 
 def engineering_status(model: dict[str, Any], index: dict[str, dict[str, Any]], view: dict[str, Any]) -> str:
@@ -539,7 +648,10 @@ def engineering_status(model: dict[str, Any], index: dict[str, dict[str, Any]], 
         parts.append(f'<text x="1120" y="{y + 23}" class="small" text-anchor="end" font-weight="700">{escape(status)}</text>')
     parts.append(lines_text(600, 666, ["MODEL MATURITY ≠ VERIFIED AIRCRAFT"], "section", "middle"))
     parts.append(lines_text(600, 691, ["No safety, airworthiness, interoperability, operational-readiness, or technical-baseline approval is claimed."], "small", "middle"))
-    return svg_document(view["title"], view["question"], "\n".join(parts), view["object_refs"])
+    return svg_document(
+        view["title"], view["question"], "\n".join(parts), view["object_refs"],
+        view["tier"], view["audience"],
+    )
 
 
 BUILDERS: dict[str, Callable[[dict[str, Any], dict[str, dict[str, Any]], dict[str, Any]], str]] = {
@@ -560,17 +672,17 @@ def build_outputs(model: dict[str, Any]) -> dict[Path, str]:
     views = model["system"].get("communication_views", [])
     configured = {item["slug"]: item for item in views}
     if set(configured) != set(BUILDERS):
-        raise ValueError("system.yaml communication-view manifest does not match the generator")
+        raise ValueError("model/system.yaml communication-view manifest does not match the generator")
     outputs: dict[Path, str] = {}
     for slug, builder in BUILDERS.items():
         view = configured[slug]
         missing = [item_id for item_id in view["object_refs"] if item_id not in index]
         if missing:
             raise ValueError(f"{slug} references unknown model records: {missing}")
-        outputs[ROOT / "reports" / "figures" / f"{slug}.svg"] = builder(model, index, view)
+        outputs[ROOT / "docs" / "figures" / f"{slug}.svg"] = builder(model, index, view)
     expected_paths = {ROOT / item for item in model["system"].get("generated_figures", [])}
     if set(outputs) != expected_paths:
-        raise ValueError("system.yaml generated_figures does not match generated outputs")
+        raise ValueError("model/system.yaml generated_figures does not match generated outputs")
     return outputs
 
 

@@ -637,10 +637,10 @@
       "subject_ids": [
         "MODE-003",
         "HAZ-005",
-        "REQ-FUN-007",
+        "REQ-007",
         "FUN-HLT-01",
         "IFC-EXT-007",
-        "REQ-FUN-008"
+        "REQ-008"
       ],
       "rationale": "The existing mode model and requirement set explicitly preserve platform control after payload loss.",
       "contradicts": [],
@@ -848,7 +848,7 @@
       ],
       "refutes": [],
       "captured_at": "2026-08-06",
-      "artifact_path": "system.yaml",
+      "artifact_path": "model/system.yaml",
       "limitations": [
         "Repository content is a candidate model, not approved truth; the HTML export remains untracked and unreconciled."
       ],
@@ -1054,7 +1054,7 @@
           {"scenario_id": "SCN-002", "result": "PASS_WITH_OPEN_GAPS", "main_trace": "OA-001 / OA-002 / OA-003 to flight, command, navigation, and health functions to MODE-001 / MODE-002", "residual_gap_ids": ["GAP-HAZ-001", "GAP-IFC-001", "GAP-BUDGET-001", "GAP-VER-001"]},
           {"scenario_id": "SCN-003", "result": "PASS_WITH_OPEN_GAPS", "main_trace": "OA-004 to IX-002 / IX-003 to FUN-REL-01", "residual_gap_ids": ["GAP-IFC-001", "GAP-VER-001"]},
           {"scenario_id": "SCN-004", "result": "PASS_WITH_OPEN_GAPS", "main_trace": "OA-005 to IX-004 / IX-005 to FUN-REL-02", "residual_gap_ids": ["GAP-IFC-001", "GAP-VER-001"]},
-          {"scenario_id": "SCN-007", "result": "PASS_WITH_OPEN_GAPS", "main_trace": "MODE-003 to FUN-HLT-01 / FUN-FLT-04 to HAZ-005 / CTL-004 to REQ-FUN-007 / REQ-FUN-008", "residual_gap_ids": ["GAP-HAZ-001", "GAP-IFC-001", "GAP-VER-001"]},
+          {"scenario_id": "SCN-007", "result": "PASS_WITH_OPEN_GAPS", "main_trace": "MODE-003 to FUN-HLT-01 / FUN-FLT-04 to HAZ-005 / CTL-004 to REQ-007 / REQ-008", "residual_gap_ids": ["GAP-HAZ-001", "GAP-IFC-001", "GAP-VER-001"]},
           {"scenario_id": "SCN-008", "result": "PASS_WITH_OPEN_GAPS", "main_trace": "OA-006 to MODE-004 / MODE-005 to command, recovery, and health functions", "residual_gap_ids": ["GAP-HAZ-001", "GAP-IFC-001", "GAP-VER-001"]},
           {"scenario_id": "SCN-005", "result": "PASS_FUTURE_SCOPE_ONLY", "main_trace": "CFG-SOS future thread retained without current allocation", "residual_gap_ids": ["GAP-SOS-001"]},
           {"scenario_id": "SCN-006", "result": "PASS_FUTURE_SCOPE_ONLY", "main_trace": "CFG-DIG / CFG-SOS future thread retained without current allocation", "residual_gap_ids": ["GAP-SOS-002"]}
@@ -1068,11 +1068,11 @@
         "VER-001", "VER-004"
       ],
       "object_refs": [
-        "REQ-FUN-001", "REQ-FUN-002", "REQ-FUN-003", "REQ-FUN-004", "REQ-FUN-005", "REQ-FUN-006", "REQ-FUN-007", "REQ-FUN-008",
-        "REQ-PER-001", "REQ-PER-002", "REQ-PER-003", "REQ-PER-004", "REQ-PER-005",
-        "REQ-IFC-001", "REQ-IFC-002", "REQ-IFC-003", "REQ-IFC-004", "REQ-SAF-001", "REQ-SAF-002",
-        "REQ-CON-001", "REQ-CON-002", "REQ-CON-003", "REQ-CON-004",
-        "REQ-DEF-001", "REQ-DEF-002", "REQ-DEF-003", "REQ-DEF-004", "REQ-DEF-005",
+        "REQ-001", "REQ-002", "REQ-003", "REQ-004", "REQ-005", "REQ-006", "REQ-007", "REQ-008",
+        "REQ-009", "REQ-010", "REQ-011", "REQ-012", "REQ-013",
+        "REQ-014", "REQ-015", "REQ-016", "REQ-017", "REQ-018", "REQ-019",
+        "REQ-020", "REQ-021", "REQ-022", "REQ-023",
+        "DEF-001", "DEF-002", "DEF-003", "DEF-004", "DEF-005",
         "SCN-001", "SCN-002", "SCN-003", "SCN-004", "SCN-005", "SCN-006", "SCN-007", "SCN-008"
       ],
       "reviewed_model_version": "0.7.0-baseline-candidate",

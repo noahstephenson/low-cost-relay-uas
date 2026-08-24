@@ -1,8 +1,11 @@
 # Constrained Relay-UAS Design-Space Feasibility
 
+[Overview](../../README.md) · [Architecture](../architecture.md) · [Feasibility](../feasibility.md) · [Engineering Status](../engineering-status.md) · [Reference index](README.md)
+
 > **Conditional engineering analysis — not an approved design.** This report applies
-> to `CFG-REP` / `CFG-DOM` in `0.8.0-baseline-candidate` and uses parent commit
-> `e7a84d2`. No owner target value, `DEC-*` record, component, technical baseline,
+> to `CFG-REP` / `CFG-DOM` in `0.9.0-baseline-candidate` and preserves the numerical
+> analysis introduced at parent commit `e7a84d2`. The identifier/documentation
+> migration did not change equations, inputs, or classifications. No owner target value, `DEC-*` record, component, technical baseline,
 > physical verification, external conformance, RF implementation, build activity, or
 > test activity is approved by this analysis.
 
@@ -156,7 +159,7 @@ Important limitations:
 
 ## D. Feasible Design Region
 
-![Conditional payload-endurance feasibility region](../analysis/results/feasible-region.svg)
+![Conditional payload-endurance feasibility region](../../analysis/results/feasible-region.svg)
 
 The reference slice at 50 W payload demand shows three regions:
 
@@ -224,7 +227,7 @@ station load. This does not make payload mass or power unimportant: they remain
 owner-controlled boundary conditions, and their influence will increase if the
 carrier becomes more efficient or the payload range expands.
 
-![Sensitivity ranking](../analysis/results/sensitivity-ranking.svg)
+![Sensitivity ranking](../../analysis/results/sensitivity-ranking.svg)
 
 ## F. Mass-Power-Endurance Finding
 
@@ -237,7 +240,7 @@ switches to energy-limited behavior. Near 30 minutes the battery becomes roughly
 half of gross mass, and beyond that point extra endurance increases battery mass,
 gross mass, disk area, structure, propulsion power, and then battery mass again.
 
-![Endurance growth in mass and cost](../analysis/results/endurance-mass-cost.svg)
+![Endurance growth in mass and cost](../../analysis/results/endurance-mass-cost.svg)
 
 The analysis therefore establishes two different battery regimes:
 
@@ -274,7 +277,7 @@ relay payload is excluded, this is a sensitivity finding rather than a budget cl
 The attritable objective is credible for short-dwell, modest-payload cases under
 reference or better assumptions. It is not credible across the long-dwell reference
 region. The owner must define recurring-unit cost, payload inclusion, reusable/lost
-hardware boundary, and recovery policy before `REQ-PER-001` can be evaluated.
+hardware boundary, and recovery policy before `REQ-009` can be evaluated.
 
 ## H. Trade-Study Implications
 
@@ -357,18 +360,18 @@ hardware boundary, and recovery policy before `REQ-PER-001` can be evaluated.
 
 ## I. Requirements / Gap Implications
 
-- `REQ-PER-002`: endurance is confirmed as the dominant owner-controlled target. No
+- `REQ-010`: endurance is confirmed as the dominant owner-controlled target. No
   value is selected.
-- `REQ-PER-003`: gross mass is quantitatively confirmed as a derived output. It
+- `REQ-011`: gross mass is quantitatively confirmed as a derived output. It
   should not become an independent owner value without a separate handling,
   transport, or regulatory basis.
-- `REQ-PER-001`: actual platform cost is derived and must be compared with an owner
+- `REQ-009`: actual platform cost is derived and must be compared with an owner
   boundary that defines inclusions and loss/reuse accounting.
-- `REQ-PER-004` and `REQ-IFC-002`: payload mass, volume, and electrical demand remain
+- `REQ-012` and `REQ-015`: payload mass, volume, and electrical demand remain
   owner inputs; volume remains entirely undetermined here.
-- `REQ-IFC-004`: retention margin remains derived from loads and authority, not from
+- `REQ-017`: retention margin remains derived from loads and authority, not from
   this parametric structure model.
-- `REQ-FUN-003`: station tolerance remains unresolved; no environmental sensitivity
+- `REQ-003`: station tolerance remains unresolved; no environmental sensitivity
   value is a requirement.
 - `GAP-BUDGET-001`: narrowed from an unexecuted coupling to a reproducible,
   quantified conditional design region. It remains open because owner targets and
@@ -445,13 +448,13 @@ project can state class-level evaluation criteria without selecting hardware.
   `feasibility-grid.csv`, `sensitivity-ranking.csv`, and `convergence-traces.csv`.
 - **Generated plots:** `analysis/results/feasible-region.svg`,
   `endurance-mass-cost.svg`, and `sensitivity-ranking.svg`.
-- **Engineering report:** `reports/feasibility-analysis.md`.
-- **Files changed for this work package:** `README.md`, `system.yaml`,
+- **Engineering report:** `docs/reference/feasibility-analysis.md`.
+- **Files changed for this work package:** `README.md`, `model/system.yaml`,
   `model/assurance.yaml`, `model/traceability.yaml`, `trade-studies.md`,
-  `scripts/validate-baseline.py`, the generated `reports/baseline.md`, and the
+  `scripts/validate-baseline.py`, the generated `docs/reference/baseline.md`, and the
   feasibility inputs, executable, results, and report under `analysis/` and
-  `reports/feasibility-analysis.md`.
-- **Model version:** unchanged at `0.8.0-baseline-candidate`; owner targets and
+  `docs/reference/feasibility-analysis.md`.
+- **Model version:** `0.9.0-baseline-candidate`; numerical analysis remains unchanged while owner targets and
   architecture intent remain unapproved.
 - **Work-package disposition:** approved by the project owner for repository
   inclusion on 2026-08-11. This accepts the analysis package and its conditional

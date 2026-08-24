@@ -1,13 +1,13 @@
 <!-- GENERATED VIEW - DO NOT EDIT. -->
 
-> Generated from `system.yaml`, `model/architecture.yaml`, `model/assurance.yaml`, `model/traceability.yaml`, `.seal/sources.yaml`, `.seal/proof.yaml` with `python scripts/validate-baseline.py --write-reports`.
+> Generated from `model/system.yaml`, `model/architecture.yaml`, `model/assurance.yaml`, `model/traceability.yaml`, `.seal/sources.yaml`, `.seal/proof.yaml` with `python scripts/validate-baseline.py --write-reports`.
 > This report is a model view, not an approval or verification record.
 
 # Baseline Candidate - Not Approved
 
 ## Baseline status
 
-- Model version: `0.8.0-baseline-candidate`
+- Model version: `0.9.0-baseline-candidate`
 - Status: `baseline_candidate_not_approved`
 - Approval: `not_approved`
 - Model-valid means structurally consistent; it does not mean safe, verified, or ready.
@@ -20,11 +20,11 @@
 - Technical baseline: `not_approved`; physical verification and external-interface conformance: `not_established`; safety approval: `not_approved`.
 - Unresolved decisions remain proposed: `DEC-002`, `DEC-003`, `DEC-004`, `DEC-005`.
 
-## Current model-review status
+## Model-review status
 
-- Current semantic model: `0.8.0-baseline-candidate`.
-- Current review: `executed_not_owner_accepted` in `EVD-013` under `SRC-DEC-006`.
-- The accepted 0.7.0 work package remains preserved; the 0.8.0 model-level review is not owner acceptance or technical-baseline approval.
+- Current semantic model: `0.9.0-baseline-candidate`.
+- Latest recorded review: `0.8.0-baseline-candidate` with status `executed_not_owner_accepted` in `EVD-013` under `SRC-DEC-006`.
+- The accepted 0.7.0 work package remains preserved; the 0.8.0 model-level review is not owner acceptance or technical-baseline approval. The 0.9.0 identifier and documentation refactor has no new evidence record.
 - Physical verification, safety approval, and external-interface conformance remain not established.
 
 ## Configuration summary
@@ -101,12 +101,12 @@
 | GAP-STD-001 | standards-version decision | OWNER DECISION REQUIRED | moderate | DEC-002, SRC-EXT-003, CFG-REP, CFG-DOM, CFG-DIG, CFG-SOS |
 | GAP-REC-001 | configuration mapping | NARROWED | moderate | CFG-REC, CFG-REP, CFG-DOM, CLM-REC-005, EVD-006, EVD-007, EVD-013, IFC-INT-011 |
 | GAP-SRC-001 | missing evidence | PHYSICAL EVIDENCE REQUIRED | major | CFG-REC, SRC-GAP-001, SRC-INT-003, EVD-005 |
-| GAP-TRC-001 | unallocated capability | INTENTIONAL DEFERRAL | major | CAP-003, REQ-DEF-004, TS-009 |
+| GAP-TRC-001 | unallocated capability | INTENTIONAL DEFERRAL | major | CAP-003, DEF-004, TS-009 |
 | GAP-HAZ-001 | unmitigated hazard | OWNER DECISION REQUIRED | major | HAZ-001, DEC-003 |
 | GAP-IFC-001 | interface verification | NARROWED | major | IFC-EXT-001, IFC-EXT-002, IFC-EXT-003, IFC-EXT-004, IFC-EXT-005, IFC-EXT-006, IFC-EXT-007, VER-005, VER-009 |
 | GAP-SOS-001 | proposed system-of-systems thread | FUTURE CONFIGURATION | major | CFG-SOS, SCN-005, OP-004, IX-006, IX-007 |
 | GAP-SOS-002 | proposed system-of-systems thread | FUTURE CONFIGURATION | major | CFG-DIG, CFG-SOS, SCN-006, IX-008 |
-| GAP-BUDGET-001 | mass-cost-endurance coupling | QUANTITATIVELY_NARROWED | major | REQ-PER-001, REQ-PER-002, REQ-PER-003, REQ-PER-004, TS-001, TS-002, TS-003, TS-004, TS-006 |
+| GAP-BUDGET-001 | mass-cost-endurance coupling | QUANTITATIVELY_NARROWED | major | REQ-009, REQ-010, REQ-011, REQ-012, TS-001, TS-002, TS-003, TS-004, TS-006 |
 | GAP-VER-001 | verification evidence | NARROWED | major | VER-001, VER-002, VER-003, VER-004, VER-005, VER-006, VER-007, VER-008, VER-009, EVD-008, EVD-009, EVD-010, EVD-011, EVD-012, EVD-013 |
 
 ## Remaining work by dependency
@@ -132,7 +132,7 @@
 
 - `GAP-CFG-001` - **INTENTIONAL DEFERRAL**: Do not inspect in this baseline; address only under a separately authorized future work package.
 - `GAP-CFG-002` - **INTENTIONAL DEFERRAL**: A designated external safety authority supplies employment assumptions, configuration applicability, and responsibility allocation before these hazards are activated.
-- `GAP-TRC-001` - **INTENTIONAL DEFERRAL**: Retain CAP-003 as unsupported with REQ-DEF-004 and TS-009; only an explicitly authorized future payload scope may introduce a mechanism or satisfaction claim.
+- `GAP-TRC-001` - **INTENTIONAL DEFERRAL**: Retain CAP-003 as unsupported with DEF-004 and TS-009; only an explicitly authorized future payload scope may introduce a mechanism or satisfaction claim.
 - `GAP-HAZ-002` - **INTENTIONAL DEFERRAL**: Keep the ID reserved; activate it only through an explicit owner decision supported by hazard content.
 - `GAP-IFC-002` - **INTENTIONAL DEFERRAL**: Keep implementation attributes unknown in this repository and preserve TS-009 as intentionally deferred.
 - `GAP-SOS-001` - **FUTURE CONFIGURATION**: A future CFG-SOS owner defines UGV responsibilities, authorized information classes, interface authority, and verification criteria before any current-system allocation.
@@ -155,10 +155,10 @@
 
 ### Requirement-level review summary
 
-- Requirements reviewed: 28; model-level review passed: 2 (`REQ-IFC-003`, `REQ-CON-003`); architecture review passed with open limitations: 26.
-- Readiness: analysis_blocked_by_tbd: 12, external_authority_required: 5, intentionally_deferred: 3, model_verifiable_now: 2, physical_evidence_required: 6.
-- `REQ-DEF-*` records remain explicit scope/deferral records rather than requirements claimed satisfied.
-- `EVD-001` through `EVD-004` remain historical. `EVD-008` through `EVD-012` preserve the accepted 0.7.0 review and acceptance trail; `EVD-013` records the current 0.8.0 model-level review without owner acceptance.
+- Requirements reviewed: 23; model-level review passed: 2 (`REQ-016`, `REQ-022`); architecture review passed with open limitations: 21.
+- Readiness: analysis_blocked_by_tbd: 12, external_authority_required: 3, model_verifiable_now: 2, physical_evidence_required: 6.
+- Deferred/external topics: 5; these `DEF-*` records are not counted as system requirements.
+- `EVD-001` through `EVD-004` remain historical. `EVD-008` through `EVD-012` preserve the accepted 0.7.0 review and acceptance trail; `EVD-013` records the latest 0.8.0 model-level review without owner acceptance.
 - Internal review does not establish physical requirement satisfaction, external conformance, safety, or technical approval (`GAP-VER-001`).
 
 ### Objective corrections from verification
@@ -171,20 +171,20 @@
 
 ## Concise traceability summary
 
-- Mission relay: `NEED-001 -> CAP-001 -> SCN-003 -> OA-004 -> IX-002 / IX-003 -> FUN-REL-01 -> CMP-COM-01 -> IFC-EXT-001 / IFC-EXT-002 -> REQ-FUN-001 -> VER-001 / VER-009`.
-- Return telemetry: `SCN-004 -> OA-005 -> IX-004 / IX-005 -> FUN-REL-02 -> CMP-COM-01 -> IFC-EXT-003 / IFC-EXT-004 -> REQ-FUN-002 -> VER-001 / VER-009`.
-- Station keeping: `CAP-002 -> SCN-002 -> OA-003 -> FUN-FLT-03 -> CMP-AVN-01 / CMP-AVN-02 / CMP-AVN-03 -> REQ-FUN-003 / REQ-CON-004`.
-- Setup and ground safety: `SCN-001 -> OA-007 -> MODE-005 -> HAZ-004 -> CTL-001 -> REQ-FUN-006 / REQ-SAF-002 -> VER-006`.
-- Health/status: `SCN-007 -> IX-009 -> FUN-HLT-01 -> CMP-AVN-01 -> IFC-EXT-007 -> REQ-FUN-008 -> VER-005 / VER-008 / VER-009`.
-- `HAZ-004 -> CTL-001 -> REQ-FUN-006 / REQ-SAF-002 -> VER-004 / VER-006 -> GAP-VER-001`.
-- `HAZ-008 -> CTL-005 -> REQ-IFC-004 -> VER-005 / VER-008 -> GAP-VER-001`.
+- Mission relay: `NEED-001 -> CAP-001 -> SCN-003 -> OA-004 -> IX-002 / IX-003 -> FUN-REL-01 -> CMP-COM-01 -> IFC-EXT-001 / IFC-EXT-002 -> REQ-001 -> VER-001 / VER-009`.
+- Return telemetry: `SCN-004 -> OA-005 -> IX-004 / IX-005 -> FUN-REL-02 -> CMP-COM-01 -> IFC-EXT-003 / IFC-EXT-004 -> REQ-002 -> VER-001 / VER-009`.
+- Station keeping: `CAP-002 -> SCN-002 -> OA-003 -> FUN-FLT-03 -> CMP-AVN-01 / CMP-AVN-02 / CMP-AVN-03 -> REQ-003 / REQ-023`.
+- Setup and ground safety: `SCN-001 -> OA-007 -> MODE-005 -> HAZ-004 -> CTL-001 -> REQ-006 / REQ-019 -> VER-006`.
+- Health/status: `SCN-007 -> IX-009 -> FUN-HLT-01 -> CMP-AVN-01 -> IFC-EXT-007 -> REQ-008 -> VER-005 / VER-008 / VER-009`.
+- `HAZ-004 -> CTL-001 -> REQ-006 / REQ-019 -> VER-004 / VER-006 -> GAP-VER-001`.
+- `HAZ-008 -> CTL-005 -> REQ-017 -> VER-005 / VER-008 -> GAP-VER-001`.
 - Current platform-to-payload crossings are only `IFC-INT-003` and `IFC-INT-007`; `IFC-INT-010` is payload-internal.
 - The complete relationship database remains in `model/traceability.yaml`.
 
 ## Items requiring owner attention
 
 - `GAP-SRC-001`: Project owner supplies and registers the original evidence set and either restores the registered SRC-INT-003 revision or explicitly registers the changed DOCX as a new source revision; otherwise retain document-reported observations at their current evidence level.
-- `GAP-TRC-001`: Retain CAP-003 as unsupported with REQ-DEF-004 and TS-009; only an explicitly authorized future payload scope may introduce a mechanism or satisfaction claim.
+- `GAP-TRC-001`: Retain CAP-003 as unsupported with DEF-004 and TS-009; only an explicitly authorized future payload scope may introduce a mechanism or satisfaction claim.
 - `GAP-HAZ-001`: Project owner selects one DEC-003 safety-objective option. Add a CTL/REQ path only after the exact generic objective is accepted.
 - `GAP-IFC-001`: Each external interface authority supplies an authoritative interface basis and accepts a future conformance method before compatibility evidence can be produced.
 - `GAP-SOS-001`: A future CFG-SOS owner defines UGV responsibilities, authorized information classes, interface authority, and verification criteria before any current-system allocation.
@@ -196,7 +196,7 @@
 
 - `GAP-TRC-002` - **RECLASSIFIED**: CAP-004 is explicitly modeled as a cross-cutting constraint on requirements, trade studies, configurations, and resources; a dedicated mission activity is not semantically required.
 - `GAP-SCN-001` - **CLOSED**: SCN-001 now uses proposed OA-007 with FUN-CFG-01 and FUN-HLT-01 to represent architecture-level preparation and readiness without defining a procedure.
-- `GAP-SOS-003` - **CLOSED**: IX-009 now has a proposed current-system chain through FUN-HLT-01, CMP-AVN-01, IFC-INT-006, IFC-EXT-007, REQ-FUN-008, and candidate verification methods.
+- `GAP-SOS-003` - **CLOSED**: IX-009 now has a proposed current-system chain through FUN-HLT-01, CMP-AVN-01, IFC-INT-006, IFC-EXT-007, REQ-008, and candidate verification methods.
 
 <details>
 <summary>Intentional deferrals and secondary items</summary>

@@ -153,7 +153,7 @@
       "authority_state": "repo_observed",
       "approval_state": "pending",
       "confidence": 0.98,
-      "location": "system.yaml",
+      "location": "model/system.yaml",
       "owner": "project owner",
       "date": "unknown",
       "revision": "working-tree baseline candidate",
@@ -198,7 +198,7 @@
       "authority_state": "repo_observed",
       "approval_state": "pending",
       "confidence": 0.95,
-      "location": "architecture.md",
+      "location": "docs/architecture.md",
       "owner": "project owner",
       "date": "unknown",
       "revision": "consolidated primary engineering view",
@@ -229,7 +229,7 @@
         "CFG-REP",
         "CFG-DOM"
       ],
-      "notes": "The maintained requirements.md view was consolidated into architecture.md, the structured model, and generated reports. Git history preserves the source."
+      "notes": "The retired requirements.md view was consolidated into the structured model and the generated docs/reference/requirements.md view. Git history preserves the source."
     },
     {
       "id": "SRC-REPO-005",
@@ -252,7 +252,7 @@
         "CFG-DIG",
         "CFG-SOS"
       ],
-      "notes": "The maintained uaf-views.md view was consolidated into architecture.md, the structured model, and generated reports. Git history preserves the source."
+      "notes": "The retired uaf-views.md view was consolidated into docs/architecture.md, the generated architecture atlas, and the structured model. Git history preserves the source."
     },
     {
       "id": "SRC-REPO-006",
@@ -273,7 +273,7 @@
         "CFG-REP",
         "CFG-DOM"
       ],
-      "notes": "The maintained hazard-analysis.md view was consolidated into architecture.md, the structured model, and generated reports. Git history preserves the source."
+      "notes": "The retired hazard-analysis.md view was consolidated into model/assurance.yaml and the engineering-status/reference views. Git history preserves the source."
     },
     {
       "id": "SRC-REPO-007",
@@ -284,7 +284,7 @@
       "authority_state": "repo_observed",
       "approval_state": "pending",
       "confidence": 0.9,
-      "location": "trade-studies.md",
+      "location": "docs/reference/trade-studies.md",
       "owner": "project owner",
       "date": "unknown",
       "revision": "working-tree exploratory draft",
@@ -315,7 +315,7 @@
         "CFG-REP",
         "CFG-DOM"
       ],
-      "notes": "The maintained traceability.md view was consolidated into architecture.md, the structured model, and generated reports. Git history preserves the source."
+      "notes": "The retired traceability.md view was consolidated into model/traceability.yaml and the generated docs/reference/traceability.md view. Git history preserves the source."
     },
     {
       "id": "SRC-REPO-009",

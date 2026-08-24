@@ -1,5 +1,7 @@
 # Architecture Decision and Target Package
 
+> **Historical work-package record.** Current decision and gap dispositions are generated in [Decisions and Gaps](../reference/decisions-and-gaps.md) from the structured model.
+
 > **Owner review package — no decision approved.** This analysis applies to
 > `CFG-REP` and `CFG-DOM` in `0.8.0-baseline-candidate`. It does not approve the
 > technical baseline, establish physical performance, close external conformance,
@@ -42,7 +44,7 @@ architecture question.
   repository names UAF 1.2 while `SRC-EXT-003` identifies UAF 1.3 as the current
   formal version. The ambiguity does not invalidate the model, but it leaves its
   standards posture intentionally unresolved.
-- **Current evidence:** `system.yaml` standards posture; `SRC-EXT-003`;
+- **Current evidence:** `model/system.yaml` standards posture; `SRC-EXT-003`;
   `EVD-013`; `GAP-STD-001`; the limited Strategic, Operational, and Resources
   vocabulary used by the current model.
 - **Options reviewed:** intentionally retain UAF 1.2 terminology; use
@@ -54,7 +56,7 @@ architecture question.
   but needlessly time-bound; migrating now would add work without changing the
   architecture.
 - **Consequences if accepted:** `DEC-002` becomes approved project-method intent;
-  standards statements in `system.yaml`, `README.md`, and `architecture.md` are
+  standards statements in `model/system.yaml`, `README.md`, and `architecture.md` are
   revised; `GAP-STD-001` closes as a governance gap. No configuration, requirement,
   interface, or physical design changes.
 - **Residual uncertainty:** No UAF conformance is established. A future contractual
@@ -94,12 +96,12 @@ architecture question.
 ### DEC-004 — Accept explicit Relay-UAS health/status architecture
 
 - **Decision statement:** Decide whether `FUN-HLT-01`, `IFC-EXT-007`, and
-  `REQ-FUN-008` remain part of the current `CFG-REP` / `CFG-DOM` candidate.
+  `REQ-008` remain part of the current `CFG-REP` / `CFG-DOM` candidate.
 - **Why the decision exists:** Setup, mode awareness, degraded-state recognition,
   and recovery decisions require more than the internal battery-state signal, but
   the minimum external status service is not yet owner-accepted.
 - **Current evidence:** `SCN-001`, `SCN-007`, and `SCN-008`; `IX-009`;
-  `IFC-INT-006`; `FUN-HLT-01`; `IFC-EXT-007`; `REQ-FUN-008`; closed
+  `IFC-INT-006`; `FUN-HLT-01`; `IFC-EXT-007`; `REQ-008`; closed
   `GAP-SOS-003`; open `GAP-IFC-001` and `GAP-VER-001`; `EVD-013`.
 - **Options reviewed:** accept the proposed logical health/status thread; return
   `IX-009` to an unresolved exchange; limit current status to battery state and
@@ -123,8 +125,8 @@ architecture question.
 - **Why the decision exists:** Affordability and attritability constrain the design,
   but they are not mission behavior. Treating checker coverage as a reason to invent
   an activity would misstate the architecture.
-- **Current evidence:** `CAP-004`; `REQ-PER-001`, `REQ-PER-003` through
-  `REQ-PER-005`, `REQ-CON-001`, and `REQ-CON-002`; `TS-001` through `TS-004` and
+- **Current evidence:** `CAP-004`; `REQ-009`, `REQ-011` through
+  `REQ-013`, `REQ-020`, and `REQ-021`; `TS-001` through `TS-004` and
   `TS-006`; closed `GAP-TRC-002`; `VER-002`; `EVD-013`.
 - **Options reviewed:** confirm the cross-cutting treatment; add a lifecycle
   activity later if affordability management is deliberately modeled as behavior;
@@ -150,10 +152,10 @@ to delay the architecture decision.
 
 | Owner Target | Form | Why Owner Must Set It | Unlocks | If Not Set |
 | ------------ | ---- | --------------------- | ------- | ---------- |
-| Relay-payload accommodation envelope | Allowable range plus maxima for payload mass, volume, and electrical demand | The black-box payload is the service load the platform exists to carry; platform analysis cannot infer the intended payload class | `REQ-PER-004`, `REQ-IFC-002`, `TS-004`, `TS-006`, and the coupled mass/power loop | Structure, mount, rail, battery, and gross-mass trades have no common load case |
-| Relay-station service envelope | Threshold and objective for on-station endurance; allowable station tolerance and operating/environmental/GNSS conditions; required platform operating geometry as an architecture objective | Mission usefulness and acceptable operating conditions are stakeholder judgments, not outputs of propulsion sizing | `REQ-PER-002`, `REQ-FUN-003`, `TS-002`, `TS-003`, `TS-007`, `TS-008`, `TS-010`, and `SCN-002` through `SCN-004` | The model can compare parts but cannot judge whether any design provides useful relay service |
-| Affordability, attritability, and loss/recovery policy | Maximum recurring unit cost plus architecture policy for recover, replace, or mixed loss disposition and desired energy-reserve philosophy | Engineering can calculate cost and recovery burden but cannot decide what loss is acceptable or what “low cost” means to the owner | `CAP-004`, `REQ-PER-001`, `REQ-FUN-005`, `TS-003`, `TS-011`, `SCN-007`, `SCN-008`, and `DEC-003` wording | Cost has no acceptance basis and the design cannot rationally trade recovery features against replacement value |
-| Single-operator portability and handling envelope | Confirmed categorical policy plus maximum/preferred handling range for transport, carry, launch, and recovery context | Human-use context defines acceptable handling; gross mass and packed geometry should then be derived | `REQ-PER-005`, `TS-001`, `TS-002`, `TS-006`, and feasibility filtering of the coupled loop | “Single operator” remains too qualitative to reject physically impractical candidates |
+| Relay-payload accommodation envelope | Allowable range plus maxima for payload mass, volume, and electrical demand | The black-box payload is the service load the platform exists to carry; platform analysis cannot infer the intended payload class | `REQ-012`, `REQ-015`, `TS-004`, `TS-006`, and the coupled mass/power loop | Structure, mount, rail, battery, and gross-mass trades have no common load case |
+| Relay-station service envelope | Threshold and objective for on-station endurance; allowable station tolerance and operating/environmental/GNSS conditions; required platform operating geometry as an architecture objective | Mission usefulness and acceptable operating conditions are stakeholder judgments, not outputs of propulsion sizing | `REQ-010`, `REQ-003`, `TS-002`, `TS-003`, `TS-007`, `TS-008`, `TS-010`, and `SCN-002` through `SCN-004` | The model can compare parts but cannot judge whether any design provides useful relay service |
+| Affordability, attritability, and loss/recovery policy | Maximum recurring unit cost plus architecture policy for recover, replace, or mixed loss disposition and desired energy-reserve philosophy | Engineering can calculate cost and recovery burden but cannot decide what loss is acceptable or what “low cost” means to the owner | `CAP-004`, `REQ-009`, `REQ-005`, `TS-003`, `TS-011`, `SCN-007`, `SCN-008`, and `DEC-003` wording | Cost has no acceptance basis and the design cannot rationally trade recovery features against replacement value |
+| Single-operator portability and handling envelope | Confirmed categorical policy plus maximum/preferred handling range for transport, carry, launch, and recovery context | Human-use context defines acceptable handling; gross mass and packed geometry should then be derived | `REQ-013`, `TS-001`, `TS-002`, `TS-006`, and feasibility filtering of the coupled loop | “Single operator” remains too qualitative to reject physically impractical candidates |
 | `CFG-DOM` sourcing policy | Architecture policy and categorical choice defining “domestic,” evidence expected, exceptions, and approval authority | Domestic-content meaning is a governance objective; component research cannot define it after the fact | `CFG-DOM` candidate filtering and later `TS-001` through `TS-008` component comparisons | `CFG-REP` analysis may proceed, but `CFG-DOM` cannot be distinguished or evaluated defensibly |
 
 These are target **packages**, not instructions to fill every bracketed TBD with one
@@ -164,13 +166,13 @@ and conformance authority.
 
 Important unresolved items classify as **A. OWNER TARGET REQUIRED NOW** as follows:
 
-- Payload service load: `REQ-PER-004`, `REQ-IFC-002`, `IFC-INT-003`,
+- Payload service load: `REQ-012`, `REQ-015`, `IFC-INT-003`,
   `IFC-INT-007`, `TS-004`, and `TS-006`.
-- Mission-effective dwell and station service: `REQ-PER-002`, `REQ-FUN-003`,
+- Mission-effective dwell and station service: `REQ-010`, `REQ-003`,
   `SCN-002` through `SCN-004`, `TS-007`, and the owner-context portion of `TS-010`.
-- Affordability and loss disposition: `CAP-004`, `REQ-PER-001`, `REQ-FUN-005`,
+- Affordability and loss disposition: `CAP-004`, `REQ-009`, `REQ-005`,
   `SCN-007`, `SCN-008`, and `TS-011`.
-- Portability: `REQ-PER-005` and its constraints on `TS-001`, `TS-002`, and
+- Portability: `REQ-013` and its constraints on `TS-001`, `TS-002`, and
   `TS-006`.
 - Configuration-specific sourcing: the domestic-content criterion and authority
   recorded as unresolved in `CFG-DOM`.
@@ -179,7 +181,7 @@ Important unresolved items classify as **A. OWNER TARGET REQUIRED NOW** as follo
 
 The following are **B. SHOULD BE DERIVED**, not independent owner targets:
 
-- **Gross mass (`REQ-PER-003`).** Derive it from the payload envelope, structural
+- **Gross mass (`REQ-011`).** Derive it from the payload envelope, structural
   concept, propulsion, battery, margins, and portability envelope. Add an independent
   hard maximum only if a handling, transport, regulatory, or other owner constraint
   supplies a real basis.
@@ -194,7 +196,7 @@ The following are **B. SHOULD BE DERIVED**, not independent owner targets:
 - **Payload-rail implementation.** The owner supplies the black-box electrical
   demand envelope; `TS-004` derives allocation, regulator burden, protection, and
   the resulting battery impact.
-- **Flight-load basis and retention margin (`REQ-IFC-004`).** Derive the load basis
+- **Flight-load basis and retention margin (`REQ-017`).** Derive the load basis
   from mass, maneuver/environment assumptions, and the selected mount. Select margin
   from an applicable safety/engineering basis, not owner preference.
 - **Actual recurring cost and cost breakdown.** Calculate these from source-backed
@@ -274,19 +276,19 @@ intersection exists.
 
 | Requirement | Correct role | Recommended governance after owner disposition |
 | ----------- | ------------ | ----------------------------------------------- |
-| `REQ-FUN-003` | Requirement waiting for an owner service value | Owner sets horizontal/vertical service tolerance and environment; `TS-007` selects the approach. `TS-009` has no dependency role. |
-| `REQ-PER-001` | Stakeholder affordability constraint | Keep a maximum only after defining the recurring-unit cost boundary and loss/reuse accounting policy. Trades calculate compliance. |
-| `REQ-PER-002` | Architecture objective becoming a threshold requirement | Record threshold and, preferably, objective/utility semantics. Do not let `TS-002` or `TS-003` decide mission-useful dwell. |
-| `REQ-PER-003` | Derived design constraint or trade output | Remove its treatment as an independent owner-set value unless portability, transport, or another authoritative ceiling provides a basis. |
-| `REQ-PER-004` | Payload service-interface requirement | Owner governs payload mass/volume envelope; `TS-006` derives mount implementation. |
-| `REQ-PER-005` | Existing owner-level portability objective | Owner confirms the operational handling context; engineering derives mass and geometry limits. |
-| `REQ-IFC-002` | Payload service-interface requirement | Owner supplies electrical-demand envelope; `TS-004` derives rail allocation and implementation. |
-| `REQ-IFC-004` | Safety/design constraint and later verification criterion | Derive load basis and margin from selected architecture and applicable engineering/safety authority, then require physical evidence. |
-| `REQ-FUN-005` | Recovery behavior with a derived trigger | Owner sets recovery/reserve policy; `TS-003` and `TS-011` derive the low-battery threshold and response allocation. |
+| `REQ-003` | Requirement waiting for an owner service value | Owner sets horizontal/vertical service tolerance and environment; `TS-007` selects the approach. `TS-009` has no dependency role. |
+| `REQ-009` | Stakeholder affordability constraint | Keep a maximum only after defining the recurring-unit cost boundary and loss/reuse accounting policy. Trades calculate compliance. |
+| `REQ-010` | Architecture objective becoming a threshold requirement | Record threshold and, preferably, objective/utility semantics. Do not let `TS-002` or `TS-003` decide mission-useful dwell. |
+| `REQ-011` | Derived design constraint or trade output | Remove its treatment as an independent owner-set value unless portability, transport, or another authoritative ceiling provides a basis. |
+| `REQ-012` | Payload service-interface requirement | Owner governs payload mass/volume envelope; `TS-006` derives mount implementation. |
+| `REQ-013` | Existing owner-level portability objective | Owner confirms the operational handling context; engineering derives mass and geometry limits. |
+| `REQ-015` | Payload service-interface requirement | Owner supplies electrical-demand envelope; `TS-004` derives rail allocation and implementation. |
+| `REQ-017` | Safety/design constraint and later verification criterion | Derive load basis and margin from selected architecture and applicable engineering/safety authority, then require physical evidence. |
+| `REQ-005` | Recovery behavior with a derived trigger | Owner sets recovery/reserve policy; `TS-003` and `TS-011` derive the low-battery threshold and response allocation. |
 
-`REQ-CON-004` should remain an architecture policy: continuous GNSS availability is
-not assumed. `TS-007` selects a solution consistent with it. `REQ-SAF-001`,
-`REQ-CON-001`, and `REQ-CON-002` remain valid selection/design constraints; their
+`REQ-023` should remain an architecture policy: continuous GNSS availability is
+not assumed. `TS-007` selects a solution consistent with it. `REQ-018`,
+`REQ-020`, and `REQ-021` remain valid selection/design constraints; their
 physical or component-specific closure occurs later.
 
 ## H. Remaining Non-Owner Dependencies
@@ -326,9 +328,9 @@ approved current architecture addition.
 
 ### G. INTENTIONALLY DEFERRED / FUTURE
 
-- `TS-009`, `REQ-DEF-001`, `REQ-DEF-002`, and `GAP-IFC-002`: relay-payload RF,
+- `TS-009`, `DEF-001`, `DEF-002`, and `GAP-IFC-002`: relay-payload RF,
   waveform, protocol, antenna, and detailed communications implementation.
-- `CAP-003`, `REQ-DEF-004`, and `GAP-TRC-001`: contested-spectrum resilience has no
+- `CAP-003`, `DEF-004`, and `GAP-TRC-001`: contested-spectrum resilience has no
   current mechanism and no partial-satisfaction claim.
 - `CFG-DIG`, `CFG-SOS`, `SCN-005`, `SCN-006`, `GAP-SOS-001`, and `GAP-SOS-002`:
   future UGV and sensor/video branches.
@@ -384,9 +386,9 @@ decision or target:
 2. Represent the five approved target packages using the existing requirement and
    TBD-governance structures, with explicit threshold/objective/range/policy form and
    source authority. Avoid creating a separate documentation framework.
-3. Reclassify `REQ-PER-003` as a derived output unless the owner supplies an
-   independent mass-limit basis. Reassign `REQ-PER-004` and `REQ-IFC-002` to the
-   owner payload envelope; assign `REQ-IFC-004` margin to derived engineering/safety
+3. Reclassify `REQ-011` as a derived output unless the owner supplies an
+   independent mass-limit basis. Reassign `REQ-012` and `REQ-015` to the
+   owner payload envelope; assign `REQ-017` margin to derived engineering/safety
    criteria.
 4. Rewrite `GAP-BUDGET-001` governance and next action so payload/service/cost policy
    are inputs while gross mass, propulsion, battery, achieved performance, and actual
@@ -403,6 +405,6 @@ decision or target:
    Do not mark any study resolved merely because its method is defined.
 
 This pass makes one objective, non-decisional correction now: `TS-009` is removed
-from `REQ-FUN-003` TBD ownership because deferred relay-payload characterization has
+from `REQ-003` TBD ownership because deferred relay-payload characterization has
 no role in selecting a station-keeping tolerance. All owner decisions, target values,
 component choices, evidence-dependent gaps, and baseline approval remain unchanged.

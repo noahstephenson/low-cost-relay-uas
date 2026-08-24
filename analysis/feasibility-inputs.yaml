@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "analysis_id": "ANL-FEAS-001",
   "title": "Relay-UAS coupled physical and economic feasibility sweep",
-  "model_version": "0.8.0-baseline-candidate",
+  "model_version": "0.9.0-baseline-candidate",
   "parent_commit": "e7a84d2",
   "approval_state": "analysis_assumptions_not_owner_approved",
   "scope": "Architecture-level CFG-REP / CFG-DOM carrier feasibility; excludes relay-payload implementation, RF design, component selection, build instructions, and physical verification.",
@@ -10,7 +10,7 @@
     {
       "name": "Relay-payload accommodation envelope",
       "target_type": "allowable range plus maxima",
-      "governing_requirements": ["REQ-PER-004", "REQ-IFC-002"],
+      "governing_requirements": ["REQ-012", "REQ-015"],
       "affected_trade_studies": ["TS-004", "TS-006"],
       "dependent_variables": ["payload_mass_kg", "payload_power_w", "payload_volume_m3"],
       "owner_value_status": "ANALYSIS BOUNDARY CAN BE EXPLORED",
@@ -20,7 +20,7 @@
     {
       "name": "Relay-station service envelope",
       "target_type": "threshold, objective, and allowable operating range",
-      "governing_requirements": ["REQ-PER-002", "REQ-FUN-003", "REQ-CON-004"],
+      "governing_requirements": ["REQ-010", "REQ-003", "REQ-023"],
       "affected_trade_studies": ["TS-002", "TS-003", "TS-007", "TS-008", "TS-010"],
       "dependent_variables": ["endurance_min", "environment_power_margin", "station_tolerance", "platform_operating_geometry"],
       "owner_value_status": "ANALYSIS BOUNDARY CAN BE EXPLORED",
@@ -30,7 +30,7 @@
     {
       "name": "Affordability, attritability, and loss/recovery policy",
       "target_type": "maximum plus architecture policy",
-      "governing_requirements": ["REQ-PER-001", "REQ-FUN-005"],
+      "governing_requirements": ["REQ-009", "REQ-005"],
       "affected_trade_studies": ["TS-003", "TS-011"],
       "dependent_variables": ["platform_cost_usd", "reserve_fraction", "loss_disposition"],
       "owner_value_status": "ANALYSIS BOUNDARY CAN BE EXPLORED",
@@ -40,7 +40,7 @@
     {
       "name": "Single-operator portability and handling envelope",
       "target_type": "categorical policy plus maximum/preferred range",
-      "governing_requirements": ["REQ-PER-005"],
+      "governing_requirements": ["REQ-013"],
       "affected_trade_studies": ["TS-001", "TS-002", "TS-006"],
       "dependent_variables": ["gross_mass_kg", "total_disk_area_m2", "packed_geometry"],
       "owner_value_status": "ANALYSIS BOUNDARY CAN BE EXPLORED",

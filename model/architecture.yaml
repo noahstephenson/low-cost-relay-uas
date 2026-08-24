@@ -254,12 +254,12 @@
       "semantic_role": "cross_cutting_architecture_constraint",
       "activity_allocation_required": false,
       "constrains_requirement_ids": [
-        "REQ-PER-001",
-        "REQ-PER-003",
-        "REQ-PER-004",
-        "REQ-PER-005",
-        "REQ-CON-001",
-        "REQ-CON-002"
+        "REQ-009",
+        "REQ-011",
+        "REQ-012",
+        "REQ-013",
+        "REQ-020",
+        "REQ-021"
       ],
       "trade_study_ids": [
         "TS-001",
@@ -737,10 +737,10 @@
       "degraded_outcome": "Initialization remains incomplete and launch readiness is not established.",
       "termination_condition": "System remains in MODE-005 until unresolved readiness conditions are addressed.",
       "related_requirements": [
-        "REQ-FUN-006",
-        "REQ-FUN-008",
-        "REQ-SAF-002",
-        "REQ-PER-005"
+        "REQ-006",
+        "REQ-008",
+        "REQ-019",
+        "REQ-013"
       ],
       "related_hazards": [
         "HAZ-003",
@@ -808,11 +808,11 @@
       "degraded_outcome": "Relay UAS remains controllable but cannot establish or maintain the intended geometry.",
       "termination_condition": "Station is established, return is commanded, or a degraded condition invokes SCN-007.",
       "related_requirements": [
-        "REQ-FUN-003",
-        "REQ-FUN-004",
-        "REQ-FUN-008",
-        "REQ-PER-005",
-        "REQ-CON-004"
+        "REQ-003",
+        "REQ-004",
+        "REQ-008",
+        "REQ-013",
+        "REQ-023"
       ],
       "related_hazards": [
         "HAZ-001",
@@ -882,7 +882,7 @@
       "degraded_outcome": "Outbound relay traffic is unavailable or partial; the relay UAS remains independently controllable.",
       "termination_condition": "Traffic demand ends, return is commanded, or SCN-007 begins.",
       "related_requirements": [
-        "REQ-FUN-001"
+        "REQ-001"
       ],
       "related_hazards": [
         "HAZ-005",
@@ -948,7 +948,7 @@
       "degraded_outcome": "Return telemetry is unavailable or partial; the relay UAS remains independently controllable.",
       "termination_condition": "Telemetry demand ends, return is commanded, or SCN-007 begins.",
       "related_requirements": [
-        "REQ-FUN-002"
+        "REQ-002"
       ],
       "related_hazards": [
         "HAZ-005",
@@ -1112,9 +1112,9 @@
       "degraded_outcome": "Platform control or recovery is also impaired; response remains an unresolved hazard-control gap.",
       "termination_condition": "Relay UAS is recovered, landed, or otherwise no longer airborne.",
       "related_requirements": [
-        "REQ-FUN-005",
-        "REQ-FUN-007",
-        "REQ-FUN-008"
+        "REQ-005",
+        "REQ-007",
+        "REQ-008"
       ],
       "related_hazards": [
         "HAZ-002",
@@ -1186,10 +1186,10 @@
       "degraded_outcome": "Recovery or record availability is incomplete and becomes visible follow-up work.",
       "termination_condition": "System is in MODE-005 or a loss disposition is recorded.",
       "related_requirements": [
-        "REQ-FUN-004",
-        "REQ-FUN-005",
-        "REQ-FUN-008",
-        "REQ-PER-005"
+        "REQ-004",
+        "REQ-005",
+        "REQ-008",
+        "REQ-013"
       ],
       "related_hazards": [
         "HAZ-001",
@@ -3385,7 +3385,7 @@
     "special_reviews": [
       {
         "topic": "platform-to-payload boundary",
-        "affected_ids": ["IFC-INT-003", "IFC-INT-007", "IFC-INT-010", "REQ-IFC-003"],
+        "affected_ids": ["IFC-INT-003", "IFC-INT-007", "IFC-INT-010", "REQ-016"],
         "result": "PARTIALLY_SUPPORTED",
         "finding": "Recovered evidence supports a physically distinct payload, a payload power relationship, physical retention, and payload-internal antenna coupling. It is insufficient to prove that power and retention were the only recovered platform crossings.",
         "architecture_implication": "The two-crossing CFG-REP / CFG-DOM boundary remains an intentional proposed improvement, not an as-built CFG-REC claim.",
@@ -3403,7 +3403,7 @@
       },
       {
         "topic": "health/status architecture",
-        "affected_ids": ["IX-009", "FUN-HLT-01", "CMP-AVN-01", "CMP-PWR-02", "IFC-INT-006", "IFC-EXT-007", "REQ-FUN-008"],
+        "affected_ids": ["IX-009", "FUN-HLT-01", "CMP-AVN-01", "CMP-PWR-02", "IFC-INT-006", "IFC-EXT-007", "REQ-008"],
         "result": "PROPOSED_ARCHITECTURE_ONLY",
         "finding": "Recovered evidence supports only a monitoring-capable resource class and does not establish an end-to-end operator health/status return.",
         "architecture_implication": "The candidate health/status thread remains proposed under DEC-004 and is not removed merely because CFG-REC does not demonstrate it.",
@@ -3563,7 +3563,7 @@
       "from": "MODE-003",
       "to": "MODE-004",
       "label": "recovery intent",
-      "trigger_refs": ["SCN-007", "REQ-FUN-007"],
+      "trigger_refs": ["SCN-007", "REQ-007"],
       "status": "candidate",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",
@@ -3575,7 +3575,7 @@
       "from": "MODE-002",
       "to": "MODE-004",
       "label": "normal termination or low-battery recovery",
-      "trigger_refs": ["SCN-008", "REQ-FUN-005"],
+      "trigger_refs": ["SCN-008", "REQ-005"],
       "status": "candidate",
       "evidence_basis": "proposed_design",
       "decision_status": "proposed",

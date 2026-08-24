@@ -1,8 +1,8 @@
 <!-- GENERATED VIEW: DO NOT EDIT. Run python scripts/generate-mermaid-views.py -->
-# Generated Architecture Views
+# Architecture Atlas
 
 > **Baseline Candidate - Not Approved.** These diagrams are generated from
-> `system.yaml`, catalogs under `model/`, and `.seal/proof.yaml`. They have no
+> `model/system.yaml`, catalogs under `model/`, and `.seal/proof.yaml`. They have no
 > independent architecture authority. Candidate, proposed, deferred, and
 > unresolved labels do not imply approval or executed verification.
 
@@ -11,7 +11,7 @@ operating procedures, and recovered implementation detail. `CFG-REC` is shown
 only as a descriptive evidence configuration and does not inherit the proposed
 `CFG-REP`/`CFG-DOM` resource decomposition.
 This report is the ID-rich engineering drill-down. Plain-language canonical
-figures are generated separately under `reports/figures/`.
+figures are generated separately under `docs/figures/`.
 
 ## Configuration and context views
 
@@ -20,6 +20,9 @@ figures are generated separately under `reports/figures/`.
 Configuration scope: `CFG-REC / CFG-REP / CFG-DOM / CFG-DIG / CFG-SOS`.
 
 Derivation denotes lineage, not exact inheritance, equivalence, or approval. Future context is outside the current implementation baseline.
+
+<details>
+<summary>Open what is current, reference, and future? diagram</summary>
 
 ```mermaid
 flowchart LR
@@ -35,27 +38,32 @@ flowchart LR
     CFG_DIG -->|"outer system-of-systems context containing the relay UAS as one constituent<br/>derivation is not approval"| CFG_SOS
 ```
 
+</details>
+
 ### 2. What is inside the project boundary?
 
 Configuration scope: `CFG-SOS outer context - CFG-REP / CFG-DOM / CFG-DIG inner constituent`.
 
 External constituents remain independently managed. Only catalogued information exchanges are drawn; unconnected future actors remain context, not implied interfaces.
 
+<details>
+<summary>Open what is inside the project boundary? diagram</summary>
+
 ```mermaid
 flowchart LR
     %% Configuration scope: CFG-SOS outer context - CFG-REP / CFG-DOM / CFG-DIG inner constituent
     subgraph OUTER["C2 Ecosystem outer boundary - CFG-SOS proposed context"]
         OP_010["OP-010<br/>Operator<br/>independently managed human performer"]
-        OP_001["OP-001<br/>Ground Control Node<br/>independently managed external system"]
-        OP_003["OP-003<br/>Remote UAS Node<br/>independently managed external system"]
+        OP_001["OP-001<br/>Ground Control<br/>independently managed external system"]
+        OP_003["OP-003<br/>Remote UAS<br/>independently managed external system"]
         OP_004["OP-004<br/>UGV<br/>future / unresolved"]
         OP_005["OP-005<br/>Radio User<br/>future / unresolved"]
         OP_006["OP-006<br/>Network Service<br/>future / unresolved"]
-        OP_007["OP-007<br/>Maintenance Personnel<br/>external support performer"]
+        OP_007["OP-007<br/>Maintenance<br/>external support performer"]
         OP_008["OP-008<br/>Spectrum-Management Authority<br/>independent authority"]
         OP_009["OP-009<br/>Supporting Infrastructure<br/>future / unresolved"]
         subgraph INNER["Relay UAS inner boundary - proposed for CFG-REP/CFG-DOM/CFG-DIG"]
-            OP_002["OP-002<br/>Relay UAS / Relay Node<br/>system under study"]
+            OP_002["OP-002<br/>Relay UAS<br/>system under study"]
         end
     end
     OP_010 -->|"IX-001 / IFC-EXT-005<br/>command and control"| OP_002
@@ -69,19 +77,24 @@ flowchart LR
     OP_007 -->|"IX-010 / IFC-EXT-006<br/>configuration and maintenance"| OP_002
 ```
 
+</details>
+
 ### 3. How current-system traffic moves
 
 Configuration scope: `CFG-REP / CFG-DOM`.
 
 `IX-001` is independent Relay-UAS platform command. `IX-002` through `IX-005` are relayed mission traffic.
 
+<details>
+<summary>Open how current-system traffic moves diagram</summary>
+
 ```mermaid
 flowchart LR
     %% Configuration scope: CFG-REP / CFG-DOM
     OP_010["OP-010<br/>Operator"]
-    OP_001["OP-001<br/>Ground Control Node"]
-    OP_002["OP-002<br/>Relay UAS / Relay Node"]
-    OP_003["OP-003<br/>Remote UAS Node"]
+    OP_001["OP-001<br/>Ground Control"]
+    OP_002["OP-002<br/>Relay UAS"]
+    OP_003["OP-003<br/>Remote UAS"]
     OP_010 -->|"IX-001 / IFC-EXT-005<br/>command and control"| OP_002
     OP_001 -->|"IX-002 / IFC-EXT-001<br/>command and control"| OP_002
     OP_002 -->|"IX-003 / IFC-EXT-002<br/>command and control"| OP_003
@@ -89,24 +102,29 @@ flowchart LR
     OP_002 -->|"IX-005 / IFC-EXT-004<br/>telemetry"| OP_001
 ```
 
+</details>
+
 ## Selected resource connectivity views
 
 ### 4B. How power and propulsion connect
 
 Configuration scope: `CFG-REP / CFG-DOM`.
 
+<details>
+<summary>Open how power and propulsion connect diagram</summary>
+
 ```mermaid
 flowchart LR
     %% Configuration scope: CFG-REP / CFG-DOM
-    CMP_PWR_01["CMP-PWR-01<br/>Battery pack"]
-    CMP_PWR_02["CMP-PWR-02<br/>Power distribution board"]
-    CMP_PWR_03["CMP-PWR-03<br/>Step-down regulator(s)"]
-    CMP_PWR_04["CMP-PWR-04<br/>Battery connector"]
-    CMP_PRP_01["CMP-PRP-01<br/>Brushless motor"]
-    CMP_PRP_02["CMP-PRP-02<br/>Electronic speed controller"]
-    CMP_PRP_03["CMP-PRP-03<br/>Propeller"]
-    CMP_AVN_01["CMP-AVN-01<br/>Flight controller"]
-    CMP_COM_01["CMP-COM-01<br/>Relay payload module (black box)"]
+    CMP_PWR_01["CMP-PWR-01<br/>Battery"]
+    CMP_PWR_02["CMP-PWR-02<br/>Main Power Distribution"]
+    CMP_PWR_03["CMP-PWR-03<br/>Power Regulators"]
+    CMP_PWR_04["CMP-PWR-04<br/>Battery Connection"]
+    CMP_PRP_01["CMP-PRP-01<br/>Motors"]
+    CMP_PRP_02["CMP-PRP-02<br/>Motor Controllers"]
+    CMP_PRP_03["CMP-PRP-03<br/>Propellers"]
+    CMP_AVN_01["CMP-AVN-01<br/>Flight Controller"]
+    CMP_COM_01["CMP-COM-01<br/>Relay Payload (Black Box)"]
     CMP_PWR_01 -->|"IFC-INT-011<br/>electrical power"| CMP_PWR_02
     CMP_PWR_04 -.->|"physical connection resource<br/>IFC-INT-011"| CMP_PWR_02
     CMP_PWR_02 -->|"IFC-INT-001<br/>electrical power"| CMP_PRP_02
@@ -118,20 +136,25 @@ flowchart LR
     CMP_PRP_01 -->|"IFC-INT-014<br/>mechanical propulsion drive"| CMP_PRP_03
 ```
 
+</details>
+
 ### 4C. How platform control works
 
 Configuration scope: `CFG-REP / CFG-DOM`.
+
+<details>
+<summary>Open how platform control works diagram</summary>
 
 ```mermaid
 flowchart LR
     %% Configuration scope: CFG-REP / CFG-DOM
     OP_010["OP-010<br/>Operator"]
-    CMP_AVN_01["CMP-AVN-01<br/>Flight controller"]
-    CMP_AVN_02["CMP-AVN-02<br/>IMU / sensor suite"]
-    CMP_AVN_03["CMP-AVN-03<br/>GNSS / compass module"]
-    CMP_AVN_04["CMP-AVN-04<br/>Control link receiver"]
-    CMP_PRP_02["CMP-PRP-02<br/>Electronic speed controller"]
-    CMP_PWR_02["CMP-PWR-02<br/>Power distribution board"]
+    CMP_AVN_01["CMP-AVN-01<br/>Flight Controller"]
+    CMP_AVN_02["CMP-AVN-02<br/>Flight Sensors"]
+    CMP_AVN_03["CMP-AVN-03<br/>Navigation Sensor"]
+    CMP_AVN_04["CMP-AVN-04<br/>Platform Command Receiver"]
+    CMP_PRP_02["CMP-PRP-02<br/>Motor Controllers"]
+    CMP_PWR_02["CMP-PWR-02<br/>Main Power Distribution"]
     OP_010 -->|"IFC-EXT-005<br/>command and control<br/>separate platform command"| CMP_AVN_04
     CMP_AVN_04 -->|"IFC-INT-005<br/>command and control"| CMP_AVN_01
     CMP_AVN_01 -->|"IFC-INT-004<br/>command and control"| CMP_PRP_02
@@ -140,22 +163,27 @@ flowchart LR
     CMP_AVN_03 -->|"IFC-INT-012<br/>navigation and timing"| CMP_AVN_01
 ```
 
+</details>
+
 ### 4D. How the relay payload is isolated
 
 Configuration scope: `CFG-REP / CFG-DOM`.
 
 `IFC-INT-010` stays inside the payload black-box envelope. Only `IFC-INT-003` and `IFC-INT-007` cross from platform to payload.
 
+<details>
+<summary>Open how the relay payload is isolated diagram</summary>
+
 ```mermaid
 flowchart LR
     %% Configuration scope: CFG-REP / CFG-DOM
-    OP_001["OP-001<br/>Ground Control Node"]
-    OP_003["OP-003<br/>Remote UAS Node"]
-    CMP_PWR_03["CMP-PWR-03<br/>Step-down regulator(s)"]
-    CMP_MNT_01["CMP-MNT-01<br/>Modular payload bay"]
+    OP_001["OP-001<br/>Ground Control"]
+    OP_003["OP-003<br/>Remote UAS"]
+    CMP_PWR_03["CMP-PWR-03<br/>Power Regulators"]
+    CMP_MNT_01["CMP-MNT-01<br/>Modular Payload Bay"]
     subgraph PAYLOAD["Relay-payload black-box envelope"]
-        CMP_COM_01["CMP-COM-01<br/>Relay payload module (black box)"]
-        CMP_COM_02["CMP-COM-02<br/>Antenna physical-resource envelope<br/>physical-resource envelope"]
+        CMP_COM_01["CMP-COM-01<br/>Relay Payload (Black Box)"]
+        CMP_COM_02["CMP-COM-02<br/>Payload Antenna Envelope<br/>physical-resource envelope"]
         CMP_COM_01 <-->|"IFC-INT-010<br/>physical-resource coupling<br/>payload-internal - characteristics undefined"| CMP_COM_02
     end
     CMP_PWR_03 -->|"IFC-INT-003<br/>electrical power<br/>platform boundary crossing"| CMP_COM_01
@@ -166,6 +194,8 @@ flowchart LR
     CMP_COM_01 -->|"IFC-EXT-004<br/>telemetry<br/>implementation undefined"| OP_001
 ```
 
+</details>
+
 ## Evidence correspondence view
 
 ### 4G. How recovered evidence informs candidate roles
@@ -173,6 +203,9 @@ flowchart LR
 Configuration scope: `CFG-REC informs CFG-REP / CFG-DOM - no exact inheritance`.
 
 This is a grouped view of the controlled record-level mapping. Five recovered records remain unmatched and one remains unknown; no contradiction was found.
+
+<details>
+<summary>Open how recovered evidence informs candidate roles diagram</summary>
 
 ```mermaid
 flowchart LR
@@ -185,6 +218,8 @@ flowchart LR
     REC_MOUNTING["Recovered payload retention"] -->|"partial role support"| CAND_MOUNTING["CMP-MNT-01"]
 ```
 
+</details>
+
 ## Behavioral views
 
 ### 5. How operating modes change
@@ -192,6 +227,9 @@ flowchart LR
 Configuration scope: `CFG-REP / CFG-DOM`.
 
 Only transitions supported by current scenarios or requirements are shown; all remain candidate unless stated otherwise.
+
+<details>
+<summary>Open how operating modes change diagram</summary>
 
 ```mermaid
 stateDiagram-v2
@@ -205,20 +243,25 @@ stateDiagram-v2
     MODE_005 --> MODE_001: SCN-002 - launch and transit
     MODE_001 --> MODE_002: SCN-002 - relay station established
     MODE_002 --> MODE_003: SCN-007 - relay function degraded
-    MODE_003 --> MODE_004: SCN-007 / REQ-FUN-007 - recovery intent
-    MODE_002 --> MODE_004: SCN-008 / REQ-FUN-005 - normal termination or low-battery recovery
+    MODE_003 --> MODE_004: SCN-007 / REQ-007 - recovery intent
+    MODE_002 --> MODE_004: SCN-008 / REQ-005 - normal termination or low-battery recovery
     MODE_004 --> MODE_005: SCN-008 - platform recovered and made ground safe
     note right of MODE_003
       Payload function degraded
       Platform control may remain available
-      REQ-FUN-007 [PROPOSED]
+      REQ-007 [PROPOSED]
       Evidence [DEFERRED]
     end note
 ```
 
+</details>
+
 ### 7. How command and telemetry flow
 
 Configuration scope: `CFG-REP / CFG-DOM`.
+
+<details>
+<summary>Open how command and telemetry flow diagram</summary>
 
 ```mermaid
 sequenceDiagram
@@ -238,11 +281,16 @@ sequenceDiagram
     Note over Ground,Remote: SCN-003 / SCN-004 logical relay only - external paths undefined
 ```
 
+</details>
+
 ### 8. What happens on relay degradation?
 
 Configuration scope: `CFG-REP / CFG-DOM`.
 
 The second path terminates at explicit gaps; it does not invent a recovery behavior.
+
+<details>
+<summary>Open what happens on relay degradation? diagram</summary>
 
 ```mermaid
 sequenceDiagram
@@ -255,7 +303,7 @@ sequenceDiagram
     Relay-->>Operator: IX-009 / IFC-EXT-007 health/status [PROPOSED]
     Operator->>Relay: IX-001 / IFC-EXT-005 independent platform command
     alt Payload lost and platform remains controllable
-        Note over Payload,Relay: MODE-003 - CTL-004 / REQ-FUN-007 [PROPOSED]
+        Note over Payload,Relay: MODE-003 - CTL-004 / REQ-007 [PROPOSED]
         Relay-->>Operator: transition intent toward MODE-004 Return / Recovery
     else Platform control also impaired
         Note over Relay,Operator: HAZ-001 / GAP-HAZ-001 - no modeled consequence-management behavior
@@ -263,36 +311,43 @@ sequenceDiagram
     end
 ```
 
+</details>
+
 ### 9B. Why mass, power, endurance, and cost are coupled
 
 Configuration scope: `CFG-REP / CFG-DOM`.
 
 This is one coupled design problem. The diagram adds no values and does not resolve any trade study.
 
+<details>
+<summary>Open why mass, power, endurance, and cost are coupled diagram</summary>
+
 ```mermaid
 flowchart LR
     %% Configuration scope: CFG-REP / CFG-DOM
-    REQ_PER_004["REQ-PER-004<br/>The payload bay shall accommodate a payload of up to [TBD] mass within a [TBD] volume envelope.<br/>[PROPOSED]"]
+    REQ_012["REQ-012<br/>Accommodate payload envelope<br/>[PROPOSED]"]
     TS_006["TS-006<br/>Payload mount interface standard<br/>[PROPOSED]"]
     TS_001["TS-001<br/>Airframe material and construction method<br/>[PROPOSED]"]
-    REQ_PER_003["REQ-PER-003<br/>System gross mass shall not exceed [TBD].<br/>[PROPOSED]"]
+    REQ_011["REQ-011<br/>Limit system gross mass<br/>[PROPOSED]"]
     TS_002["TS-002<br/>Propulsion sizing<br/>[PROPOSED]"]
     TS_004["TS-004<br/>Payload power allocation<br/>[PROPOSED]"]
-    REQ_PER_002["REQ-PER-002<br/>The system shall provide at least [TBD] minutes of on-station endurance.<br/>[PROPOSED]"]
+    REQ_010["REQ-010<br/>Provide on-station endurance<br/>[PROPOSED]"]
     TS_003["TS-003<br/>Battery architecture<br/>[PROPOSED]"]
-    REQ_PER_001["REQ-PER-001<br/>System unit cost shall not exceed [TBD].<br/>[PROPOSED]"]
+    REQ_009["REQ-009<br/>Limit system unit cost<br/>[PROPOSED]"]
     GAP_BUDGET_001["GAP-BUDGET-001<br/>Coupled targets and evidence unresolved<br/>[UNRESOLVED]"]
-    REQ_PER_004 -->|"contributes to"| REQ_PER_003
+    REQ_012 -->|"contributes to"| REQ_011
     TS_002 -->|"coupled to"| TS_003
     TS_004 -->|"constrains"| TS_003
-    TS_006 -->|"defines envelope for"| REQ_PER_004
-    TS_001 -->|"contributes mass to"| REQ_PER_003
-    REQ_PER_003 -->|"drives"| TS_002
-    REQ_PER_002 -->|"sets energy demand for"| TS_003
-    TS_003 -->|"contributes mass to"| REQ_PER_003
-    TS_003 -->|"contributes cost to"| REQ_PER_001
-    REQ_PER_001 -.->|"remains blocked by"| GAP_BUDGET_001
+    TS_006 -->|"defines envelope for"| REQ_012
+    TS_001 -->|"contributes mass to"| REQ_011
+    REQ_011 -->|"drives"| TS_002
+    REQ_010 -->|"sets energy demand for"| TS_003
+    TS_003 -->|"contributes mass to"| REQ_011
+    TS_003 -->|"contributes cost to"| REQ_009
+    REQ_009 -.->|"remains blocked by"| GAP_BUDGET_001
 ```
+
+</details>
 
 ## Assurance and traceability views
 
@@ -300,18 +355,21 @@ flowchart LR
 
 Configuration scope: `CFG-REP / CFG-DOM with project-scope deferrals`.
 
-VER-001 through VER-007 have current 0.8.0 model-level evidence in EVD-013 but no new owner acceptance. EVD-008 through EVD-012 preserve the accepted 0.7.0 work package. VER-008 remains deferred and VER-009 remains blocked; neither review constitutes physical verification, external conformance, safety approval, or technical-baseline approval.
+VER-001 through VER-007 have 0.8.0 model-level evidence in EVD-013 but no owner acceptance. The current 0.9.0 identifier and documentation refactor has no new evidence record. EVD-008 through EVD-012 preserve the accepted 0.7.0 work package. VER-008 remains deferred and VER-009 remains blocked; none of these records constitutes physical verification, external conformance, safety approval, or technical-baseline approval.
+
+<details>
+<summary>Open what has been checked and what still needs evidence? diagram</summary>
 
 ```mermaid
 flowchart LR
     %% Configuration scope: CFG-REP / CFG-DOM with project-scope deferrals
     ACCEPTED["PRESERVED OWNER-ACCEPTED REVIEW<br/>0.7.0 / EVD-008 through EVD-012"]
-    EXECUTED["CURRENT MODEL REVIEW<br/>0.8.0 / VER-001 through VER-007<br/>EVD-013 - not owner accepted"]
+    EXECUTED["LATEST RECORDED MODEL REVIEW<br/>0.8.0 / VER-001 through VER-007<br/>EVD-013 - not owner accepted"]
     PASS["EXECUTED PASS<br/>VER-002 / VER-007"]
     OPEN["EXECUTED WITH OPEN GAPS<br/>VER-001 / VER-003 through VER-006"]
-    PHYSICAL["PHYSICAL-EVIDENCE-REQUIRED<br/>REQ-FUN-006 / REQ-FUN-008<br/>GAP-VER-001"]
-    EXTERNAL["EXTERNAL-AUTHORITY-REQUIRED<br/>REQ-FUN-001 / REQ-FUN-004<br/>GAP-IFC-001"]
-    DEFERRED["INTENTIONALLY-DEFERRED<br/>REQ-DEF-001 / REQ-DEF-004"]
+    PHYSICAL["PHYSICAL-EVIDENCE-REQUIRED<br/>REQ-006 / REQ-008<br/>GAP-VER-001"]
+    EXTERNAL["EXTERNAL-AUTHORITY-REQUIRED<br/>REQ-001 / REQ-004<br/>GAP-IFC-001"]
+    DEFERRED["INTENTIONALLY-DEFERRED<br/>DEF-001 / DEF-004"]
     VER_008["VER-008<br/>Deferred physical verification method<br/>future physical evidence"]
     VER_009["VER-009<br/>External conformance verification<br/>external authority required"]
     TS_009["TS-009<br/>Relay payload characterization<br/>formal deferral"]
@@ -323,11 +381,16 @@ flowchart LR
     DEFERRED -.->|"outside current scope"| TS_009
 ```
 
+</details>
+
 ### 11. Example end-to-end relay trace
 
 Configuration scope: `CFG-REP / CFG-DOM`.
 
 The thread is readable end to end, but candidate relationships and evidence gaps remain visible.
+
+<details>
+<summary>Open example end-to-end relay trace diagram</summary>
 
 ```mermaid
 flowchart LR
@@ -338,9 +401,9 @@ flowchart LR
     OA_004["OA-004<br/>Relay outbound traffic<br/>[PROPOSED]"]
     IX_002["IX-002<br/>Remote-UAS command toward relay<br/>[PROPOSED]"]
     FUN_REL_01["FUN-REL-01<br/>Relay outbound traffic<br/>[PROPOSED]"]
-    CMP_COM_01["CMP-COM-01<br/>Relay payload module (black box)<br/>[PROPOSED]"]
+    CMP_COM_01["CMP-COM-01<br/>Relay Payload (Black Box)<br/>[PROPOSED]"]
     IFC_EXT_001["IFC-EXT-001<br/>Ground-control outbound traffic to relay payload<br/>[PROPOSED]"]
-    REQ_FUN_001["REQ-FUN-001<br/>Relay outbound traffic<br/>[PROPOSED]"]
+    REQ_001["REQ-001<br/>Relay outbound traffic<br/>[PROPOSED]"]
     VER_001["VER-001<br/>Requirement and architecture analysis<br/>[EXECUTED WITH OPEN GAPS]"]
     VER_009["VER-009<br/>External conformance verification<br/>[BLOCKED]"]
     GAP_IFC_001["GAP-IFC-001<br/>External conformance authority missing<br/>[UNRESOLVED]"]
@@ -356,6 +419,8 @@ flowchart LR
     REQ_FUN_001 -.->|"external conformance"| VER_009
     VER_009 -.->|"authority and evidence unresolved"| GAP_IFC_001
 ```
+
+</details>
 
 ## Generated interface inventory
 
