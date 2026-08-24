@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Low-Cost Repeater Drone — Generic Concept: Model Report</title>
+<style>
+  body { font-family: Segoe UI, Arial, sans-serif; margin: 2em auto; max-width: 1100px; color: #1a1a1a; line-height: 1.45; }
+  h1 { border-bottom: 3px solid #2c3e50; padding-bottom: 0.3em; }
+  h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.2em; margin-top: 2em; color: #2c3e50; }
+  h3 { margin-top: 1.4em; color: #34495e; }
+  table { border-collapse: collapse; width: 100%; margin: 1em 0 2em 0; font-size: 0.92em; }
+  th, td { border: 1px solid #ccc; padding: 6px 10px; text-align: left; vertical-align: top; }
+  th { background: #2c3e50; color: white; }
+  tr:nth-child(even) { background: #f5f7f8; }
+  .open { color: #b03a2e; font-weight: 600; }
+  .closed { color: #1e8449; font-weight: 600; }
+  .note { background: #fff8e1; border-left: 4px solid #f39c12; padding: 0.8em 1em; margin: 1em 0; }
+  .warn { background: #fdecea; border-left: 4px solid #c0392b; padding: 0.8em 1em; margin: 1em 0; }
+  code { background: #eef1f2; padding: 1px 5px; border-radius: 3px; font-size: 0.9em; }
+  .meta { color: #666; font-size: 0.9em; }
+</style>
+</head>
+<body>
+
+<h1>Low-Cost Repeater Drone — Generic Concept<br><span style="font-size:0.6em; color:#555;">Model Report — Blocks, Open Trade-Study Parameters, Requirements Traceability</span></h1>
+
+<p class="meta">Model baseline: <code>Claude Test.mdzip</code> · Scope: full project (root package <code>Low-Cost Repeater Drone — Generic Concept</code>) · Report authored directly from model queries (see note below on report-generation method).</p>
+
+<div class="note">
+<strong>Report generation method.</strong> The native CATIA Magic Report Wizard ("Structural Report" template) was invoked via the Cameo bridge in HTML and PDF output modes. Both invocations returned <code>generated: true</code> but produced only the template's boilerplate title page/front matter (~1.1 KB of placeholder text such as "&lt;Provide a short description...&gt;"), with no per-element content body — confirmed by inspecting the raw file signature (both outputs were actually DOCX/OOXML packages regardless of the requested format) and by extracting and reading the full document text. This is a bridge/template-engine limitation, not a scoping or format error. In place of the non-functional native report, this document was authored directly by querying the live model (<code>cameo_query_elements</code>, <code>cameo_get_specification</code>) for every Block, ConstraintBlock, and Requirement in the project, so its content is authoritative against the current saved baseline.
+</div>
+
+<div class="warn">
+<strong>Baseline anomalies to disposition.</strong>
+<ul>
+<li>An orphaned duplicate system block <code>UAV Functional Replica (SYS-001)</code> (id <code>_2024x_2_642020f_1785634633980_558768_3390</code>) exists in the <code>System</code> package alongside the active <code>Low-Cost Repeater Drone — Generic Concept (SYS-001)</code> block. It carries the original pre-rename documentation ("Partially disassembled at time of capture") and is not composed into any diagram or association created in this build. It appears to be a leftover from an earlier capture and should be reviewed for deletion.</li>
+<li>An auto-generated context block named <code>03_Parametrics</code> (id <code>_2024x_2_642020f_1785635914960_700003_5173</code>) was silently created by the CATIA Magic engine when the "Cost-Mass Rollup" Parametric Diagram was created directly under the <code>03_Parametrics</code> package without an explicit owning block. It is a diagram-context artifact, not an architecture element, and is excluded from the block roster below.</li>
+</ul>
+</div>
+
+<h2>1. Block Roster and Open Trade-Study Parameters</h2>
+<p>32 architecture Blocks + 2 ConstraintBlocks across 6 subsystems plus the top-level system block. "Open" parameters are those whose value is explicitly documented as TBD / placeholder / pending a trade study — i.e., unresolved design decisions that a future design phase must close, consistent with this being an architecture-level (not detailed-design) model.</p>
+
+<h3>System</h3>
+<table>
+<tr><th>Block</th><th>Documentation</th><th>Open Trade-Study Parameters</th></tr>
+<tr><td><b>Low-Cost Repeater Drone — Generic Concept (SYS-001)</b></td><td>Notional X-configuration quadcopter carrying a communications-relay payload. Architecture-level concept; design driver: minimize cost via COTS components.</td><td><span class="open">massBudget</span> ≈2.5 kg (target ceiling, not resolved design value); <span class="open">costBudget</span> ≈500 USD (target ceiling)</td></tr>
+</table>
+
+<h3>Airframe</h3>
+<table>
+<tr><th>Block</th><th>Documentation</th><th>Open Trade-Study Parameters</th></tr>
+<tr><td>Airframe (aggregate)</td><td>Composes the 5 parts below.</td><td>massRollupEstimate ≈1.00 kg, costRollupEstimate ≈42 USD (informational rollups, not open items themselves)</td></tr>
+<tr><td>AFR-FRAME</td><td>Central frame plate(s).</td><td class="open">material — TBD (candidates: injection-molded nylon/PC, G10 fiberglass, stamped aluminum)</td></tr>
+<tr><td>AFR-ARM (qty 4)</td><td>Arm assembly; cornerPosition C1-C4 = FL/FR/RL/RR.</td><td class="open">material — TBD (nylon/glass-fiber composite or COTS arm stock)</td></tr>
+<tr><td>AFR-LANDING (qty 4)</td><td>Fixed landing gear leg.</td><td class="open">material — TBD (3D-printed TPU or PLA/ABS)</td></tr>
+<tr><td>AFR-MOUNT</td><td>Modular payload/comms mount interface, standardized bolt pattern.</td><td class="open">material — TBD (injection-molded plate)</td></tr>
+<tr><td>AFR-FASTENERS</td><td>Generic COTS fastener set.</td><td class="open">fastener size — TBD (M2/M3 class)</td></tr>
+</table>
+
+<h3>Propulsion</h3>
+<table>
+<tr><th>Block</th><th>Documentation</th><th>Open Trade-Study Parameters</th></tr>
+<tr><td>Propulsion (aggregate)</td><td>Composes 4 identical PropulsionSet-C{n}.</td><td>massRollupEstimate ≈0.36 kg, costRollupEstimate ≈84 USD (informational, includes all 4 sets)</td></tr>
+<tr><td>PropulsionSet-C1..C4</td><td>One per corner; identical by design; rotation alternates CCW/CW/CW/CCW.</td><td>None beyond shared Motor/ESC/Propeller parameters (rotation direction is a fixed design convention, not open)</td></tr>
+<tr><td>Motor (shared type)</td><td>Generic COTS brushless outrunner.</td><td class="open">kvRatingEstimate — TBD by trade study</td></tr>
+<tr><td>ESC (shared type)</td><td>Generic COTS electronic speed controller.</td><td class="open">currentRatingEstimate — TBD by motor selection</td></tr>
+<tr><td>Propeller (shared type)</td><td>Generic COTS 2-blade propeller.</td><td class="open">diameterEstimate — TBD; <span class="open">pitchEstimate</span> — TBD</td></tr>
+</table>
+
+<h3>Power</h3>
+<table>
+<tr><th>Block</th><th>Documentation</th><th>Open Trade-Study Parameters</th></tr>
+<tr><td>Power (aggregate)</td><td>Composes the 4 parts below.</td><td>massRollupEstimate ≈0.585 kg, costRollupEstimate ≈52 USD (informational)</td></tr>
+<tr><td>PWR-BATT</td><td>Generic LiPo/Li-ion battery pack — largest single mass contributor.</td><td class="open">cellCountEstimate — TBD; <span class="open">capacityEstimate</span> — TBD by endurance requirement (drives REQ-PWR-001/002)</td></tr>
+<tr><td>PWR-PDB</td><td>COTS power distribution board with current sensing.</td><td class="open">currentRatingEstimate — TBD by power budget rollup</td></tr>
+<tr><td>PWR-REG</td><td>Step-down regulator(s) for Avionics/Comms low-voltage rails.</td><td class="open">outputVoltageEstimate — TBD (5V/12V dual-rail candidate)</td></tr>
+<tr><td>PWR-CONN</td><td>Generic COTS battery connector.</td><td class="open">connectorClass — TBD (XT60-class candidate, by current budget)</td></tr>
+</table>
+
+<h3>Avionics</h3>
+<table>
+<tr><th>Block</th><th>Documentation</th><th>Open Trade-Study Parameters</th></tr>
+<tr><td>Avionics (aggregate)</td><td>Composes the 4 parts below.</td><td>massRollupEstimate ≈0.065 kg, costRollupEstimate ≈80 USD (informational; includes AVN-GNSS pending scope decision)</td></tr>
+<tr><td>AVN-FC</td><td>Generic COTS flight controller, open-source-firmware class.</td><td class="open">firmwareEcosystem — TBD by trade study (traces to REQ-AVN-001)</td></tr>
+<tr><td>AVN-IMU</td><td>Integrated sensor suite (typically on/paired with FC).</td><td class="open">standalone vs. FC-integrated — not decided</td></tr>
+<tr><td>AVN-GNSS</td><td>Optional GNSS/compass for position-hold / RTH.</td><td class="open"><b>Entire block's inclusion in scope is unresolved</b> — see REQ-AVN-002</td></tr>
+<tr><td>AVN-CAM</td><td>FPV or mapping-class camera.</td><td class="open">camera class — TBD by mission (FPV vs. mapping)</td></tr>
+</table>
+
+<h3>Communications (black-box only, per architecture-level scope constraint)</h3>
+<table>
+<tr><th>Block</th><th>Documentation</th><th>Open Trade-Study Parameters</th></tr>
+<tr><td>Communications (aggregate)</td><td>Composes the 3 parts below.</td><td>massRollupEstimate ≈0.05 kg, costRollupEstimate ≈35 USD (informational)</td></tr>
+<tr><td>COM-UPLINK</td><td>Black-box: ground→remote relay of control/telemetry.</td><td class="open">frequency/protocol/modulation — explicitly not modeled (open trade study + regulatory dependency, REQ-COM-002/003)</td></tr>
+<tr><td>COM-DOWNLINK</td><td>Black-box: remote→ground relay of telemetry/video.</td><td class="open">frequency/protocol/modulation — explicitly not modeled (same as above)</td></tr>
+<tr><td>COM-ANTENNA</td><td>Generic RF radiating element.</td><td class="open">type/gain/pattern — explicitly left as open trade-study parameters, not modeled as values</td></tr>
+</table>
+
+<h3>Equipment Mounts</h3>
+<table>
+<tr><th>Block</th><th>Documentation</th><th>Open Trade-Study Parameters</th></tr>
+<tr><td>EquipmentMounts (aggregate)</td><td>Composes PAY-MOUNT.</td><td>massRollupEstimate ≈0.04 kg, costRollupEstimate ≈5 USD (informational)</td></tr>
+<tr><td>PAY-MOUNT</td><td>Modular payload bay using the AFR-MOUNT bolt-pattern interface.</td><td>None — interface is fixed to AFR-MOUNT; payload content is scope-limited by REQ-EQP-001 (sensor/comms only)</td></tr>
+</table>
+
+<h3>Parametrics (03_Parametrics)</h3>
+<table>
+<tr><th>ConstraintBlock</th><th>Documentation</th><th>Status</th></tr>
+<tr><td>Total Mass</td><td>Sums 6 subsystem massRollupEstimate placeholders vs. SYS-001::massBudget. Rollup ≈2.10 kg vs. 2.5 kg target (≈0.4 kg margin).</td><td class="open">Visual connector paths on the "Cost-Mass Rollup" diagram could not be rendered by the bridge (nested constraint-parameter shapes) — the 14 underlying model-level Connector bindings exist and are queryable, only the diagram lines are missing. Documented bridge limitation.</td></tr>
+<tr><td>Total Unit Cost</td><td>Sums 6 subsystem costRollupEstimate placeholders vs. SYS-001::costBudget. Rollup ≈298 USD vs. 500 USD target (≈202 USD margin).</td><td class="open">Same limitation as above.</td></tr>
+</table>
+
+<h2>2. Requirements Traceability and Trace Status</h2>
+<p>11 Requirements total: 1 parent/umbrella + 10 subsystem-level children. Every child requirement has (a) a <code>Satisfy</code> relationship from its owning subsystem-aggregate block, and (b) a <code>Derive</code> (deriveReqt) relationship into the parent umbrella requirement. Traceability closure for this architecture-level pass is <span class="closed">COMPLETE</span> — no orphan requirements, no requirement lacking both a satisfying block and a parent link.</p>
+<p class="meta">Note on granularity: Satisfy relationships are asserted at the subsystem-aggregate level (e.g., <code>Airframe</code>), not against individual part blocks (e.g., <code>AFR-FRAME</code>). Part blocks trace to requirements transitively via their composition into the satisfying subsystem block.</p>
+
+<table>
+<tr><th>Req ID</th><th>Name</th><th>Satisfied By (Block)</th><th>Derives To</th><th>Trace Status</th><th>Content Maturity</th></tr>
+<tr><td>REQ-SYS-000</td><td>Low-Cost Repeater Drone Concept Requirements (parent)</td><td>— (umbrella; not directly satisfied by a block)</td><td>— (top of hierarchy)</td><td class="closed">CONSOLIDATED — 10/10 children traced in</td><td>Stable</td></tr>
+<tr><td>REQ-AFR-001</td><td>Low-cost structure</td><td>Airframe</td><td>REQ-SYS-000</td><td class="closed">TRACED</td><td>Stable — material selection flagged as trade study</td></tr>
+<tr><td>REQ-PRO-001</td><td>COTS propulsion</td><td>Propulsion</td><td>REQ-SYS-000</td><td class="closed">TRACED</td><td>Stable — KV/current/prop sizing flagged as trade study</td></tr>
+<tr><td>REQ-PWR-001</td><td>Endurance target</td><td>Power</td><td>REQ-SYS-000</td><td class="closed">TRACED</td><td>Placeholder value (~20 min), not validated</td></tr>
+<tr><td>REQ-PWR-002</td><td>Power budget</td><td>Power</td><td>REQ-SYS-000</td><td class="closed">TRACED</td><td class="open">Open — rollup is qualitative, no detailed load analysis performed</td></tr>
+<tr><td>REQ-AVN-001</td><td>Open architecture</td><td>Avionics</td><td>REQ-SYS-000</td><td class="closed">TRACED</td><td>Stable — firmware ecosystem is the open item</td></tr>
+<tr><td>REQ-AVN-002</td><td>Position-hold and autonomous return scope</td><td>Avionics</td><td>REQ-SYS-000</td><td class="closed">TRACED</td><td class="open">Open — scope decision (AVN-GNSS in/out) not yet made; disposition required before PDR-equivalent maturity</td></tr>
+<tr><td>REQ-COM-001</td><td>Relay function</td><td>Communications</td><td>REQ-SYS-000</td><td class="closed">TRACED</td><td>Stable — qualitative statement, no link budget by design intent</td></tr>
+<tr><td>REQ-COM-002</td><td>Regulatory compliance</td><td>Communications</td><td>REQ-SYS-000</td><td class="closed">TRACED</td><td class="open">Open item by definition — explicitly requires legal/regulatory input, not resolved in this model</td></tr>
+<tr><td>REQ-COM-003</td><td>Low-cost relay</td><td>Communications</td><td>REQ-SYS-000</td><td class="closed">TRACED</td><td class="open">Open — radio module selection contingent on REQ-COM-001/002</td></tr>
+<tr><td>REQ-EQP-001</td><td>Payload scope limitation</td><td>EquipmentMounts</td><td>REQ-SYS-000</td><td class="closed">TRACED</td><td>Stable — scope boundary statement, no open parameters</td></tr>
+</table>
+
+<h2>3. Summary</h2>
+<ul>
+<li><b>Blocks:</b> 32 architecture Blocks + 2 ConstraintBlocks modeled across 6 subsystems and the top-level system, consistent with the academic/architecture-level scope (no RF link budgets, frequencies, protocols, gain patterns, transmit power, or firmware/hardware part numbers resolved).</li>
+<li><b>Open trade studies:</b> concentrated in material selection (Airframe), COTS component sizing (Propulsion, Power), firmware/camera class (Avionics), RF implementation and regulatory compliance (Communications — by design, since this is explicitly out of scope for the architecture pass), and one unresolved scope decision (AVN-GNSS / position-hold capability).</li>
+<li><b>Requirements:</b> 11 total, 100% traceability closure (Satisfy to subsystem block + Derive to parent umbrella) for this pass.</li>
+<li><b>Known limitations carried forward:</b> (1) native Report Wizard templates produced only empty boilerplate via this bridge — this document substitutes for that step; (2) parametric-diagram connector paths for nested constraint parameters could not be rendered visually, though the underlying model bindings exist; (3) two baseline anomalies (orphan duplicate SYS-001 block, auto-generated 03_Parametrics context block) should be dispositioned by the next session.</li>
+</ul>
+
+</body>
+</html>

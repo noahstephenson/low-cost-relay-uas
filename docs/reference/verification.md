@@ -20,7 +20,7 @@ Generated from `model/assurance.yaml`, `.seal/proof.yaml`. The structured catalo
 
 ## Verification activities
 
-| Activity | Method | Readiness | Execution | Evidence | Residual gaps |
+| Activity | Method | Readiness | Execution | Evidence | Review-time residual gaps |
 |---|---|---|---|---|---|
 | **Requirement and architecture analysis** (VER-001) | analysis | model_verifiable_now | executed_with_open_gaps | EVD-013 | GAP-BUDGET-001, GAP-IFC-001, GAP-TRC-001, GAP-VER-001 |
 | **Structured traceability audit** (VER-002) | analysis | model_verifiable_now | executed_pass | EVD-013 | - |
@@ -31,5 +31,7 @@ Generated from `model/assurance.yaml`, `.seal/proof.yaml`. The structured catalo
 | **Configuration-applicability review** (VER-007) | inspection | model_verifiable_now | executed_pass | EVD-013 | - |
 | **Deferred physical verification method** (VER-008) | deferred demonstration or test | physical_evidence_required | deferred | - | GAP-BUDGET-001, GAP-VER-001 |
 | **External interface conformance verification** (VER-009) | external-authority review and future conformance evidence | external_authority_required | blocked | - | GAP-IFC-001, GAP-VER-001 |
+
+Residual-gap lists preserve the result recorded when each verification ran. See [Decisions & gaps](decisions-and-gaps.md) for current dispositions.
 
 The current semantic model is `0.9.0-baseline-candidate`. The latest recorded review evidence remains tied to `0.8.0-baseline-candidate`; the identifier/documentation migration does not rewrite that evidence.

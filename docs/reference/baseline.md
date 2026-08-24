@@ -130,7 +130,6 @@
 
 ### Intentionally deferred or future configuration
 
-- `GAP-CFG-001` - **INTENTIONAL DEFERRAL**: Do not inspect in this baseline; address only under a separately authorized future work package.
 - `GAP-CFG-002` - **INTENTIONAL DEFERRAL**: A designated external safety authority supplies employment assumptions, configuration applicability, and responsibility allocation before these hazards are activated.
 - `GAP-TRC-001` - **INTENTIONAL DEFERRAL**: Retain CAP-003 as unsupported with DEF-004 and TS-009; only an explicitly authorized future payload scope may introduce a mechanism or satisfaction claim.
 - `GAP-HAZ-002` - **INTENTIONAL DEFERRAL**: Keep the ID reserved; activate it only through an explicit owner decision supported by hazard content.
@@ -141,7 +140,7 @@
 
 ## Verification execution matrix
 
-| VER ID | Method | Readiness | Execution | Evidence | Result | Residual gaps |
+| VER ID | Method | Readiness | Execution | Evidence | Result | Review-time residual gaps |
 |---|---|---|---|---|---|---|
 | VER-001 | analysis | model_verifiable_now | executed_with_open_gaps | EVD-013 | PASS_WITH_OPEN_GAPS | GAP-BUDGET-001, GAP-IFC-001, GAP-TRC-001, GAP-VER-001 |
 | VER-002 | analysis | model_verifiable_now | executed_pass | EVD-013 | PASS | - |
@@ -152,6 +151,8 @@
 | VER-007 | inspection | model_verifiable_now | executed_pass | EVD-013 | PASS | - |
 | VER-008 | deferred demonstration or test | physical_evidence_required | deferred | - | NOT_EXECUTED | GAP-BUDGET-001, GAP-VER-001 |
 | VER-009 | external-authority review and future conformance evidence | external_authority_required | blocked | - | BLOCKED | GAP-IFC-001, GAP-VER-001 |
+
+Residual-gap lists record each verification's execution-time result. A referenced gap may have been closed later; current dispositions are listed in the gap sections below.
 
 ### Requirement-level review summary
 
@@ -194,6 +195,7 @@
 
 ## Closed or reclassified gaps in this maturation pass
 
+- `GAP-CFG-001` - **CLOSED_AS_HISTORICAL_ARTIFACT**: The legacy Cameo/MagicDraw report is preserved in the archive and explicitly classified as historical, non-authoritative, and inapplicable to current configurations.
 - `GAP-TRC-002` - **RECLASSIFIED**: CAP-004 is explicitly modeled as a cross-cutting constraint on requirements, trade studies, configurations, and resources; a dedicated mission activity is not semantically required.
 - `GAP-SCN-001` - **CLOSED**: SCN-001 now uses proposed OA-007 with FUN-CFG-01 and FUN-HLT-01 to represent architecture-level preparation and readiness without defining a procedure.
 - `GAP-SOS-003` - **CLOSED**: IX-009 now has a proposed current-system chain through FUN-HLT-01, CMP-AVN-01, IFC-INT-006, IFC-EXT-007, REQ-008, and candidate verification methods.
@@ -201,7 +203,6 @@
 <details>
 <summary>Intentional deferrals and secondary items</summary>
 
-- `GAP-CFG-001` (deferred): The Cameo/MagicDraw HTML export remains unreconciled and is deferred future work outside this work package.
 - `GAP-CFG-002` (deferred): The external hazards do not yet have defensible configuration applicability.
 - `GAP-HAZ-002` (deferred): HAZ-009 is a preserved inactive identifier with no current architecture meaning.
 - `GAP-IFC-002` (intentionally_out_of_scope): External communications interfaces intentionally retain unknown protocol, frequency, waveform, power, data-rate, and message-format attributes.

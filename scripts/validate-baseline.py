@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the consolidated baseline and generate its two derived reports.
+"""Validate the consolidated baseline and generate its derived reports.
 
 Catalogs use the JSON-compatible subset of YAML 1.2, so validation and generation
 require only the Python standard library. Model validity never implies approval,
@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import collections
+import hashlib
 import json
 import re
 import subprocess
@@ -388,7 +389,7 @@ def render_baseline(catalogs: dict[str, dict[str, Any]]) -> str:
         "",
         "## Verification execution matrix",
         "",
-        "| VER ID | Method | Readiness | Execution | Evidence | Result | Residual gaps |",
+        "| VER ID | Method | Readiness | Execution | Evidence | Result | Review-time residual gaps |",
         "|---|---|---|---|---|---|---|",
     ])
     for verification in assurance["verifications"]:
@@ -399,6 +400,8 @@ def render_baseline(catalogs: dict[str, dict[str, Any]]) -> str:
             f"{pipe(verification['residual_gap_ids'])} |"
         )
     lines.extend([
+        "",
+        "Residual-gap lists record each verification's execution-time result. A referenced gap may have been closed later; current dispositions are listed in the gap sections below.",
         "",
         "### Requirement-level review summary",
         "",
@@ -630,7 +633,7 @@ def render_verification(catalogs: dict[str, dict[str, Any]]) -> str:
         "| Physical verification | Aircraft behavior and measured performance | Not performed |",
         "| External conformance | Endpoint, spectrum, and authority-controlled compatibility | Blocked by missing authority/specifications |",
         "| Technical baseline approval | Owner acceptance of a design baseline | Not approved |", "",
-        "## Verification activities", "", "| Activity | Method | Readiness | Execution | Evidence | Residual gaps |",
+        "## Verification activities", "", "| Activity | Method | Readiness | Execution | Evidence | Review-time residual gaps |",
         "|---|---|---|---|---|---|",
     ])
     for verification in assurance["verifications"]:
@@ -640,6 +643,7 @@ def render_verification(catalogs: dict[str, dict[str, Any]]) -> str:
             f"{pipe(verification['evidence_ids'])} | {pipe(verification['residual_gap_ids'])} |"
         )
     lines.extend([
+        "", "Residual-gap lists preserve the result recorded when each verification ran. See [Decisions & gaps](decisions-and-gaps.md) for current dispositions.",
         "", "The current semantic model is `" + system["model_version"] + "`. The latest recorded review evidence remains tied to `" + system["latest_recorded_model_review"]["model_version"] + "`; the identifier/documentation migration does not rewrite that evidence.",
     ])
     return "\n".join(lines).rstrip() + "\n"
@@ -1836,10 +1840,27 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
 
     cameo_source = next(item for item in sources["sources"] if item["id"] == "SRC-REPO-009")
     cameo_gap = next(item for item in traceability["gaps"] if item["code"] == "GAP-CFG-001")
-    if cameo_source.get("applicability_scope") != "deferred_external_artifact":
-        errors.append("Cameo source is not explicitly deferred")
-    if cameo_gap.get("disposition") != "deferred" or cameo_gap.get("reporting_priority") != "secondary":
-        errors.append("Cameo gap is not deferred secondary work")
+    cameo_path = ROOT / cameo_source.get("location", "")
+    cameo_integrity = cameo_source.get("integrity_check", {})
+    expected_cameo_hash = "C38F99CBF4B5CA11BEDEC11D060D961F4C42E4ED8AC7875F605F3238F3AFB9F6"
+    if cameo_source.get("applicability_scope") != "historical_unreconciled_reference":
+        errors.append("Cameo source is not explicitly classified as historical")
+    if cameo_source.get("applicable_configurations"):
+        errors.append("historical Cameo source must not apply to a current configuration")
+    if not cameo_path.is_file():
+        errors.append("historical Cameo source is missing from the archive")
+    else:
+        actual_cameo_hash = hashlib.sha256(cameo_path.read_bytes()).hexdigest().upper()
+        if actual_cameo_hash != expected_cameo_hash:
+            errors.append("historical Cameo source checksum changed")
+    if (
+        cameo_integrity.get("expected_sha256") != expected_cameo_hash
+        or cameo_integrity.get("actual_sha256") != expected_cameo_hash
+        or cameo_integrity.get("status") != "MATCH"
+    ):
+        errors.append("historical Cameo source lacks its verified archive checksum")
+    if cameo_gap.get("disposition") != "closed" or cameo_gap.get("reporting_priority") != "secondary":
+        errors.append("Cameo repository conflict is not closed as secondary historical material")
     haz_009 = next(item for item in assurance["hazards"] if item["id"] == "HAZ-009")
     haz_009_gap = next(item for item in traceability["gaps"] if item["code"] == "GAP-HAZ-002")
     if haz_009.get("lifecycle_status") != "reserved_inactive" or haz_009_gap.get("disposition") != "deferred":

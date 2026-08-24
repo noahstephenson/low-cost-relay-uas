@@ -6,3 +6,4 @@ The documents may describe the repository structure or review state that existed
 
 - [Architecture communication pass](architecture-communication-pass.md)
 - [Architecture decision and target package](architecture-decision-target-package.md)
+- [Historical Cameo model report disposition](cameo-model-report-2026-08-02.md)

@@ -747,16 +747,16 @@
     {
       "code": "GAP-CFG-001",
       "category": "unknown configuration applicability",
-      "statement": "The Cameo/MagicDraw HTML export remains unreconciled and is deferred future work outside this work package.",
+      "statement": "The legacy Cameo/MagicDraw report is preserved in the archive and explicitly classified as historical, non-authoritative, and inapplicable to current configurations.",
       "affected_ids": [
         "SRC-REPO-009"
       ],
-      "disposition": "deferred",
+      "disposition": "closed",
       "severity": "expected",
-      "next_action": "Do not inspect in this baseline; address only under a separately authorized future work package.",
+      "next_action": "No current action. Re-open only if the project owner authorizes a detailed cross-model reconciliation.",
       "reporting_priority": "secondary",
-      "audit_classification": "D_intentional_deferral",
-      "work_package_outcome": "INTENTIONAL DEFERRAL"
+      "audit_classification": "A_closeable_by_model_work",
+      "work_package_outcome": "CLOSED_AS_HISTORICAL_ARTIFACT"
     },
     {
       "code": "GAP-CFG-002",

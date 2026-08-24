@@ -39,7 +39,6 @@ Generated from `model/assurance.yaml`, `model/traceability.yaml`. The structured
 
 | Gap | Outcome | Meaning | Next action |
 |---|---|---|---|
-| GAP-CFG-001 | INTENTIONAL DEFERRAL | The Cameo/MagicDraw HTML export remains unreconciled and is deferred future work outside this work package. | Do not inspect in this baseline; address only under a separately authorized future work package. |
 | GAP-CFG-002 | INTENTIONAL DEFERRAL | The external hazards do not yet have defensible configuration applicability. | A designated external safety authority supplies employment assumptions, configuration applicability, and responsibility allocation before these hazards are activated. |
 | GAP-TRC-001 | INTENTIONAL DEFERRAL | CAP-003 has no allocated operational activity, function, component, or supported requirement mechanism. | Retain CAP-003 as unsupported with DEF-004 and TS-009; only an explicitly authorized future payload scope may introduce a mechanism or satisfaction claim. |
 | GAP-HAZ-002 | INTENTIONAL DEFERRAL | HAZ-009 is a preserved inactive identifier with no current architecture meaning. | Keep the ID reserved; activate it only through an explicit owner decision supported by hazard content. |
@@ -56,6 +55,7 @@ Generated from `model/assurance.yaml`, `model/traceability.yaml`. The structured
 
 | Gap | Outcome | Meaning | Next action |
 |---|---|---|---|
+| GAP-CFG-001 | CLOSED_AS_HISTORICAL_ARTIFACT | The legacy Cameo/MagicDraw report is preserved in the archive and explicitly classified as historical, non-authoritative, and inapplicable to current configurations. | No current action. Re-open only if the project owner authorizes a detailed cross-model reconciliation. |
 | GAP-TRC-002 | RECLASSIFIED | CAP-004 is explicitly modeled as a cross-cutting constraint on requirements, trade studies, configurations, and resources; a dedicated mission activity is not semantically required. | Project owner reviews DEC-005 and confirms or rejects the proposed cross-cutting treatment; do not create a synthetic mission activity. |
 | GAP-SCN-001 | CLOSED | SCN-001 now uses proposed OA-007 with FUN-CFG-01 and FUN-HLT-01 to represent architecture-level preparation and readiness without defining a procedure. | Project owner reviews OA-007 and its candidate allocations; no operating checklist or startup procedure is authorized. |
 | GAP-SOS-003 | CLOSED | IX-009 now has a proposed current-system chain through FUN-HLT-01, CMP-AVN-01, IFC-INT-006, IFC-EXT-007, REQ-008, and candidate verification methods. | Project owner reviews DEC-004. Physical behavior and external conformance remain under GAP-VER-001 and GAP-IFC-001. |
