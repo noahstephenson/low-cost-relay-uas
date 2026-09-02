@@ -2,7 +2,7 @@
 
 This repository is a model-based systems engineering study of a small uncrewed aircraft that carries a modular communications relay to an advantageous airborne location. It explores the aircraft around the payload; it does not design the payload's radio implementation.
 
-![System concept showing independent aircraft control and relayed mission traffic](docs/figures/project-in-one-picture.svg)
+![System concept showing independent aircraft control and relayed mission traffic](https://raw.githubusercontent.com/noahstephenson/low-cost-relay-uas/93bc46a86ea4ee24550edd69d8ea76f79dd353f5/docs/figures/project-in-one-picture.svg)
 
 ## The problem
 
