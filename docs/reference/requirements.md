@@ -4,9 +4,13 @@
 
 [Overview](../../README.md) · [Architecture](../architecture.md) · [Feasibility](../feasibility.md) · [Engineering Status](../engineering-status.md) · [Reference index](README.md)
 
-The current assurance set contains 23 system requirements. Neutral IDs are durable keys; classification remains metadata and names carry the human meaning.
+The requirements below describe what the current carrier must accomplish. Some values are deliberately [TBD] because owner targets and physical evidence are not yet available; those placeholders are not settled design values.
 
 Generated from `model/assurance.yaml`. The structured catalogs remain authoritative.
+
+## Design-driving requirements
+
+The payload envelope, on-station endurance, gross mass, cost, payload power, recovery behavior, and single-operator handling are coupled. Changing one changes the practical range of the others.
 
 ## Relay mission
 

@@ -2,27 +2,34 @@
 
 [Overview](../../README.md) · [Architecture](../architecture.md) · [Feasibility](../feasibility.md) · [Engineering Status](../engineering-status.md) · **Reference**
 
-Use this layer for complete inventories, identifiers, traceability, verification detail, model status, and source/evidence audit. The [structured model](../../model/) remains authoritative; these pages make it easier to inspect.
+The primary documents explain the study in plain language. Use this layer when you need complete inventories, identifiers, evidence records, or the full reasoning behind a decision. The structured [model](../../model/) is the source of record; these pages make it easier to inspect.
+
+## Start with the engineering question
+
+| Question | Reference |
+|---|---|
+| What must the current system do, and which targets are still open? | [Requirements](requirements.md) |
+| How do commands, telemetry, power, and payload support cross the architecture? | [Interfaces](interfaces.md) |
+| What trade has been studied, what remains open, and why? | [Trade Studies](trade-studies.md) |
+| What does the quantitative model include and where does it stop? | [Detailed Feasibility Analysis](feasibility-analysis.md) |
+| What owner decisions, evidence needs, and future branches remain? | [Decisions and Gaps](decisions-and-gaps.md) |
+
+## Audit and model detail
 
 | Need to inspect… | Reference |
 |---|---|
-| System requirements and deferred topics | [Requirements](requirements.md) |
-| External, internal, payload-boundary, and future interfaces | [Interfaces](interfaces.md) |
-| Representative and complete model relationships | [Traceability](traceability.md) |
+| Requirement, function, component, interface, and evidence relationships | [Traceability](traceability.md) |
 | Model review, analysis, physical verification, and conformance status | [Verification](verification.md) |
-| Owner decisions, engineering gaps, deferrals, and next actions | [Decisions and Gaps](decisions-and-gaps.md) |
-| Detailed trade reasoning | [Trade Studies](trade-studies.md) |
-| Equations, sources, sweeps, convergence, and quantitative limitations | [Feasibility Analysis](feasibility-analysis.md) |
 | ID-rich architecture diagrams and interface inventory | [Architecture Atlas](architecture-atlas.md) |
 | Generated baseline state | [Baseline](baseline.md) |
 | Old-to-new requirement key mapping | [Requirement ID Migration](requirement-id-migration.md) |
 | Historical work packages and communication passes | [Archive](../archive/README.md) |
 
-Direct authority and reproducibility links:
+The model and executable sources are available directly:
 
-- [`model/system.yaml`](../../model/system.yaml) — scope, status, manifests, and ID scheme;
-- [`model/architecture.yaml`](../../model/architecture.yaml) — configurations, behavior, resources, interfaces, and modes;
-- [`model/assurance.yaml`](../../model/assurance.yaml) — requirements, deferred topics, hazards, controls, verification, trade studies, and decisions;
-- [`model/traceability.yaml`](../../model/traceability.yaml) — complete relationships and gaps;
-- [`.seal/sources.yaml`](../../.seal/sources.yaml) and [`.seal/proof.yaml`](../../.seal/proof.yaml) — source and evidence records; and
-- [`analysis/`](../../analysis/) — executable feasibility inputs, model, and results.
+- [model/system.yaml](../../model/system.yaml) — scope, status, and generated-view manifest.
+- [model/architecture.yaml](../../model/architecture.yaml) — configurations, behavior, resources, and interfaces.
+- [model/assurance.yaml](../../model/assurance.yaml) — requirements, deferred topics, hazards, verification, trade studies, and decisions.
+- [model/traceability.yaml](../../model/traceability.yaml) — relationship and gap registers.
+- [.seal/sources.yaml](../../.seal/sources.yaml) and [.seal/proof.yaml](../../.seal/proof.yaml) — source and evidence records.
+- [analysis/](../../analysis/) — feasibility inputs, executable model, and generated results.

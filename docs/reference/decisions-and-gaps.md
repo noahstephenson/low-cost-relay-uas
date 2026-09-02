@@ -4,7 +4,7 @@
 
 [Overview](../../README.md) · [Architecture](../architecture.md) · [Feasibility](../feasibility.md) · [Engineering Status](../engineering-status.md) · [Reference index](README.md)
 
-This page consolidates unresolved owner choices, evidence dependencies, deliberate deferrals, and future-configuration work without changing their model dispositions.
+Use this page to see which owner decisions, evidence needs, and future branches block the next phase. It reports model dispositions; it does not change them.
 
 Generated from `model/assurance.yaml`, `model/traceability.yaml`. The structured catalogs remain authoritative.
 

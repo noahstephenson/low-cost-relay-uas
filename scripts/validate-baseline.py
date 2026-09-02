@@ -510,9 +510,13 @@ def render_requirements(catalogs: dict[str, dict[str, Any]]) -> str:
     ]
     lines = reference_header(
         "Requirements",
-        "The current assurance set contains 23 system requirements. Neutral IDs are durable keys; classification remains metadata and names carry the human meaning.",
+        "The requirements below describe what the current carrier must accomplish. Some values are deliberately [TBD] because owner targets and physical evidence are not yet available; those placeholders are not settled design values.",
         ["model/assurance.yaml"],
     )
+    lines.extend([
+        "## Design-driving requirements", "",
+        "The payload envelope, on-station endurance, gross mass, cost, payload power, recovery behavior, and single-operator handling are coupled. Changing one changes the practical range of the others.", "",
+    ])
     for heading, identifiers in groups:
         lines.extend([f"## {heading}", "", "| ID | Requirement | Status | Verification |", "|---|---|---|---|"])
         for item_id in identifiers:
@@ -654,7 +658,7 @@ def render_decisions_and_gaps(catalogs: dict[str, dict[str, Any]]) -> str:
     gaps = catalogs["traceability"]["gaps"]
     lines = reference_header(
         "Decisions and Gaps",
-        "This page consolidates unresolved owner choices, evidence dependencies, deliberate deferrals, and future-configuration work without changing their model dispositions.",
+        "Use this page to see which owner decisions, evidence needs, and future branches block the next phase. It reports model dispositions; it does not change them.",
         ["model/assurance.yaml", "model/traceability.yaml"],
     )
     lines.extend(["## Decisions", "", "| Decision | Status | Authority | Remaining issue |", "|---|---|---|---|"])

@@ -2,360 +2,82 @@
 
 [Overview](../../README.md) · [Architecture](../architecture.md) · [Feasibility](../feasibility.md) · [Engineering Status](../engineering-status.md) · [Reference index](README.md)
 
-Open decisions this model does not resolve. The `TS-*` register metadata is
-authoritative in `model/assurance.yaml`; this document preserves the substantive
-engineering reasoning that should not be reduced to catalog fields.
+Trade studies turn open engineering questions into visible choices. This page explains what each choice affects, what the current analysis has shown, and what must happen before a design decision is made. The structured trade-study records in [model/assurance.yaml](../../model/assurance.yaml) remain the complete register.
 
-The point of this file is to make the model's ignorance explicit. A `TS-*` reference
-is a known gap with a defined question, not permission to fill an unknown with a
-plausible value.
+## How to read status
 
-## Status Legend
+| Status | Meaning |
+|---|---|
+| Open | The decision still needs bounds, authority, or evidence before it can be evaluated. |
+| Scoped | The architecture or analysis clarifies the decision, but does not justify a selection. |
+| Resolved | A decision has been made and recorded. |
+| Deferred | The decision is deliberately outside this study. |
 
-**Open** — not yet bounded for evaluation · **Scoped** — criteria defined and
-architecture-level analysis performed, but owner input or evidence still prevents
-a decision · **Resolved** — decision made and recorded · **Deferred** — out of
-scope for this project
+## Trade-study register
 
-## Register
+| Trade | Question | Why it matters | Current result |
+|---|---|---|---|
+| TS-001 — Airframe construction | What structural approach can carry the aircraft and payload? | Structure mass and cost reinforce the endurance loop. | Scoped; structure must be evaluated with battery, propulsion, and payload mass. |
+| TS-002 — Propulsion sizing | What propulsion class and rotor geometry are appropriate? | Rotor efficiency and disk loading strongly affect hover power. | Scoped; no motors, propellers, or controllers selected. |
+| TS-003 — Battery architecture | What pack characteristics are needed? | Battery energy and continuous power drive mass, cost, and endurance. | Scoped; no chemistry, topology, or capacity selected. |
+| TS-004 — Payload power | What regulated electrical service must the carrier provide? | It affects rail capacity, power-conversion mass, and mission energy. | Scoped; payload electrical envelope remains open. |
+| TS-005 — Flight controller | What flight-control capability is needed? | It depends on navigation, command, I/O, and authority needs. | Open. |
+| TS-006 — Payload mount | What mechanical interface supports modular payloads? | The mount affects mass, volume, retention, and portability. | Scoped; geometry and load basis remain open. |
+| TS-007 — Station keeping | How should the aircraft hold relay position without assuming continuous GNSS? | It affects navigation, control, energy, and mission usefulness. | Open. |
+| TS-008 — Platform command link | How is the carrier aircraft controlled independently of the payload? | It preserves the separation between aircraft control and relayed traffic. | Open; external interface authority is needed. |
+| TS-009 — Relay payload characterization | What is inside the relay payload? | The carrier must accommodate the payload, but does not design its radio implementation. | Deferred; outside this study. |
+| TS-010 — Operating environment | What conditions must the aircraft tolerate? | Environmental burden changes power demand and available feasibility margin. | Open. |
+| TS-011 — Recovery approach | What recovery and loss policy is acceptable? | It drives reserve, recovery behavior, cost, and safety work. | Open. |
 
-| TS ID | Decision | Drives | Criteria | Status |
-|---|---|---|---|---|
-| TS-001 | Airframe material and construction method | CMP-AFR-01, CMP-AFR-02 | Cost, mass, manufacturability, damage tolerance | Scoped — conditional feasible region established |
-| TS-002 | Propulsion sizing (motor class, prop diameter/pitch, ESC rating) | CMP-PRP-01..03 | Thrust margin, efficiency at loiter, cost | Scoped — conditional feasible region established |
-| TS-003 | Battery chemistry, cell count, capacity | CMP-PWR-01 | Endurance vs. mass vs. cost; REQ-010 | Scoped — conditional feasible region established |
-| TS-004 | Payload power rail voltage and current allocation | CMP-PWR-03 | Payload-agnostic support without overprovisioning | Scoped — conditional feasible region established |
-| TS-005 | Flight controller selection | CMP-AVN-01 | Open-source firmware support, cost, I/O | Open |
-| TS-006 | Payload mount interface standard | CMP-MNT-01, CMP-AFR-04 | Modularity, mass, retention under vibration | Scoped — conditional feasible region established |
-| TS-007 | Station-keeping approach and GNSS dependence | CMP-AVN-03, FUN-FLT-03 | Position hold accuracy without assuming GNSS availability | Open |
-| TS-008 | Platform command link approach | CMP-AVN-04, IFC-EXT-005 | Range, cost — **platform control only, not the relay payload** | Open |
-| TS-009 | Relay payload characterization | CMP-COM-01, CMP-COM-02, all `IFC-EXT-001..004` | — | **Deferred — out of scope** |
-| TS-010 | Environmental envelope | All | Temperature, wind, precipitation limits | Open |
-| TS-011 | Recovery approach (recoverable vs. genuinely attritable) | CMP-AFR-03, FUN-FLT-04 | Cost of recovery features vs. unit replacement cost | Open |
+## The central coupled trade: propulsion and battery
 
-## Coupled architecture dependency
+### Question
 
-The structured model now records the governing dependency rather than treating cost,
-mass, endurance, payload capacity, and propulsion as independent blanks:
+What propulsion and battery characteristics could support useful relay dwell without making the carrier too large, expensive, or difficult to handle?
 
-`TS-006 -> REQ-012 -> REQ-011 -> TS-002 -> TS-003 -> REQ-011`
+### Why it matters
 
-`REQ-010 -> TS-003 -> REQ-009`
+Payload mass and electrical demand add to the carrier. More dwell requires more battery energy. The heavier battery raises gross mass, which raises hover power and therefore requires still more battery. Propulsion efficiency, rotor disk loading, battery specific energy, and battery specific power determine how sharply that loop grows.
 
-`TS-001 -> REQ-011` and `TS-004 -> TS-003`
+### Options
 
-The feedback from `TS-003` battery requirement to `REQ-011` gross mass is the
-central loop. `CAP-004` constrains this entire set through `REQ-009`,
-`REQ-011`, `REQ-012`, and the associated trade studies. No target or value is
-selected here. Generated view 9B in `docs/reference/architecture-atlas.md` provides the
-compact diagram.
+- Smaller rotors and a more compact airframe can help packaging and structure, but higher disk loading tends to increase hover power.
+- Larger rotor area can improve hover efficiency, but longer arms and larger structure can cost mass, money, and portability.
+- A battery class with stronger continuous-power capability can help short dwell, while greater specific energy matters more as dwell increases.
+- Pack topology, power regulation, and payload demand must remain compatible, but no electrical implementation is selected here.
 
-TBD governance is explicit in `model/assurance.yaml`: owner targets initiate the
-coupled engineering trades, while the resulting structure, propulsion, battery,
-power-allocation, mount, flight-control, station-keeping, and recovery choices are
-engineering trade-study outputs. TS-010 requires owner context followed by an
-external evidence basis, and TS-009 is intentionally deferred. External-interface
-authority is tracked separately from design TBDs.
+### Key trade
 
-## Conditional Feasibility Result
+There is no independent “best battery” or “best propulsion set.” A battery cannot be sized until hover power is estimated, and hover power cannot be estimated until the aircraft mass—including battery mass—is known. Improving one part of the loop can move the burden to structure, packaging, cost, or portability.
 
-The executable model in [`analysis/feasibility.py`](../../analysis/feasibility.py), its
-versioned inputs in
-[`analysis/feasibility-inputs.yaml`](../../analysis/feasibility-inputs.yaml), and the
-engineering interpretation in
-[`feasibility-analysis.md`](feasibility-analysis.md) replace the
-earlier qualitative-only loop discussion as the current quantitative basis. The
-model iterates gross mass, hover power, installed propulsion, structure, and the
-greater of energy- or continuous-power-limited battery mass to convergence.
+### Current result
 
-Across 225 deterministic grid cases, the favorable regime contains 73 feasible, 2
-marginal, and no infeasible cases; the reference regime contains 20 feasible, 21
-marginal, and 34 infeasible cases; and the adverse regime contains no feasible or
-marginal cases. These are **conditional classes**, not requirement dispositions,
-because no owner target is approved. In the reference 50 W payload-power slice,
-short-dwell cases are generally feasible or marginal, 30-minute cases cross a
-payload-sensitive knee, and all evaluated 45- and 60-minute cases are infeasible.
+The executable feasibility analysis finds a limited short-dwell, modest-payload region under reference-or-better assumptions. Endurance is the dominant sensitivity; rotor figure of merit, disk loading, environmental power margin, battery specific energy and power, and motor/controller efficiency follow. In the reference 50 W payload slice, 30-minute cases reach a payload-sensitive knee, while all evaluated 45- and 60-minute cases are infeasible under the analysis boundaries.
 
-The strongest sensitivities are endurance, rotor figure of merit, disk loading,
-environmental power margin, and installed battery specific energy/power. That result
-legitimately scopes TS-001, TS-002, TS-003, TS-004, and TS-006 without choosing a
-material, rotor, motor, controller, battery, rail, or mount. It also sharpens the
-inputs needed by TS-005, TS-007, TS-008, TS-010, and TS-011. TS-009 remains outside
-the analysis.
+The directional lesson is clear: efficient, lower-disk-loading propulsion improves the available design space, but its structural and portability consequences must be evaluated at the same time. The analysis does not select a rotor, motor, controller, battery chemistry, capacity, or topology.
 
-The central finding is narrow: a modest-payload, short-dwell carrier is physically
-and economically plausible under reference-or-better class assumptions, while
-longer dwell rapidly drives battery feedback, gross mass, installed power, and cost
-outside the analysis boundaries. The next decision-quality step is owner disposition
-of payload service, endurance, affordability, portability, environment, reserve,
-recovery, and sourcing targets—not product selection.
+### Status
 
-## TS-009 — Formal Deferral
+**Scoped.** The model bounds the question and shows which variables matter most. Owner targets, packaging geometry, environmental conditions, and supported component-class evidence are still needed before a candidate comparison is appropriate.
 
-Every other entry in the Register above is an open trade study: a decision this
-project intends to make, currently sitting at Open, Scoped, or Resolved while it
-waits its turn. TS-009 is categorically different, and its `Status` reflects that:
-**Deferred**, not Open. This is not "not yet decided." It is **not this project's
-decision to make.** RF frequency plan, waveform, protocol, modulation, transmit
-power, antenna type and gain, and link budget are listed under `model/system.yaml`'s
-`out_of_scope` from the start, alongside antenna design, gain patterns, transmit
-power, and electronic-warfare/counter-EW technique. There is no state this project
-reaches where TS-009 becomes a study to work; it is a boundary of the study itself.
+## Other important decisions
 
-**What would actually have to happen for someone to pick this up.** Consistent with
-the scope constraints summarized in `README.md`:
-moving toward a real payload would require RF engineering expertise as a separate
-effort, spectrum authorization from the relevant national authority before any
-radiating hardware exists, and — in a defense-affiliated context — export control
-review. None of that is addressed here, and none of it is this repository's
-competence to address. See `DEF-001` through `DEF-005` for the specific
-items recorded as out of scope rather than silently dropped.
+| Decision area | Key trade | What the analysis or architecture establishes | What is still needed |
+|---|---|---|---|
+| Airframe construction | Low structural mass versus stiffness, durability, cost, and portability | Structural growth amplifies the mass–power loop. | Load basis, portability envelope, payload geometry, and sourcing policy. |
+| Payload power | Sufficient support versus unnecessary mass and energy use | Payload demand consumes mission energy and rail capacity, even though propulsion dominates the reference station load. | Voltage, current, transient, protection, thermal, and connector envelope. |
+| Payload mount | Modularity versus retention, mass, and package size | Mount and structural penalties must scale with payload load. | Payload volume, geometry, retention margin, inspection basis, and physical loads. |
+| Flight control and station keeping | Capability versus complexity, energy use, and authority | The architecture requires station keeping without assuming continuous GNSS. | Station tolerance, navigation concept, command needs, and acceptance authority. |
+| Platform command | Independent aircraft control versus external-interface uncertainty | Aircraft control stays separate from relay traffic. | Endpoint specification, interface authority, and conformance method. |
+| Operating environment | Mission usefulness versus power and recovery margin | The generic environmental power margin is a leading sensitivity. | Authorized temperature, wind, precipitation, and operating conditions. |
+| Recovery approach | Recoverability versus unit cost and reserve burden | Reserve changes the coupled feasibility region, but no safety credit is assumed. | Recovery/loss policy and accepted safety objective. |
 
-**Why the rest of the model doesn't have to wait on it.** This is the payoff of one
-of the architecture choices that shape everything downstream: the
-payload is isolated behind exactly two interfaces. `CMP-COM-01` touches the rest of
-the system through `IFC-INT-003` (regulated power) and `IFC-INT-007` (mechanical
-retention), and nothing else — no data path, no control signal, no shared structure.
-`REQ-016` exists specifically to hold that boundary in place: *"The
-platform-to-payload interface shall be limited to power (`IFC-INT-003`) and
-mechanical retention (`IFC-INT-007`)."* Its rationale is that another platform
-crossing would break the isolation the architecture depends on. As long as that
-requirement holds,
-TS-009 can be picked up — by this project, by someone else entirely, on whatever
-timeline RF engineering, spectrum authorization, and export control allow — without
-the platform architecture around it needing to change. A payload decision is a
-mount-and-rail question, not a redesign.
+## Deliberate payload boundary
 
-## Worked Trade Studies
+TS-009 is different from the open trades. The relay payload's internal communications implementation is deliberately outside the project boundary. The carrier architecture only needs a payload accommodation envelope, regulated power, and mechanical retention. Keeping that boundary stable lets the carrier be studied without implying a radio design, endpoint compatibility, spectrum authorization, or payload selection.
 
-TS-002 and TS-003 are worked together below because the coupled model shows they
-must be worked together rather than in sequence. Neither resolves to a point
-design. This qualitative walk-through explains the causal loop; the executable
-model and feasibility report above are the current quantitative result. A `[TBD]`
-remains a load-bearing statement of what is not owner-approved, not a placeholder
-for a borrowed point value.
+## Next decision-quality step
 
-### TS-002 — Propulsion sizing (motor class, prop diameter/pitch, ESC rating)
+Before the project compares actual components, the owner needs to set the payload service, endurance, portability, affordability, operating environment, reserve, and recovery targets together. Engineering can then rerun the feasibility model over that authorized region, define component-class evidence needs, and decide whether a later candidate comparison is justified.
 
-**Question.** What motor class, propeller diameter/pitch, and ESC current rating
-should the four corner sets (`CMP-PRP-01..03`) use, given that the thrust
-requirement they're sized against is itself a function of an all-up mass (AUW) that
-this same loop has not yet closed?
-
-**Options.**
-
-- **Smaller-diameter, higher-KV motors and proportionally smaller props.** Cheaper
-  per unit, shorter arms (`CMP-AFR-02`) — lighter, cheaper structure, better fit with
-  single-operator portability (`REQ-013`). Costs hover efficiency: smaller disk
-  area at a given thrust means higher disk loading, which (by actuator disk /
-  momentum theory) means more power per unit of thrust. That power penalty is paid
-  on every gram the battery carries, which feeds directly into TS-003.
-- **Larger-diameter, lower-KV motors and proportionally larger props.** Lower disk
-  loading, better power-per-unit-thrust — the one lever available to reduce the
-  loop's gain without fighting the airframe-cost trade directly (TS-001). Costs arm
-  length: `CMP-AFR-02` length sets the propeller clearance / diameter limit, and
-  longer arms mean more structure, more mass, and more cost — working against
-  `CAP-004` on a different axis than the one it's trying to help.
-- **ESC current rating.** Follows from whichever motor is chosen and the final AUW's
-  peak thrust demand (including whatever wind-tolerance margin TS-010 eventually
-  sets). Cannot be pinned before either of those closes; carried as a dependent
-  quantity, not decided here.
-
-**Evaluation criteria.** Thrust margin (including the not-yet-set wind-tolerance
-requirement from TS-010), hover power-per-unit-thrust (disk loading), unit cost,
-arm-length impact on structure and portability, and — the criterion that actually
-governs this trade — how strongly the choice feeds back into TS-003's required
-battery mass.
-
-**Analysis.** Propulsion sizing cannot be evaluated in isolation from battery
-sizing: the thrust requirement depends on AUW, AUW depends on battery mass, and
-battery mass depends on the hover power this trade sets. The full pass-by-pass
-iteration is walked through under TS-003's Analysis below, since that is where the
-loop's mass/endurance output actually lands. What belongs here is what TS-002
-specifically controls *within* that loop: disk loading, and the arm-length/cost
-ceiling on how much disk-area growth is available to blunt the loop's gain before it
-runs into TS-001's structural-cost trade.
-
-**Decision.** Not resolved to a point design. Directional lean toward the
-lower-disk-loading end of the option space (larger prop for a given thrust,
-within whatever arm-length/cost ceiling TS-001 sets), because it is the only lever
-here that reduces the loop's gain without directly trading against airframe cost.
-How far that lean can go — and whether the resulting arm length still fits
-`REQ-013`'s single-operator, no-support-equipment constraint — cannot be pinned
-without TS-001 (structure) and TS-003 (battery) closing at the same time. Status:
-**Scoped**, not Resolved — the conditional region is quantified, but this remains a
-genuinely coupled decision awaiting owner targets and candidate-class evidence.
-
-**Consequences / affected IDs.** `CMP-PRP-01..03`, `CMP-AFR-02` (arm length),
-`REQ-010` (endurance, still `[TBD]`), `REQ-011` (gross mass, still `[TBD]`),
-`REQ-009` (unit cost, still `[TBD]`), `CAP-004`. Directly coupled to TS-003
-(below) and TS-001 (airframe structural efficiency). See the shared finding at the
-end of TS-003 for where this leaves the model.
-
-### TS-003 — Battery chemistry, cell count, capacity
-
-**Question.** What chemistry, cell count, and capacity should `CMP-PWR-01` use,
-given that required capacity depends on hover power (set by TS-002), and hover
-power depends on AUW, which depends on the battery's own mass?
-
-**Options.**
-
-- **Li-Poly (LiPo).** Higher continuous discharge capability (specific power),
-  which matches hover's steady, non-trivial current draw well, and is the more
-  COTS-commodity, field-reusable option consistent with `REQ-020`. Trades some
-  specific energy (capacity per unit mass) for that discharge headroom — meaning
-  more mass is needed for a given required watt-hours than a chemistry optimized the
-  other way.
-- **Li-ion (cylindrical or pouch).** Better specific energy — less battery mass for
-  the same required watt-hours, which directly reduces the loop's gain (see
-  Analysis). Trades continuous discharge capability, which may require more
-  parallel cell strings to meet peak hover current, adding pack complexity, BMS
-  overhead, and some of the mass savings back.
-- **Cell count / series-parallel topology.** Bounded by `CMP-PWR-03`'s regulator
-  design (TS-004, itself open) and `CMP-PWR-02`'s bus voltage. Not resolved here —
-  it is downstream of both the chemistry choice above and TS-004.
-
-**Evaluation criteria.** Specific energy vs. specific power against hover's
-continuous current draw, COTS availability and field reusability (`REQ-020`,
-and the field-replaceable framing already built into `CMP-PWR-04`), unit cost
-contribution—the quantitative model treats the battery as a leading reusable cost
-driver—
-and, centrally, how battery mass feeds back into TS-002's required thrust.
-
-**Analysis.** This is the loop explained in [Feasibility](../feasibility.md). Walked forward
-as an iteration rather than collapsed into a single pass:
-
-- **Pass 0 — the one piece with the fewest circular dependencies.** Start from
-  *dry mass*: airframe (`CMP-AFR-*`), propulsion hardware minus battery
-  (`CMP-PRP-*`), avionics (`CMP-AVN-*`), payload mount (`CMP-MNT-01`), and the
-  payload mass/volume *envelope* reserved for `CMP-COM-01`/`CMP-COM-02` (an
-  envelope, not a value—see [Architecture](../architecture.md)). This is still not a number: TS-001
-  (structure), TS-006 (mount), and the envelope width itself (TS-004/TS-006) are all
-  open. But it is boundable in *kind* without circularity — `REQ-013` (single
-  operator, hand-launched, no support equipment) implies a platform light enough for
-  one person to carry and launch alongside their own equipment, which bounds dry
-  mass to "small platform" order, not "heavy lift" order. That is an inference from
-  an existing requirement, not an invented figure, and it is the only foothold this
-  iteration starts from.
-- **Pass 1 — size propulsion (TS-002) against dry mass alone, battery mass not yet
-  included.** This produces a first-guess thrust requirement and, from it, a
-  first-guess hover power `P1`, using whatever disk loading TS-002 leans toward.
-  `P1` is necessarily an underestimate, because it ignores the battery that hasn't
-  been sized yet.
-- **Pass 2 — size the battery (this trade) against `P1` and a candidate endurance.**
-  `REQ-010` is `[TBD]`, so this pass has to be run against a *range* of
-  candidate endurance targets rather than a single value, to show how sensitive the
-  result is to a decision that hasn't been made: a short-dwell candidate (enough to
-  reposition or demonstrate the relay function briefly) versus a
-  mission-useful-dwell candidate (long enough that `OP-002` actually delivers
-  persistent link geometry rather than a brief window). Required energy scales with
-  `P1 × endurance`; required battery mass scales with that energy divided by the
-  chemistry's specific energy (TS-003's own open question above). The short-dwell
-  candidate produces a modest `M_batt`; the mission-useful candidate produces a
-  substantially larger one — this is not a numeric claim, it is the shape of a
-  linear-in-endurance relationship applied to an unresolved input.
-- **Pass 3 — feed `M_batt` back into AUW, re-run TS-002.** New AUW = dry mass +
-  `M_batt` (pass 2) is heavier than the pass-0/pass-1 assumption. At a fixed disk
-  area (arm length not yet re-opened), higher weight means higher disk loading,
-  and — by the same momentum-theory relationship TS-002 relies on — power per unit
-  thrust gets *worse*, not just proportionally more. Hover power rises to `P2 > P1`,
-  and it rises faster than the mass that caused it, because of that disk-loading
-  effect. This is the feedback closing, and it is the step a single-pass sizing
-  exercise skips.
-- **Pass 4 — re-size the battery for `P2` at the same endurance candidate.**
-  Required energy is now `P2 × endurance` (larger than pass 2's), so `M_batt2 >
-  M_batt1`. Whether this converges to a stable, modest correction or keeps growing
-  pass over pass depends on three things, none of which this model currently pins:
-  (a) how much disk-area growth TS-002 can still apply within TS-001's arm-length/
-  cost ceiling to blunt the disk-loading penalty; (b) which chemistry TS-003 lands
-  on (higher specific energy directly reduces the loop's gain); and (c) how large
-  the candidate endurance is, because the loop's gain scales with it — a short-dwell
-  target reaches a small correction quickly, a mission-useful-dwell target pushes
-  the iteration further into the region where these second-order effects dominate.
-
-  For context on why this matters and isn't merely a rounding effect: it is a
-  widely observed pattern in small electric multirotor design *in general* — not a
-  number derived for or assigned to this platform — that battery mass ends up
-  representing a large minority to a majority of all-up mass once flight times move
-  from token (a few minutes) to operationally meaningful (tens of minutes),
-  precisely because hover offers no forward-flight lift assist to offset the
-  induced-power cost of carrying more weight. That pattern is cited here only to
-  explain *why* the iteration above has real gain, not to fill any `[TBD]` in this
-  repository with a borrowed figure.
-
-**Decision.** Not resolved to a chemistry, cell count, or capacity, and no chemistry
-lean is retained. The sweep shows that both installed specific energy and continuous
-specific power matter: short-dwell cases can be power-limited while longer-dwell
-cases become energy-limited. The real blocker is therefore a two-dimensional pack
-envelope plus owner targets, not a chemistry label. Setting the endurance requirement
-first and discovering the loop's consequences afterward is exactly the sequencing
-error the coupled analysis avoids by working TS-002 and TS-003 together.
-Status: **Scoped**, not Resolved; the coupled sweep is complete, while chemistry and
-topology selection remain premature.
-
-**Consequences / affected IDs.** `CMP-PWR-01`, `CMP-PWR-03` (rail sizing, TS-004),
-`REQ-010` (endurance), `REQ-011` (gross mass), `REQ-009` (unit cost).
-Coupled to TS-002 (above) and TS-001 (structural efficiency).
-
-### TS-002 / TS-003 — Shared Finding: Does the Endurance-vs-Cost Loop Close?
-
-The executable iteration directly evaluates whether the endurance-versus-cost loop
-closes favorably enough for a useful design region to exist.
-The answer is **conditionally favorable only for a bounded short-dwell,
-modest-payload region; it is unfavorable across the evaluated long-dwell reference
-region and throughout the adverse regime.**
-
-Three things push toward the unfavorable side, and none of them are addressed by
-making the rest of the platform cheaper:
-
-1. **Rotary-wing hover is structurally power-hungry.** Unlike a fixed-wing vehicle,
-   there is no forward-flight lift assist to offset the induced-power cost of extra
-   weight. Every gram of added battery mass increases disk loading (at fixed prop
-   size) and therefore increases power-per-unit-thrust, not just total thrust — the
-   loop in Pass 3/4 above has real, physically grounded gain, not merely a rounding
-   correction.
-2. **The dominant cost driver is the one component cost-cutting elsewhere doesn't
-   touch.** The quantitative model identifies the battery as a leading reusable cost
-   driver. Battery cost per watt-hour is set by chemistry and market, not by how
-   aggressively the airframe, propulsion, or avionics are cost-optimized
-   (`REQ-020`/`REQ-021`). A design strategy of "cheap by COTS everything"
-   does not reduce the one budget line the endurance target grows fastest.
-3. **The lever that could reduce the loop's gain is the one the cost strategy
-   already spends.** Structural efficiency — bigger, more efficient rotors within a
-   lighter, more capable structure — is the main way to blunt the disk-loading
-   feedback (Pass 3 above). Structural efficiency is what buys margin in that loop,
-   and structural efficiency is also constrained by the low-cost airframe strategy.
-
-None of this means the intersection is *definitely* empty — a short-dwell endurance
-target plausibly converges to a small, genuinely cheap, genuinely attritable
-platform through this same iteration. But a short dwell time is also in tension with
-the reason `OP-002` exists in the first place: the operational concept in [Architecture](../architecture.md)
-describes the relay's value as *positional* and dependent on *sustained* geometry
-(`OA-003`, `FUN-FLT-03`), not a brief window. A relay that must be relaunched every
-few minutes to maintain a link does not obviously deliver `CAP-001`/`CAP-002` in any
-operationally useful sense, even if it is cheap.
-
-**This is recorded as a finding, not engineered around.** No value has been chosen
-for `REQ-010` here, and none should be. The sensitivity has now been evaluated
-over the analysis-only bounds in `analysis/feasibility-inputs.yaml`; it must next be
-rerun against owner-authorized targets. What this trade study establishes is that
-`REQ-010`, `REQ-011`, and `REQ-009` are not three independent `[TBD]`s
-that can be filled in one at a time — they are three views of the same unresolved
-coupling, and setting any one of them first constrains the other two in ways the
-model does not yet make explicit. See [Engineering Status](../engineering-status.md)
-and the generated [baseline](baseline.md) for how this is carried forward.
-
-## Template
-
-<!-- Copy this block when working a trade study. -->
-
-```
-### TS-XXX — <decision>
-
-**Question.**
-**Options.**
-**Evaluation criteria.**
-**Analysis.**
-**Decision.**
-**Consequences / affected IDs.**
-```
+For calculations, representative points, sensitivity rankings, equations, and limitations, read the [detailed feasibility analysis](feasibility-analysis.md). For all current owner decisions and evidence gaps, read [Decisions and Gaps](decisions-and-gaps.md).
