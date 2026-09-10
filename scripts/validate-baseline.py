@@ -33,6 +33,7 @@ INTERFACES_REFERENCE = ROOT / "docs" / "reference" / "interfaces.md"
 TRACEABILITY_REFERENCE = ROOT / "docs" / "reference" / "traceability.md"
 VERIFICATION_REFERENCE = ROOT / "docs" / "reference" / "verification.md"
 FEASIBILITY_MODEL = ROOT / "analysis" / "feasibility.py"
+MISSION_MODEL = ROOT / "analysis" / "mission_connectivity.py"
 
 CATALOG_PATHS = {
     "system": ROOT / "model" / "system.yaml",
@@ -2094,6 +2095,19 @@ def main() -> int:
             if feasibility_check.stderr.strip():
                 errors.append("Feasibility validator error: " + feasibility_check.stderr.strip())
 
+    if not MISSION_MODEL.exists():
+        errors.append("analysis/mission_connectivity.py is missing")
+    else:
+        mission_check = subprocess.run(
+            [sys.executable, str(MISSION_MODEL), "--check"], cwd=ROOT,
+            capture_output=True, text=True, check=False,
+        )
+        if mission_check.stdout.strip():
+            print(mission_check.stdout.strip())
+        if mission_check.returncode:
+            errors.append("mission analysis artifacts are stale or invalid")
+            if mission_check.stderr.strip():
+                errors.append("Mission validator error: " + mission_check.stderr.strip())
     if errors:
         print("MODEL-INVALID FAILURES")
         for error in sorted(set(errors)):

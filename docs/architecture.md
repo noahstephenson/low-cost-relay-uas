@@ -10,7 +10,7 @@ The Relay UAS is a small multirotor that positions a modular communications rela
 
 The product boundary contains the carrier aircraft, its payload-support hardware, and the relay payload. The carrier includes structure, propulsion, stored energy and power distribution, flight avionics, navigation, platform communications, and payload mounting. The payload is inside the boundary as a bounded physical resource, but its radio implementation is not defined here.
 
-Operators, ground equipment, the remote aircraft, maintenance personnel, external services, spectrum authorities, and future platforms are outside the product boundary. A recovered article informs the study at the role level only; it is not an inherited design baseline. The current functional-replica and domestic-sourcing configurations are candidates under study, not approved designs.
+Operators, ground equipment, the remote aircraft, maintenance personnel, external services, spectrum authorities, and future platforms are outside the product boundary. A recovered article informs the study at the role level only; it is not an inherited design baseline. The current replica and domestic-sourcing candidate configurations are under study, not approved designs.
 
 ## Mission behavior
 

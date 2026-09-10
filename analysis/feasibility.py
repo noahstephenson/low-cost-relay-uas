@@ -29,8 +29,16 @@ Battery mass is the larger of the energy- and power-limited values:
 
 The propulsion-group and structure masses depend on installed peak power, battery
 mass, payload mass, and disk area. The resulting gross mass is relaxed back into the
-equations until the relative mass change is below the configured tolerance. This is
-an architecture sensitivity model, not a certification or component-sizing method.
+equations until the relative mass change is below the configured tolerance. For a
+fixed battery-sizing branch, constant disk loading makes this mapping affine:
+``m_new = a*m + b``. The independently calculated fixed point is a verification of
+this conceptual representation, not a proof of real-aircraft stability.
+
+``reserve_fraction`` is the fraction withheld from the energy remaining after the
+permitted depth-of-discharge limit. Thus usable nominal energy is
+``DoD * (1 - reserve_fraction)``.
+This is an architecture sensitivity model, not a certification or component-sizing
+method.
 """
 
 from __future__ import annotations
@@ -124,6 +132,79 @@ def stable_float_tree(value: Any, significant_digits: int = 12) -> Any:
     return value
 
 
+def analytical_closure(inputs: dict[str, Any], p: dict[str, float]) -> dict[str, Any]:
+    """Return the branch-consistent affine closure for the conceptual model.
+
+    With constant disk loading, propulsion power and rotor area are linear in gross
+    mass. Each battery branch is therefore affine, which permits an independent
+    fixed-point check against the relaxed numerical iteration.
+    """
+    constants = inputs["constants"]
+    g = float(constants["gravity_m_s2"]["value"])
+    rho = float(constants["air_density_kg_m3"]["value"])
+    area_per_mass = g / p["disk_loading_n_m2"]
+    propulsion_power_per_mass = (
+        g * math.sqrt(p["disk_loading_n_m2"] / (2.0 * rho))
+        / (p["rotor_figure_of_merit"] * p["motor_controller_efficiency"])
+        * p["environment_power_margin"]
+    )
+    payload_bus_power = p["payload_power_w"] / p["payload_regulator_efficiency"]
+    peak_per_mass = propulsion_power_per_mass * p["thrust_margin_ratio"] ** 1.5
+    peak_fixed = p["auxiliary_power_w"] + payload_bus_power
+    propulsion_mass_per_mass = (
+        peak_per_mass / p["propulsion_specific_power_w_kg"]
+        + p["rotor_mass_per_disk_area_kg_m2"] * area_per_mass
+    )
+    mount_mass = p["mount_base_mass_kg"] + p["mount_payload_fraction"] * p["payload_mass_kg"]
+    carried_fixed_mass = (
+        p["payload_mass_kg"] + p["avionics_mass_kg"]
+        + p["power_electronics_mass_kg"] + mount_mass
+    )
+    usable_fraction = p["battery_depth_of_discharge"] * (1.0 - p["reserve_fraction"])
+    energy_per_mass = (
+        propulsion_power_per_mass * p["endurance_min"] / 60.0
+        / usable_fraction / p["battery_specific_energy_wh_kg"]
+    )
+    energy_fixed = (
+        (p["auxiliary_power_w"] + payload_bus_power) * p["endurance_min"] / 60.0
+        / usable_fraction / p["battery_specific_energy_wh_kg"]
+    )
+    power_per_mass = peak_per_mass * p["battery_power_margin_ratio"] / p["battery_specific_power_w_kg"]
+    power_fixed = peak_fixed * p["battery_power_margin_ratio"] / p["battery_specific_power_w_kg"]
+    candidates = []
+    for branch, battery_per_mass, battery_fixed in (
+        ("energy", energy_per_mass, energy_fixed),
+        ("power", power_per_mass, power_fixed),
+    ):
+        slope = (
+            (1.0 + p["structure_load_fraction"])
+            * (battery_per_mass + propulsion_mass_per_mass)
+            + p["structure_area_penalty_kg_m2"] * area_per_mass
+        )
+        intercept = (
+            (1.0 + p["structure_load_fraction"]) * (carried_fixed_mass + battery_fixed)
+            + p["structure_base_mass_kg"]
+        )
+        finite = slope < 1.0
+        mass = intercept / (1.0 - slope) if finite else None
+        valid = False
+        if mass is not None and mass > 0.0:
+            energy_mass = energy_per_mass * mass + energy_fixed
+            power_mass = power_per_mass * mass + power_fixed
+            valid = energy_mass >= power_mass if branch == "energy" else power_mass >= energy_mass
+        candidates.append({
+            "branch": branch, "effective_a": slope, "effective_b_kg": intercept,
+            "analytical_gross_mass_kg": mass, "finite_closure": finite,
+            "branch_consistent": valid,
+        })
+    selected = next((item for item in candidates if item["finite_closure"] and item["branch_consistent"]), None)
+    return {
+        "candidates": candidates,
+        "selected": selected,
+        "propulsion_power_per_mass_w_kg": propulsion_power_per_mass,
+        "area_per_mass_m2_kg": area_per_mass,
+    }
+
 def solve_point(
     inputs: dict[str, Any],
     parameters: dict[str, float],
@@ -132,6 +213,7 @@ def solve_point(
 ) -> dict[str, Any]:
     p = dict(parameters)
     p.update(overrides or {})
+    analytical = analytical_closure(inputs, p)
     constants = inputs["constants"]
     solver = inputs["solver"]
     g = float(constants["gravity_m_s2"]["value"])
@@ -144,6 +226,7 @@ def solve_point(
     divergence_mass = float(solver["divergence_gross_mass_kg"])
     trace: list[dict[str, float]] = []
     converged = False
+    numerical_guard_exceeded = False
     reason = "maximum_iterations"
 
     state: dict[str, float] = {}
@@ -178,7 +261,8 @@ def solve_point(
         structure_mass = (
             p["structure_base_mass_kg"]
             + p["structure_load_fraction"]
-            * (p["payload_mass_kg"] + battery_mass + propulsion_mass)
+            * (p["payload_mass_kg"] + battery_mass + propulsion_mass
+               + p["avionics_mass_kg"] + p["power_electronics_mass_kg"] + mount_mass)
             + p["structure_area_penalty_kg_m2"] * disk_area
         )
         calculated_gross = (
@@ -210,10 +294,12 @@ def solve_point(
         }
         if capture_trace:
             trace.append(dict(state))
-        if not math.isfinite(next_gross) or next_gross > divergence_mass:
+        if not math.isfinite(next_gross):
             gross = next_gross
-            reason = "mass_divergence"
+            reason = "numerical_nonfinite"
             break
+        if next_gross > divergence_mass:
+            numerical_guard_exceeded = True
         gross = next_gross
         if relative_change <= tolerance:
             converged = True
@@ -232,46 +318,110 @@ def solve_point(
     discharge_margin = available_battery_power / max(peak_battery_power, 1e-9)
     battery_fraction = state["battery_mass_kg"] / max(gross, 1e-9)
     rotor_diameter = math.sqrt(4.0 * state["total_disk_area_m2"] / (rotor_count * math.pi))
-
-    structure_cost = 50.0 + state["structure_mass_kg"] * p["structure_cost_usd_per_kg"]
-    propulsion_cost = (
-        state["propulsion_hover_power_w"] * p["thrust_margin_ratio"] ** 1.5 / 1000.0
-        * p["propulsion_cost_usd_per_kw"]
+    vehicle_span = 2.0 * rotor_diameter
+    selected_closure = analytical["selected"]
+    mathematical_closed = selected_closure is not None
+    analytical_mass = selected_closure["analytical_gross_mass_kg"] if selected_closure else None
+    numerical_last_gross_mass = gross
+    closure_relative_error = (
+        abs(gross - analytical_mass) / max(analytical_mass, 1e-9)
+        if converged and analytical_mass is not None else None
     )
-    battery_cost = state["installed_nominal_battery_energy_wh"] * p["battery_cost_usd_per_wh"]
-    cost_breakdown = {
-        "structure_usd": structure_cost,
-        "propulsion_usd": propulsion_cost,
-        "avionics_usd": p["avionics_cost_usd"],
-        "battery_usd": battery_cost,
-        "power_electronics_usd": p["power_electronics_cost_usd"],
-        "mount_usd": p["mount_cost_usd"],
-        "other_platform_usd": p["other_platform_cost_usd"],
-    }
-    platform_cost = sum(cost_breakdown.values())
-    boundaries = inputs["analysis_acceptance_boundaries"]
-    burden_terms = {
-        "portability": gross / p["analysis_portability_mass_kg"],
-        "cost": platform_cost / p["analysis_cost_boundary_usd"],
-        "battery_fraction": battery_fraction / float(boundaries["reference_battery_mass_fraction"]),
-        "discharge": float(boundaries["minimum_reference_discharge_margin"]) / max(discharge_margin, 1e-9),
-    }
-    feasibility_burden = max(burden_terms.values()) if converged else 10.0
-    technically_closes = converged and discharge_margin >= float(
-        boundaries["minimum_marginal_discharge_margin"]
-    ) and battery_fraction <= float(boundaries["marginal_battery_mass_fraction"])
-    if converged and all(value <= 1.0 for value in burden_terms.values()):
-        conditional_class = "FEASIBLE"
-    elif technically_closes and gross <= 1.5 * p["analysis_portability_mass_kg"] and platform_cost <= 2.0 * p[
-        "analysis_cost_boundary_usd"
-    ]:
-        conditional_class = "MARGINAL"
+    # A valid affine fixed point is the authoritative analytical model state. The
+    # relaxed iteration remains only a verification diagnostic; a nonclosing
+    # iteration is never reported as a finite carrier result.
+    if mathematical_closed:
+        gross = analytical_mass
+        disk_area = gross * g / p["disk_loading_n_m2"]
+        ideal_power = (gross * g) ** 1.5 / math.sqrt(2.0 * rho * disk_area)
+        propulsion_hover_power = ideal_power / (p["rotor_figure_of_merit"] * p["motor_controller_efficiency"]) * p["environment_power_margin"]
+        payload_bus_power = p["payload_power_w"] / p["payload_regulator_efficiency"]
+        total_hover_power = propulsion_hover_power + p["auxiliary_power_w"] + payload_bus_power
+        required_nominal_energy = total_hover_power * p["endurance_min"] / 60.0 / usable_fraction
+        energy_limited_battery_mass = required_nominal_energy / p["battery_specific_energy_wh_kg"]
+        peak_propulsion_power = propulsion_hover_power * p["thrust_margin_ratio"] ** 1.5
+        peak_battery_power = peak_propulsion_power + p["auxiliary_power_w"] + payload_bus_power
+        power_limited_battery_mass = peak_battery_power * p["battery_power_margin_ratio"] / p["battery_specific_power_w_kg"]
+        battery_mass = max(energy_limited_battery_mass, power_limited_battery_mass)
+        propulsion_mass = peak_propulsion_power / p["propulsion_specific_power_w_kg"] + p["rotor_mass_per_disk_area_kg_m2"] * disk_area
+        structure_mass = p["structure_base_mass_kg"] + p["structure_load_fraction"] * (p["payload_mass_kg"] + battery_mass + propulsion_mass + p["avionics_mass_kg"] + p["power_electronics_mass_kg"] + mount_mass) + p["structure_area_penalty_kg_m2"] * disk_area
+        state.update({"gross_mass_kg": gross, "battery_mass_kg": battery_mass, "structure_mass_kg": structure_mass, "propulsion_mass_kg": propulsion_mass, "total_disk_area_m2": disk_area, "ideal_induced_power_w": ideal_power, "propulsion_hover_power_w": propulsion_hover_power, "total_hover_power_w": total_hover_power, "required_nominal_battery_energy_wh": required_nominal_energy, "installed_nominal_battery_energy_wh": battery_mass * p["battery_specific_energy_wh_kg"], "energy_limited_battery_mass_kg": energy_limited_battery_mass, "power_limited_battery_mass_kg": power_limited_battery_mass})
+        available_battery_power = battery_mass * p["battery_specific_power_w_kg"]
+        discharge_margin = available_battery_power / max(peak_battery_power, 1e-9)
+        battery_fraction = battery_mass / gross
+        rotor_diameter = math.sqrt(4.0 * disk_area / (rotor_count * math.pi))
+        vehicle_span = 2.0 * rotor_diameter
+    practical = inputs.get("analysis_practical_boundaries", {})
+    practical_failures = []
+    if mathematical_closed and practical:
+        rotor_diameter = math.sqrt(4.0 * state["total_disk_area_m2"] / (rotor_count * math.pi))
+        vehicle_span = 2.0 * rotor_diameter
+        if gross > float(practical["analysis_max_gross_mass_kg"]):
+            practical_failures.append("gross_mass")
+        if rotor_diameter > float(practical["analysis_max_rotor_diameter_m"]):
+            practical_failures.append("rotor_diameter")
+        if vehicle_span > float(practical["analysis_max_vehicle_span_m"]):
+            practical_failures.append("vehicle_span")
+    practical_ok = mathematical_closed and not practical_failures
+
+    if mathematical_closed:
+        structure_cost = 50.0 + state["structure_mass_kg"] * p["structure_cost_usd_per_kg"]
+        propulsion_cost = (
+            state["propulsion_hover_power_w"] * p["thrust_margin_ratio"] ** 1.5 / 1000.0
+            * p["propulsion_cost_usd_per_kw"]
+        )
+        battery_cost = state["installed_nominal_battery_energy_wh"] * p["battery_cost_usd_per_wh"]
+        cost_breakdown = {
+            "structure_usd": structure_cost,
+            "propulsion_usd": propulsion_cost,
+            "avionics_usd": p["avionics_cost_usd"],
+            "battery_usd": battery_cost,
+            "power_electronics_usd": p["power_electronics_cost_usd"],
+            "mount_usd": p["mount_cost_usd"],
+            "other_platform_usd": p["other_platform_cost_usd"],
+        }
+        platform_cost = sum(cost_breakdown.values())
     else:
+        cost_breakdown = None
+        platform_cost = None
+    boundaries = inputs["analysis_acceptance_boundaries"]
+    if mathematical_closed:
+        burden_terms = {
+            "portability": gross / p["analysis_portability_mass_kg"],
+            "cost": platform_cost / p["analysis_cost_boundary_usd"],
+            "battery_fraction": battery_fraction / float(boundaries["reference_battery_mass_fraction"]),
+            "discharge": float(boundaries["minimum_reference_discharge_margin"]) / discharge_margin,
+        }
+        feasibility_burden = max(burden_terms.values()) if converged else 10.0
+        technically_closes = converged and discharge_margin >= float(
+            boundaries["minimum_marginal_discharge_margin"]
+        ) and battery_fraction <= float(boundaries["marginal_battery_mass_fraction"])
+        if converged and all(value <= 1.0 for value in burden_terms.values()):
+            conditional_class = "FEASIBLE"
+        elif technically_closes and gross <= 1.5 * p["analysis_portability_mass_kg"] and platform_cost <= 2.0 * p[
+            "analysis_cost_boundary_usd"
+        ]:
+            conditional_class = "MARGINAL"
+        else:
+            conditional_class = "INFEASIBLE"
+    else:
+        burden_terms = None
+        feasibility_burden = None
         conditional_class = "INFEASIBLE"
 
     return {
         "converged": converged,
+        "numerical_converged": converged,
+        "numerical_guard_exceeded": numerical_guard_exceeded,
         "convergence_reason": reason,
+        "mathematical_closed": mathematical_closed,
+        "model_state": "FINITE_CLOSURE" if mathematical_closed else "NONCLOSURE",
+        "analytical_branch": selected_closure["branch"] if selected_closure else "none",
+        "effective_a": selected_closure["effective_a"] if selected_closure else None,
+        "effective_b_kg": selected_closure["effective_b_kg"] if selected_closure else None,
+        "analytical_gross_mass_kg": analytical_mass,
+        "numerical_analytical_relative_error": closure_relative_error,
+        "analytical_candidates": analytical["candidates"],
         "iterations": int(state["iteration"]),
         "conditional_class": conditional_class,
         "owner_requirement_class": "UNDETERMINED",
@@ -280,32 +430,36 @@ def solve_point(
         "payload_mass_kg": p["payload_mass_kg"],
         "payload_power_w": p["payload_power_w"],
         "endurance_min": p["endurance_min"],
-        "gross_mass_kg": gross,
-        "battery_mass_kg": state["battery_mass_kg"],
-        "battery_mass_fraction": battery_fraction,
-        "structure_mass_kg": state["structure_mass_kg"],
-        "propulsion_mass_kg": state["propulsion_mass_kg"],
-        "total_disk_area_m2": state["total_disk_area_m2"],
-        "equivalent_rotor_diameter_m": rotor_diameter,
-        "ideal_induced_power_w": state["ideal_induced_power_w"],
-        "propulsion_hover_power_w": state["propulsion_hover_power_w"],
-        "total_hover_power_w": state["total_hover_power_w"],
-        "required_nominal_battery_energy_wh": state["required_nominal_battery_energy_wh"],
-        "installed_nominal_battery_energy_wh": state["installed_nominal_battery_energy_wh"],
+        "gross_mass_kg": gross if mathematical_closed else None,
+        "numerical_last_gross_mass_kg": numerical_last_gross_mass,
+        "battery_mass_kg": state["battery_mass_kg"] if mathematical_closed else None,
+        "battery_mass_fraction": battery_fraction if mathematical_closed else None,
+        "structure_mass_kg": state["structure_mass_kg"] if mathematical_closed else None,
+        "propulsion_mass_kg": state["propulsion_mass_kg"] if mathematical_closed else None,
+        "total_disk_area_m2": state["total_disk_area_m2"] if mathematical_closed else None,
+        "equivalent_rotor_diameter_m": rotor_diameter if mathematical_closed else None,
+        "approximate_vehicle_span_m": vehicle_span if mathematical_closed else None,
+        "practical_constraint_ok": practical_ok,
+        "practical_constraint_failures": practical_failures,
+        "ideal_induced_power_w": state["ideal_induced_power_w"] if mathematical_closed else None,
+        "propulsion_hover_power_w": state["propulsion_hover_power_w"] if mathematical_closed else None,
+        "total_hover_power_w": state["total_hover_power_w"] if mathematical_closed else None,
+        "required_nominal_battery_energy_wh": state["required_nominal_battery_energy_wh"] if mathematical_closed else None,
+        "installed_nominal_battery_energy_wh": state["installed_nominal_battery_energy_wh"] if mathematical_closed else None,
         "battery_sizing_driver": (
             "energy"
             if state["energy_limited_battery_mass_kg"] >= state["power_limited_battery_mass_kg"]
             else "power"
-        ),
+        ) if mathematical_closed else "none",
         "achievable_endurance_min": (
             state["installed_nominal_battery_energy_wh"]
             * p["battery_depth_of_discharge"]
             * (1.0 - p["reserve_fraction"])
             / state["total_hover_power_w"]
             * 60.0
-        ),
-        "peak_battery_power_w": peak_battery_power,
-        "battery_discharge_margin": discharge_margin,
+        ) if mathematical_closed else None,
+        "peak_battery_power_w": peak_battery_power if mathematical_closed else None,
+        "battery_discharge_margin": discharge_margin if mathematical_closed else None,
         "platform_cost_usd": platform_cost,
         "cost_breakdown": cost_breakdown,
         "trace": trace,
@@ -429,8 +583,9 @@ def region_svg(rows: list[dict[str, Any]], payload_power: float = 50.0) -> str:
             category = item["conditional_class"]
             parts.append(f'<rect x="{x}" y="{y}" width="{cell_w-3}" height="{cell_h-3}" rx="5" fill="{colors[category]}" {borders[category]}/>')
             parts.append(f'<text x="{x + cell_w/2}" y="{y + 27}" text-anchor="middle" style="font-size:12px;font-weight:700;fill:{text_colors[category]}">{category}</text>')
-            parts.append(f'<text x="{x + cell_w/2}" y="{y + 48}" text-anchor="middle" style="font-size:12px;fill:{text_colors[category]}">{float(item["gross_mass_kg"]):.1f} kg gross</text>')
-    parts.append(f'<text x="25" y="{height-64}" style="font-size:13px;font-weight:700">Cells show conditional class and converged gross mass.</text>')
+            label = f'{float(item["gross_mass_kg"]):.1f} kg gross' if item["gross_mass_kg"] is not None else "NONCLOSURE"
+            parts.append(f'<text x="{x + cell_w/2}" y="{y + 48}" text-anchor="middle" style="font-size:12px;fill:{text_colors[category]}">{label}</text>')
+    parts.append(f'<text x="25" y="{height-64}" style="font-size:13px;font-weight:700">Cells show conditional class and finite analytical gross mass; nonclosures have no finite model state.</text>')
     parts.append(f'<text x="25" y="{height-40}" style="font-size:13px">Solid = feasible · dashed = marginal · heavy border = infeasible.</text>')
     parts.append(f'<text x="25" y="{height-18}" style="font-size:13px;fill:#536174">Owner requirements remain undecided; this is an exploratory design-space result.</text>')
     return svg_document(width, height, "\n".join(parts), "Conditional payload-endurance feasibility region")
@@ -447,7 +602,7 @@ def line_plot_svg(series: list[tuple[str, list[tuple[float, float, float]]]]) ->
     cost_max = max(cost_values) * 1.08
     colors = ["#2266aa", "#d9822b", "#7b4ab5"]
     parts = ['<rect width="820" height="470" fill="#ffffff"/>']
-    parts.append('<text x="20" y="28" class="title">Endurance growth in mass and platform cost</text>')
+    parts.append('<text x="20" y="28" class="title">Finite-closure endurance growth in mass and platform cost</text>')
     for step in range(6):
         y = bottom - (bottom - top) * step / 5
         mass_label = mass_max * step / 5
@@ -461,7 +616,7 @@ def line_plot_svg(series: list[tuple[str, list[tuple[float, float, float]]]]) ->
     for endurance in sorted(set(x_values)):
         x = left + (endurance - x_min) / (x_max - x_min) * (right - left)
         parts.append(f'<text x="{x}" y="{bottom+20}" text-anchor="middle" class="small">{endurance:g}</text>')
-    parts.append(f'<text x="{(left+right)/2}" y="{bottom+42}" text-anchor="middle" class="label">On-station endurance (min)</text>')
+    parts.append(f'<text x="{(left+right)/2}" y="{bottom+42}" text-anchor="middle" class="label">On-station dwell (min); nonclosures omitted</text>')
     for index, (label, points) in enumerate(series):
         color = colors[index % len(colors)]
         mass_coords = []
@@ -498,6 +653,9 @@ def sensitivity_svg(rows: list[dict[str, Any]]) -> str:
     return svg_document(width, height, "\n".join(parts), "Ranked sensitivity of feasibility burden")
 
 
+def nullable_round(value: float | None, digits: int) -> float | None:
+    return round(value, digits) if value is not None else None
+
 def build_outputs(inputs: dict[str, Any]) -> dict[Path, str]:
     cases = {case: parameters_for_case(inputs, case) for case in ("favorable", "reference", "adverse")}
     grid_rows: list[dict[str, Any]] = []
@@ -516,21 +674,22 @@ def build_outputs(inputs: dict[str, Any]) -> dict[Path, str]:
                         "payload_power_w": payload_power,
                         "endurance_min": endurance,
                         "conditional_class": result["conditional_class"],
+                        "model_state": result["model_state"],
                         "owner_requirement_class": result["owner_requirement_class"],
                         "converged": result["converged"],
                         "iterations": result["iterations"],
-                        "gross_mass_kg": round(result["gross_mass_kg"], 6),
-                        "battery_mass_kg": round(result["battery_mass_kg"], 6),
-                        "battery_mass_fraction": round(result["battery_mass_fraction"], 6),
-                        "total_hover_power_w": round(result["total_hover_power_w"], 6),
-                        "required_nominal_battery_energy_wh": round(result["required_nominal_battery_energy_wh"], 6),
-                        "installed_nominal_battery_energy_wh": round(result["installed_nominal_battery_energy_wh"], 6),
+                        "gross_mass_kg": nullable_round(result["gross_mass_kg"], 6),
+                        "battery_mass_kg": nullable_round(result["battery_mass_kg"], 6),
+                        "battery_mass_fraction": nullable_round(result["battery_mass_fraction"], 6),
+                        "total_hover_power_w": nullable_round(result["total_hover_power_w"], 6),
+                        "required_nominal_battery_energy_wh": nullable_round(result["required_nominal_battery_energy_wh"], 6),
+                        "installed_nominal_battery_energy_wh": nullable_round(result["installed_nominal_battery_energy_wh"], 6),
                         "battery_sizing_driver": result["battery_sizing_driver"],
-                        "achievable_endurance_min": round(result["achievable_endurance_min"], 6),
-                        "equivalent_rotor_diameter_m": round(result["equivalent_rotor_diameter_m"], 6),
-                        "battery_discharge_margin": round(result["battery_discharge_margin"], 6),
-                        "platform_cost_usd": round(result["platform_cost_usd"], 2),
-                        "feasibility_burden": round(result["feasibility_burden"], 6),
+                        "achievable_endurance_min": nullable_round(result["achievable_endurance_min"], 6),
+                        "equivalent_rotor_diameter_m": nullable_round(result["equivalent_rotor_diameter_m"], 6),
+                        "battery_discharge_margin": nullable_round(result["battery_discharge_margin"], 6),
+                        "platform_cost_usd": nullable_round(result["platform_cost_usd"], 2),
+                        "feasibility_burden": nullable_round(result["feasibility_burden"], 6),
                     })
 
     sensitivity_variables = [
@@ -553,8 +712,11 @@ def build_outputs(inputs: dict[str, Any]) -> dict[Path, str]:
         for variable, base in zip(sensitivity_variables, bases):
             value = scale_range(inputs["ranges"][variable], halton(sample_index, int(base)))
             overrides[variable] = value
-            sample_inputs[variable].append(value)
         result = solve_point(inputs, reference, overrides)
+        if not result["mathematical_closed"]:
+            continue
+        for variable in sensitivity_variables:
+            sample_inputs[variable].append(overrides[variable])
         for output in sample_outputs:
             sample_outputs[output].append(float(result[output]))
 
@@ -585,7 +747,7 @@ def build_outputs(inputs: dict[str, Any]) -> dict[Path, str]:
         result = solve_point(inputs, reference, overrides, capture_trace=True)
         representative_results[label] = {key: value for key, value in result.items() if key != "trace"}
         for state in result["trace"]:
-            convergence_rows.append({"point": label, **{key: round(value, 8) for key, value in state.items()}})
+            convergence_rows.append({"point": label, **{f"numerical_{key}": round(value, 8) for key, value in state.items()}})
 
     class_counts: dict[str, dict[str, int]] = {}
     for case in cases:
@@ -601,7 +763,7 @@ def build_outputs(inputs: dict[str, Any]) -> dict[Path, str]:
         points = []
         for endurance in inputs["sweep"]["endurance_grid_min"]:
             item = next(row for row in reference_slice if row["payload_mass_kg"] == payload and row["endurance_min"] == endurance)
-            points.append((float(endurance), float(item["gross_mass_kg"]), float(item["platform_cost_usd"])))
+            if item["gross_mass_kg"] is not None: points.append((float(endurance), float(item["gross_mass_kg"]), float(item["platform_cost_usd"])))
         endurance_series.append((f"{payload:g} kg payload", points))
 
     nominal_cost = representative_results["middle"]["cost_breakdown"]
@@ -613,6 +775,8 @@ def build_outputs(inputs: dict[str, Any]) -> dict[Path, str]:
         "approval_state": inputs["approval_state"],
         "grid_points": len(grid_rows),
         "sensitivity_samples": sample_count,
+        "physical_sensitivity_samples": len(sample_outputs["gross_mass_kg"]),
+        "sensitivity_nonclosures_excluded": sample_count - len(sample_outputs["gross_mass_kg"]),
         "conditional_class_counts": class_counts,
         "all_owner_requirement_dispositions": "UNDETERMINED",
         "representative_points": stable_float_tree(representative_results),
@@ -622,6 +786,7 @@ def build_outputs(inputs: dict[str, Any]) -> dict[Path, str]:
         ],
         "limitations": [
             "No owner-approved numeric target exists; FEASIBLE/MARGINAL/INFEASIBLE labels are conditional on analysis-only boundaries.",
+            "NONCLOSURE means no finite analytical model state; numerical iteration diagnostics are excluded from physical result reporting and mass/cost sensitivity calculations.",
             "Payload volume, station tolerance, command-link geometry/conformance, detailed environment, and CFG-DOM sourcing are UNDETERMINED.",
             "Momentum-theory power is corrected by broad efficiency ranges but is not a substitute for rotor or vehicle test data.",
             "Structural growth and cost are parametric class-level approximations, not a stress model, supplier quote, BOM, or lifecycle-cost estimate.",
@@ -632,7 +797,7 @@ def build_outputs(inputs: dict[str, Any]) -> dict[Path, str]:
 
     grid_fields = [
         "case", "payload_mass_kg", "payload_power_w", "endurance_min",
-        "conditional_class", "owner_requirement_class", "converged", "iterations",
+        "conditional_class", "model_state", "owner_requirement_class", "converged", "iterations",
         "gross_mass_kg", "battery_mass_kg", "battery_mass_fraction",
         "total_hover_power_w", "required_nominal_battery_energy_wh",
         "installed_nominal_battery_energy_wh", "battery_sizing_driver",
@@ -645,12 +810,12 @@ def build_outputs(inputs: dict[str, Any]) -> dict[Path, str]:
         "rho_feasibility_burden",
     ]
     convergence_fields = [
-        "point", "iteration", "gross_mass_kg", "battery_mass_kg",
-        "structure_mass_kg", "propulsion_mass_kg", "total_disk_area_m2",
-        "ideal_induced_power_w", "propulsion_hover_power_w", "total_hover_power_w",
-        "required_nominal_battery_energy_wh", "installed_nominal_battery_energy_wh",
-        "energy_limited_battery_mass_kg", "power_limited_battery_mass_kg",
-        "relative_mass_change",
+        "point", "numerical_iteration", "numerical_gross_mass_kg", "numerical_battery_mass_kg",
+        "numerical_structure_mass_kg", "numerical_propulsion_mass_kg", "numerical_total_disk_area_m2",
+        "numerical_ideal_induced_power_w", "numerical_propulsion_hover_power_w", "numerical_total_hover_power_w",
+        "numerical_required_nominal_battery_energy_wh", "numerical_installed_nominal_battery_energy_wh",
+        "numerical_energy_limited_battery_mass_kg", "numerical_power_limited_battery_mass_kg",
+        "numerical_relative_mass_change",
     ]
     return {
         RESULT_FILES["summary"]: json.dumps(summary, indent=2, sort_keys=False) + "\n",

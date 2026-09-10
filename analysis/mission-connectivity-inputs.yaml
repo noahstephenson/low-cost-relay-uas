@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "purpose": "Declared low-order service, propagation, and stylized visibility assumptions for the relay architecture experiment. These are analysis scenarios, not operational requirements.",
+  "primary_payload_id": "PAY-MESH-OEM",
+  "service_mode": {
+    "frequency_mhz": {"value": 2400.0, "unit": "MHz", "status": "analysis_assumption", "interpretation": "Common 2.4 GHz analysis band; not a frequency authorization."},
+    "channel_bandwidth_mhz": {"value": 5.0, "unit": "MHz", "status": "analysis_assumption", "interpretation": "Common service-mode bandwidth used to avoid combining manufacturer sensitivities from different modes."},
+    "service_description": {"value": "low-rate relay service", "unit": "text", "status": "analysis_assumption", "interpretation": "No throughput, interoperability, or waveform-performance claim is made."},
+    "ground_transmit_power_dbm": {"value": 30.0, "unit": "dBm", "status": "analysis_assumption", "interpretation": "Endpoint conducted transmit-power basis."},
+    "endpoint_gain_dbi": {"value": 6.0, "unit": "dBi", "status": "analysis_assumption", "interpretation": "Per-endpoint installed-gain allowance."},
+    "relay_gain_dbi": {"value": 2.0, "unit": "dBi", "status": "analysis_assumption", "interpretation": "Per-relay installed-gain allowance."},
+    "miscellaneous_loss_db": {"value": 6.0, "unit": "dB", "status": "analysis_assumption", "interpretation": "Combined implementation and miscellaneous loss allowance."},
+    "receiver_threshold_dbm": {"value": -90.0, "unit": "dBm", "status": "analysis_assumption", "interpretation": "One common service threshold for all receivers; it is not a manufacturer sensitivity datum."},
+    "adverse_excess_loss_db": {"value": 12.0, "unit": "dB", "status": "analysis_assumption", "interpretation": "Bounded adverse clear-path sensitivity, applied in the adverse scenario."}
+  },
+  "geometry": {
+    "ground_altitude_m": {"value": 0.0, "unit": "m", "status": "analysis_scenario", "interpretation": "Ground endpoint elevation datum."},
+    "remote_altitude_m": {"value": 100.0, "unit": "m", "status": "analysis_scenario", "interpretation": "Remote-UAS elevation datum."},
+    "relay_altitudes_m": {"value": [60.0, 120.0, 240.0], "unit": "m", "status": "analysis_scenario", "interpretation": "Controlled altitude sensitivity; not requirements."},
+    "relay_position_fraction": {"value": 0.5, "unit": "fraction", "status": "analysis_scenario", "interpretation": "Fixed midpoint relay, not optimized."}
+  },
+  "obstruction_scenarios": [
+    {"id": "baseline_h80_x40", "label": "Baseline: 80 m screen at 40% baseline", "obstruction_top_m": {"value": 80.0, "unit": "m", "status": "analysis_scenario"}, "obstruction_position_fraction": {"value": 0.40, "unit": "fraction", "status": "analysis_scenario"}},
+    {"id": "h60_x40", "label": "Height sensitivity: 60 m screen at 40% baseline", "obstruction_top_m": {"value": 60.0, "unit": "m", "status": "analysis_scenario"}, "obstruction_position_fraction": {"value": 0.40, "unit": "fraction", "status": "analysis_scenario"}},
+    {"id": "h100_x40", "label": "Height sensitivity: 100 m screen at 40% baseline", "obstruction_top_m": {"value": 100.0, "unit": "m", "status": "analysis_scenario"}, "obstruction_position_fraction": {"value": 0.40, "unit": "fraction", "status": "analysis_scenario"}},
+    {"id": "h80_x30", "label": "Location sensitivity: 80 m screen at 30% baseline", "obstruction_top_m": {"value": 80.0, "unit": "m", "status": "analysis_scenario"}, "obstruction_position_fraction": {"value": 0.30, "unit": "fraction", "status": "analysis_scenario"}},
+    {"id": "h80_x45", "label": "Location sensitivity: 80 m screen at 45% baseline", "obstruction_top_m": {"value": 80.0, "unit": "m", "status": "analysis_scenario"}, "obstruction_position_fraction": {"value": 0.45, "unit": "fraction", "status": "analysis_scenario"}}
+  ],
+  "sweep": {
+    "separations_km": {"value": [5, 10, 20, 30, 40, 60], "unit": "km", "status": "analysis_scenario", "interpretation": "Controlled endpoint separations."},
+    "dwell_min": {"value": [10, 20, 30, 45, 60], "unit": "min", "status": "analysis_scenario", "interpretation": "On-station dwell values passed to the carrier model."}
+  }
+}

@@ -16,84 +16,84 @@
 <text x="136" y="212.0" text-anchor="end" style="font-size:14px">0.25 kg</text>
 <rect x="150" y="175" width="129" height="61" rx="5" fill="#2f9e68" stroke="#247a52" stroke-width="2"/>
 <text x="216.0" y="202" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#ffffff">FEASIBLE</text>
-<text x="216.0" y="223" text-anchor="middle" style="font-size:12px;fill:#ffffff">5.3 kg gross</text>
+<text x="216.0" y="223" text-anchor="middle" style="font-size:12px;fill:#ffffff">5.7 kg gross</text>
 <rect x="282" y="175" width="129" height="61" rx="5" fill="#2f9e68" stroke="#247a52" stroke-width="2"/>
 <text x="348.0" y="202" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#ffffff">FEASIBLE</text>
-<text x="348.0" y="223" text-anchor="middle" style="font-size:12px;fill:#ffffff">5.3 kg gross</text>
+<text x="348.0" y="223" text-anchor="middle" style="font-size:12px;fill:#ffffff">5.7 kg gross</text>
 <rect x="414" y="175" width="129" height="61" rx="5" fill="#e6a43a" stroke="#8a5b00" stroke-width="2" stroke-dasharray="7 4"/>
 <text x="480.0" y="202" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#172033">MARGINAL</text>
-<text x="480.0" y="223" text-anchor="middle" style="font-size:12px;fill:#172033">8.9 kg gross</text>
+<text x="480.0" y="223" text-anchor="middle" style="font-size:12px;fill:#172033">9.5 kg gross</text>
 <rect x="546" y="175" width="129" height="61" rx="5" fill="#c95757" stroke="#9f2d2d" stroke-width="3"/>
 <text x="612.0" y="202" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#ffffff">INFEASIBLE</text>
-<text x="612.0" y="223" text-anchor="middle" style="font-size:12px;fill:#ffffff">50.0 kg gross</text>
+<text x="612.0" y="223" text-anchor="middle" style="font-size:12px;fill:#ffffff">120.9 kg gross</text>
 <rect x="678" y="175" width="129" height="61" rx="5" fill="#c95757" stroke="#9f2d2d" stroke-width="3"/>
 <text x="744.0" y="202" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#ffffff">INFEASIBLE</text>
-<text x="744.0" y="223" text-anchor="middle" style="font-size:12px;fill:#ffffff">54.6 kg gross</text>
+<text x="744.0" y="223" text-anchor="middle" style="font-size:12px;fill:#ffffff">NONCLOSURE</text>
 <text x="136" y="276.0" text-anchor="end" style="font-size:14px">0.5 kg</text>
 <rect x="150" y="239" width="129" height="61" rx="5" fill="#2f9e68" stroke="#247a52" stroke-width="2"/>
 <text x="216.0" y="266" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#ffffff">FEASIBLE</text>
-<text x="216.0" y="287" text-anchor="middle" style="font-size:12px;fill:#ffffff">6.1 kg gross</text>
+<text x="216.0" y="287" text-anchor="middle" style="font-size:12px;fill:#ffffff">6.5 kg gross</text>
 <rect x="282" y="239" width="129" height="61" rx="5" fill="#2f9e68" stroke="#247a52" stroke-width="2"/>
 <text x="348.0" y="266" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#ffffff">FEASIBLE</text>
-<text x="348.0" y="287" text-anchor="middle" style="font-size:12px;fill:#ffffff">6.1 kg gross</text>
+<text x="348.0" y="287" text-anchor="middle" style="font-size:12px;fill:#ffffff">6.5 kg gross</text>
 <rect x="414" y="239" width="129" height="61" rx="5" fill="#e6a43a" stroke="#8a5b00" stroke-width="2" stroke-dasharray="7 4"/>
 <text x="480.0" y="266" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#172033">MARGINAL</text>
-<text x="480.0" y="287" text-anchor="middle" style="font-size:12px;fill:#172033">10.1 kg gross</text>
+<text x="480.0" y="287" text-anchor="middle" style="font-size:12px;fill:#172033">10.7 kg gross</text>
 <rect x="546" y="239" width="129" height="61" rx="5" fill="#c95757" stroke="#9f2d2d" stroke-width="3"/>
 <text x="612.0" y="266" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#ffffff">INFEASIBLE</text>
-<text x="612.0" y="287" text-anchor="middle" style="font-size:12px;fill:#ffffff">50.9 kg gross</text>
+<text x="612.0" y="287" text-anchor="middle" style="font-size:12px;fill:#ffffff">135.4 kg gross</text>
 <rect x="678" y="239" width="129" height="61" rx="5" fill="#c95757" stroke="#9f2d2d" stroke-width="3"/>
 <text x="744.0" y="266" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#ffffff">INFEASIBLE</text>
-<text x="744.0" y="287" text-anchor="middle" style="font-size:12px;fill:#ffffff">50.3 kg gross</text>
+<text x="744.0" y="287" text-anchor="middle" style="font-size:12px;fill:#ffffff">NONCLOSURE</text>
 <text x="136" y="340.0" text-anchor="end" style="font-size:14px">1 kg</text>
 <rect x="150" y="303" width="129" height="61" rx="5" fill="#2f9e68" stroke="#247a52" stroke-width="2"/>
 <text x="216.0" y="330" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#ffffff">FEASIBLE</text>
-<text x="216.0" y="351" text-anchor="middle" style="font-size:12px;fill:#ffffff">7.7 kg gross</text>
+<text x="216.0" y="351" text-anchor="middle" style="font-size:12px;fill:#ffffff">8.1 kg gross</text>
 <rect x="282" y="303" width="129" height="61" rx="5" fill="#2f9e68" stroke="#247a52" stroke-width="2"/>
 <text x="348.0" y="330" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#ffffff">FEASIBLE</text>
-<text x="348.0" y="351" text-anchor="middle" style="font-size:12px;fill:#ffffff">7.7 kg gross</text>
+<text x="348.0" y="351" text-anchor="middle" style="font-size:12px;fill:#ffffff">8.1 kg gross</text>
 <rect x="414" y="303" width="129" height="61" rx="5" fill="#e6a43a" stroke="#8a5b00" stroke-width="2" stroke-dasharray="7 4"/>
 <text x="480.0" y="330" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#172033">MARGINAL</text>
-<text x="480.0" y="351" text-anchor="middle" style="font-size:12px;fill:#172033">12.5 kg gross</text>
+<text x="480.0" y="351" text-anchor="middle" style="font-size:12px;fill:#172033">13.2 kg gross</text>
 <rect x="546" y="303" width="129" height="61" rx="5" fill="#c95757" stroke="#9f2d2d" stroke-width="3"/>
 <text x="612.0" y="330" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#ffffff">INFEASIBLE</text>
-<text x="612.0" y="351" text-anchor="middle" style="font-size:12px;fill:#ffffff">50.7 kg gross</text>
+<text x="612.0" y="351" text-anchor="middle" style="font-size:12px;fill:#ffffff">164.3 kg gross</text>
 <rect x="678" y="303" width="129" height="61" rx="5" fill="#c95757" stroke="#9f2d2d" stroke-width="3"/>
 <text x="744.0" y="330" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#ffffff">INFEASIBLE</text>
-<text x="744.0" y="351" text-anchor="middle" style="font-size:12px;fill:#ffffff">57.2 kg gross</text>
+<text x="744.0" y="351" text-anchor="middle" style="font-size:12px;fill:#ffffff">NONCLOSURE</text>
 <text x="136" y="404.0" text-anchor="end" style="font-size:14px">1.5 kg</text>
 <rect x="150" y="367" width="129" height="61" rx="5" fill="#e6a43a" stroke="#8a5b00" stroke-width="2" stroke-dasharray="7 4"/>
 <text x="216.0" y="394" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#172033">MARGINAL</text>
-<text x="216.0" y="415" text-anchor="middle" style="font-size:12px;fill:#172033">9.3 kg gross</text>
+<text x="216.0" y="415" text-anchor="middle" style="font-size:12px;fill:#172033">9.8 kg gross</text>
 <rect x="282" y="367" width="129" height="61" rx="5" fill="#e6a43a" stroke="#8a5b00" stroke-width="2" stroke-dasharray="7 4"/>
 <text x="348.0" y="394" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#172033">MARGINAL</text>
-<text x="348.0" y="415" text-anchor="middle" style="font-size:12px;fill:#172033">9.3 kg gross</text>
-<rect x="414" y="367" width="129" height="61" rx="5" fill="#e6a43a" stroke="#8a5b00" stroke-width="2" stroke-dasharray="7 4"/>
-<text x="480.0" y="394" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#172033">MARGINAL</text>
-<text x="480.0" y="415" text-anchor="middle" style="font-size:12px;fill:#172033">14.9 kg gross</text>
+<text x="348.0" y="415" text-anchor="middle" style="font-size:12px;fill:#172033">9.8 kg gross</text>
+<rect x="414" y="367" width="129" height="61" rx="5" fill="#c95757" stroke="#9f2d2d" stroke-width="3"/>
+<text x="480.0" y="394" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#ffffff">INFEASIBLE</text>
+<text x="480.0" y="415" text-anchor="middle" style="font-size:12px;fill:#ffffff">15.6 kg gross</text>
 <rect x="546" y="367" width="129" height="61" rx="5" fill="#c95757" stroke="#9f2d2d" stroke-width="3"/>
 <text x="612.0" y="394" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#ffffff">INFEASIBLE</text>
-<text x="612.0" y="415" text-anchor="middle" style="font-size:12px;fill:#ffffff">50.6 kg gross</text>
+<text x="612.0" y="415" text-anchor="middle" style="font-size:12px;fill:#ffffff">193.2 kg gross</text>
 <rect x="678" y="367" width="129" height="61" rx="5" fill="#c95757" stroke="#9f2d2d" stroke-width="3"/>
 <text x="744.0" y="394" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#ffffff">INFEASIBLE</text>
-<text x="744.0" y="415" text-anchor="middle" style="font-size:12px;fill:#ffffff">54.5 kg gross</text>
+<text x="744.0" y="415" text-anchor="middle" style="font-size:12px;fill:#ffffff">NONCLOSURE</text>
 <text x="136" y="468.0" text-anchor="end" style="font-size:14px">2 kg</text>
 <rect x="150" y="431" width="129" height="61" rx="5" fill="#e6a43a" stroke="#8a5b00" stroke-width="2" stroke-dasharray="7 4"/>
 <text x="216.0" y="458" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#172033">MARGINAL</text>
-<text x="216.0" y="479" text-anchor="middle" style="font-size:12px;fill:#172033">10.9 kg gross</text>
+<text x="216.0" y="479" text-anchor="middle" style="font-size:12px;fill:#172033">11.4 kg gross</text>
 <rect x="282" y="431" width="129" height="61" rx="5" fill="#e6a43a" stroke="#8a5b00" stroke-width="2" stroke-dasharray="7 4"/>
 <text x="348.0" y="458" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#172033">MARGINAL</text>
-<text x="348.0" y="479" text-anchor="middle" style="font-size:12px;fill:#172033">10.9 kg gross</text>
+<text x="348.0" y="479" text-anchor="middle" style="font-size:12px;fill:#172033">11.4 kg gross</text>
 <rect x="414" y="431" width="129" height="61" rx="5" fill="#c95757" stroke="#9f2d2d" stroke-width="3"/>
 <text x="480.0" y="458" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#ffffff">INFEASIBLE</text>
-<text x="480.0" y="479" text-anchor="middle" style="font-size:12px;fill:#ffffff">17.3 kg gross</text>
+<text x="480.0" y="479" text-anchor="middle" style="font-size:12px;fill:#ffffff">18.1 kg gross</text>
 <rect x="546" y="431" width="129" height="61" rx="5" fill="#c95757" stroke="#9f2d2d" stroke-width="3"/>
 <text x="612.0" y="458" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#ffffff">INFEASIBLE</text>
-<text x="612.0" y="479" text-anchor="middle" style="font-size:12px;fill:#ffffff">51.5 kg gross</text>
+<text x="612.0" y="479" text-anchor="middle" style="font-size:12px;fill:#ffffff">222.1 kg gross</text>
 <rect x="678" y="431" width="129" height="61" rx="5" fill="#c95757" stroke="#9f2d2d" stroke-width="3"/>
 <text x="744.0" y="458" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#ffffff">INFEASIBLE</text>
-<text x="744.0" y="479" text-anchor="middle" style="font-size:12px;fill:#ffffff">50.7 kg gross</text>
-<text x="25" y="546" style="font-size:13px;font-weight:700">Cells show conditional class and converged gross mass.</text>
+<text x="744.0" y="479" text-anchor="middle" style="font-size:12px;fill:#ffffff">NONCLOSURE</text>
+<text x="25" y="546" style="font-size:13px;font-weight:700">Cells show conditional class and finite analytical gross mass; nonclosures have no finite model state.</text>
 <text x="25" y="570" style="font-size:13px">Solid = feasible · dashed = marginal · heavy border = infeasible.</text>
 <text x="25" y="592" style="font-size:13px;fill:#536174">Owner requirements remain undecided; this is an exploratory design-space result.</text>
 </svg>

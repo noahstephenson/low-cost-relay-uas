@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "purpose": "Representative relay payload cases for architecture-level mass, DC-power, and link-budget sensitivity; not selected products.",
+  "payloads": [
+    {
+      "id": "PAY-HELIX-NANO",
+      "name": "Doodle Labs Mesh Rider Helix Nano OEM representative integration",
+      "source": "https://doodlelabs.com/datasheets/mesh-rider-radio-platform-1625-2510-mhz-datasheet/",
+      "mass_kg": 0.15,
+      "dc_power_w": 4.0,
+      "peak_dc_power_w": 6.0,
+      "rf_output_max_w": 1.3,
+      "receiver_threshold_dbm": -100.0,
+      "form_factor_assumptions": "Radio-board datum is 15–30 g. Analysis mass includes a 0.12 kg explicit integration allowance for enclosure, short cables, and antenna; antenna gain is not claimed.",
+      "included_items": "Board plus analysis integration allowance; no selected enclosure or antenna.",
+      "evidence_status": "manufacturer datasheet plus exploratory integration allowance"
+    },
+    {
+      "id": "PAY-MESH-OEM",
+      "name": "Doodle Labs Mesh Rider OEM representative integration",
+      "source": "https://doodlelabs.com/product/oem/",
+      "mass_kg": 0.20,
+      "dc_power_w": 5.0,
+      "peak_dc_power_w": 14.0,
+      "rf_output_max_w": 1.6,
+      "receiver_threshold_dbm": -95.0,
+      "form_factor_assumptions": "Manufacturer radio datum is 102 g. Analysis mass adds 0.098 kg for unselected integration hardware.",
+      "included_items": "Radio plus analysis integration allowance; no selected enclosure or antenna.",
+      "evidence_status": "manufacturer product data plus exploratory integration allowance"
+    },
+    {
+      "id": "PAY-SC4200-PLUS",
+      "name": "Silvus StreamCaster 4200 Plus representative module integration",
+      "source": "https://silvustechnologies.com/wp-content/uploads/2022/12/StreamCaster-4200-SC4200-Plus-Drop-In-Module-Datasheet.pdf",
+      "mass_kg": 0.36,
+      "dc_power_w": 24.0,
+      "peak_dc_power_w": 48.0,
+      "rf_output_max_w": 10.0,
+      "receiver_threshold_dbm": -99.0,
+      "form_factor_assumptions": "Manufacturer module datum is 245–260 g. Analysis mass adds 0.10 kg for unselected integration hardware.",
+      "included_items": "Module plus analysis integration allowance; no selected enclosure or antenna.",
+      "evidence_status": "manufacturer datasheet plus exploratory integration allowance"
+    }
+  ]
+}

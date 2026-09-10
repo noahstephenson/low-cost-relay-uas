@@ -2,7 +2,7 @@
 
 [Overview](../README.md) · [Architecture](architecture.md) · [Feasibility](feasibility.md) · **Engineering Status** · [Reference](reference/README.md)
 
-The project has a coherent model-level architecture, logical interfaces, requirements and traceability, and a reproducible exploratory feasibility analysis. It is not a selected, verified, or approved aircraft.
+The project has a coherent model-level architecture, logical interfaces, traceable requirements, and a reproducible exploratory feasibility analysis. It is not a selected, verified, or approved aircraft.
 
 ![Engineering maturity separated into established work, scope limits, and missing evidence](figures/engineering-status.svg)
 
@@ -16,7 +16,7 @@ The project has a coherent model-level architecture, logical interfaces, require
 | Feasibility | Conditional mass–power–battery–endurance–cost behavior | A point design or predicted aircraft performance |
 | Evidence | Internal model review and reproducible analysis | Prototype, physical verification, or external conformance evidence |
 
-Passing repository checks confirms structural consistency and generated-file freshness. It does not demonstrate safety, airworthiness, performance, interoperability, operational readiness, or approval.
+Passing repository checks confirms structural consistency and generated-artifact freshness. It does not demonstrate safety, airworthiness, performance, interoperability, operational readiness, or approval.
 
 ## Decisions that unblock the next phase
 

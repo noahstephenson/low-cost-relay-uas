@@ -1,0 +1,8 @@
+{
+  "purpose": "Order-of-magnitude scale comparison only; published operating conditions and configurations are not normalized.",
+  "vehicles": [
+    {"id":"VAL-M350","name":"DJI Matrice 350 RTK","source":"https://enterprise.dji.com/matrice-350-rtk/specs","gross_mass_kg":9.2,"battery_energy_wh":527.0,"rotor_diameter_m":0.533,"notes":"Maximum takeoff weight and dual-battery energy; not hover-test conditions."},
+    {"id":"VAL-IF1200","name":"Inspired Flight IF1200","source":"https://www.inspiredflight.com/if1200a","gross_mass_kg":21.0,"battery_energy_wh":1536.0,"rotor_diameter_m":0.762,"notes":"Published platform-scale values; payload and mission conditions differ."},
+    {"id":"VAL-AURELIA-X8","name":"Aurelia X8","source":"https://www.aurelia-aerospace.com/aurelia-x8","gross_mass_kg":15.0,"battery_energy_wh":888.0,"rotor_diameter_m":0.71,"notes":"Public product-page values; exact configuration varies."}
+  ]
+}

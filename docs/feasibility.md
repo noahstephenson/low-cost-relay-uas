@@ -6,6 +6,14 @@
 
 Can a small multirotor carry the relay payload and remain airborne for a useful time without mass, power, battery size, cost, or portability becoming unreasonable? The executable analysis explores that question across a range of assumptions. It does not size a selected aircraft.
 
+For the mission-architecture result, the model covers Ground → Relay → Remote service during stationary hover dwell at constant atmospheric density under declared stylized visibility, link, and exploratory vehicle-boundary assumptions. It does not model transit, climb, descent, return, reverse-link service, full mission energy, bidirectional operational performance, or physical aircraft validation.
+
+## Current model status
+
+The carrier model is a conceptual, reproducible sizing representation. `reserve_fraction` is the fraction withheld from the energy remaining after the permitted depth-of-discharge limit, so usable energy is `depth_of_discharge × (1 − reserve_fraction)`. Its fixed-point iteration is independently checked against a branch-aware affine closure calculation. A numerical mass guard is reported as a guard event, not as mathematical nonclosure or a predicted aircraft mass. Nonclosing cases have no finite analytical model state or physical mass, power, energy, battery, rotor, or cost result.
+
+The model also reports total disk area, equivalent rotor diameter, and a two-diameter quadrotor footprint proxy against explicitly unapproved practical analysis boundaries. A point may mathematically close yet fail those boundaries.
+
 ## Why endurance is coupled
 
 Longer hover time is not a battery-only problem:
@@ -16,7 +24,7 @@ Longer hover time is not a battery-only problem:
 4. Battery energy and continuous-power demand determine battery mass.
 5. The larger battery increases gross mass, so hover power and battery demand rise again.
 
-The model repeats this loop until mass converges or the case diverges. As dwell time grows, the feedback becomes stronger: the battery must carry energy for both the aircraft and the additional battery mass caused by the endurance target.
+The relaxed iteration diagnoses the coupled loop, while a branch-aware affine calculation determines whether a finite analytical closure exists. As dwell time grows, the feedback becomes stronger: the battery must carry energy for both the aircraft and the additional battery mass caused by the endurance target.
 
 ## What goes into the model
 
@@ -35,7 +43,7 @@ The versioned [analysis inputs](../analysis/feasibility-inputs.yaml) identify th
 
 ## What comes out
 
-The model calculates disk area, hover power, required and installed battery energy, battery mass, propulsion and structure allowances, gross mass, cost, convergence behavior, and a conditional feasibility class. It evaluates 225 deterministic grid cases and uses 4,096 low-discrepancy samples to rank sensitivities.
+The model calculates finite-closure disk area, hover power, required and installed battery energy, battery mass, propulsion and structure allowances, gross mass, cost, convergence behavior, and a conditional feasibility class. It evaluates 225 deterministic grid cases and 4,096 low-discrepancy sensitivity candidates; physical mass and cost rankings exclude candidates without finite analytical closure.
 
 ## Main result
 
@@ -44,7 +52,7 @@ The study finds a bounded plausible region for short dwell and modest payload un
 | Assumption bundle | Feasible | Marginal | Infeasible |
 |---|---:|---:|---:|
 | Favorable | 73 | 2 | 0 |
-| Reference | 20 | 21 | 34 |
+| Reference | 18 | 22 | 35 |
 | Adverse | 0 | 0 | 75 |
 
 In the reference 50 W payload-power slice, shorter dwell cases are generally feasible or marginal, 30-minute cases reach a payload-sensitive knee, and every evaluated 45- and 60-minute case is infeasible under the model's analysis boundaries.
@@ -55,7 +63,7 @@ In the reference 50 W payload-power slice, shorter dwell cases are generally fea
 
 ## What changes the region
 
-The leading sensitivities are on-station endurance, rotor figure of merit, disk loading, environmental power margin, installed battery specific energy, installed battery specific power, and motor/controller efficiency. Payload mass and power matter most near the transition between marginal and infeasible cases.
+For finite analytical closures, endurance is the strongest ranked input; battery specific power, payload mass, rotor figure of merit, disk loading, structural growth, and environmental margin also affect the conditional region. The ranking is conditional on the declared ranges and exploratory boundaries.
 
 ![How longer dwell drives mass and cost in the reference analysis](../analysis/results/endurance-mass-cost.svg)
 

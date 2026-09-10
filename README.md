@@ -2,6 +2,8 @@
 
 This repository is a model-based systems engineering study of a small uncrewed aircraft that carries a modular communications relay to an advantageous airborne location. It explores the aircraft around the payload; it does not design the payload's radio implementation.
 
+**Research question:** Under what mission geometries does an airborne relay provide useful connectivity, and when can the multirotor physically sustain that service?
+
 ![System concept showing independent aircraft control and relayed mission traffic](https://raw.githubusercontent.com/noahstephenson/low-cost-relay-uas/93bc46a86ea4ee24550edd69d8ea76f79dd353f5/docs/figures/project-in-one-picture.svg)
 
 ## The problem
@@ -41,7 +43,7 @@ The physical architecture combines an airframe, four-corner propulsion, stored e
 
 Read [Architecture](docs/architecture.md) for the system boundary, mission behavior, information paths, power flow, and degraded behavior.
 
-## The engineering problem
+## Why endurance is coupled
 
 Endurance is not a simple battery-capacity choice. Payload mass and power affect aircraft mass and electrical demand. More endurance requires more battery energy; the larger battery increases gross mass; greater mass increases hover power; and that extra power increases the battery demand again.
 
@@ -91,10 +93,13 @@ The model and views use Python's standard library. From the repository root:
 python scripts/generate-communication-views.py
 python scripts/generate-mermaid-views.py
 python analysis/feasibility.py
+python analysis/validation/validate_vehicle_scale.py
+python analysis/mission_connectivity.py
+python -m unittest discover -s tests -v
 python scripts/validate-baseline.py --write-reports
 python scripts/validate-baseline.py --check-generated
 ```
 
 ## Scope note
 
-This study defines a relay-aircraft architecture and a conditional feasibility envelope. It does not select components; define payload radio details; provide fabrication, flight-test, or operating instructions; or claim interoperability, spectrum authorization, safety certification, airworthiness, operational readiness, standards conformance, or an approved technical baseline. See [Engineering Status](docs/engineering-status.md) for the remaining work and [`LICENSE`](LICENSE) for licensing.
+This study defines a relay-aircraft architecture and a conditional feasibility envelope. It does not select components, define payload radio details, provide fabrication, flight-test, or operating instructions, or claim interoperability, spectrum authorization, safety certification, airworthiness, operational readiness, standards conformance, or an approved technical baseline. See [Engineering Status](docs/engineering-status.md) for the remaining work and [`LICENSE`](LICENSE) for licensing.

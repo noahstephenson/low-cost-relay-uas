@@ -24,7 +24,7 @@ reference, and adverse assumption bundles. Against the explicitly unapproved
 | Assumption bundle | Feasible | Marginal | Infeasible |
 | ----------------- | -------: | -------: | ---------: |
 | Favorable | 73 | 2 | 0 |
-| Reference | 20 | 21 | 34 |
+| Reference | 18 | 22 | 35 |
 | Adverse | 0 | 0 | 75 |
 
 This spread is itself the central result. The concept does not fail universally, but
@@ -127,13 +127,15 @@ E_required = P_total × endurance / (depth_of_discharge × (1 - reserve))
 m_energy = E_required / installed_specific_energy
 m_power = P_peak × battery_power_margin / continuous_specific_power
 m_battery = max(m_energy, m_power)
+
+Here, `reserve` is the fraction withheld from the energy remaining after the permitted depth-of-discharge limit; it is not a fraction of nominal pack energy.
 ```
 
 Propulsion-group mass grows with installed peak power and rotor area. Structural
 mass contains a base allowance, a carried-mass growth factor, and a disk-area/arm
 penalty. Battery, propulsion, structure, and gross mass are recalculated until the
 relative gross-mass change is at most `1×10^-7`, with relaxation `0.55`, a limit of
-200 iterations, and a 50 kg divergence guard.
+200 iterations, and a 50 kg numerical-analysis guard. The guard is reported separately from mathematical finite closure and is not a predicted mass.
 
 Conditional feasibility requires convergence and evaluates gross mass, platform
 cost, battery fraction, and discharge margin against analysis-only boundaries.
@@ -168,8 +170,8 @@ The reference slice at 50 W payload demand shows three regions:
 - The conditional reference core is approximately `0.25–1.0 kg` payload and
   `10–20 min` dwell under the current generic ranges.
 - A representative `0.5 kg`, `25 W`, `20 min` point converges in 49 iterations to
-  `6.02 kg` gross mass, `2.00 kg` battery mass, `706 W` estimated station power,
-  `340 Wh` installed energy, and `$1,984` platform-only cost.
+  `6.43 kg` gross mass, `2.13 kg` battery mass, `750 W` estimated station power,
+  `362 Wh` installed energy, and `$2,075` platform-only cost.
 - That representative pack is power-limited rather than energy-limited, illustrating
   that short dwell does not eliminate the peak-power constraint.
 
@@ -178,19 +180,15 @@ The reference slice at 50 W payload demand shows three regions:
 - Most reference `30 min` points are marginal: battery fraction approaches
   approximately `46–48%`, and cost or portability crosses the reference boundary.
 - The representative `1.0 kg`, `50 W`, `30 min` point converges in 82 iterations to
-  `12.51 kg`, `5.87 kg` battery mass, `1.44 kW` station power, `998 Wh` installed
-  energy, and `$3,226` platform-only cost.
+  `13.18 kg`, `6.16 kg` battery mass, `1.51 kW` station power, `1,048 Wh` installed
+  energy, and `$3,371` platform-only cost.
 - Reference `1.5–2.0 kg` payload cases are already marginal at short dwell because
   platform mass and cost approach or exceed the exploratory boundaries.
 
 ### INFEASIBLE
 
-- At `45–60 min`, the reference loop generally enters battery-dominated growth and
-  reaches the 50 kg divergence guard.
-- The representative `1.5 kg`, `100 W`, `45 min` point exceeds `50 kg` before
-  convergence, with battery fraction above `65%` and platform-only cost above
-  `$10,000`. This is an infeasible region under the current model, not a component
-  sizing result.
+- At `45–60 min`, the reference loop generally enters battery-dominated growth and exceeds a practical analysis boundary or the numerical-analysis guard.
+- The representative `1.5 kg`, `100 W`, `45 min` point is beyond the practical analysis boundaries. Where iteration does not converge within its configured limit, the independent analytical closure diagnostic is reported separately. This remains a conditional architecture result, not a component sizing result.
 - The adverse assumption bundle makes every grid point infeasible. This rules out
   claiming robust feasibility without bounding efficiency and structural quality.
 
@@ -204,28 +202,22 @@ The reference slice at 50 W payload demand shows three regions:
 
 ## E. Dominant Sensitivities
 
-The model used 4,096 deterministic Halton samples across 17 variables. Rankings are
-the root-mean-square of absolute Spearman relationships with gross mass, platform
-cost, and conditional feasibility burden.
+The model evaluates 4,096 deterministic Halton samples across 17 variables. Physical mass, cost, and burden rankings use the 2,605 samples with finite analytical closure; 1,491 nonclosures are excluded rather than treated as physical values. Rankings are the root-mean-square of absolute Spearman relationships with gross mass, platform cost, and conditional feasibility burden.
 
 | Rank | Variable | Sensitivity score | Direction of effect |
 | ---: | -------- | ----------------: | ------------------- |
-| 1 | Endurance | `0.681` | Higher endurance strongly increases mass, cost, and burden |
-| 2 | Rotor figure of merit | `0.266` | Higher figure of merit reduces all three outputs |
-| 3 | Disk loading | `0.256` | Higher disk loading increases power, mass, and cost |
-| 4 | Environmental power margin | `0.188` | Higher burden increases power and closes the feasible region |
-| 5 | Battery specific energy | `0.182` | Higher specific energy reduces battery feedback |
-| 6 | Battery specific power | `0.175` | Higher specific power reduces the power-limited short-dwell pack penalty |
-| 7 | Motor/controller efficiency | `0.122` | Higher efficiency reduces power and downstream mass |
-| 8 | Battery cost per Wh | `0.119` | Primarily changes cost, not physical closure |
-| 9 | Structural growth factor | `0.108` | Added carried-mass penalty reinforces the loop |
-| 10 | Reserve fraction | `0.101` | Higher reserve increases energy and battery mass |
+| 1 | Endurance | `0.576` | Higher endurance increases finite-closure mass, cost, and burden |
+| 2 | Battery specific power | `0.221` | Higher specific power reduces finite-closure mass, cost, and burden |
+| 3 | Payload mass | `0.198` | Higher payload mass increases finite-closure mass, cost, and burden |
+| 4 | Analysis cost boundary | `0.126` | Changes the conditional burden boundary, not physical closure |
+| 5 | Rotor figure of merit | `0.126` | Higher figure of merit reduces finite-closure mass, cost, and burden |
+| 6 | Disk loading | `0.124` | Higher disk loading increases finite-closure mass, cost, and burden |
+| 7 | Analysis portability mass | `0.105` | Changes the conditional burden boundary, not physical closure |
+| 8 | Structural growth factor | `0.102` | Added carried-mass penalty increases finite-closure mass and cost |
+| 9 | Environmental power margin | `0.096` | Higher margin increases finite-closure mass, cost, and burden |
+| 10 | Structure base mass | `0.077` | Higher base mass increases finite-closure mass, cost, and burden |
 
-Payload mass ranks below these dominant physics variables over the explored ranges,
-and payload power ranks last because propulsion power dominates the reference
-station load. This does not make payload mass or power unimportant: they remain
-owner-controlled boundary conditions, and their influence will increase if the
-carrier becomes more efficient or the payload range expands.
+The finite-closure ranking is conditional on excluding nonclosures and on the explored ranges. Payload mass and power remain owner-controlled boundary conditions; the ranking does not support payload selection or physical-aircraft predictions.
 
 ![Sensitivity ranking](../../analysis/results/sensitivity-ranking.svg)
 
@@ -295,9 +287,7 @@ hardware boundary, and recovery policy before `REQ-009` can be evaluated.
 
 ### TS-002 — Propulsion sizing
 
-- **Established:** rotor figure of merit and disk loading are the strongest design
-  levers after endurance; installed peak-power class can be bounded at representative
-  points.
+- **Established:** within the finite-closure sensitivity subset, endurance is the strongest ranked input; battery specific power, payload mass, rotor figure of merit, disk loading, structural growth, and environmental margin also affect the conditional region.
 - **Ruled out:** high disk loading with mediocre efficiency as a robust basis for
   long dwell.
 - **Unresolved:** actual rotor geometry, thrust distribution, control margin,

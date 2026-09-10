@@ -154,7 +154,7 @@
     "payload_mass_kg": {"low": 0.25, "nominal": 1.0, "high": 2.0, "unit": "kg", "class": "A_owner_controlled_target", "approval": "unapproved sensitivity boundary"},
     "payload_power_w": {"low": 0.0, "nominal": 50.0, "high": 120.0, "unit": "W", "class": "A_owner_controlled_target", "approval": "unapproved sensitivity boundary"},
     "endurance_min": {"low": 10.0, "nominal": 30.0, "high": 60.0, "unit": "min", "class": "A_owner_controlled_target", "approval": "unapproved sensitivity boundary"},
-    "reserve_fraction": {"low": 0.10, "nominal": 0.20, "high": 0.30, "unit": "fraction of nominal energy held in reserve", "class": "A_owner_controlled_target", "approval": "unapproved recovery-policy sensitivity"},
+    "reserve_fraction": {"low": 0.10, "nominal": 0.20, "high": 0.30, "unit": "fraction withheld from the energy remaining after the permitted depth-of-discharge limit", "class": "A_owner_controlled_target", "approval": "unapproved recovery-policy sensitivity"},
     "battery_specific_energy_wh_kg": {"low": 130.0, "nominal": 170.0, "high": 220.0, "unit": "Wh/kg installed pack", "class": "B_exogenous_evidence", "source_ids": ["ANL-SRC-001", "ANL-SRC-003", "ANL-SRC-004"], "limitation": "Upper bound extrapolates high-energy cell data with optimistic pack overhead; it is not a guaranteed COTS pack value."},
     "battery_specific_power_w_kg": {"low": 400.0, "nominal": 900.0, "high": 1800.0, "unit": "W/kg continuous", "class": "B_exogenous_evidence", "source_ids": ["ANL-SRC-004"], "limitation": "Broad class range captures the energy-versus-power trade and must later be replaced by pack-level data."},
     "battery_depth_of_discharge": {"low": 0.80, "nominal": 0.90, "high": 0.95, "unit": "fraction", "class": "C_engineering_design_variable", "source_ids": ["ANL-SRC-001"]},
@@ -197,7 +197,13 @@
     "minimum_marginal_discharge_margin": 1.0,
     "note": "These boundaries classify the sweep for decision support only. They are not REQ values or owner-approved limits. Platform cost excludes the black-box relay payload, external systems, labor, and integration."
   },
-  "solver": {
+  "analysis_practical_boundaries": {
+    "status": "exploratory_not_owner_approved",
+    "analysis_max_gross_mass_kg": 15.0,
+    "analysis_max_rotor_diameter_m": 0.75,
+    "analysis_max_vehicle_span_m": 1.5,
+    "rotor_span_proxy_note": "A quadrotor footprint proxy of two equivalent rotor diameters. These are analysis boundaries, not approved portability requirements."
+  },  "solver": {
     "initial_gross_mass_kg": 5.0,
     "relaxation_factor": 0.55,
     "relative_mass_tolerance": 1e-7,
