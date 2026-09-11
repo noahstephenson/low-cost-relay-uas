@@ -61,6 +61,6 @@ python scripts/validate-baseline.py --check-generated
 
 For Mermaid syntax/render checks, use the repository-pinned Mermaid CLI 11.4.1 and `python scripts/generate-mermaid-views.py --check --validate-syntax`. A skipped parser is not a successful syntax check.
 
-For the publication argument, read the [short argument test](paper-argument-test.md). For the scope and assumptions behind the results, return to [research status](../IEEE_AERO_2027_RESEARCH_STATUS.md). Historical work stays in the [archive](../archive/README.md); it does not supersede current model records.
+For drafting, use the [writer-ready manuscript outline](../manuscript-outline.md) and its [claim and evidence audit](manuscript-evidence-audit.md). The audit supersedes the earlier [short argument test](paper-argument-test.md) on publication positioning and source qualifications. For the scope and assumptions behind the results, return to [research status](../research-status.md). Historical work stays in the [archive](../archive/README.md); it does not supersede current model records.
 
 The [readability review](readability-review.md) records diagram coverage, checks, and presentation limits.

@@ -2,8 +2,6 @@
 
 Working title: **System Architecture and Mission Feasibility of a Multirotor Communications Relay**
 
-Target: 2027 IEEE Aerospace Conference, Track 13.01.
-
 Baseline: `2eb84259573cf7e0f216bc11002d65dbdb0f32f3`, tag `relay-uas-research-freeze-v1`. This corrective successor preserves that tag and the research scope. Recommended successor tag: `relay-uas-research-corrective-v1`.
 
 ## Corrections and rationale

@@ -69,7 +69,7 @@ The existing baseline cases at 10 km endpoint separation and 120 m relay altitud
 | Finite practical exclusion | The declared resource demand and carrier assumptions are incompatible with the exploratory physical envelope; a larger allowable mass alone does not address rotor/span limits |
 | Mathematical nonclosure | Dwell or carrier parameters governing resource feedback must change; practical-boundary relaxation is insufficient |
 
-The 15 kg mass, 0.75 m rotor, and 1.5 m span boundaries are exploratory, not owner requirements. Span is twice equivalent rotor diameter, so rotor and span checks are redundant. Integrated physical pass is different from the standalone carrier cost/battery-fraction acceptance classes below. See [research status](IEEE_AERO_2027_RESEARCH_STATUS.md) for scenario assumptions, counting precedence, and limitations.
+The 15 kg mass, 0.75 m rotor, and 1.5 m span boundaries are exploratory, not owner requirements. Span is twice equivalent rotor diameter, so rotor and span checks are redundant. Integrated physical pass is different from the standalone carrier cost/battery-fraction acceptance classes below. See [research status](research-status.md) for scenario assumptions, counting precedence, and limitations.
 
 ## Supporting carrier sensitivity inputs
 

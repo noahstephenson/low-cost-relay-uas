@@ -1,4 +1,4 @@
-# IEEE Aerospace 2027 Research Status
+# Research Status
 
 Working title: **System Architecture and Mission Feasibility of a Multirotor Communications Relay**
 

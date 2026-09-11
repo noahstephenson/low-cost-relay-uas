@@ -4,7 +4,7 @@ A relay aircraft carries a radio to a place where two other systems can communic
 
 **Paper title:** System Architecture and Mission Feasibility of a Multirotor Communications Relay
 
-The study targets IEEE Aerospace 2027, Track 13.01. Examination of a recovered relay aircraft motivated the work; the analysis does not reconstruct that aircraft or claim its performance. “Low-cost” is a project objective, not an established result.
+Examination of a recovered relay aircraft motivated the work; the analysis does not reconstruct that aircraft or claim its performance. “Low-cost” is a project objective, not an established result.
 
 ## Start with the communications problem
 
@@ -53,6 +53,7 @@ Across 90 baseline cases, the ordered counts are **18 physical passes / 6 finite
 2. [Feasibility](docs/feasibility.md): follow assumptions through calculations and decision gates.
 3. [Engineering Status](docs/engineering-status.md): distinguish evidence from remaining decisions.
 4. [Engineering Reference](docs/reference/README.md): inspect requirements, interfaces, sources, and traceability.
+5. [Manuscript outline](docs/manuscript-outline.md): develop the paper argument, evidence, and submission priorities.
 
 The model catalogs define architecture records; generators turn them into views. Analysis inputs feed executable models and generated results. Passing checks establishes consistency and reproducibility, not aircraft validation. [The reference guide](docs/reference/README.md) explains this evidence trail and provides regeneration commands.
 
@@ -67,4 +68,4 @@ python -B scripts/validate-baseline.py --check-generated
 
 ## Scope note
 
-The project establishes a proposed architecture and a conditional service envelope. Affordability, hardware selection, safety, airworthiness, interoperability, physical performance, and operational readiness remain unresolved. The low-order link budget uses declared assumptions; it is not a radio design or spectrum authorization. See [research status](docs/IEEE_AERO_2027_RESEARCH_STATUS.md) for precise claims and [LICENSE](LICENSE) for licensing.
+The project establishes a proposed architecture and a conditional service envelope. Affordability, hardware selection, safety, airworthiness, interoperability, physical performance, and operational readiness remain unresolved. The low-order link budget uses declared assumptions; it is not a radio design or spectrum authorization. See [research status](docs/research-status.md) for precise claims and [LICENSE](LICENSE) for licensing.
