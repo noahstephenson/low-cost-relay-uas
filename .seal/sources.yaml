@@ -456,6 +456,105 @@
       "applicability_scope": "project_methodology"
     },
     {
+      "id": "SRC-CAL-001",
+      "title": "NASA/TM-2018-219758 multicopter hover measurements",
+      "source_type": "primary government test report",
+      "kind": "external_source_snapshot",
+      "description": "Tabulated full-vehicle hover force, ESC voltage, and per-motor current measurements for five multicopters.",
+      "authority_state": "externally_sourced", "approval_state": "not_required", "confidence": 0.99,
+      "location": "https://rotorcraft.arc.nasa.gov/Publications/files/Russell_1180_Final_TM_022218.pdf",
+      "owner": "NASA Ames Research Center", "date": "2018-02", "revision": "NASA/TM-2018-219758",
+      "accessed_date": "2026-09-11", "reliability": "primary tabulated hover-test measurements",
+      "applicable_configurations": ["CFG-REP", "CFG-DOM"], "applicability_scope": "carrier hover-power calibration only",
+      "notes": "Used rows: SOLO run 28 point 11 (Fz 3.330 lb, 16.594 V, 2.590/2.941/2.821/2.763 A); Phantom 3 run 27 point 9 (2.697 lb, 16.601 V, 2.404/2.830/2.625/2.506 A); Iris+ run 29 point 12 (2.819 lb, 12.387 V, 2.661/3.075/2.935/2.865 A); DAx8 run 97 point 9 (12.328 lb, 16.263 V, 6.189/6.610/6.472/6.143/6.067/6.864/6.521/6.661 A); Endurance run 119 point 11 (6.423 lb, 16.571 V, 4.057/4.436/4.399/4.097 A). All are full-vehicle uniform-RPM hover points. Electrical power is voltage times summed motor current."
+    },
+    {
+      "id": "SRC-CAL-002",
+      "title": "Wind Tunnel and Hover Performance Test Results for Multicopter UAS Vehicles",
+      "source_type": "peer-reviewed government conference paper", "kind": "external_source_snapshot",
+      "description": "NASA test method and configuration source for the five hover test articles.",
+      "authority_state": "externally_sourced", "approval_state": "not_required", "confidence": 0.99,
+      "location": "https://rotorcraft.arc.nasa.gov/Publications/files/72-2016-374.pdf",
+      "owner": "NASA Ames Research Center", "date": "2016-05", "revision": "AHS 72nd Annual Forum; NTRS 20160007399",
+      "accessed_date": "2026-09-11", "reliability": "primary test-program paper",
+      "applicable_configurations": ["CFG-REP", "CFG-DOM"], "applicability_scope": "carrier hover-power calibration only",
+      "notes": "Table 1: SOLO 10.0 in/3.3 lb, Phantom 3 9.4 in/2.8 lb, Iris+ 9.6 in/2.8 lb, DAx8 11.0 in/12.8 lb, Endurance 15.0 in/6.0 lb; weights exclude additional payload. Hover testing used DC input and ESC voltage/current instrumentation."
+    },
+    {
+      "id": "SRC-CAL-003",
+      "title": "Incorporating Test Data for Small UAS at the Conceptual Design Level",
+      "source_type": "peer-reviewed government conference paper", "kind": "external_source_snapshot",
+      "description": "NASA component-mass, efficiency, battery, and conceptual-design anchor informed by SUI Endurance testing.",
+      "authority_state": "externally_sourced", "approval_state": "not_required", "confidence": 0.98,
+      "location": "https://rotorcraft.arc.nasa.gov/Publications/files/Russell_2018_TechMx.pdf",
+      "owner": "NASA Ames and Langley Research Centers", "date": "2018-01", "revision": "AHS paper; NTRS 20180008701",
+      "accessed_date": "2026-09-11", "reliability": "primary government component-data paper",
+      "applicable_configurations": ["CFG-REP", "CFG-DOM"], "applicability_scope": "carrier mass and propulsion calibration only",
+      "notes": "Table 1: disk loading 1.22 lb/ft^2, DGW 6.35 lb, empty 5.85 lb, battery+wiring 2.28 lb, airframe 1.61 lb, rotors 0.22 lb, motors 0.72 lb, systems 0.78 lb, battery 109.7 Wh for a 20-minute, 0.5-lb-payload hover design. Text states about 135 Wh/kg installed hobby-grade LiPo and 75% combined motor/controller efficiency."
+    },
+    {
+      "id": "SRC-CAL-004", "title": "DJI Matrice 350 RTK specifications",
+      "source_type": "manufacturer specification page", "kind": "external_source_snapshot",
+      "description": "Manufacturer mass, battery, and forward-flight endurance data retained only as an excluded comparison.",
+      "authority_state": "externally_sourced", "approval_state": "not_required", "confidence": 0.99,
+      "location": "https://enterprise.dji.com/matrice-350-rtk/specs", "owner": "DJI", "date": "current page",
+      "revision": "web specification accessed 2026-09-11", "accessed_date": "2026-09-11", "reliability": "manufacturer specification",
+      "applicable_configurations": ["CFG-REP", "CFG-DOM"], "applicability_scope": "excluded forward-flight comparison only",
+      "notes": "6.47 kg with two TB65 batteries; each battery 263.2 Wh; 55 minutes at about 8 m/s without payload in windless conditions to 0%. Not hover; excluded from fit and held-out scoring."
+    },
+    {
+      "id": "SRC-CAL-005", "title": "DJI Matrice 30 Series specifications",
+      "source_type": "manufacturer specification page", "kind": "external_source_snapshot",
+      "description": "Manufacturer maximum-hover, mass, and battery-energy data for a held-out endurance check.",
+      "authority_state": "externally_sourced", "approval_state": "not_required", "confidence": 0.99,
+      "location": "https://enterprise.dji.com/matrice-30/specs", "owner": "DJI", "date": "current page",
+      "revision": "web specification accessed 2026-09-11", "accessed_date": "2026-09-11", "reliability": "manufacturer specification",
+      "applicable_configurations": ["CFG-REP", "CFG-DOM"], "applicability_scope": "held-out carrier hover-endurance check",
+      "notes": "3770 +/- 10 g including two batteries; 36 min maximum hover in a laboratory; each TB30 is 131.6 Wh and 685 g, giving 263.2 Wh in the two-battery condition."
+    },
+    {
+      "id": "SRC-CAL-006", "title": "DJI Matrice 4 Series specifications",
+      "source_type": "manufacturer specification page", "kind": "external_source_snapshot",
+      "description": "Manufacturer hover-to-empty, takeoff-mass, propeller, and battery data for a held-out check.",
+      "authority_state": "externally_sourced", "approval_state": "not_required", "confidence": 0.99,
+      "location": "https://enterprise.dji.com/matrice-4-series/specs", "owner": "DJI", "date": "current page",
+      "revision": "web specification accessed 2026-09-11", "accessed_date": "2026-09-11", "reliability": "manufacturer specification",
+      "applicable_configurations": ["CFG-REP", "CFG-DOM"], "applicability_scope": "held-out carrier hover-endurance check",
+      "notes": "Standard configuration: 1219 g including battery and propellers, 10.8 in propellers, 99.5 Wh battery, 42 min hover at windless sea level from 100% to 0%."
+    },
+    {
+      "id": "SRC-CAL-007", "title": "DJI Mavic 3M specifications",
+      "source_type": "manufacturer specification page", "kind": "external_source_snapshot",
+      "description": "Manufacturer hover-to-empty, mass, and battery data for a held-out endurance check.",
+      "authority_state": "externally_sourced", "approval_state": "not_required", "confidence": 0.99,
+      "location": "https://enterprise.dji.com/mavic-3-m/specs", "owner": "DJI", "date": "current page",
+      "revision": "web specification accessed 2026-09-11", "accessed_date": "2026-09-11", "reliability": "manufacturer specification",
+      "applicable_configurations": ["CFG-REP", "CFG-DOM"], "applicability_scope": "held-out carrier hover-endurance check",
+      "notes": "951 g including battery, propellers, and RTK; 77 Wh battery; 37 min wind-free sea-level hover until 0%."
+    },
+    {
+      "id": "SRC-CAL-008", "title": "DJI aircraft propeller materials, dimensions, and models",
+      "source_type": "manufacturer support page", "kind": "external_source_snapshot",
+      "description": "Manufacturer propeller-diameter cross-reference for the DJI aircraft in the dataset.",
+      "authority_state": "externally_sourced", "approval_state": "not_required", "confidence": 0.99,
+      "location": "https://repair.dji.com/help/content?customId=01700006559&lang=en&paperDocType=ARTICLE&re=US&spaceId=17",
+      "owner": "DJI", "date": "current page", "revision": "support article accessed 2026-09-11",
+      "accessed_date": "2026-09-11", "reliability": "manufacturer dimensional reference",
+      "applicable_configurations": ["CFG-REP", "CFG-DOM"], "applicability_scope": "carrier disk-loading calculation only",
+      "notes": "Standard propellers: Matrice 30 16 in; Mavic 3E/3T/3M hard propeller 23.88 cm diameter; Matrice 350 21 x 10 in."
+    },
+    {
+      "id": "SRC-CAL-009", "title": "NASA Multicopter UAS Performance Test program page",
+      "source_type": "primary government program page", "kind": "external_source_snapshot",
+      "description": "NASA program context and publication index for force, moment, and electrical-power test campaigns.",
+      "authority_state": "externally_sourced", "approval_state": "not_required", "confidence": 0.99,
+      "location": "https://rotorcraft.arc.nasa.gov/Research/Programs/UAS_Performance_Test.html",
+      "owner": "NASA Ames Research Center", "date": "current page", "revision": "program page accessed 2026-09-11",
+      "accessed_date": "2026-09-11", "reliability": "primary government program description",
+      "applicable_configurations": ["CFG-REP", "CFG-DOM"], "applicability_scope": "carrier calibration provenance",
+      "notes": "States that data include forces, moments, and electrical power versus attitude, rotor speed, and wind speed; identifies the five 2015 vehicles and the calibration publications."
+    },
+    {
       "id": "SRC-EXT-002",
       "title": "SEAL - Systems Engineering Agent Layer",
       "source_type": "external publication",

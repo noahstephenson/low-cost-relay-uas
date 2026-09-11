@@ -1,4 +1,4 @@
 id,name,source,gross_mass_kg,battery_energy_wh,rotor_diameter_m,notes,model_reference_gross_mass_kg,model_reference_battery_energy_wh,model_reference_rotor_diameter_m,comparison_status
-VAL-M350,DJI Matrice 350 RTK,https://enterprise.dji.com/matrice-350-rtk/specs,9.2,527.0,0.533,Maximum takeoff weight and dual-battery energy; not hover-test conditions.,6.374,355.4,0.576,scale-only; not a calibrated prediction
-VAL-IF1200,Inspired Flight IF1200,https://www.inspiredflight.com/if1200a,21.0,1536.0,0.762,Published platform-scale values; payload and mission conditions differ.,6.374,355.4,0.576,scale-only; not a calibrated prediction
-VAL-AURELIA-X8,Aurelia X8,https://www.aurelia-aerospace.com/aurelia-x8,15.0,888.0,0.71,Public product-page values; exact configuration varies.,6.374,355.4,0.576,scale-only; not a calibrated prediction
+VAL-M350,DJI Matrice 350 RTK,https://enterprise.dji.com/matrice-350-rtk/specs,9.2,527.0,0.533,Maximum takeoff weight and dual-battery energy; not hover-test conditions.,4.54,288.5,0.486,scale-only; not a calibrated prediction
+VAL-IF1200,Inspired Flight IF1200,https://www.inspiredflight.com/if1200a,21.0,1536.0,0.762,Published platform-scale values; payload and mission conditions differ.,4.54,288.5,0.486,scale-only; not a calibrated prediction
+VAL-AURELIA-X8,Aurelia X8,https://www.aurelia-aerospace.com/aurelia-x8,15.0,888.0,0.71,Public product-page values; exact configuration varies.,4.54,288.5,0.486,scale-only; not a calibrated prediction

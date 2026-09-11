@@ -9,14 +9,14 @@
   "sensitivity_nonclosures_excluded": 1491,
   "conditional_class_counts": {
     "favorable": {
-      "FEASIBLE": 73,
-      "MARGINAL": 2,
+      "FEASIBLE": 71,
+      "MARGINAL": 4,
       "INFEASIBLE": 0
     },
     "reference": {
-      "FEASIBLE": 18,
-      "MARGINAL": 22,
-      "INFEASIBLE": 35
+      "FEASIBLE": 32,
+      "MARGINAL": 14,
+      "INFEASIBLE": 29
     },
     "adverse": {
       "FEASIBLE": 0,
@@ -34,67 +34,67 @@
       "mathematical_closed": true,
       "model_state": "FINITE_CLOSURE",
       "analytical_branch": "power",
-      "effective_a": 0.570330453548,
-      "effective_b_kg": 2.76326666667,
-      "analytical_gross_mass_kg": 6.43114386273,
-      "numerical_analytical_relative_error": 3.11182856279e-07,
+      "effective_a": 0.570106327013,
+      "effective_b_kg": 1.97643966667,
+      "analytical_gross_mass_kg": 4.59750815343,
+      "numerical_analytical_relative_error": 2.72786515041e-07,
       "analytical_candidates": [
         {
           "branch": "energy",
-          "effective_a": 0.54028391682,
-          "effective_b_kg": 2.85226126741,
-          "analytical_gross_mass_kg": 6.2043973917,
+          "effective_a": 0.499968925077,
+          "effective_b_kg": 2.04613267384,
+          "analytical_gross_mass_kg": 4.09201102982,
           "finite_closure": true,
           "branch_consistent": false
         },
         {
           "branch": "power",
-          "effective_a": 0.570330453548,
-          "effective_b_kg": 2.76326666667,
-          "analytical_gross_mass_kg": 6.43114386273,
+          "effective_a": 0.570106327013,
+          "effective_b_kg": 1.97643966667,
+          "analytical_gross_mass_kg": 4.59750815343,
           "finite_closure": true,
           "branch_consistent": true
         }
       ],
-      "iterations": 50,
+      "iterations": 47,
       "conditional_class": "FEASIBLE",
       "owner_requirement_class": "UNDETERMINED",
       "feasibility_burden": 0.95652173913,
       "burden_terms": {
-        "portability": 0.643114386273,
-        "cost": 0.830146875647,
-        "battery_fraction": 0.735956720553,
+        "portability": 0.459750815343,
+        "cost": 0.674962060901,
+        "battery_fraction": 0.744829320181,
         "discharge": 0.95652173913
       },
       "payload_mass_kg": 0.5,
       "payload_power_w": 25.0,
       "endurance_min": 20.0,
-      "gross_mass_kg": 6.43114386273,
-      "numerical_last_gross_mass_kg": 6.43114186147,
-      "battery_mass_kg": 2.12986959598,
-      "battery_mass_fraction": 0.331180524249,
-      "structure_mass_kg": 1.98208063064,
-      "propulsion_mass_kg": 0.849193636116,
-      "total_disk_area_m2": 1.05113294936,
-      "equivalent_rotor_diameter_m": 0.578434101237,
-      "approximate_vehicle_span_m": 1.15686820247,
+      "gross_mass_kg": 4.59750815343,
+      "numerical_last_gross_mass_kg": 4.59750940757,
+      "battery_mass_kg": 1.5409614926,
+      "battery_mass_fraction": 0.335173194081,
+      "structure_mass_kg": 0.979695223027,
+      "propulsion_mass_kg": 0.606851437805,
+      "total_disk_area_m2": 0.751435888881,
+      "equivalent_rotor_diameter_m": 0.489070007529,
+      "approximate_vehicle_span_m": 0.978140015057,
       "practical_constraint_ok": true,
       "practical_constraint_failures": [],
-      "ideal_induced_power_w": 312.105544079,
-      "propulsion_hover_power_w": 697.476439354,
-      "total_hover_power_w": 749.650352397,
-      "required_nominal_battery_energy_wh": 347.060348332,
-      "installed_nominal_battery_energy_wh": 362.077831316,
+      "ideal_induced_power_w": 223.118595115,
+      "propulsion_hover_power_w": 498.393003975,
+      "total_hover_power_w": 550.566917019,
+      "required_nominal_battery_energy_wh": 254.892091212,
+      "installed_nominal_battery_energy_wh": 296.044899074,
       "battery_sizing_driver": "power",
-      "achievable_endurance_min": 20.8654104715,
-      "peak_battery_power_w": 1666.85446642,
+      "achievable_endurance_min": 23.2290376422,
+      "peak_battery_power_w": 1205.96986377,
       "battery_discharge_margin": 1.15,
-      "platform_cost_usd": 2075.36718912,
+      "platform_cost_usd": 1687.40515225,
       "cost_breakdown": {
-        "structure_usd": 406.774513514,
-        "propulsion_usd": 565.138193681,
+        "structure_usd": 226.345140145,
+        "propulsion_usd": 403.828582756,
         "avionics_usd": 350.0,
-        "battery_usd": 253.454481921,
+        "battery_usd": 207.231429352,
         "power_electronics_usd": 150.0,
         "mount_usd": 125.0,
         "other_platform_usd": 225.0
@@ -108,70 +108,67 @@
       "mathematical_closed": true,
       "model_state": "FINITE_CLOSURE",
       "analytical_branch": "energy",
-      "effective_a": 0.714541086629,
-      "effective_b_kg": 3.76327726627,
-      "analytical_gross_mass_kg": 13.1832536663,
-      "numerical_analytical_relative_error": 5.13644967469e-07,
+      "effective_a": 0.654097049492,
+      "effective_b_kg": 2.93241850595,
+      "analytical_gross_mass_kg": 8.47757586813,
+      "numerical_analytical_relative_error": 3.66680331546e-07,
       "analytical_candidates": [
         {
           "branch": "energy",
-          "effective_a": 0.714541086629,
-          "effective_b_kg": 3.76327726627,
-          "analytical_gross_mass_kg": 13.1832536663,
+          "effective_a": 0.654097049492,
+          "effective_b_kg": 2.93241850595,
+          "analytical_gross_mass_kg": 8.47757586813,
           "finite_closure": true,
           "branch_consistent": true
         },
         {
           "branch": "power",
-          "effective_a": 0.570330453548,
-          "effective_b_kg": 3.50043888889,
-          "analytical_gross_mass_kg": 8.14681635642,
+          "effective_a": 0.570106327013,
+          "effective_b_kg": 2.71361188889,
+          "analytical_gross_mass_kg": 6.3122861754,
           "finite_closure": true,
           "branch_consistent": false
         }
       ],
-      "iterations": 82,
-      "conditional_class": "MARGINAL",
+      "iterations": 66,
+      "conditional_class": "FEASIBLE",
       "owner_requirement_class": "UNDETERMINED",
-      "feasibility_burden": 1.34851357362,
+      "feasibility_burden": 0.973647427487,
       "burden_terms": {
-        "portability": 1.31832536663,
-        "cost": 1.34851357362,
-        "battery_fraction": 1.03914099203,
-        "discharge": 0.671970000316
+        "portability": 0.847757586813,
+        "cost": 0.973647427487,
+        "battery_fraction": 0.945963864974,
+        "discharge": 0.747432754537
       },
       "payload_mass_kg": 1.0,
       "payload_power_w": 50.0,
       "endurance_min": 30.0,
-      "gross_mass_kg": 13.1832536663,
-      "numerical_last_gross_mass_kg": 13.1832468948,
-      "battery_mass_kg": 6.16466668182,
-      "battery_mass_fraction": 0.467613446413,
-      "structure_mass_kg": 3.2178181017,
-      "propulsion_mass_kg": 1.74076888275,
-      "total_disk_area_m2": 2.15472590944,
-      "equivalent_rotor_diameter_m": 0.82817302479,
-      "approximate_vehicle_span_m": 1.65634604958,
-      "practical_constraint_ok": false,
-      "practical_constraint_failures": [
-        "rotor_diameter",
-        "vehicle_span"
-      ],
-      "ideal_induced_power_w": 639.787671691,
-      "propulsion_hover_power_w": 1429.76257762,
-      "total_hover_power_w": 1509.11040371,
-      "required_nominal_battery_energy_wh": 1047.99333591,
-      "installed_nominal_battery_energy_wh": 1047.99333591,
+      "gross_mass_kg": 8.47757586813,
+      "numerical_last_gross_mass_kg": 8.47757275957,
+      "battery_mass_kg": 3.60876619522,
+      "battery_mass_fraction": 0.425683739238,
+      "structure_mass_kg": 1.68980587064,
+      "propulsion_mass_kg": 1.11900380227,
+      "total_disk_area_m2": 1.38561032312,
+      "equivalent_rotor_diameter_m": 0.664118561891,
+      "approximate_vehicle_span_m": 1.32823712378,
+      "practical_constraint_ok": true,
+      "practical_constraint_failures": [],
+      "ideal_induced_power_w": 411.419567852,
+      "propulsion_hover_power_w": 919.011856497,
+      "total_hover_power_w": 998.359682584,
+      "required_nominal_battery_energy_wh": 693.305335128,
+      "installed_nominal_battery_energy_wh": 693.305335128,
       "battery_sizing_driver": "energy",
       "achievable_endurance_min": 30.0,
-      "peak_battery_power_w": 3389.29451356,
-      "battery_discharge_margin": 1.6369778405,
-      "platform_cost_usd": 3371.28393406,
+      "peak_battery_power_w": 2206.89004727,
+      "battery_discharge_margin": 1.47170430159,
+      "platform_cost_usd": 2434.11856872,
       "cost_breakdown": {
-        "structure_usd": 629.207258306,
-        "propulsion_usd": 1158.48134062,
+        "structure_usd": 354.165056714,
+        "propulsion_usd": 744.639777415,
         "avionics_usd": 350.0,
-        "battery_usd": 733.595335137,
+        "battery_usd": 485.313734589,
         "power_electronics_usd": 150.0,
         "mount_usd": 125.0,
         "other_platform_usd": 225.0
@@ -180,29 +177,29 @@
     "demanding": {
       "converged": false,
       "numerical_converged": false,
-      "numerical_guard_exceeded": true,
+      "numerical_guard_exceeded": false,
       "convergence_reason": "maximum_iterations",
       "mathematical_closed": true,
       "model_state": "FINITE_CLOSURE",
       "analytical_branch": "energy",
-      "effective_a": 0.975926841343,
-      "effective_b_kg": 5.04367199488,
-      "analytical_gross_mass_kg": 209.514341956,
+      "effective_a": 0.885289236114,
+      "effective_b_kg": 4.14555924448,
+      "analytical_gross_mass_kg": 36.1392349248,
       "numerical_analytical_relative_error": null,
       "analytical_candidates": [
         {
           "branch": "energy",
-          "effective_a": 0.975926841343,
-          "effective_b_kg": 5.04367199488,
-          "analytical_gross_mass_kg": 209.514341956,
+          "effective_a": 0.885289236114,
+          "effective_b_kg": 4.14555924448,
+          "analytical_gross_mass_kg": 36.1392349248,
           "finite_closure": true,
           "branch_consistent": true
         },
         {
           "branch": "power",
-          "effective_a": 0.570330453548,
-          "effective_b_kg": 4.27858333333,
-          "analytical_gross_mass_kg": 9.95784636976,
+          "effective_a": 0.570106327013,
+          "effective_b_kg": 3.49175633333,
+          "analytical_gross_mass_kg": 8.12237200206,
           "finite_closure": true,
           "branch_consistent": false
         }
@@ -210,46 +207,46 @@
       "iterations": 200,
       "conditional_class": "INFEASIBLE",
       "owner_requirement_class": "UNDETERMINED",
-      "feasibility_burden": 20.9514341956,
+      "feasibility_burden": 3.61392349248,
       "burden_terms": {
-        "portability": 20.9514341956,
-        "cost": 17.2095758334,
-        "battery_fraction": 1.48544469759,
-        "discharge": 0.460237457095
+        "portability": 3.61392349248,
+        "cost": 3.29755183474,
+        "battery_fraction": 1.35074528261,
+        "discharge": 0.512066050973
       },
       "payload_mass_kg": 1.5,
       "payload_power_w": 100.0,
       "endurance_min": 45.0,
-      "gross_mass_kg": 209.514341956,
-      "numerical_last_gross_mass_kg": 195.290721805,
-      "battery_mass_kg": 140.049885747,
-      "battery_mass_fraction": 0.668450113914,
-      "structure_mass_kg": 39.149354998,
-      "propulsion_mass_kg": 27.6651012108,
-      "total_disk_area_m2": 34.2438970256,
-      "equivalent_rotor_diameter_m": 3.3015406956,
-      "approximate_vehicle_span_m": 6.60308139121,
+      "gross_mass_kg": 36.1392349248,
+      "numerical_last_gross_mass_kg": 36.1391668796,
+      "battery_mass_kg": 21.9667054914,
+      "battery_mass_fraction": 0.607835377176,
+      "structure_mass_kg": 6.75230479359,
+      "propulsion_mass_kg": 4.77022463981,
+      "total_disk_area_m2": 5.90674713625,
+      "equivalent_rotor_diameter_m": 1.37119510233,
+      "approximate_vehicle_span_m": 2.74239020466,
       "practical_constraint_ok": false,
       "practical_constraint_failures": [
         "gross_mass",
         "rotor_diameter",
         "vehicle_span"
       ],
-      "ideal_induced_power_w": 10167.8004853,
-      "propulsion_hover_power_w": 22722.4457017,
-      "total_hover_power_w": 22856.1413539,
-      "required_nominal_battery_energy_wh": 23808.4805769,
-      "installed_nominal_battery_energy_wh": 23808.4805769,
+      "ideal_induced_power_w": 1753.84905385,
+      "propulsion_hover_power_w": 3917.67480435,
+      "total_hover_power_w": 4051.37045653,
+      "required_nominal_battery_energy_wh": 4220.17755888,
+      "installed_nominal_battery_energy_wh": 4220.17755888,
       "battery_sizing_driver": "energy",
       "achievable_endurance_min": 45.0,
-      "peak_battery_power_w": 52736.8935948,
-      "battery_discharge_margin": 2.39007056693,
-      "platform_cost_usd": 43023.9395834,
+      "peak_battery_power_w": 9203.23974588,
+      "battery_discharge_margin": 2.14816037484,
+      "platform_cost_usd": 8243.87958686,
       "cost_breakdown": {
-        "structure_usd": 7096.88389964,
-        "propulsion_usd": 18411.1192799,
+        "structure_usd": 1265.41486285,
+        "propulsion_usd": 3174.3404328,
         "avionics_usd": 350.0,
-        "battery_usd": 16665.9364039,
+        "battery_usd": 2954.12429122,
         "power_electronics_usd": 150.0,
         "mount_usd": 125.0,
         "other_platform_usd": 225.0
@@ -259,136 +256,136 @@
   "sensitivity_ranking": [
     {
       "variable": "endurance_min",
-      "overall_score": 0.575764,
-      "rho_gross_mass": 0.605316,
-      "rho_platform_cost": 0.584445,
-      "rho_feasibility_burden": 0.535285
+      "overall_score": 0.571331,
+      "rho_gross_mass": 0.598592,
+      "rho_platform_cost": 0.579592,
+      "rho_feasibility_burden": 0.533871
     },
     {
       "variable": "battery_specific_power_w_kg",
-      "overall_score": 0.221941,
-      "rho_gross_mass": -0.237311,
-      "rho_platform_cost": -0.223748,
-      "rho_feasibility_burden": -0.203454
+      "overall_score": 0.219322,
+      "rho_gross_mass": -0.232676,
+      "rho_platform_cost": -0.219936,
+      "rho_feasibility_burden": -0.20444
     },
     {
       "variable": "payload_mass_kg",
-      "overall_score": 0.203667,
-      "rho_gross_mass": 0.237037,
-      "rho_platform_cost": 0.193229,
-      "rho_feasibility_burden": 0.175833
+      "overall_score": 0.211835,
+      "rho_gross_mass": 0.247359,
+      "rho_platform_cost": 0.202487,
+      "rho_feasibility_burden": 0.180095
     },
     {
       "variable": "analysis_cost_boundary_usd",
-      "overall_score": 0.138571,
-      "rho_gross_mass": 0.007883,
-      "rho_platform_cost": 0.009959,
-      "rho_feasibility_burden": -0.239675
-    },
-    {
-      "variable": "rotor_figure_of_merit",
-      "overall_score": 0.125221,
-      "rho_gross_mass": -0.108039,
-      "rho_platform_cost": -0.155182,
-      "rho_feasibility_burden": -0.106239
-    },
-    {
-      "variable": "disk_loading_n_m2",
-      "overall_score": 0.124429,
-      "rho_gross_mass": 0.099101,
-      "rho_platform_cost": 0.158126,
-      "rho_feasibility_burden": 0.10781
-    },
-    {
-      "variable": "analysis_portability_mass_kg",
-      "overall_score": 0.120164,
-      "rho_gross_mass": 0.012413,
-      "rho_platform_cost": 0.011785,
-      "rho_feasibility_burden": -0.207425
-    },
-    {
-      "variable": "structure_load_fraction",
-      "overall_score": 0.102736,
-      "rho_gross_mass": 0.106531,
-      "rho_platform_cost": 0.112217,
-      "rho_feasibility_burden": 0.087877
-    },
-    {
-      "variable": "environment_power_margin",
-      "overall_score": 0.095004,
-      "rho_gross_mass": 0.086663,
-      "rho_platform_cost": 0.113234,
-      "rho_feasibility_burden": 0.082126
+      "overall_score": 0.137211,
+      "rho_gross_mass": 0.007873,
+      "rho_platform_cost": 0.010124,
+      "rho_feasibility_burden": -0.237311
     },
     {
       "variable": "structure_base_mass_kg",
-      "overall_score": 0.079327,
-      "rho_gross_mass": 0.086588,
-      "rho_platform_cost": 0.078792,
-      "rho_feasibility_burden": 0.071921
+      "overall_score": 0.126009,
+      "rho_gross_mass": 0.136185,
+      "rho_platform_cost": 0.130778,
+      "rho_feasibility_burden": 0.109478
+    },
+    {
+      "variable": "rotor_figure_of_merit",
+      "overall_score": 0.122067,
+      "rho_gross_mass": -0.105329,
+      "rho_platform_cost": -0.151354,
+      "rho_feasibility_burden": -0.103435
+    },
+    {
+      "variable": "disk_loading_n_m2",
+      "overall_score": 0.120919,
+      "rho_gross_mass": 0.095679,
+      "rho_platform_cost": 0.153161,
+      "rho_feasibility_burden": 0.106074
+    },
+    {
+      "variable": "analysis_portability_mass_kg",
+      "overall_score": 0.115398,
+      "rho_gross_mass": 0.012193,
+      "rho_platform_cost": 0.011745,
+      "rho_feasibility_burden": -0.199157
+    },
+    {
+      "variable": "structure_load_fraction",
+      "overall_score": 0.102699,
+      "rho_gross_mass": 0.106802,
+      "rho_platform_cost": 0.112976,
+      "rho_feasibility_burden": 0.086434
+    },
+    {
+      "variable": "environment_power_margin",
+      "overall_score": 0.093647,
+      "rho_gross_mass": 0.085453,
+      "rho_platform_cost": 0.111561,
+      "rho_feasibility_burden": 0.081002
     },
     {
       "variable": "motor_controller_efficiency",
-      "overall_score": 0.074394,
-      "rho_gross_mass": -0.06829,
-      "rho_platform_cost": -0.085046,
-      "rho_feasibility_burden": -0.068608
+      "overall_score": 0.071425,
+      "rho_gross_mass": -0.065384,
+      "rho_platform_cost": -0.081848,
+      "rho_feasibility_burden": -0.065806
     },
     {
       "variable": "propulsion_specific_power_w_kg",
-      "overall_score": 0.071013,
-      "rho_gross_mass": -0.085182,
-      "rho_platform_cost": -0.065916,
-      "rho_feasibility_burden": -0.059394
+      "overall_score": 0.069098,
+      "rho_gross_mass": -0.082928,
+      "rho_platform_cost": -0.064197,
+      "rho_feasibility_burden": -0.057664
     },
     {
       "variable": "payload_power_w",
-      "overall_score": 0.057475,
-      "rho_gross_mass": 0.058574,
-      "rho_platform_cost": 0.05689,
-      "rho_feasibility_burden": 0.056944
+      "overall_score": 0.058903,
+      "rho_gross_mass": 0.059697,
+      "rho_platform_cost": 0.058215,
+      "rho_feasibility_burden": 0.058787
     },
     {
       "variable": "battery_cost_usd_per_wh",
-      "overall_score": 0.057388,
-      "rho_gross_mass": -0.024974,
-      "rho_platform_cost": 0.095439,
-      "rho_feasibility_burden": 0.012165
+      "overall_score": 0.054646,
+      "rho_gross_mass": -0.028632,
+      "rho_platform_cost": 0.08965,
+      "rho_feasibility_burden": 0.010088
     },
     {
       "variable": "battery_specific_energy_wh_kg",
-      "overall_score": 0.039353,
-      "rho_gross_mass": -0.059413,
-      "rho_platform_cost": -0.007879,
-      "rho_feasibility_burden": -0.032466
-    },
-    {
-      "variable": "battery_power_margin_ratio",
-      "overall_score": 0.022655,
-      "rho_gross_mass": 0.024993,
-      "rho_platform_cost": 0.022254,
-      "rho_feasibility_burden": 0.020491
+      "overall_score": 0.038796,
+      "rho_gross_mass": -0.058805,
+      "rho_platform_cost": -0.008779,
+      "rho_feasibility_burden": -0.031308
     },
     {
       "variable": "reserve_fraction",
-      "overall_score": 0.02145,
-      "rho_gross_mass": 0.023646,
-      "rho_platform_cost": 0.021634,
-      "rho_feasibility_burden": 0.018793
+      "overall_score": 0.021962,
+      "rho_gross_mass": 0.024774,
+      "rho_platform_cost": 0.022555,
+      "rho_feasibility_burden": 0.018012
+    },
+    {
+      "variable": "battery_power_margin_ratio",
+      "overall_score": 0.021601,
+      "rho_gross_mass": 0.024761,
+      "rho_platform_cost": 0.022207,
+      "rho_feasibility_burden": 0.017136
     }
   ],
   "middle_point_cost_ranking": [
     {
       "category": "propulsion_usd",
-      "cost_usd": 1158.48
+      "cost_usd": 744.64
     },
     {
       "category": "battery_usd",
-      "cost_usd": 733.6
+      "cost_usd": 485.31
     },
     {
       "category": "structure_usd",
-      "cost_usd": 629.21
+      "cost_usd": 354.17
     },
     {
       "category": "avionics_usd",

@@ -1,0 +1,107 @@
+{
+  "link_limited": {
+    "clear": {
+      "endpoint_separation_km": 25.04948615743644,
+      "limiting_hop": "ground_to_relay",
+      "hop_1_path_limit_km": 12.525317927617644,
+      "hop_2_path_limit_km": 15.843413227604715,
+      "relay_altitude_m": 120.0,
+      "excess_loss_db": 0.0
+    },
+    "baseline": {
+      "endpoint_separation_km": 25.04948615743644,
+      "limiting_hop": "ground_to_relay",
+      "hop_1_path_limit_km": 12.525317927617644,
+      "hop_2_path_limit_km": 15.843413227604715,
+      "relay_altitude_m": 120.0,
+      "excess_loss_db": 0.0
+    },
+    "plus_12_db": {
+      "endpoint_separation_km": 6.287856640430628,
+      "limiting_hop": "ground_to_relay",
+      "hop_1_path_limit_km": 3.146217615272645,
+      "hop_2_path_limit_km": 3.9796854715219676,
+      "relay_altitude_m": 120.0,
+      "excess_loss_db": 12.0
+    }
+  },
+  "endurance": {
+    "favorable": {
+      "case": "favorable",
+      "longest_practical_dwell_min": 126.91322714664412,
+      "practical_boundary_status": "bounded",
+      "energy_slope_one_dwell_min": 156.9642113780264,
+      "payload_mass_kg": 0.2,
+      "payload_power_w": 14.0
+    },
+    "reference": {
+      "case": "reference",
+      "longest_practical_dwell_min": 42.11580557127478,
+      "practical_boundary_status": "bounded",
+      "energy_slope_one_dwell_min": 52.442558865985276,
+      "payload_mass_kg": 0.2,
+      "payload_power_w": 14.0
+    },
+    "adverse": {
+      "case": "adverse",
+      "longest_practical_dwell_min": null,
+      "practical_boundary_status": "no_practical_solution_at_zero_dwell",
+      "energy_slope_one_dwell_min": 6.4164803806533115,
+      "payload_mass_kg": 0.2,
+      "payload_power_w": 14.0
+    }
+  },
+  "worked_case": {
+    "separation_km": 10.0,
+    "relay_altitude_m": 120.0,
+    "scenario": "obstructed_reference",
+    "payload_id": "PAY-MESH-OEM",
+    "rows": [
+      {
+        "dwell_min": 10.0,
+        "gross_mass_kg": 3.583890589000366,
+        "rotor_diameter_m": 0.4318044837772669,
+        "battery_branch": "power",
+        "energy_branch_slope": 0.3458408006621051,
+        "mathematical_closed": true,
+        "practical_constraint_ok": true
+      },
+      {
+        "dwell_min": 20.0,
+        "gross_mass_kg": 3.583890589000366,
+        "rotor_diameter_m": 0.4318044837772669,
+        "battery_branch": "power",
+        "energy_branch_slope": 0.4999689250769027,
+        "mathematical_closed": true,
+        "practical_constraint_ok": true
+      },
+      {
+        "dwell_min": 30.0,
+        "gross_mass_kg": 4.774731960075533,
+        "rotor_diameter_m": 0.49840716212610037,
+        "battery_branch": "energy",
+        "energy_branch_slope": 0.6540970494917002,
+        "mathematical_closed": true,
+        "practical_constraint_ok": true
+      },
+      {
+        "dwell_min": 45.0,
+        "gross_mass_kg": 15.1456084020122,
+        "rotor_diameter_m": 0.8876732611933477,
+        "battery_branch": "energy",
+        "energy_branch_slope": 0.8852892361138965,
+        "mathematical_closed": true,
+        "practical_constraint_ok": false
+      },
+      {
+        "dwell_min": 60.0,
+        "gross_mass_kg": null,
+        "rotor_diameter_m": null,
+        "battery_branch": "none",
+        "energy_branch_slope": 1.116481422736093,
+        "mathematical_closed": false,
+        "practical_constraint_ok": false
+      }
+    ]
+  }
+}

@@ -18,7 +18,7 @@ class MissionConnectivityTests(unittest.TestCase):
         self.assertEqual(len(keys), len(self.rows))
         self.assertEqual(len(keys), 1890)
 
-    def test_corrected_primary_headline_counts(self):
+    def test_calibrated_primary_headline_counts(self):
         states = ("RELAY_BENEFICIAL_AND_FEASIBLE", "MASS_CLOSED_PRACTICAL_CONSTRAINT_FAILURE",
                   "RELAY_FUNCTIONAL_VEHICLE_RESOURCE_FAILURE", "RELAY_CONNECTIVITY_INFEASIBLE")
         for scenario, expected in (("obstructed_reference", (18, 6, 6, 60)),

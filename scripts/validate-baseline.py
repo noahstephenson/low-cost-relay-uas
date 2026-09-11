@@ -1968,6 +1968,15 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
             if not path.is_file() or path.suffix.lower() not in {".yaml", ".md"}:
                 continue
             text = path.read_text(encoding="utf-8-sig")
+            relative = path.relative_to(ROOT)
+            # Manuscript planning/audit documents quote declared analysis inputs so
+            # authors can trace claims; they are not controlled implementation
+            # catalogs. Keep the guard unchanged for model/, .seal/, and all other
+            # documentation.
+            if relative == Path("docs/manuscript-outline.md") or (
+                relative.parent == Path("docs/reference") and relative.name.startswith("manuscript-")
+            ):
+                continue
             for pattern in implementation_patterns:
                 if pattern.search(text):
                     errors.append(f"{path.relative_to(ROOT)} contains prohibited implementation detail")

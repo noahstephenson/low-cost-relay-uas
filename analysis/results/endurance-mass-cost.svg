@@ -9,20 +9,20 @@
 <text x="62" y="389.0" text-anchor="end" class="small">0.0 kg</text>
 <text x="808" y="389.0" class="small">$0</text>
 <line x1="70" y1="319.0" x2="800" y2="319.0" class="grid"/>
-<text x="62" y="323.0" text-anchor="end" class="small">41.7 kg</text>
-<text x="808" y="323.0" class="small">$8,580</text>
+<text x="62" y="323.0" text-anchor="end" class="small">7.2 kg</text>
+<text x="808" y="323.0" class="small">$1,641</text>
 <line x1="70" y1="253.0" x2="800" y2="253.0" class="grid"/>
-<text x="62" y="257.0" text-anchor="end" class="small">83.5 kg</text>
-<text x="808" y="257.0" class="small">$17,160</text>
+<text x="62" y="257.0" text-anchor="end" class="small">14.3 kg</text>
+<text x="808" y="257.0" class="small">$3,283</text>
 <line x1="70" y1="187.0" x2="800" y2="187.0" class="grid"/>
-<text x="62" y="191.0" text-anchor="end" class="small">125.2 kg</text>
-<text x="808" y="191.0" class="small">$25,739</text>
+<text x="62" y="191.0" text-anchor="end" class="small">21.5 kg</text>
+<text x="808" y="191.0" class="small">$4,924</text>
 <line x1="70" y1="121.0" x2="800" y2="121.0" class="grid"/>
-<text x="62" y="125.0" text-anchor="end" class="small">166.9 kg</text>
-<text x="808" y="125.0" class="small">$34,319</text>
+<text x="62" y="125.0" text-anchor="end" class="small">28.6 kg</text>
+<text x="808" y="125.0" class="small">$6,565</text>
 <line x1="70" y1="55.0" x2="800" y2="55.0" class="grid"/>
-<text x="62" y="59.0" text-anchor="end" class="small">208.6 kg</text>
-<text x="808" y="59.0" class="small">$42,899</text>
+<text x="62" y="59.0" text-anchor="end" class="small">35.8 kg</text>
+<text x="808" y="59.0" class="small">$8,206</text>
 <line x1="70" y1="55" x2="70" y2="385" class="axis"/>
 <line x1="800" y1="55" x2="800" y2="385" class="axis"/>
 <line x1="70" y1="385" x2="800" y2="385" class="axis"/>
@@ -31,16 +31,16 @@
 <text x="487.1428571428571" y="405" text-anchor="middle" class="small">30</text>
 <text x="800.0" y="405" text-anchor="middle" class="small">45</text>
 <text x="435.0" y="427" text-anchor="middle" class="label">On-station dwell (min); nonclosures omitted</text>
-<polyline points="70.0,374.7 278.6,374.7 487.1,368.0 800.0,170.9" fill="none" stroke="#2266aa" stroke-width="3"/>
-<polyline points="70.0,368.9 278.6,368.9 487.1,362.3 800.0,168.4" fill="none" stroke="#2266aa" stroke-width="2" stroke-dasharray="7 5" opacity="0.7"/>
+<polyline points="70.0,341.7 278.6,341.7 487.1,325.3 800.0,191.5" fill="none" stroke="#2266aa" stroke-width="3"/>
+<polyline points="70.0,316.3 278.6,316.3 487.1,301.2 800.0,177.0" fill="none" stroke="#2266aa" stroke-width="2" stroke-dasharray="7 5" opacity="0.7"/>
 <line x1="490" y1="57" x2="520" y2="57" stroke="#2266aa" stroke-width="3"/>
 <text x="528" y="61" class="small">0.5 kg payload: mass solid, cost dashed</text>
-<polyline points="70.0,372.1 278.6,372.1 487.1,364.1 800.0,125.2" fill="none" stroke="#d9822b" stroke-width="3"/>
-<polyline points="70.0,366.9 278.6,366.9 487.1,359.1 800.0,123.9" fill="none" stroke="#d9822b" stroke-width="2" stroke-dasharray="7 5" opacity="0.7"/>
+<polyline points="70.0,326.7 278.6,326.7 487.1,306.8 800.0,135.5" fill="none" stroke="#d9822b" stroke-width="3"/>
+<polyline points="70.0,305.7 278.6,305.7 487.1,287.1 800.0,128.2" fill="none" stroke="#d9822b" stroke-width="2" stroke-dasharray="7 5" opacity="0.7"/>
 <line x1="490" y1="77" x2="520" y2="77" stroke="#d9822b" stroke-width="3"/>
 <text x="528" y="81" class="small">1 kg payload: mass solid, cost dashed</text>
-<polyline points="70.0,369.6 278.6,369.6 487.1,360.3 800.0,79.4" fill="none" stroke="#7b4ab5" stroke-width="3"/>
-<polyline points="70.0,364.9 278.6,364.9 487.1,355.8 800.0,79.4" fill="none" stroke="#7b4ab5" stroke-width="2" stroke-dasharray="7 5" opacity="0.7"/>
+<polyline points="70.0,311.8 278.6,311.8 487.1,288.2 800.0,79.4" fill="none" stroke="#7b4ab5" stroke-width="3"/>
+<polyline points="70.0,295.0 278.6,295.0 487.1,273.1 800.0,79.4" fill="none" stroke="#7b4ab5" stroke-width="2" stroke-dasharray="7 5" opacity="0.7"/>
 <line x1="490" y1="97" x2="520" y2="97" stroke="#7b4ab5" stroke-width="3"/>
 <text x="528" y="101" class="small">1.5 kg payload: mass solid, cost dashed</text>
 </svg>

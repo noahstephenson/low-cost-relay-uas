@@ -80,7 +80,7 @@ class FeasibilityModelTests(unittest.TestCase):
         self.assertEqual(result["analytical_branch"], "none")
 
     def test_practical_constraint_is_distinct_from_mathematical_closure(self):
-        result = self.point(payload_mass_kg=1.0, payload_power_w=50.0, endurance_min=30.0)
+        result = self.point(payload_mass_kg=1.0, payload_power_w=50.0, endurance_min=40.0)
         self.assertTrue(result["mathematical_closed"])
         self.assertFalse(result["practical_constraint_ok"])
         self.assertTrue(result["practical_constraint_failures"])
@@ -88,7 +88,7 @@ class FeasibilityModelTests(unittest.TestCase):
 
 
     def test_finite_high_mass_case_reports_analytical_physical_state(self):
-        result = self.point(payload_mass_kg=0.2, payload_power_w=5.0, endurance_min=45.0)
+        result = self.point(payload_mass_kg=0.2, payload_power_w=5.0, endurance_min=48.0)
         self.assertTrue(result["mathematical_closed"])
         self.assertFalse(result["numerical_converged"])
         self.assertAlmostEqual(result["gross_mass_kg"], result["analytical_gross_mass_kg"], places=9)
