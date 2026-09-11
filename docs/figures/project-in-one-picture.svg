@@ -59,7 +59,7 @@
 <rect x="550" y="290" width="120" height="48" rx="10" class="chip"/>
 <text x="610" y="319" class="chip-title" text-anchor="middle"><tspan x="610" dy="0">Propulsion</tspan></text>
 <rect x="690" y="290" width="115" height="48" rx="10" class="chip"/>
-<text x="747.5" y="319" class="chip-title" text-anchor="middle"><tspan x="747.5" dy="0">Electrical Power</tspan></text>
+<text x="747.5" y="310" class="chip-title" text-anchor="middle"><tspan x="747.5" dy="0">Electrical</tspan><tspan x="747.5" dy="18">Power</tspan></text>
 <rect x="500" y="405" width="350" height="130" rx="16" class="payload-black"/>
 <text x="675" y="438" class="payload-title" text-anchor="middle"><tspan x="675" dy="0">BLACK-BOX RELAY PAYLOAD</tspan></text>
 <rect x="35" y="190" width="185" height="86" rx="14" class="box blue"/>

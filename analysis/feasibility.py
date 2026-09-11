@@ -524,7 +524,7 @@ def svg_document(width: int, height: int, body: str, title: str) -> str:
         f'viewBox="0 0 {width} {height}" role="img" aria-labelledby="title desc">\n'
         f'<title id="title">{title}</title>\n'
         '<desc id="desc">Generated deterministically by analysis/feasibility.py.</desc>\n'
-        '<style>text{font-family:Arial,sans-serif;fill:#172033}.axis{stroke:#607089;stroke-width:1}.grid{stroke:#d9e0ea;stroke-width:1}.label{font-size:12px}.small{font-size:10px}.title{font-size:18px;font-weight:700}</style>\n'
+        '<style>text{font-family:Arial,sans-serif;fill:#172033}.axis{stroke:#607089;stroke-width:1}.grid{stroke:#d9e0ea;stroke-width:1}.label{font-size:12px}.small{font-size:12px}.title{font-size:18px;font-weight:700}</style>\n'
         f'{body}\n</svg>\n'
     )
 
@@ -563,7 +563,7 @@ def region_svg(rows: list[dict[str, Any]], payload_power: float = 50.0) -> str:
         f"{dwell_span(infeasible_dwell)} is infeasible across the tested payload range."
     )
     left, top, cell_w, cell_h = 150, 175, 132, 64
-    width = left + cell_w * len(endurances) + 40
+    width = left + cell_w * len(endurances) + 80
     height = top + cell_h * len(payloads) + 115
     parts = [f'<rect width="{width}" height="{height}" fill="#ffffff"/>']
     parts.append('<text x="25" y="38" style="font-size:28px;font-weight:700">Exploratory Feasibility: Dwell vs Payload</text>')
@@ -592,8 +592,8 @@ def region_svg(rows: list[dict[str, Any]], payload_power: float = 50.0) -> str:
 
 
 def line_plot_svg(series: list[tuple[str, list[tuple[float, float, float]]]]) -> str:
-    width, height = 820, 470
-    left, right, top, bottom = 70, 760, 55, 385
+    width, height = 900, 490
+    left, right, top, bottom = 70, 800, 55, 385
     x_values = [point[0] for _, points in series for point in points]
     mass_values = [point[1] for _, points in series for point in points]
     cost_values = [point[2] for _, points in series for point in points]
@@ -601,7 +601,7 @@ def line_plot_svg(series: list[tuple[str, list[tuple[float, float, float]]]]) ->
     mass_max = max(mass_values) * 1.08
     cost_max = max(cost_values) * 1.08
     colors = ["#2266aa", "#d9822b", "#7b4ab5"]
-    parts = ['<rect width="820" height="470" fill="#ffffff"/>']
+    parts = ['<rect width="900" height="490" fill="#ffffff"/>']
     parts.append('<text x="20" y="28" class="title">Finite-closure endurance growth in mass and platform cost</text>')
     parts.append('<text x="70" y="452" class="small">Finite closure can exceed exploratory vehicle boundaries; curves are not realizable designs.</text>')
     for step in range(6):
@@ -639,7 +639,7 @@ def line_plot_svg(series: list[tuple[str, list[tuple[float, float, float]]]]) ->
 def sensitivity_svg(rows: list[dict[str, Any]]) -> str:
     top_rows = rows[:10]
     width, height = 760, 390
-    left, right, top = 230, 710, 50
+    left, right, top = 250, 700, 50
     bar_h = 26
     max_score = max(float(row["overall_score"]) for row in top_rows)
     parts = ['<rect width="760" height="390" fill="#ffffff"/>']
@@ -648,7 +648,7 @@ def sensitivity_svg(rows: list[dict[str, Any]]) -> str:
         y = top + index * (bar_h + 6)
         value = float(row["overall_score"])
         width_bar = (right - left) * value / max_score
-        parts.append(f'<text x="{left-10}" y="{y+18}" text-anchor="end" class="small">{row["variable"]}</text>')
+        parts.append(f'<text x="{left-10}" y="{y+18}" text-anchor="end" class="small">{row["variable"].replace("analysis_", "").replace("battery_specific_power_w_kg", "Battery specific power").replace("environment_power_margin", "Environmental margin").replace("structure_base_mass_kg", "Structure base mass").replace("_", " ")}</text>')
         parts.append(f'<rect x="{left}" y="{y}" width="{width_bar:.1f}" height="{bar_h}" rx="3" fill="#3973b7"/>')
         parts.append(f'<text x="{left+width_bar+6:.1f}" y="{y+18}" class="small">{value:.3f}</text>')
     parts.append('<text x="20" y="385" class="small">RMS Spearman score across mass, cost, burden; nonclosing candidates excluded.</text>')

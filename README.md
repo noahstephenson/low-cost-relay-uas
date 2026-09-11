@@ -1,103 +1,70 @@
 # Low-Cost Communications Relay UAS
 
-This repository studies a small multirotor communications relay UAS: its mission role, subsystem responsibilities, payload interfaces, and resource limits. Executable models assess the architecture under declared mission assumptions.
+A relay aircraft carries a radio to a place where two other systems can communicate more effectively. This repository asks what the **aircraft around that radio** must do, and when a small multirotor can support the resulting mission demands.
 
 **Paper title:** System Architecture and Mission Feasibility of a Multirotor Communications Relay
 
-The study targets IEEE Aerospace 2027, Track 13.01. Examination of a recovered relay aircraft provides background motivation only. The paper does not reconstruct that aircraft or depend on its provenance or measured performance.
+The study targets IEEE Aerospace 2027, Track 13.01. Examination of a recovered relay aircraft motivated the work; the analysis does not reconstruct that aircraft or claim its performance. “Low-cost” is a project objective, not an established result.
 
-**Research question:** What architecture lets a small multirotor support airborne relay service, and under what declared mission demands does that architecture remain plausible?
+## Start with the communications problem
 
-![System concept showing logically separate aircraft control and relayed mission traffic](docs/figures/project-in-one-picture.svg)
+Imagine a ground station communicating with a remote aircraft. An obstruction can block their direct path. Putting a relay above that obstruction may restore a useful path, but creates a second engineering problem: another aircraft must lift, power, and hold the radio in position.
 
-## The problem
+That is the research question: **What architecture lets a small multirotor support airborne relay service, and under what declared mission demands does it remain plausible?**
 
-Ground systems do not always have a useful direct communications path to a remote aircraft. Terrain, distance, and line-of-sight geometry can block or weaken that path. An airborne relay can improve the geometry by carrying a communications payload above the obstruction or between the endpoints.
+![How the relay aircraft supports the communications payload](docs/figures/project-in-one-picture.svg)
 
-The engineering question is whether a small, portable aircraft can do that without becoming too heavy, power-hungry, costly, or difficult to recover.
+The picture separates two jobs. The payload passes mission traffic between endpoints. The carrier keeps that payload airborne and supports it. The carrier’s own command path is logically separate from the traffic being relayed.
 
-## What the system does
+## Follow the aircraft, then its resources
 
-The Relay UAS carries the black-box relay payload to a useful position and holds that position while the payload passes mission traffic between ground control and a remote aircraft. The carrier supplies lift, navigation, electrical power, payload retention, and its own recovery capability.
+The proposed mission is **prepare → launch → transit → establish position → relay → monitor → recover**. This is a responsibility sequence, not a demonstrated operating procedure. The calculations cover stationary outbound relay service during hover; transit, return telemetry, recovery energy, and carrier-control performance remain unassessed.
 
-Two information paths are intentionally separate:
+| What moves through the aircraft? | What carries it? | Why it matters |
+|---|---|---|
+| Mission traffic | The relay payload | Provides the service the aircraft exists to support |
+| Aircraft command and health/status | Platform communications and avionics | Positions and monitors the carrier without using the relayed traffic to fly it |
+| Electrical energy | Battery, distribution, and regulated branches | Supports propulsion, avionics, and payload demand |
+| Mechanical loads | Airframe and payload mounting | Keeps the aircraft and payload physically supported |
 
-| Path | Purpose |
-|---|---|
-| Aircraft command and control | Lets the operator launch, position, monitor, and recover the Relay UAS. |
-| Relayed mission traffic | Passes remote-aircraft commands outward and telemetry back through the payload. |
+The radio is a **black-box payload**: its external resource needs are represented, while its internal implementation is unspecified. The architecture therefore commits to payload retention, regulated electrical support, and logical control separation. These are modeled responsibilities—not verified packaging, electrical compatibility, or fault isolation. Shared power and physical failures can still affect both information paths.
 
-Three commitments define the proposed architecture: a black-box relay payload, explicit mechanical and electrical payload support, and logically separate carrier control and relay traffic. The carrier does not use relayed mission traffic to fly itself. Separation is architectural intent, not demonstrated failure isolation: shared power, physical dependencies, and control-link performance remain unresolved.
+## Walk through one declared example
 
-## Mission
+The reference example places endpoints 10 km apart, with the remote aircraft 100 m above the ground datum. An idealized 80 m opaque screen lies 40% of the way along that separation. A midpoint relay at 120 m clears it. This is a geometric scenario, not terrain data.
 
-The operating concept is deliberately simple: **Prepare → Launch → Transit → Establish relay position → Relay → Monitor → Recover.**
+Clearance is only the first gate. **Link margin** is the calculated received signal level above an assumed receiver threshold; the two outbound relay hops must both have nonnegative margin. Then the carrier must support the payload for the required **dwell**, meaning time spent at the relay station.
 
-This is an architecture sequence, not an operating procedure. The quantitative assessment covers only stationary Ground → Relay → Remote service during hover dwell. Transit, recovery energy, reverse-link service, and carrier-control performance are not quantitatively established.
+With the primary 0.20 kg payload and constant 14 W sizing allowance, existing calculations give:
 
-## Architecture
+| Dwell | Carrier result | What it tells us |
+|---|---|---|
+| 30 minutes | 8.6203 kg; passes exploratory physical bounds | The declared link and carrier screens both pass |
+| 45 minutes | 106.2456 kg; outside those bounds | A finite calculation is not necessarily a plausible small aircraft |
+| 60 minutes | No finite analytical closure | The assumed resource feedback has no finite solution |
 
-The aircraft allocates lift, energy, navigation, carrier control, and payload-support responsibilities. Quantitative owner targets and component selections remain open. Read [Architecture](docs/architecture.md) for subsystem roles, interfaces, and the evidence supporting them.
+**Analytical closure** means that calculated component masses sum consistently to the gross mass used to calculate power. More battery adds mass; more mass needs more hover power; that requires more battery. The large 45-minute result is an extrapolation, not a design proposal. **Exploratory boundaries** are analysis limits used to screen results, not approved aircraft requirements.
 
-## Why endurance is coupled
+Across 90 baseline cases, the ordered counts are **18 physical passes / 6 finite exclusions / 6 nonclosures / 60 connectivity failures**. The +12 dB loss sensitivity gives **6 / 2 / 2 / 80**. These are hierarchical grid counts, not probabilities.
 
-More dwell requires more battery energy; added battery mass raises hover power and battery demand again. The model treats gross mass as an output, using branch-consistent analytical closure and numerical iteration as a verification diagnostic.
+## Read the engineering in order
 
-## What the study found
+1. [Architecture](docs/architecture.md): follow the subsystems and four flows.
+2. [Feasibility](docs/feasibility.md): follow assumptions through calculations and decision gates.
+3. [Engineering Status](docs/engineering-status.md): distinguish evidence from remaining decisions.
+4. [Engineering Reference](docs/reference/README.md): inspect requirements, interfaces, sources, and traceability.
 
-The primary relay-UAS study evaluates 90 separation × dwell × altitude cases with a 0.20 kg payload and a constant 14 W electrical sizing allowance. Its baseline screen scenario produces **18 relay-beneficial physical-boundary passes, 6 finite practical exclusions, 6 mathematical nonclosures, and 60 connectivity failures**. The +12 dB sensitivity produces **6 / 2 / 2 / 80**, respectively. These hierarchical counts describe the declared grid, not success probabilities.
-
-At 10 km endpoint separation and 120 m relay altitude in the baseline scenario, 30-minute dwell gives an 8.6203 kg analytical carrier that passes exploratory physical bounds; 45 minutes gives a finite 106.2456 kg result outside those bounds; 60 minutes has no finite closure. The large finite result is an extrapolation, not a proposed aircraft.
-
-The outcomes distinguish connectivity failure, finite carrier burden, and mathematical nonclosure. The broader carrier sweep provides supporting sensitivity analysis. Affordability and operational performance remain unestablished.
-
-Read the [architecture-to-evidence assessment](docs/architecture.md#architecture-to-evidence-assessment), [feasibility interpretation](docs/feasibility.md), and [paper research status](docs/IEEE_AERO_2027_RESEARCH_STATUS.md).
-
-## What remains unresolved
-
-- The owner must set the payload service, endurance, portability, affordability, environment, reserve, and recovery targets together.
-- Payload packaging, electrical-service, and retention-load envelopes remain open.
-- No hardware has been selected, and no prototype, physical verification, or external-interface conformance evidence exists.
-- A low-order link budget uses declared service and antenna-gain assumptions to screen connectivity. Radio implementation, waveform/protocol design, installed antenna performance, and spectrum authorization remain outside the demonstrated evidence.
-
-## Engineering status
-
-| Area | Current position |
-|---|---|
-| Architecture, functions, and logical interfaces | Defined at the model level |
-| Feasibility analysis | Reproducible and exploratory |
-| Quantitative design targets and hardware | Not established |
-| Physical verification and external conformance | Not performed or not available |
-| Technical baseline | Not approved |
-
-Automated checks confirm the model is internally consistent and its generated files are current. They do not establish safety, airworthiness, endpoint compatibility, operational readiness, or approval.
-
-## Explore the engineering
-
-| If you want to know… | Read |
-|---|---|
-| How the system works | [Architecture](docs/architecture.md) |
-| Whether the concept closes quantitatively | [Feasibility](docs/feasibility.md) |
-| What is established and what the next phase must do | [Engineering Status](docs/engineering-status.md) |
-| Detailed requirements, interfaces, traceability, decisions, verification, and evidence | [Engineering Reference](docs/reference/README.md) |
-| The structured source of record | [Model catalogs](model/) |
-| The executable feasibility model and results | [Analysis](analysis/) |
+The model catalogs define architecture records; generators turn them into views. Analysis inputs feed executable models and generated results. Passing checks establishes consistency and reproducibility, not aircraft validation. [The reference guide](docs/reference/README.md) explains this evidence trail and provides regeneration commands.
 
 ## Reproduce and validate
 
-The model and views use Python's standard library. From the repository root:
+From the repository root, using Python’s standard library:
 
 ```bash
-python scripts/generate-communication-views.py
-python scripts/generate-mermaid-views.py
-python analysis/feasibility.py
-python analysis/validation/validate_vehicle_scale.py
-python analysis/mission_connectivity.py
-python -m unittest discover -s tests -v
-python scripts/validate-baseline.py --write-reports
-python scripts/validate-baseline.py --check-generated
+python -B -m unittest discover -s tests -v
+python -B scripts/validate-baseline.py --check-generated
 ```
 
 ## Scope note
 
-This study defines a relay-aircraft architecture and a conditional feasibility envelope. It does not select components, define payload radio details, provide fabrication, flight-test, or operating instructions, or claim interoperability, spectrum authorization, safety certification, airworthiness, operational readiness, standards conformance, or an approved technical baseline. See [Engineering Status](docs/engineering-status.md) for the remaining work and [`LICENSE`](LICENSE) for licensing.
+The project establishes a proposed architecture and a conditional service envelope. Affordability, hardware selection, safety, airworthiness, interoperability, physical performance, and operational readiness remain unresolved. The low-order link budget uses declared assumptions; it is not a radio design or spectrum authorization. See [research status](docs/IEEE_AERO_2027_RESEARCH_STATUS.md) for precise claims and [LICENSE](LICENSE) for licensing.

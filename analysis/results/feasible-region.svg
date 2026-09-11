@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="850" height="610" viewBox="0 0 850 610" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="890" height="610" viewBox="0 0 890 610" role="img" aria-labelledby="title desc">
 <title id="title">Conditional payload-endurance feasibility region</title>
 <desc id="desc">Generated deterministically by analysis/feasibility.py.</desc>
-<style>text{font-family:Arial,sans-serif;fill:#172033}.axis{stroke:#607089;stroke-width:1}.grid{stroke:#d9e0ea;stroke-width:1}.label{font-size:12px}.small{font-size:10px}.title{font-size:18px;font-weight:700}</style>
-<rect width="850" height="610" fill="#ffffff"/>
+<style>text{font-family:Arial,sans-serif;fill:#172033}.axis{stroke:#607089;stroke-width:1}.grid{stroke:#d9e0ea;stroke-width:1}.label{font-size:12px}.small{font-size:12px}.title{font-size:18px;font-weight:700}</style>
+<rect width="890" height="610" fill="#ffffff"/>
 <text x="25" y="38" style="font-size:28px;font-weight:700">Exploratory Feasibility: Dwell vs Payload</text>
 <text x="25" y="74" style="font-size:17px;font-weight:700">10–20 min includes feasible cases; 45–60 min is infeasible across the tested payload range.</text>
 <text x="25" y="102" style="font-size:14px;fill:#536174">50 W payload demand · exploratory 10 kg / $2,500 boundaries · no hardware selected</text>

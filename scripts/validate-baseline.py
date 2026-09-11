@@ -609,7 +609,7 @@ def render_traceability(catalogs: dict[str, dict[str, Any]]) -> str:
         "**Hold a useful relay position**", "",
         "Station-keeping capability → position-and-hold scenario → flight behavior → avionics and navigation → **Maintain commanded station position (REQ-003)** → analysis after owner tolerance; physical evidence later.", "",
         "**Recover after payload loss**", "",
-        "Degraded scenario → independent aircraft control → recovery mode → **Recover after payload loss (REQ-007)** → model review recorded; physical recovery evidence absent.", "",
+        "Degraded scenario → separate carrier-control intent → recovery mode → **Recover after payload loss (REQ-007)** → model review recorded; physical recovery evidence absent.", "",
         "## Complete relationship register", "", f"The model contains {len(relationships)} explicit relationships.", "",
         "<details>", "<summary>Open complete relationship table</summary>", "",
         "| From | Relationship | To | Status | Gap |", "|---|---|---|---|---|",
@@ -787,7 +787,7 @@ def validate_mermaid_documents(definitions: set[str], gap_codes: set[str]) -> li
             if not lines:
                 errors.append(f"{path.name}: Mermaid diagram {title!r} is empty")
                 continue
-            header = lines[0].split()[0]
+            header = next((line.split()[0] for line in lines if not line.lstrip().startswith("%%")), "")
             if header not in MERMAID_HEADERS:
                 errors.append(f"{path.name}: Mermaid diagram {title!r} uses unsupported header {header}")
             if not any("%% Configuration scope:" in line for line in lines[:4]):
@@ -1934,10 +1934,10 @@ def validate(catalogs: dict[str, dict[str, Any]]) -> tuple[list[str], list[str],
 
     readme_text = (ROOT / "README.md").read_text(encoding="utf-8-sig")
     required_readme_sections = (
-        "## What the system does",
-        "## What the study found",
-        "## Engineering status",
-        "## Explore the engineering",
+        "## Start with the communications problem",
+        "## Follow the aircraft, then its resources",
+        "## Walk through one declared example",
+        "## Read the engineering in order",
         "## Reproduce and validate",
         "## Scope note",
     )

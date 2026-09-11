@@ -1,38 +1,38 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="760" height="390" viewBox="0 0 760 390" role="img" aria-labelledby="title desc">
 <title id="title">RMS of three Spearman correlations; finite-closure subset only</title>
 <desc id="desc">Generated deterministically by analysis/feasibility.py.</desc>
-<style>text{font-family:Arial,sans-serif;fill:#172033}.axis{stroke:#607089;stroke-width:1}.grid{stroke:#d9e0ea;stroke-width:1}.label{font-size:12px}.small{font-size:10px}.title{font-size:18px;font-weight:700}</style>
+<style>text{font-family:Arial,sans-serif;fill:#172033}.axis{stroke:#607089;stroke-width:1}.grid{stroke:#d9e0ea;stroke-width:1}.label{font-size:12px}.small{font-size:12px}.title{font-size:18px;font-weight:700}</style>
 <rect width="760" height="390" fill="#ffffff"/>
 <text x="20" y="28" class="title">Finite-closure sensitivity: mass, cost, and burden</text>
-<text x="220" y="68" text-anchor="end" class="small">endurance_min</text>
-<rect x="230" y="50" width="480.0" height="26" rx="3" fill="#3973b7"/>
-<text x="716.0" y="68" class="small">0.576</text>
-<text x="220" y="100" text-anchor="end" class="small">battery_specific_power_w_kg</text>
-<rect x="230" y="82" width="185.0" height="26" rx="3" fill="#3973b7"/>
-<text x="421.0" y="100" class="small">0.222</text>
-<text x="220" y="132" text-anchor="end" class="small">payload_mass_kg</text>
-<rect x="230" y="114" width="169.8" height="26" rx="3" fill="#3973b7"/>
-<text x="405.8" y="132" class="small">0.204</text>
-<text x="220" y="164" text-anchor="end" class="small">analysis_cost_boundary_usd</text>
-<rect x="230" y="146" width="115.5" height="26" rx="3" fill="#3973b7"/>
-<text x="351.5" y="164" class="small">0.139</text>
-<text x="220" y="196" text-anchor="end" class="small">rotor_figure_of_merit</text>
-<rect x="230" y="178" width="104.4" height="26" rx="3" fill="#3973b7"/>
-<text x="340.4" y="196" class="small">0.125</text>
-<text x="220" y="228" text-anchor="end" class="small">disk_loading_n_m2</text>
-<rect x="230" y="210" width="103.7" height="26" rx="3" fill="#3973b7"/>
-<text x="339.7" y="228" class="small">0.124</text>
-<text x="220" y="260" text-anchor="end" class="small">analysis_portability_mass_kg</text>
-<rect x="230" y="242" width="100.2" height="26" rx="3" fill="#3973b7"/>
-<text x="336.2" y="260" class="small">0.120</text>
-<text x="220" y="292" text-anchor="end" class="small">structure_load_fraction</text>
-<rect x="230" y="274" width="85.6" height="26" rx="3" fill="#3973b7"/>
-<text x="321.6" y="292" class="small">0.103</text>
-<text x="220" y="324" text-anchor="end" class="small">environment_power_margin</text>
-<rect x="230" y="306" width="79.2" height="26" rx="3" fill="#3973b7"/>
-<text x="315.2" y="324" class="small">0.095</text>
-<text x="220" y="356" text-anchor="end" class="small">structure_base_mass_kg</text>
-<rect x="230" y="338" width="66.1" height="26" rx="3" fill="#3973b7"/>
-<text x="302.1" y="356" class="small">0.079</text>
+<text x="240" y="68" text-anchor="end" class="small">endurance min</text>
+<rect x="250" y="50" width="450.0" height="26" rx="3" fill="#3973b7"/>
+<text x="706.0" y="68" class="small">0.576</text>
+<text x="240" y="100" text-anchor="end" class="small">Battery specific power</text>
+<rect x="250" y="82" width="173.5" height="26" rx="3" fill="#3973b7"/>
+<text x="429.5" y="100" class="small">0.222</text>
+<text x="240" y="132" text-anchor="end" class="small">payload mass kg</text>
+<rect x="250" y="114" width="159.2" height="26" rx="3" fill="#3973b7"/>
+<text x="415.2" y="132" class="small">0.204</text>
+<text x="240" y="164" text-anchor="end" class="small">cost boundary usd</text>
+<rect x="250" y="146" width="108.3" height="26" rx="3" fill="#3973b7"/>
+<text x="364.3" y="164" class="small">0.139</text>
+<text x="240" y="196" text-anchor="end" class="small">rotor figure of merit</text>
+<rect x="250" y="178" width="97.9" height="26" rx="3" fill="#3973b7"/>
+<text x="353.9" y="196" class="small">0.125</text>
+<text x="240" y="228" text-anchor="end" class="small">disk loading n m2</text>
+<rect x="250" y="210" width="97.3" height="26" rx="3" fill="#3973b7"/>
+<text x="353.3" y="228" class="small">0.124</text>
+<text x="240" y="260" text-anchor="end" class="small">portability mass kg</text>
+<rect x="250" y="242" width="93.9" height="26" rx="3" fill="#3973b7"/>
+<text x="349.9" y="260" class="small">0.120</text>
+<text x="240" y="292" text-anchor="end" class="small">structure load fraction</text>
+<rect x="250" y="274" width="80.3" height="26" rx="3" fill="#3973b7"/>
+<text x="336.3" y="292" class="small">0.103</text>
+<text x="240" y="324" text-anchor="end" class="small">Environmental margin</text>
+<rect x="250" y="306" width="74.3" height="26" rx="3" fill="#3973b7"/>
+<text x="330.3" y="324" class="small">0.095</text>
+<text x="240" y="356" text-anchor="end" class="small">Structure base mass</text>
+<rect x="250" y="338" width="62.0" height="26" rx="3" fill="#3973b7"/>
+<text x="318.0" y="356" class="small">0.079</text>
 <text x="20" y="385" class="small">RMS Spearman score across mass, cost, burden; nonclosing candidates excluded.</text>
 </svg>

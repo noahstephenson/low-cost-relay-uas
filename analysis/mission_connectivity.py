@@ -188,62 +188,32 @@ def state_counts(rows):
 
 
 def architecture_figure(rows, geometry, inputs):
-    colors = {
-        "DIRECT_SUFFICIENT": "#3973b7",
-        "RELAY_BENEFICIAL_AND_FEASIBLE": "#2f9e68",
-        "RELAY_FUNCTIONAL_VEHICLE_RESOURCE_FAILURE": "#c95757",
-        "MASS_CLOSED_PRACTICAL_CONSTRAINT_FAILURE": "#e6a43a",
-        "RELAY_CONNECTIVITY_INFEASIBLE": "#8469a9",
-    }
-    codes = {"DIRECT_SUFFICIENT": "DIR", "RELAY_BENEFICIAL_AND_FEASIBLE": "PASS",
-             "RELAY_FUNCTIONAL_VEHICLE_RESOURCE_FAILURE": "NC",
-             "MASS_CLOSED_PRACTICAL_CONSTRAINT_FAILURE": "BOUND",
-             "RELAY_CONNECTIVITY_INFEASIBLE": "LINK"}
-    altitudes = value(geometry["relay_altitudes_m"])
+    colors = {"DIRECT_SUFFICIENT": "#3973b7", "RELAY_BENEFICIAL_AND_FEASIBLE": "#2f9e68",
+              "RELAY_FUNCTIONAL_VEHICLE_RESOURCE_FAILURE": "#c95757",
+              "MASS_CLOSED_PRACTICAL_CONSTRAINT_FAILURE": "#e6a43a",
+              "RELAY_CONNECTIVITY_INFEASIBLE": "#8469a9"}
+    codes = dict(zip(colors, ("DIRECT", "PASS", "NO CLOSE", "EXCLUDED", "LINK FAIL")))
+    elements = ['<text x="25" y="32" style="font:bold 24px Arial">Primary relay-UAS architecture map</text>',
+                '<text x="25" y="58" style="font:14px Arial">Baseline screen; each cell is one separation / dwell / altitude case.</text>']
     separations = value(inputs["sweep"]["separations_km"])
-    dwells = value(inputs["sweep"]["dwell_min"])
-    elements = [
-        '<text x="25" y="35" style="font:bold 22px Arial">Primary architecture map</text>',
-        '<text x="25" y="57" style="font:11px Arial">Primary payload, baseline obstructed-reference scenario; one tile is one unique separation × dwell × altitude case.</text>',
-    ]
-    for panel_index, altitude in enumerate(altitudes):
-        panel_x = 80 + panel_index * 330
-        elements.append(
-            f'<text x="{panel_x + 115}" y="82" text-anchor="middle" style="font:bold 13px Arial">{altitude:.0f} m relay altitude</text>'
-        )
-        for dwell_index, dwell in enumerate(dwells):
-            if panel_index == 0:
-                elements.append(
-                    f'<text x="73" y="{121 + dwell_index * 58}" text-anchor="end" style="font:11px Arial">{dwell} min</text>'
-                )
-            for separation_index, separation in enumerate(separations):
-                row = next(
-                    item
-                    for item in rows
-                    if item["relay_altitude_m"] == altitude
-                    and item["separation_km"] == separation
-                    and item["dwell_min"] == dwell
-                )
-                x = panel_x + separation_index * 38
-                y = 94 + dwell_index * 58
-                elements.append(
-                    f'<rect x="{x}" y="{y}" width="34" height="46" fill="{colors[row["state"]]}"/>'
-                    f'<text x="{x + 17}" y="{y + 28}" text-anchor="middle" fill="white" style="font:9px Arial">{codes[row["state"]]}</text>'
-                )
-        for separation_index, separation in enumerate(separations):
-            elements.append(
-                f'<text x="{panel_x + separation_index * 38 + 17}" y="400" text-anchor="middle" style="font:10px Arial">{separation}</text>'
-            )
-    elements.append('<text x="530" y="425" text-anchor="middle" style="font:12px Arial">Endpoint separation (km); rows: on-station dwell (min)</text>')
-    elements.append(
-        '<text x="25" y="455" style="font:11px Arial">DIR: direct sufficient; PASS: conditional relay/physical pass; BOUND: finite but excluded; NC: mathematical nonclosure; LINK: connectivity failure.</text>'
-    )
-    return (
-        '<svg xmlns="http://www.w3.org/2000/svg" width="1060" height="480">'
-        '<rect width="100%" height="100%" fill="white"/>'
-        + "".join(elements)
-        + "</svg>\n"
-    )
+    for panel, altitude in enumerate(value(geometry["relay_altitudes_m"])):
+        top = 95 + panel * 230
+        elements.append(f'<text x="25" y="{top}" style="font:bold 18px Arial">Relay altitude: {altitude:g} m</text>')
+        for col, separation in enumerate(separations):
+            elements.append(f'<text x="{180 + col * 108}" y="{top+25}" text-anchor="middle" style="font:14px Arial">{separation} km</text>')
+        for r, dwell in enumerate(value(inputs["sweep"]["dwell_min"])):
+            y = top + 36 + r * 31
+            elements.append(f'<text x="115" y="{y+20}" text-anchor="end" style="font:14px Arial">{dwell} min</text>')
+            for col, separation in enumerate(separations):
+                row = next(v for v in rows if v["relay_altitude_m"] == altitude and v["separation_km"] == separation and v["dwell_min"] == dwell)
+                x = 130 + col * 108
+                color = "#172033" if "PRACTICAL" in row["state"] else "white"
+                elements.append(f'<rect x="{x}" y="{y}" width="102" height="27" rx="3" fill="{colors[row["state"]]}"/>')
+                elements.append(f'<text x="{x+51}" y="{y+19}" text-anchor="middle" fill="{color}" style="font:bold 12px Arial">{codes[row["state"]]}</text>')
+    elements.extend(['<text x="25" y="795" style="font:14px Arial">Columns: endpoint separation. Rows: on-station dwell.</text>',
+                     '<text x="25" y="820" style="font:13px Arial">PASS: relay benefit + physical bounds. EXCLUDED: finite closure outside bounds.</text>',
+                     '<text x="25" y="843" style="font:13px Arial">NO CLOSE: no finite carrier solution. LINK FAIL: relay connectivity gate fails.</text>'])
+    return '<svg xmlns="http://www.w3.org/2000/svg" width="810" height="865"><rect width="100%" height="100%" fill="white"/>' + "".join(elements) + '</svg>\n'
 
 
 def architecture_dependencies_figure():

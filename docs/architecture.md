@@ -4,6 +4,19 @@
 
 The Relay UAS is a small multirotor that positions a modular communications relay payload where airborne geometry can help a blocked or distant path. The proposed architecture assigns different jobs to the aircraft and payload: the aircraft provides flight, power, payload support, and recovery functions; the payload relays mission traffic as a black box. Three commitments organize the assessment: black-box payload abstraction, explicit mechanical/electrical support, and logical separation of carrier control from relay traffic.
 
+Read this page after the [overview](../README.md). Its purpose is to explain which part of the aircraft does each job. “Black box” means the payload is described by its external interfaces and resource needs, not its internal radio implementation.
+
+## Follow four flows
+
+Start with the 10 km, 120 m relay example in the overview. The payload carries the outbound message; the aircraft must hold the payload where both hops can work. These responsibilities connect through four different flows:
+
+1. **Mission traffic:** ground endpoint → relay payload → remote endpoint. Return traffic belongs to the conceptual architecture but is not calculated by the outbound link model.
+2. **Carrier control:** operator → platform communications → flight avionics → propulsion control. Navigation and health information support this intended behavior; performance is unverified.
+3. **Electrical energy:** battery → distribution → propulsion and regulated avionics/payload branches. The payload's constant DC allowance enters the hover-resource calculation.
+4. **Mechanical loads:** payload → mount → airframe → propulsion-supported aircraft. Mass allowances represent this burden; they are not a load or stress analysis.
+
+The following views separate those concerns. Read arrows as the named connection or intended flow, not as proof of implemented behavior.
+
 ## System boundary
 
 ![System boundary showing the carrier, relay payload, and external actors](figures/system-boundary.svg)

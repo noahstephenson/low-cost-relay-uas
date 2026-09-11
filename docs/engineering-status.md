@@ -2,6 +2,8 @@
 
 [Overview](../README.md) · [Architecture](architecture.md) · [Feasibility](feasibility.md) · **Engineering Status** · [Reference](reference/README.md)
 
+Read this after [Feasibility](feasibility.md). The 30-minute example passes an analysis screen; this page explains why that is still different from a demonstrated aircraft.
+
 The project has a coherent model-level architecture, logical interfaces, traceable requirements, and a reproducible exploratory feasibility analysis. It is not a selected, verified, or approved aircraft.
 
 ![Engineering maturity separated into established work, scope limits, and missing evidence](figures/engineering-status.svg)
@@ -13,7 +15,7 @@ The project has a coherent model-level architecture, logical interfaces, traceab
 | System concept | Carrier, payload boundary, external actors, and mission behavior | An approved operating concept or procedure |
 | Architecture | Functions, component roles, power paths, information flows, and degraded-state intent | Selected components, ratings, packaging, or detailed control behavior |
 | Requirements and interfaces | A traceable logical set with explicit unknowns and deferred topics | Approved quantitative targets or endpoint compatibility |
-| Feasibility | Conditional mass–power–battery–endurance–cost behavior | A point design or predicted aircraft performance |
+| Feasibility | Outbound connectivity screening plus conditional carrier resource closure | A point design or predicted aircraft performance |
 | Evidence | Internal model review and reproducible analysis | Prototype, physical verification, or external conformance evidence |
 
 Passing repository checks confirms structural consistency and generated-artifact freshness. It does not demonstrate safety, airworthiness, performance, interoperability, operational readiness, or approval.
@@ -41,12 +43,14 @@ The external logical interfaces also need an authoritative endpoint basis and ac
 
 The repository does not provide payload RF implementation, hardware selection, fabrication or assembly instructions, operating procedures, flight-test instructions, weapon integration, or a deployable communications-system specification. Future digital-payload, ground-vehicle, and broader system-of-systems ideas remain future work rather than implied parts of the current design.
 
-## Recommended next engineering phase
+## If the project proceeds to hardware
 
 1. Obtain owner decisions on the coupled target package and the outstanding safety, health/status, terminology, and sourcing questions.
 2. Re-run the feasibility model against those authorized targets with supported component-class evidence.
 3. Define payload packaging, electrical-service, retention, and operating-environment envelopes.
 4. Develop a physical candidate and verification plan with clear safety and interface authorities.
 5. Gather physical and external evidence before considering a technical-baseline approval.
+
+The current paper can be drafted within the existing scope without executing this future hardware phase. See the [paper-argument test](reference/paper-argument-test.md) for what the existing evidence can support.
 
 For detailed requirements, verification activities, interfaces, traceability, decisions, and evidence records, use the [Engineering Reference](reference/README.md).

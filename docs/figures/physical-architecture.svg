@@ -54,13 +54,13 @@
 <text x="128" y="271" class="body" text-anchor="start"><tspan x="128" dy="0">Controlled lift</tspan><tspan x="128" dy="23">Controllers •</tspan><tspan x="128" dy="23">motors • propellers</tspan></text>
 <rect x="347" y="210" width="205" height="130" rx="14" class="box amber"/>
 <text x="449.5" y="241" class="box-title" text-anchor="middle"><tspan x="449.5" dy="0">Electrical Power</tspan></text>
-<text x="365" y="271" class="body" text-anchor="start"><tspan x="365" dy="0">Energy storage and</tspan><tspan x="365" dy="23">distribution</tspan><tspan x="365" dy="23">Battery • bus •</tspan><tspan x="365" dy="23">regulators</tspan></text>
+<text x="365" y="271" class="body" text-anchor="start"><tspan x="365" dy="0">Stored energy</tspan><tspan x="365" dy="23">Battery / bus /</tspan><tspan x="365" dy="23">regulation</tspan></text>
 <rect x="585" y="210" width="205" height="130" rx="14" class="box blue"/>
 <text x="687.5" y="241" class="box-title" text-anchor="middle"><tspan x="687.5" dy="0">Flight Avionics</tspan></text>
-<text x="603" y="271" class="body" text-anchor="start"><tspan x="603" dy="0">Stabilize •</tspan><tspan x="603" dy="23">navigate • hold</tspan><tspan x="603" dy="23">Health and</tspan><tspan x="603" dy="23">recovery support</tspan></text>
+<text x="603" y="271" class="body" text-anchor="start"><tspan x="603" dy="0">Stabilize and navigate</tspan><tspan x="603" dy="23">Hold / health / recovery</tspan></text>
 <rect x="110" y="375" width="275" height="110" rx="14" class="box blue"/>
 <text x="247.5" y="406" class="box-title" text-anchor="middle"><tspan x="247.5" dy="0">Platform Communications</tspan></text>
-<text x="128" y="436" class="body" text-anchor="start"><tspan x="128" dy="0">Independent aircraft command</tspan><tspan x="128" dy="23">Health / status return</tspan></text>
+<text x="128" y="436" class="body" text-anchor="start"><tspan x="128" dy="0">Separate carrier command</tspan><tspan x="128" dy="23">Health / status return</tspan></text>
 <rect x="430" y="375" width="360" height="110" rx="14" class="box neutral"/>
 <text x="610.0" y="406" class="box-title" text-anchor="middle"><tspan x="610.0" dy="0">Payload Support</tspan></text>
 <text x="448" y="436" class="body" text-anchor="start"><tspan x="448" dy="0">Mechanical retention</tspan><tspan x="448" dy="23">Regulated payload power</tspan></text>

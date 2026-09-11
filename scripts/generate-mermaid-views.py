@@ -16,6 +16,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import textwrap
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -147,12 +148,44 @@ def status_of(index: dict[str, dict[str, Any]], item_id: str) -> str:
 
 
 def flow_diagram(number: str, title: str, scope: str, body: Iterable[str], note: str = "") -> list[str]:
+    """Keep relationships in the picture and full labels in a companion table."""
+    details = []
+    compact = []
+    for line in body:
+        def compact_node(match):
+            key, label = match.groups()
+            parts = label.split("<br/>")
+            if key in {"OUTER", "INNER", "PAYLOAD"}:
+                details.append((key, label))
+                return f'{key}["{dict(OUTER="External context", INNER="Relay UAS", PAYLOAD="Payload boundary")[key]}"]'
+            details.append((key, label.replace("<br/>", "; ")))
+            if len(parts) > 1:
+                headings = {"ACCEPTED": "Accepted review", "EXECUTED": "Latest model review", "PASS": "Review pass", "OPEN": "Review with gaps", "PHYSICAL": "Physical evidence needed", "EXTERNAL": "External authority needed", "DEFERRED": "Deferred scope"}
+                parts[0] = headings.get(key, parts[0])
+                name = textwrap.shorten(parts[1], width=48, placeholder="...")
+                label = parts[0] + "<br/>" + "<br/>".join(textwrap.wrap(name, width=25))
+            else:
+                label = "<br/>".join(textwrap.wrap(label, width=25))
+            return f'{key}["{label}"]'
+        line = re.sub(r'(\w+)\["([^"\n]+)"\]', compact_node, line)
+        def compact_edge(match):
+            label = match.group(1)
+            if len(label.split()) <= 4 and "<br/>" not in label:
+                return match.group(0)
+            ref = f"R{sum(k.startswith('R') and k[1:].isdigit() for k, _ in details) + 1}"
+            details.append((ref, label.replace("<br/>", "; ")))
+            return f'|"{ref}"|'
+        compact.append(re.sub(r'\|"([^"\n]+)"\|', compact_edge, line))
     lines = [f"### {number}. {title}", "", f"Configuration scope: `{scope}`."]
     if note:
         lines.extend(["", note])
-    lines.extend(["", "<details>", f"<summary>Open {title.lower()} diagram</summary>", "", "```mermaid", "flowchart LR", f"    %% Configuration scope: {scope}"])
-    lines.extend(body)
-    lines.extend(["```", "", "</details>", ""])
+    lines.extend(["", "<details>", f"<summary>Open {title.lower()} diagram and detail table</summary>", "", "```mermaid",
+                  '%%{init: {"theme": "neutral", "htmlLabels": false, "themeVariables": {"fontSize": "18px"}, "flowchart": {"htmlLabels": false, "nodeSpacing": 35, "rankSpacing": 45}}}%%',
+                  ("flowchart TB" if number in {"2", "4B", "9B", "11A", "11B"} else "flowchart LR"), f"    %% Configuration scope: {scope}"])
+    lines.extend(compact)
+    lines.extend(["```", "", "The picture shows connections. Full names, status qualifiers, and numbered relationship labels are below.", "", "| Diagram key | Full description |", "|---|---|"])
+    lines.extend(f"| `{key}` | {label.replace('|', '/')} |" for key, label in details)
+    lines.extend(["", "</details>", ""])
     return lines
 
 
@@ -160,8 +193,15 @@ def sequence_diagram(number: str, title: str, scope: str, body: Iterable[str], n
     lines = [f"### {number}. {title}", "", f"Configuration scope: `{scope}`."]
     if note:
         lines.extend(["", note])
-    lines.extend(["", "<details>", f"<summary>Open {title.lower()} diagram</summary>", "", "```mermaid", "sequenceDiagram", f"    %% Configuration scope: {scope}"])
-    lines.extend(body)
+    lines.extend(["", "<details>", f"<summary>Open {title.lower()} diagram</summary>", "", "```mermaid", '%%{init: {"theme": "neutral"}}%%', "sequenceDiagram", f"    %% Configuration scope: {scope}"])
+    for line in body:
+        if " as " in line:
+            prefix, label = line.split(" as ", 1)
+            line = prefix + " as " + "<br/>".join(textwrap.wrap(label, width=20))
+        elif ":" in line:
+            prefix, label = line.split(":", 1)
+            line = prefix + ": " + "<br/>".join(textwrap.wrap(label.strip(), width=42))
+        lines.append(line)
     lines.extend(["```", "", "</details>", ""])
     return lines
 
@@ -170,7 +210,7 @@ def state_diagram(number: str, title: str, scope: str, body: Iterable[str], note
     lines = [f"### {number}. {title}", "", f"Configuration scope: `{scope}`."]
     if note:
         lines.extend(["", note])
-    lines.extend(["", "<details>", f"<summary>Open {title.lower()} diagram</summary>", "", "```mermaid", "stateDiagram-v2", f"    %% Configuration scope: {scope}"])
+    lines.extend(["", "<details>", f"<summary>Open {title.lower()} diagram</summary>", "", "```mermaid", '%%{init: {"htmlLabels": false, "theme": "neutral"}}%%', "stateDiagram-v2", f"    %% Configuration scope: {scope}"])
     lines.extend(body)
     lines.extend(["```", "", "</details>", ""])
     return lines
@@ -231,6 +271,7 @@ def generated_header() -> list[str]:
         "`CFG-REP`/`CFG-DOM` resource decomposition.",
         "This report is the ID-rich engineering drill-down. Plain-language canonical",
         "figures are generated separately under `docs/figures/`.",
+        "Start with [Architecture](../architecture.md) for the subsystem explanation. These reference views retain stable IDs; full qualifiers live in the companion tables.",
         "",
         "## Configuration and context views",
         "",
@@ -404,7 +445,7 @@ def resource_diagrams(catalogs: dict[str, dict[str, Any]], index: dict[str, dict
     ]
     lines.extend(flow_diagram(
         "4D",
-        "How the relay payload is isolated",
+        "How the relay payload is bounded",
         "CFG-REP / CFG-DOM",
         body,
         "`IFC-INT-010` stays inside the payload black-box envelope. Only `IFC-INT-003` and `IFC-INT-007` cross from platform to payload.",
@@ -562,7 +603,10 @@ def relay_sequence(index: dict[str, dict[str, Any]]) -> list[str]:
         "    end",
         "    Note over Ground,Remote: SCN-003 / SCN-004 logical relay only - external paths undefined",
     ]
-    return sequence_diagram("7", "How command and telemetry flow", "CFG-REP / CFG-DOM", body)
+    return sequence_diagram("7A", "Carrier command path", "CFG-REP / CFG-DOM", body[:2] + [body[5]],
+                            "Carrier command is logically separate from the relay payload; isolation and link performance are not verified.") + sequence_diagram(
+        "7B", "Relayed mission traffic", "CFG-REP / CFG-DOM", body[2:5] + body[6:],
+        "The conceptual service includes return telemetry. Only outbound stationary service is quantitatively screened.")
 
 
 def degradation_sequence(index: dict[str, dict[str, Any]]) -> list[str]:
@@ -744,18 +788,22 @@ def trace_view(index: dict[str, dict[str, Any]]) -> list[str]:
         '    IX_002 -->|"supports"| FUN_REL_01',
         '    FUN_REL_01 -->|"allocated to"| CMP_COM_01',
         '    CMP_COM_01 -->|"external interface"| IFC_EXT_001',
-        '    IFC_EXT_001 -->|"allocated requirement"| REQ_FUN_001',
-        '    REQ_FUN_001 -->|"model analysis"| VER_001',
-        '    REQ_FUN_001 -.->|"external conformance"| VER_009',
+        '    IFC_EXT_001 -->|"allocated requirement"| REQ_001',
+        '    REQ_001 -->|"model analysis"| VER_001',
+        '    REQ_001 -.->|"external conformance"| VER_009',
         '    VER_009 -.->|"authority and evidence unresolved"| GAP_IFC_001',
     ])
-    return flow_diagram(
-        "11",
-        "Example end-to-end relay trace",
-        "CFG-REP / CFG-DOM",
-        body,
-        "The thread is readable end to end, but candidate relationships and evidence gaps remain visible.",
-    )
+    # Split the long trace at the payload component; preserve every relationship.
+    first_ids = ids[:7]
+    second_ids = ids[6:]
+    edges = [line for line in body if '-->' in line or '-.->' in line]
+    first = ["    " + node(index, i, status_of(index, i)) for i in first_ids] + edges[:6]
+    second = ["    " + node(index, i, status_of(index, i)) for i in second_ids] + edges[6:]
+    return flow_diagram("11A", "Relay trace: need to payload", "CFG-REP / CFG-DOM", first,
+                        "Follow the need to its allocated payload role; continue at CMP-COM-01 in 11B.") + flow_diagram(
+        "11B", "Relay trace: payload to evidence", "CFG-REP / CFG-DOM", second,
+        "Continue from CMP-COM-01 in 11A. Model review and external conformance are different evidence obligations.")
+
 
 
 def governance_view(index: dict[str, dict[str, Any]]) -> list[str]:

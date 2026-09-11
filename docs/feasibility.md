@@ -2,6 +2,17 @@
 
 [Overview](../README.md) · [Architecture](architecture.md) · **Feasibility** · [Engineering Status](engineering-status.md) · [Reference](reference/README.md)
 
+Read this after [Architecture](architecture.md). This page follows the existing example from an assumed mission to a classified result; it then explains the supporting carrier sensitivity study.
+
+## From assumptions to a decision
+
+1. **Can the relay see both endpoints?** At 10 km separation, the baseline screen is 4 km from the ground endpoint. A midpoint relay at 120 m has a straight-line height of 96 m at that screen, above its 80 m top. The direct path is only 40 m high there and is blocked. This is a stylized geometry calculation.
+2. **Are clear paths strong enough?** Free-space loss, assumed gains/losses, and transmit power give received power. Subtracting the assumed receiver threshold gives link margin in dB. A clear path still fails if that margin is negative; bandwidth is a declared service context, not a throughput prediction.
+3. **Can the carrier support the dwell?** Payload mass/DC demand and time on station enter the hover-resource model. Altitude affects the link calculation but does not change the assumed atmospheric density in carrier sizing.
+4. **Which gate governs?** Direct sufficiency is checked first, then relay connectivity, analytical closure, and exploratory physical limits. A connectivity label can conceal a simultaneous carrier failure; row-level flags preserve both facts.
+
+The [mission inputs](../analysis/mission-connectivity-inputs.yaml), [payload cases](../analysis/relay-payloads.yaml), and [carrier inputs](../analysis/feasibility-inputs.yaml) supply assumptions. The [mission model](../analysis/mission_connectivity.py) calls the [carrier model](../analysis/feasibility.py), writes [case-level results](../analysis/results/integrated-tradespace.csv), and summarizes the classification. The following equations explain that data flow rather than introducing additional physics.
+
 ## The question
 
 Under what declared mission demands can the proposed small relay-UAS architecture provide useful connectivity while supporting its payload within exploratory physical bounds? The integrated analysis addresses that question; the broader carrier sweep explains supporting resource sensitivities. Neither sizes a selected aircraft.
@@ -25,6 +36,8 @@ Longer hover time is not a battery-only problem:
 5. The larger battery increases gross mass, so hover power and battery demand rise again.
 
 The relaxed iteration diagnoses the coupled loop, while a branch-aware affine calculation determines whether a finite analytical closure exists. As dwell time grows, the feedback becomes stronger: the battery must carry energy for both the aircraft and the additional battery mass caused by the endurance target.
+
+**Disk loading** is aircraft weight divided by total rotor disk area. Holding it constant lets rotor area grow with gross mass; it does not represent a fixed physical airframe.
 
 For each fixed battery-sizing branch, the existing constant-disk-loading model has the form
 
@@ -59,6 +72,8 @@ The existing baseline cases at 10 km endpoint separation and 120 m relay altitud
 The 15 kg mass, 0.75 m rotor, and 1.5 m span boundaries are exploratory, not owner requirements. Span is twice equivalent rotor diameter, so rotor and span checks are redundant. Integrated physical pass is different from the standalone carrier cost/battery-fraction acceptance classes below. See [research status](IEEE_AERO_2027_RESEARCH_STATUS.md) for scenario assumptions, counting precedence, and limitations.
 
 ## Supporting carrier sensitivity inputs
+
+This supporting sweep has different payload ranges from the primary 0.20 kg / 14 W case; its counts must not be added to the 90 mission cases.
 
 The analysis varies payload mass and electrical demand, on-station endurance, battery performance, rotor loading and efficiency, environmental power margin, reserve, structural and propulsion allowances, and broad carrier-cost factors. It also checks conditional mass, cost, battery-fraction, and discharge boundaries.
 

@@ -185,8 +185,8 @@ The reference slice at 50 W payload demand shows three regions:
 
 ### INFEASIBLE
 
-- At `45–60 min`, the reference loop generally enters battery-dominated growth and exceeds a practical analysis boundary or the numerical-analysis guard.
-- The representative `1.5 kg`, `100 W`, `45 min` point is beyond the practical analysis boundaries. Where iteration does not converge within its configured limit, the independent analytical closure diagnostic is reported separately. This remains a conditional architecture result, not a component sizing result.
+- At `45 min`, finite reference solutions exceed analysis boundaries; at `60 min`, the reference model has mathematical nonclosure. The numerical guard is diagnostic and does not determine either class.
+- The representative `1.5 kg`, `100 W`, `45 min` point is beyond the practical analysis boundaries. The analytical closure remains the reported physical state even when iteration reaches its limit. This remains a conditional architecture result, not a component sizing result.
 - The adverse assumption bundle makes every grid point infeasible. This rules out
   claiming robust feasibility without bounding efficiency and structural quality.
 

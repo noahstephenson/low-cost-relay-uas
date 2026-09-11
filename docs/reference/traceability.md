@@ -24,7 +24,7 @@ Station-keeping capability → position-and-hold scenario → flight behavior �
 
 **Recover after payload loss**
 
-Degraded scenario → independent aircraft control → recovery mode → **Recover after payload loss (REQ-007)** → model review recorded; physical recovery evidence absent.
+Degraded scenario → separate carrier-control intent → recovery mode → **Recover after payload loss (REQ-007)** → model review recorded; physical recovery evidence absent.
 
 ## Complete relationship register
 
