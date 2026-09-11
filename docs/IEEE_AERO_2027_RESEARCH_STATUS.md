@@ -4,9 +4,21 @@ Working title: **System Architecture and Mission Feasibility of a Multirotor Com
 
 Corrective successor to commit `2eb84259573cf7e0f216bc11002d65dbdb0f32f3`, tag `relay-uas-research-freeze-v1`. The original frozen tag is preserved. See [corrective record](reference/research-corrective-v1.md).
 
-## Frozen research question
+## Aircraft-centered research question
 
-Under what mission geometries does a multirotor airborne relay architecture provide a connectivity benefit over a direct link, and how do payload and endurance requirements constrain physical realizability?
+What architecture lets a small multirotor support airborne relay service, and under what declared mission demands does that architecture remain plausible?
+
+The subject is the relay aircraft: its mission role, subsystem responsibilities, payload-support interfaces, and resource limitations. The existing connectivity and carrier models provide a conditional assessment of that architecture. This framing update follows corrective commit `2d19310abc4df22e6a662ec03436c6938c1751a6` without changing its equations, inputs, grids, classifications, or results.
+
+Examination of a recovered relay aircraft is background motivation only. No paper claim depends on provenance, exact reconstruction, or measured performance of that article. Historical replica and domestic-sourcing configuration identifiers and evidence records remain intact; the paper is organized around the general relay-UAS architecture.
+
+## Proposed contributions and evidence
+
+1. **An explicit small relay-UAS architecture:** black-box relay payload, mechanical/electrical payload support, and logically separate carrier control and relay traffic. This is a documented architecture allocation, not demonstrated fault isolation or a claim that these established principles are new.
+2. **A conditional service envelope for that architecture:** the existing geometry/link screen and carrier resource closure jointly identify where the declared outbound hover-dwell service passes exploratory physical bounds. This is shared-payload screening, not joint radio/vehicle optimization or full-mission validation.
+3. **Decision-relevant failure distinctions:** connectivity failure, finite closure outside physical bounds, and mathematical nonclosure identify different limitations on the small aircraft. Their value is in explaining which assumptions would need to change, not in treating standard equations as novel methods.
+
+The [architecture-to-evidence table](architecture.md#architecture-to-evidence-assessment) separates modeled responsibilities from quantitative support and remaining gaps. The [worked dwell example](feasibility.md#primary-relay-uas-result) uses the existing 30-, 45-, and 60-minute cases. The full prepare-to-recover mission remains a conceptual responsibility sequence; only stationary one-way dwell is quantitatively assessed.
 
 ## Current experiment
 
@@ -86,7 +98,7 @@ Span is defined as twice equivalent rotor diameter: the 1.5 m span and 0.75 m ro
 
 The public-aircraft comparison is a vehicle-scale sanity check, not aircraft validation. It has no matched mission, calibration, residual, or endurance-prediction basis.
 
-## Claims supported
+## Findings supported by calculations
 
 - In the declared stylized screen family, relay clearance altitude moves according to screen height and location rather than being unique to the baseline screen.
 - The transition from blocked to clear visibility can be an architecture decision boundary; after clearance, link margin and endurance/practical boundaries determine the remaining feasible region.
@@ -102,4 +114,4 @@ The public-aircraft comparison is a vehicle-scale sanity check, not aircraft val
 
 ## Stop gate
 
-This minimum obstruction sensitivity is complete. Stop here for review; no manuscript prose, terrain data, higher-fidelity RF model, optimization, vehicle bundles, or parameter tuning is implied.
+The existing research scope remains frozen. The paper framing now centers the relay aircraft and uses the completed analyses as evidence. No terrain data, higher-fidelity RF model, optimization, new vehicle or payload families, or parameter tuning is needed for this bounded argument. Affordability, physical validation, operational performance, and broader mission-feasibility claims remain unresolved.

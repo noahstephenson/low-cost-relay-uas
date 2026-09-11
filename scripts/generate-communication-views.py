@@ -257,7 +257,7 @@ def project_picture(model: dict[str, Any], index: dict[str, dict[str, Any]], vie
     assert_interface(model, "IFC-INT-007", "CMP-MNT-01", "CMP-COM-01")
     parts = [
         lines_text(40, 48, [view["title"]], "title"),
-        lines_text(40, 78, ["Aircraft control stays separate from the mission traffic that passes through the payload."], "subtitle"),
+        lines_text(40, 78, ["Architecture intent: carrier control and relayed mission traffic use separate logical paths."], "subtitle"),
         '<rect x="300" y="108" width="600" height="470" rx="24" class="boundary" style="fill:#fbfcfe;stroke:#b5c0cf;stroke-width:1.75;stroke-dasharray:12 8"/>',
         f'<text x="330" y="143" style="font-size:15px;font-weight:700;fill:#607087;letter-spacing:1px">{escape(display(index, "OP-002").upper())}</text>',
         lines_text(870, 143, ["product boundary"], "small", "end"),
@@ -295,7 +295,7 @@ def project_picture(model: dict[str, Any], index: dict[str, dict[str, Any]], vie
             [(747.5, 338), (747.5, 372), (760, 372), (760, 405)],
             "Regulated power", "amber", label_position=(790, 367),
         ),
-        '<text x="600" y="625" text-anchor="middle" style="font-size:18px;font-weight:700;fill:#26364d">Mission traffic passes through the relay payload; aircraft control remains independent.</text>',
+        '<text x="600" y="625" text-anchor="middle" style="font-size:18px;font-weight:700;fill:#26364d">Logical control separation is intended; physical failure isolation is not demonstrated.</text>',
     ]
     return svg_document(
         view["title"], view["question"], "\n".join(parts), view["object_refs"],
@@ -486,7 +486,7 @@ def mission_sequence(model: dict[str, Any], index: dict[str, dict[str, Any]], vi
         parts.append(arrow(x1, y, x2, y, label, kind, kind == "green" and x1 > x2, y - 10))
     parts.append(arrow(390, 560, 90, 560, "8  Monitor health / status", "blue", True, 550))
     parts.append(arrow(390, 620, 90, 620, "9  Recover and return to Ground Safe", "blue", False, 610))
-    parts.append(lines_text(600, 680, ["Architecture sequence only; exact readiness and recovery criteria remain unresolved."], "small", "middle"))
+    parts.append(lines_text(600, 680, ["Conceptual mission sequence; quantitative analysis covers stationary outbound relay service only."], "small", "middle"))
     return svg_document(
         view["title"], view["question"], "\n".join(parts), view["object_refs"],
         view["tier"], view["audience"],
@@ -532,7 +532,7 @@ def degraded_behavior(model: dict[str, Any], index: dict[str, dict[str, Any]], v
         '<path d="M 1018 455 V 640 H 20 V 206 H 35" class="arrow blue" marker-end="url(#arrow-blue)"/>',
         lines_text(555, 630, ["land, recover, and return to Ground Safe"], "edge-label", "middle"),
         lines_text(40, 405, ["Defined:"], "section"),
-        lines_text(40, 435, ["• Independent platform control", "• Degraded and recovery states", "• Normal recovery path"], "body"),
+        lines_text(40, 435, ["• Separate control path (intent)", "• Degraded and recovery states", "• Normal recovery path"], "body"),
         lines_text(40, 535, ["Not yet defined:"], "section"),
         lines_text(40, 565, ["• Detection thresholds", "• Recovery criteria and physical behavior", "• Safety acceptance evidence"], "body"),
     ]

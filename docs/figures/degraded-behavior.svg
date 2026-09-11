@@ -81,7 +81,7 @@
 <path d="M 1018 455 V 640 H 20 V 206 H 35" class="arrow blue" marker-end="url(#arrow-blue)"/>
 <text x="555" y="630" class="edge-label" text-anchor="middle"><tspan x="555" dy="0">land, recover, and return to Ground Safe</tspan></text>
 <text x="40" y="405" class="section" text-anchor="start"><tspan x="40" dy="0">Defined:</tspan></text>
-<text x="40" y="435" class="body" text-anchor="start"><tspan x="40" dy="0">• Independent platform control</tspan><tspan x="40" dy="23">• Degraded and recovery states</tspan><tspan x="40" dy="23">• Normal recovery path</tspan></text>
+<text x="40" y="435" class="body" text-anchor="start"><tspan x="40" dy="0">• Separate control path (intent)</tspan><tspan x="40" dy="23">• Degraded and recovery states</tspan><tspan x="40" dy="23">• Normal recovery path</tspan></text>
 <text x="40" y="535" class="section" text-anchor="start"><tspan x="40" dy="0">Not yet defined:</tspan></text>
 <text x="40" y="565" class="body" text-anchor="start"><tspan x="40" dy="0">• Detection thresholds</tspan><tspan x="40" dy="23">• Recovery criteria and physical behavior</tspan><tspan x="40" dy="23">• Safety acceptance evidence</tspan></text>
 </svg>

@@ -2,7 +2,7 @@
 
 [Overview](../README.md) · **Architecture** · [Feasibility](feasibility.md) · [Engineering Status](engineering-status.md) · [Reference](reference/README.md)
 
-The Relay UAS is a small multirotor that positions a modular communications relay payload where airborne geometry can help a blocked or distant path. The aircraft and the payload have different jobs: the aircraft flies, powers, carries, and recovers; the payload relays mission traffic as a black box.
+The Relay UAS is a small multirotor that positions a modular communications relay payload where airborne geometry can help a blocked or distant path. The proposed architecture assigns different jobs to the aircraft and payload: the aircraft provides flight, power, payload support, and recovery functions; the payload relays mission traffic as a black box. Three commitments organize the assessment: black-box payload abstraction, explicit mechanical/electrical support, and logical separation of carrier control from relay traffic.
 
 ## System boundary
 
@@ -10,13 +10,13 @@ The Relay UAS is a small multirotor that positions a modular communications rela
 
 The product boundary contains the carrier aircraft, its payload-support hardware, and the relay payload. The carrier includes structure, propulsion, stored energy and power distribution, flight avionics, navigation, platform communications, and payload mounting. The payload is inside the boundary as a bounded physical resource, but its radio implementation is not defined here.
 
-Operators, ground equipment, the remote aircraft, maintenance personnel, external services, spectrum authorities, and future platforms are outside the product boundary. A recovered article informs the study at the role level only; it is not an inherited design baseline. The current replica and domestic-sourcing candidate configurations are under study, not approved designs.
+Operators, ground equipment, the remote aircraft, maintenance personnel, external services, spectrum authorities, and future platforms are outside the product boundary. Examination of a recovered article is background motivation only; the paper does not depend on its provenance, exact reconstruction, or measured performance. Replica and domestic-sourcing candidate identifiers are preserved as repository configuration history and remain unapproved; they do not organize the paper's argument.
 
 ## Mission behavior
 
 ![Mission sequence from preparation through recovery](figures/mission-sequence.svg)
 
-The normal mission is conceptual rather than procedural. The operator prepares and launches the aircraft, moves it to a useful relay position, holds that position, relays outbound command and return telemetry, monitors aircraft health, then recovers the aircraft. The sequence explains responsibility and information flow without claiming detailed readiness, station-keeping, or recovery criteria are known.
+The normal mission is conceptual rather than procedural. The operator prepares and launches the aircraft, moves it to a useful relay position, holds that position, relays outbound command and return telemetry, monitors aircraft health, then recovers the aircraft. The sequence explains intended responsibility and information flow. Quantitative evidence covers stationary, one-way Ground → Relay → Remote dwell only; it does not establish transit/recovery energy, return telemetry, station-keeping accuracy, or carrier-control performance.
 
 ## Major physical architecture
 
@@ -28,7 +28,7 @@ The normal mission is conceptual rather than procedural. The operator prepares a
 | Propulsion | Produces lift through motor controllers, motors, and propellers. |
 | Electrical power | Stores energy, distributes main power, and provides regulated branches. |
 | Flight avionics | Stabilizes, navigates, holds station, manages aircraft modes, and reports health/status. |
-| Platform communications | Receives the Relay UAS's own commands independently of the payload. |
+| Platform communications | Provides the intended carrier-command path, logically separate from relay traffic. |
 | Payload support | Retains the payload and provides its regulated electrical interface. |
 | Relay payload | Passes mission traffic between the external endpoints without being specified internally. |
 
@@ -42,7 +42,7 @@ The upper lane controls the carrier aircraft. The operator sends platform comman
 
 The lower lane carries remote-aircraft mission traffic. Ground-originated command enters the relay payload and is passed toward the remote aircraft. Return telemetry follows the reverse path. The carrier transports and powers that payload, but does not use the relayed traffic to fly itself.
 
-This separation is the key architectural decision. The current carrier-to-payload boundary has two crossings: regulated payload power and mechanical retention. A later digital payload-management connection is a future configuration, not part of the current candidate.
+This logical separation is an architecture commitment, not demonstrated failure isolation. Shared power and physical dependencies can still affect both paths; no quantitative control-link or common-cause failure assessment has been performed. The current carrier-to-payload boundary has two crossings: regulated payload power and mechanical retention. A later digital payload-management connection is a future configuration, not part of the current candidate.
 
 ## Power and resources
 
@@ -56,7 +56,7 @@ The diagram establishes the resource path and why a payload-power loss differs f
 
 ![Mode flow showing relay degradation and recovery intent](figures/degraded-behavior.svg)
 
-Relay degradation is distinct from loss of aircraft control. If relay service is impaired while the independent platform-control path remains available, the architecture calls for return and recovery. If platform control is also impaired, the model records an unresolved safety gap instead of assuming a response.
+Relay degradation is distinct from loss of aircraft control. If relay service is impaired while the separate platform-control path remains available, the architecture calls for return and recovery. If platform control is also impaired, the model records an unresolved safety gap instead of assuming a response.
 
 The study has not established detection thresholds, detailed control behavior, recovery criteria, or physical recovery performance. Those require an accepted safety objective and later evidence.
 
@@ -65,6 +65,18 @@ The study has not established detection thresholds, detailed control behavior, r
 The architecture deliberately keeps the relay payload as a black box. It specifies the support the carrier must provide—mass and volume accommodation, regulated power, and mechanical retention—without defining the payload's internal radio design.
 
 The current study also does not define component selections, electrical ratings, connector families, packaging geometry, external endpoint compatibility, spectrum authorization, detailed operational procedures, or a safety or airworthiness case. These are open decisions, evidence needs, or intentionally out-of-scope topics—not hidden assumptions.
+
+## Architecture-to-evidence assessment
+
+Architecture definitions establish responsibilities; calculations test selected resource and service assumptions. They are different forms of evidence.
+
+| Architecture commitment | Modeled support | Quantitative evidence | Unresolved limitation |
+|---|---|---|---|
+| Black-box relay payload | Relay payload and antenna envelope in the [architecture catalog](../model/architecture.yaml); fixed payload cases in the [payload inputs](../analysis/relay-payloads.yaml) | Primary 0.20 kg / 14 W case enters carrier sizing; fixed RF assumptions enter the connectivity screen | Representative payload is a resource proxy, not identification of the examined radio; throughput, compatibility, and actual operating consumption are unverified |
+| Explicit mechanical and electrical payload support | Regulated power `IFC-INT-003` and retention `IFC-INT-007`, documented in the [interface reference](reference/interfaces.md) | Existing carrier calculation propagates payload mass/DC demand into mass, power, energy, and exploratory rotor/span checks | No retention-load analysis, packaging fit, thermal assessment, or qualified electrical interface |
+| Logical separation of carrier control and relay traffic | Platform-command path, avionics, and distinct information lanes in the architecture catalog | No quantitative verification of this commitment; connectivity calculations cover the relayed outbound path only | No proven fault isolation, carrier-control availability, reverse-link performance, or recovery capability |
+
+The [integrated results](../analysis/results/integrated-tradespace-summary.json) assess a declared mission envelope for this architecture. They do not validate every subsystem responsibility. Fixed payload assumptions connect the link and carrier calculations; the model does not resize radio equipment from link margin.
 
 ## Go deeper
 

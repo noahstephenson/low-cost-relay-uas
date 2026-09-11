@@ -71,5 +71,5 @@
 <text x="240.0" y="550" class="edge-label" text-anchor="middle">8  Monitor health / status</text>
 <line x1="390" y1="620" x2="90" y2="620" class="arrow blue" marker-end="url(#arrow-blue)"/>
 <text x="240.0" y="610" class="edge-label" text-anchor="middle">9  Recover and return to Ground Safe</text>
-<text x="600" y="680" class="small" text-anchor="middle"><tspan x="600" dy="0">Architecture sequence only; exact readiness and recovery criteria remain unresolved.</tspan></text>
+<text x="600" y="680" class="small" text-anchor="middle"><tspan x="600" dy="0">Conceptual mission sequence; quantitative analysis covers stationary outbound relay service only.</tspan></text>
 </svg>

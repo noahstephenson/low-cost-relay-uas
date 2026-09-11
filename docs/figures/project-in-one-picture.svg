@@ -44,7 +44,7 @@
 </style>
 <rect width="1200" height="700" fill="#ffffff"/>
 <text x="40" y="48" class="title" text-anchor="start"><tspan x="40" dy="0">How the Relay UAS Extends Communications</tspan></text>
-<text x="40" y="78" class="subtitle" text-anchor="start"><tspan x="40" dy="0">Aircraft control stays separate from the mission traffic that passes through the payload.</tspan></text>
+<text x="40" y="78" class="subtitle" text-anchor="start"><tspan x="40" dy="0">Architecture intent: carrier control and relayed mission traffic use separate logical paths.</tspan></text>
 <rect x="300" y="108" width="600" height="470" rx="24" class="boundary" style="fill:#fbfcfe;stroke:#b5c0cf;stroke-width:1.75;stroke-dasharray:12 8"/>
 <text x="330" y="143" style="font-size:15px;font-weight:700;fill:#607087;letter-spacing:1px">RELAY UAS</text>
 <text x="870" y="143" class="small" text-anchor="end"><tspan x="870" dy="0">product boundary</tspan></text>
@@ -87,5 +87,5 @@
 <text x="505" y="367" class="edge-label" text-anchor="middle"><tspan x="505" dy="0">Mechanical mount</tspan></text>
 <path d="M 747.5 338 L 747.5 372 L 760 372 L 760 405" class="arrow amber" marker-end="url(#arrow-amber)"/>
 <text x="790" y="367" class="edge-label" text-anchor="middle"><tspan x="790" dy="0">Regulated power</tspan></text>
-<text x="600" y="625" text-anchor="middle" style="font-size:18px;font-weight:700;fill:#26364d">Mission traffic passes through the relay payload; aircraft control remains independent.</text>
+<text x="600" y="625" text-anchor="middle" style="font-size:18px;font-weight:700;fill:#26364d">Logical control separation is intended; physical failure isolation is not demonstrated.</text>
 </svg>

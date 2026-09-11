@@ -1,10 +1,14 @@
 # Low-Cost Communications Relay UAS
 
-This repository is a model-based systems engineering study of a small uncrewed aircraft that carries a modular communications relay to an advantageous airborne location. It explores the aircraft around the payload; it does not design the payload's radio implementation.
+This repository studies a small multirotor communications relay UAS: its mission role, subsystem responsibilities, payload interfaces, and resource limits. Executable models assess the architecture under declared mission assumptions.
 
-**Research question:** Under what mission geometries does an airborne relay provide useful connectivity, and when can the multirotor physically sustain that service?
+**Paper title:** System Architecture and Mission Feasibility of a Multirotor Communications Relay
 
-![System concept showing independent aircraft control and relayed mission traffic](https://raw.githubusercontent.com/noahstephenson/low-cost-relay-uas/93bc46a86ea4ee24550edd69d8ea76f79dd353f5/docs/figures/project-in-one-picture.svg)
+The study targets IEEE Aerospace 2027, Track 13.01. Examination of a recovered relay aircraft provides background motivation only. The paper does not reconstruct that aircraft or depend on its provenance or measured performance.
+
+**Research question:** What architecture lets a small multirotor support airborne relay service, and under what declared mission demands does that architecture remain plausible?
+
+![System concept showing logically separate aircraft control and relayed mission traffic](docs/figures/project-in-one-picture.svg)
 
 ## The problem
 
@@ -23,44 +27,38 @@ Two information paths are intentionally separate:
 | Aircraft command and control | Lets the operator launch, position, monitor, and recover the Relay UAS. |
 | Relayed mission traffic | Passes remote-aircraft commands outward and telemetry back through the payload. |
 
-The aircraft does not interpret the relayed mission traffic. The current platform-to-payload boundary is limited to regulated power and mechanical retention, so a loss of relay service need not remove aircraft control.
+Three commitments define the proposed architecture: a black-box relay payload, explicit mechanical and electrical payload support, and logically separate carrier control and relay traffic. The carrier does not use relayed mission traffic to fly itself. Separation is architectural intent, not demonstrated failure isolation: shared power, physical dependencies, and control-link performance remain unresolved.
 
 ## Mission
 
 The operating concept is deliberately simple: **Prepare → Launch → Transit → Establish relay position → Relay → Monitor → Recover.**
 
-This is an architecture sequence, not an operating procedure. It describes the behavior the study must support while leaving detailed readiness criteria, flight-control logic, and recovery thresholds for later engineering.
-
-## What the system must accomplish
-
-The requirements are organized around relay service, station keeping, aircraft control and recovery, payload support, power and safety, and portability and affordability. The requirements that most strongly shape the design are the payload envelope, useful on-station endurance, gross mass, cost, battery reserve and recovery behavior, and single-operator handling.
-
-Several of those targets are intentionally still open. The study uses ranges to understand their consequences; it does not convert those ranges into approved requirements.
+This is an architecture sequence, not an operating procedure. The quantitative assessment covers only stationary Ground → Relay → Remote service during hover dwell. Transit, recovery energy, reverse-link service, and carrier-control performance are not quantitatively established.
 
 ## Architecture
 
-The physical architecture combines an airframe, four-corner propulsion, stored energy and power distribution, flight avionics and navigation, a dedicated platform-command path, payload support, and the relay payload. The payload remains a black box, while the carrier architecture makes its support and control responsibilities explicit.
-
-Read [Architecture](docs/architecture.md) for the system boundary, mission behavior, information paths, power flow, and degraded behavior.
+The aircraft allocates lift, energy, navigation, carrier control, and payload-support responsibilities. Quantitative owner targets and component selections remain open. Read [Architecture](docs/architecture.md) for subsystem roles, interfaces, and the evidence supporting them.
 
 ## Why endurance is coupled
 
-Endurance is not a simple battery-capacity choice. Payload mass and power affect aircraft mass and electrical demand. More endurance requires more battery energy; the larger battery increases gross mass; greater mass increases hover power; and that extra power increases the battery demand again.
-
-The feasibility model iterates this feedback loop. It treats gross mass as an output of the coupled design problem rather than a number chosen independently at the start.
+More dwell requires more battery energy; added battery mass raises hover power and battery demand again. The model treats gross mass as an output, using branch-consistent analytical closure and numerical iteration as a verification diagnostic.
 
 ## What the study found
 
-The analysis identifies a limited plausible region for modest payloads and short on-station dwell under exploratory, component-class assumptions. In the reference 50 W payload slice, shorter dwell cases are generally feasible or marginal, 30-minute cases reach a payload-sensitive transition, and every evaluated 45- and 60-minute case is infeasible under the model's analysis boundaries.
+The primary relay-UAS study evaluates 90 separation × dwell × altitude cases with a 0.20 kg payload and a constant 14 W electrical sizing allowance. Its baseline screen scenario produces **18 relay-beneficial physical-boundary passes, 6 finite practical exclusions, 6 mathematical nonclosures, and 60 connectivity failures**. The +12 dB sensitivity produces **6 / 2 / 2 / 80**, respectively. These hierarchical counts describe the declared grid, not success probabilities.
 
-This is a conditional feasibility result, not a selected aircraft or proof that an owner requirement has been met. The main conclusion is straightforward: longer hover time becomes increasingly difficult because of the battery–mass–power feedback.
+At 10 km endpoint separation and 120 m relay altitude in the baseline scenario, 30-minute dwell gives an 8.6203 kg analytical carrier that passes exploratory physical bounds; 45 minutes gives a finite 106.2456 kg result outside those bounds; 60 minutes has no finite closure. The large finite result is an extrapolation, not a proposed aircraft.
+
+The outcomes distinguish connectivity failure, finite carrier burden, and mathematical nonclosure. The broader carrier sweep provides supporting sensitivity analysis. Affordability and operational performance remain unestablished.
+
+Read the [architecture-to-evidence assessment](docs/architecture.md#architecture-to-evidence-assessment), [feasibility interpretation](docs/feasibility.md), and [paper research status](docs/IEEE_AERO_2027_RESEARCH_STATUS.md).
 
 ## What remains unresolved
 
 - The owner must set the payload service, endurance, portability, affordability, environment, reserve, and recovery targets together.
 - Payload packaging, electrical-service, and retention-load envelopes remain open.
 - No hardware has been selected, and no prototype, physical verification, or external-interface conformance evidence exists.
-- Relay frequency, waveform, protocol, link budget, antenna design, and spectrum authorization are outside this study.
+- A low-order link budget uses declared service and antenna-gain assumptions to screen connectivity. Radio implementation, waveform/protocol design, installed antenna performance, and spectrum authorization remain outside the demonstrated evidence.
 
 ## Engineering status
 
