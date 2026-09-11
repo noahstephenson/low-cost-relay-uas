@@ -137,8 +137,8 @@ penalty. Battery, propulsion, structure, and gross mass are recalculated until t
 relative gross-mass change is at most `1×10^-7`, with relaxation `0.55`, a limit of
 200 iterations, and a 50 kg numerical-analysis guard. The guard is reported separately from mathematical finite closure and is not a predicted mass.
 
-Conditional feasibility requires convergence and evaluates gross mass, platform
-cost, battery fraction, and discharge margin against analysis-only boundaries.
+Conditional feasibility requires finite analytical closure and evaluates gross mass, platform
+cost, battery fraction, and discharge margin against analysis-only boundaries. Numerical convergence is diagnostic only and cannot change the finite-state burden or class. These standalone carrier labels differ from the integrated mission classifier, which gates relay benefit, closure, and exploratory physical boundaries.
 Platform cost covers structure, propulsion, avionics, battery, power electronics,
 mount, and other carrier hardware. It excludes the black-box relay payload,
 external systems, labor, integration, shipping, verification, and lifecycle cost.
@@ -150,9 +150,7 @@ Important limitations:
 - Disk loading and efficiency compress rotor geometry and detailed propeller behavior
   into architecture variables.
 - The sweep holds each sampled disk-loading value while allowing total rotor area to
-  grow with gross mass. It does not enforce a maximum rotor diameter, arm length, or
-  packed geometry, so an otherwise feasible point can still fail the future owner
-  portability/packaging envelope.
+  grow with gross mass. The standalone conditional class does not enforce rotor diameter or footprint; the integrated mission classifier separately applies exploratory 15 kg mass, 0.75 m rotor, and 1.5 m span limits. Neither establishes packed geometry or owner-approved portability.
 - Structure and cost are parametric. They require candidate-class evidence before
   supporting selection.
 - Environmental burden is a generic sensitivity multiplier, not a wind requirement.
@@ -239,7 +237,7 @@ The analysis therefore establishes two different battery regimes:
 1. **Short-dwell power-limited region:** battery specific power and propulsion peak
    demand matter as much as energy density.
 2. **Longer-dwell energy-limited region:** specific energy, rotor efficiency, disk
-   loading, and structural growth control whether the loop converges.
+   loading, and structural growth control analytical closure and its finite mass.
 
 The 30-to-45-minute transition is the current reference-model knee, not a requirement
 or universal aircraft limit. Its location moves substantially with the sourced and
@@ -252,9 +250,9 @@ For the representative 30-minute point, the platform-only cost contributors rank
 
 | Category | Estimated cost |
 | -------- | -------------: |
-| Propulsion | `$1,100` |
-| Battery | `$698` |
-| Structure | `$578` |
+| Propulsion | `$1,158` |
+| Battery | `$734` |
+| Structure | `$629` |
 | Avionics | `$350` |
 | Other carrier hardware | `$225` |
 | Power electronics | `$150` |
@@ -341,8 +339,7 @@ hardware boundary, and recovery policy before `REQ-009` can be evaluated.
   can now be included once a navigation concept is proposed.
 - `TS-008` remains externally blocked: no platform-command product or RF parameter
   was introduced.
-- `TS-010` remains open: its generic `1.00–1.30` power multiplier ranks fourth in
-  sensitivity, demonstrating that an approved environment is an upstream need.
+- `TS-010` remains open: its generic `1.00–1.30` power multiplier ranks ninth in the corrected finite-closure aggregate sensitivity. This conditional ranking does not measure its influence on nonclosure; an approved environment remains an upstream need.
 - `TS-011` remains open: reserve fraction is quantitatively relevant, but recovery
   policy and `DEC-003` are not approved.
 

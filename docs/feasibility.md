@@ -67,7 +67,7 @@ For finite analytical closures, endurance is the strongest ranked input; battery
 
 ![How longer dwell drives mass and cost in the reference analysis](../analysis/results/endurance-mass-cost.svg)
 
-The analysis shows two battery regimes. At short dwell, the pack can be limited by the continuous power needed to hover. At longer dwell, energy capacity dominates. The transition near 30 to 45 minutes is a feature of these explored assumptions, not a universal aircraft limit.
+The analysis shows two battery regimes. At short dwell, the pack can be limited by the modeled peak-power allowance. At longer dwell, energy capacity dominates. The sampled reference battery branch switches between 20 and 30 minutes. The steep mass growth between 30 and 45 minutes is a separate approach to analytical nonclosure, not the battery-branch switch or a universal aircraft limit.
 
 ## Engineering implications
 

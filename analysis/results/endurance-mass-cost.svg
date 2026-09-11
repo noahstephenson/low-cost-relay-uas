@@ -4,6 +4,7 @@
 <style>text{font-family:Arial,sans-serif;fill:#172033}.axis{stroke:#607089;stroke-width:1}.grid{stroke:#d9e0ea;stroke-width:1}.label{font-size:12px}.small{font-size:10px}.title{font-size:18px;font-weight:700}</style>
 <rect width="820" height="470" fill="#ffffff"/>
 <text x="20" y="28" class="title">Finite-closure endurance growth in mass and platform cost</text>
+<text x="70" y="452" class="small">Finite closure can exceed exploratory vehicle boundaries; curves are not realizable designs.</text>
 <line x1="70" y1="385.0" x2="760" y2="385.0" class="grid"/>
 <text x="62" y="389.0" text-anchor="end" class="small">0.0 kg</text>
 <text x="768" y="389.0" class="small">$0</text>

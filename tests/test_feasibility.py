@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import math
 import unittest
 
@@ -16,6 +17,21 @@ class FeasibilityModelTests(unittest.TestCase):
 
     def point(self, **overrides):
         return solve_point(self.inputs, self.reference, overrides)
+
+    def test_iteration_budget_cannot_change_analytical_decisions(self):
+        limited = copy.deepcopy(self.inputs)
+        limited["solver"]["max_iterations"] = 1
+        for dwell in (10.0, 30.0, 45.0, 60.0):
+            with self.subTest(dwell=dwell):
+                overrides = dict(payload_mass_kg=0.2, payload_power_w=14.0, endurance_min=dwell)
+                full = solve_point(self.inputs, self.reference, overrides)
+                short = solve_point(limited, self.reference, overrides)
+                self.assertFalse(short["numerical_converged"])
+                for field in ("mathematical_closed", "conditional_class", "feasibility_burden",
+                              "gross_mass_kg", "platform_cost_usd", "practical_constraint_ok"):
+                    self.assertEqual(full[field], short[field], field)
+                if short["mathematical_closed"]:
+                    self.assertEqual(short["feasibility_burden"], max(short["burden_terms"].values()))
 
     def test_units_and_hand_hover_power_case(self):
         result = self.point(payload_mass_kg=0.5, payload_power_w=25.0, endurance_min=20.0)

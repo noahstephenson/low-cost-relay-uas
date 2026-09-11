@@ -392,13 +392,13 @@ def solve_point(
             "battery_fraction": battery_fraction / float(boundaries["reference_battery_mass_fraction"]),
             "discharge": float(boundaries["minimum_reference_discharge_margin"]) / discharge_margin,
         }
-        feasibility_burden = max(burden_terms.values()) if converged else 10.0
-        technically_closes = converged and discharge_margin >= float(
+        feasibility_burden = max(burden_terms.values())
+        meets_marginal_resource_bounds = discharge_margin >= float(
             boundaries["minimum_marginal_discharge_margin"]
         ) and battery_fraction <= float(boundaries["marginal_battery_mass_fraction"])
-        if converged and all(value <= 1.0 for value in burden_terms.values()):
+        if all(value <= 1.0 for value in burden_terms.values()):
             conditional_class = "FEASIBLE"
-        elif technically_closes and gross <= 1.5 * p["analysis_portability_mass_kg"] and platform_cost <= 2.0 * p[
+        elif meets_marginal_resource_bounds and gross <= 1.5 * p["analysis_portability_mass_kg"] and platform_cost <= 2.0 * p[
             "analysis_cost_boundary_usd"
         ]:
             conditional_class = "MARGINAL"
@@ -603,6 +603,7 @@ def line_plot_svg(series: list[tuple[str, list[tuple[float, float, float]]]]) ->
     colors = ["#2266aa", "#d9822b", "#7b4ab5"]
     parts = ['<rect width="820" height="470" fill="#ffffff"/>']
     parts.append('<text x="20" y="28" class="title">Finite-closure endurance growth in mass and platform cost</text>')
+    parts.append('<text x="70" y="452" class="small">Finite closure can exceed exploratory vehicle boundaries; curves are not realizable designs.</text>')
     for step in range(6):
         y = bottom - (bottom - top) * step / 5
         mass_label = mass_max * step / 5
@@ -642,7 +643,7 @@ def sensitivity_svg(rows: list[dict[str, Any]]) -> str:
     bar_h = 26
     max_score = max(float(row["overall_score"]) for row in top_rows)
     parts = ['<rect width="760" height="390" fill="#ffffff"/>']
-    parts.append('<text x="20" y="28" class="title">Sensitivity ranking for conditional feasibility burden</text>')
+    parts.append('<text x="20" y="28" class="title">Finite-closure sensitivity: mass, cost, and burden</text>')
     for index, row in enumerate(top_rows):
         y = top + index * (bar_h + 6)
         value = float(row["overall_score"])
@@ -650,7 +651,8 @@ def sensitivity_svg(rows: list[dict[str, Any]]) -> str:
         parts.append(f'<text x="{left-10}" y="{y+18}" text-anchor="end" class="small">{row["variable"]}</text>')
         parts.append(f'<rect x="{left}" y="{y}" width="{width_bar:.1f}" height="{bar_h}" rx="3" fill="#3973b7"/>')
         parts.append(f'<text x="{left+width_bar+6:.1f}" y="{y+18}" class="small">{value:.3f}</text>')
-    return svg_document(width, height, "\n".join(parts), "Ranked sensitivity of feasibility burden")
+    parts.append('<text x="20" y="385" class="small">RMS Spearman score across mass, cost, burden; nonclosing candidates excluded.</text>')
+    return svg_document(width, height, "\n".join(parts), "RMS of three Spearman correlations; finite-closure subset only")
 
 
 def nullable_round(value: float | None, digits: int) -> float | None:
@@ -786,6 +788,8 @@ def build_outputs(inputs: dict[str, Any]) -> dict[Path, str]:
         ],
         "limitations": [
             "No owner-approved numeric target exists; FEASIBLE/MARGINAL/INFEASIBLE labels are conditional on analysis-only boundaries.",
+            "Numerical convergence is diagnostic only; finite-state burden and conditional class use analytical closure.",
+            "Sensitivity scores are RMS Spearman correlations for mass, cost, and burden, conditional on finite closure; they do not rank causes of nonclosure.",
             "NONCLOSURE means no finite analytical model state; numerical iteration diagnostics are excluded from physical result reporting and mass/cost sensitivity calculations.",
             "Payload volume, station tolerance, command-link geometry/conformance, detailed environment, and CFG-DOM sourcing are UNDETERMINED.",
             "Momentum-theory power is corrected by broad efficiency ranges but is not a substitute for rotor or vehicle test data.",

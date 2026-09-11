@@ -1,5 +1,9 @@
 # IEEE Aerospace 2027 Research Status
 
+Working title: **System Architecture and Mission Feasibility of a Multirotor Communications Relay**
+
+Corrective successor to commit `2eb84259573cf7e0f216bc11002d65dbdb0f32f3`, tag `relay-uas-research-freeze-v1`. The original frozen tag is preserved. See [corrective record](reference/research-corrective-v1.md).
+
 ## Frozen research question
 
 Under what mission geometries does a multirotor airborne relay architecture provide a connectivity benefit over a direct link, and how do payload and endurance requirements constrain physical realizability?
@@ -12,9 +16,13 @@ The reference service is declared in `analysis/mission-connectivity-inputs.yaml`
 
 The mission-feasibility analysis covers the Ground → Relay → Remote direction, stationary hover dwell, constant atmospheric density, declared stylized visibility and link assumptions, and declared exploratory vehicle boundaries. It does not demonstrate transit, climb, descent, return, reverse-link service, full mission energy, bidirectional operational performance, or physical aircraft validation.
 
+The primary payload uses 14 W continuously for carrier energy and power sizing: the manufacturer lists 5 W for receive and 14 W peak. This replaces the freeze's receive-only 5 W assumption with an upper-load allowance; no duty cycle or measured RF/DC operating pair is claimed. Secondary payload DC assumptions remain exploratory; their peak-power fields are source metadata, not separate solver inputs.
+
+The implemented connection is a shared-payload architecture screening: payload mass/DC demand and dwell drive carrier closure; geometry and RF assumptions drive connectivity; the classifier intersects their results. Link margin does not resize radio hardware or electrical demand, and altitude does not alter constant-density hover power.
+
 ## Visibility and propagation scenarios
 
-Free-space loss is applied only to clear segments. The visibility mechanism is an opaque vertical screen, deliberately declared as a stylized clearance scenario rather than terrain prediction, ray tracing, or an operational terrain claim. The direct Ground → Remote path is blocked in every screen case. The Relay → Remote segment is not evaluated against a screen located before the midpoint relay because that segment does not cross it.
+The classifier accepts free-space margins only for clear segments. Exported margins for blocked segments are hypothetical unobstructed-path values, not predictions through the screen. The visibility mechanism is an opaque vertical screen, deliberately declared as a stylized clearance scenario rather than terrain prediction, ray tracing, or an operational terrain claim. The direct Ground → Remote path is blocked in every screen case. The Relay → Remote segment is not evaluated against a screen located before the midpoint relay because that segment does not cross it.
 
 The baseline screen is 80 m at 40% of endpoint separation. Four one-factor geometry sensitivities retain the same separation, dwell, altitude, payload, link, and carrier inputs:
 
@@ -58,11 +66,21 @@ The baseline-obstructed +12 dB sensitivity leaves 6 feasible cases, 2 finite/pra
 
 Secondary payload sensitivity produces the same coarse baseline state boundaries for all three payload cases. This supports only the narrow null result that payload SWaP did not move these coarse boundaries under the declared service assumptions.
 
+## Classification and counting
+
+First applicable gate wins: direct sufficient, relay connectivity failure, mathematical nonclosure, finite closure outside practical boundaries, then relay benefit with physical-boundary pass. The retained `RELAY_BENEFICIAL_AND_FEASIBLE` identifier means only the last of these; it is not the standalone carrier `FEASIBLE` class (which also tests cost and battery fraction), approved requirements compliance, or operational mission success. `RELAY_FUNCTIONAL_VEHICLE_RESOURCE_FAILURE` means mathematical nonclosure of this model.
+
+Counts partition 90 deterministic grid cases, not probabilities or independent observations. Connectivity failure can conceal a simultaneous carrier failure. Before connectivity gating, each primary scenario has 54 physical-boundary passes, 18 finite practical exclusions, and 18 nonclosures; the baseline gate exposes only 6 finite exclusions and 6 nonclosures. JSON reports these separate counts and CSV retains carrier flags. The 1,890 rows include secondary payloads and scenario repetitions.
+
 ## Carrier reporting and boundaries
 
 The carrier solver distinguishes numerical convergence, finite analytical model closure, nonclosure, guard events, and practical-boundary failure. A valid affine closure is reported as the analytical model state even if relaxation has not reached tolerance. Nonclosing cases have no finite model state and no reported mass, power, energy, battery, rotor, or cost result; the explicitly named last iterate is a numerical diagnostic only.
 
+Numerical timeout cannot change finite-state burden or either classifier. Sensitivity scores combine three Spearman correlations (mass, cost, burden) by RMS, conditional on the 2,605 finite closures out of 4,096 candidates; they do not rank causes of nonclosure.
+
 The 15 kg gross-mass ceiling, 0.75 m equivalent rotor-diameter ceiling, and 1.5 m footprint proxy remain explicitly exploratory analysis boundaries, not vehicle requirements, selected-design limits, or validation results.
+
+Span is defined as twice equivalent rotor diameter: the 1.5 m span and 0.75 m rotor limits are redundant, not independent constraints. At reference disk loading the rotor bound implies approximately 10.81 kg, tighter than the 15 kg ceiling. Large finite masses near the affine singularity are mathematical extrapolations, not proposed aircraft.
 
 ## Validation status
 

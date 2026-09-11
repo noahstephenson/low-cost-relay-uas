@@ -1,4 +1,11 @@
 {
+  "classification_order": [
+    "DIRECT_SUFFICIENT",
+    "RELAY_CONNECTIVITY_INFEASIBLE",
+    "RELAY_FUNCTIONAL_VEHICLE_RESOURCE_FAILURE",
+    "MASS_CLOSED_PRACTICAL_CONSTRAINT_FAILURE",
+    "RELAY_BENEFICIAL_AND_FEASIBLE"
+  ],
   "primary_payload_id": "PAY-MESH-OEM",
   "primary_architecture_scenario": "obstructed_reference",
   "primary_unique_mission_cases": 90,
@@ -11,6 +18,11 @@
   "scenario_counts": {
     "clear_reference": {
       "unique_mission_cases": 90,
+      "carrier_counts_before_connectivity_gating": {
+        "finite_practical_pass": 54,
+        "finite_practical_failure": 18,
+        "mathematical_nonclosure": 18
+      },
       "state_counts": {
         "DIRECT_SUFFICIENT": 30,
         "MASS_CLOSED_PRACTICAL_CONSTRAINT_FAILURE": 3,
@@ -21,6 +33,11 @@
     },
     "obstructed_reference": {
       "unique_mission_cases": 90,
+      "carrier_counts_before_connectivity_gating": {
+        "finite_practical_pass": 54,
+        "finite_practical_failure": 18,
+        "mathematical_nonclosure": 18
+      },
       "state_counts": {
         "MASS_CLOSED_PRACTICAL_CONSTRAINT_FAILURE": 6,
         "RELAY_BENEFICIAL_AND_FEASIBLE": 18,
@@ -30,6 +47,11 @@
     },
     "obstructed_adverse": {
       "unique_mission_cases": 90,
+      "carrier_counts_before_connectivity_gating": {
+        "finite_practical_pass": 54,
+        "finite_practical_failure": 18,
+        "mathematical_nonclosure": 18
+      },
       "state_counts": {
         "MASS_CLOSED_PRACTICAL_CONSTRAINT_FAILURE": 2,
         "RELAY_BENEFICIAL_AND_FEASIBLE": 6,
@@ -39,6 +61,11 @@
     },
     "obstruction_sensitivity_h60_x40": {
       "unique_mission_cases": 90,
+      "carrier_counts_before_connectivity_gating": {
+        "finite_practical_pass": 54,
+        "finite_practical_failure": 18,
+        "mathematical_nonclosure": 18
+      },
       "state_counts": {
         "MASS_CLOSED_PRACTICAL_CONSTRAINT_FAILURE": 6,
         "RELAY_BENEFICIAL_AND_FEASIBLE": 18,
@@ -48,6 +75,11 @@
     },
     "obstruction_sensitivity_h100_x40": {
       "unique_mission_cases": 90,
+      "carrier_counts_before_connectivity_gating": {
+        "finite_practical_pass": 54,
+        "finite_practical_failure": 18,
+        "mathematical_nonclosure": 18
+      },
       "state_counts": {
         "MASS_CLOSED_PRACTICAL_CONSTRAINT_FAILURE": 3,
         "RELAY_BENEFICIAL_AND_FEASIBLE": 9,
@@ -57,6 +89,11 @@
     },
     "obstruction_sensitivity_h80_x30": {
       "unique_mission_cases": 90,
+      "carrier_counts_before_connectivity_gating": {
+        "finite_practical_pass": 54,
+        "finite_practical_failure": 18,
+        "mathematical_nonclosure": 18
+      },
       "state_counts": {
         "MASS_CLOSED_PRACTICAL_CONSTRAINT_FAILURE": 3,
         "RELAY_BENEFICIAL_AND_FEASIBLE": 9,
@@ -66,6 +103,11 @@
     },
     "obstruction_sensitivity_h80_x45": {
       "unique_mission_cases": 90,
+      "carrier_counts_before_connectivity_gating": {
+        "finite_practical_pass": 54,
+        "finite_practical_failure": 18,
+        "mathematical_nonclosure": 18
+      },
       "state_counts": {
         "MASS_CLOSED_PRACTICAL_CONSTRAINT_FAILURE": 6,
         "RELAY_BENEFICIAL_AND_FEASIBLE": 18,
@@ -152,7 +194,12 @@
     }
   },
   "limitations": [
-    "Free-space loss only for visible paths.",
+    "Exported margins are hypothetical unobstructed-path values; a blocked path always fails regardless of margin.",
+    "Hierarchical state counts assign one label per mission case, not independent failure frequencies or probabilities; carrier flags retain simultaneous failures.",
+    "FEASIBLE denotes relay benefit and exploratory physical-boundary pass, not standalone carrier acceptance or operational mission feasibility.",
+    "Stationary one-way Ground-to-Relay-to-Remote screening; no transit, recovery, reverse link, control-link assessment, or throughput prediction.",
+    "Payload mass and constant DC demand drive carrier sizing; link margin does not resize the payload. Altitude affects links, not constant-density hover sizing.",
+    "Payload peak_dc_power_w is source metadata, not an additional solver load. Primary dc_power_w already uses the published peak continuously; secondary DC assumptions remain exploratory.",
     "Screens are stylized visibility scenarios, not terrain prediction.",
     "Payload alternatives are sensitivity cases, not mission counts.",
     "Adverse result is bounded 12 dB sensitivity, not propagation prediction.",

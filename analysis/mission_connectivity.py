@@ -147,6 +147,11 @@ def link_case(separation_km, relay_altitude_m, payload, service, geometry, scree
 
 
 def classify(link, vehicle):
+    """First applicable gate wins; carrier flags retain simultaneous failures.
+
+    FEASIBLE here means relay benefit plus exploratory physical-boundary pass,
+    not the standalone carrier cost/battery-fraction class or mission approval.
+    """
     if link["direct_link_ok"]:
         return "DIRECT_SUFFICIENT", "direct_link_clear_and_margin_nonnegative"
     if not link["relay_link_ok"]:
@@ -190,6 +195,10 @@ def architecture_figure(rows, geometry, inputs):
         "MASS_CLOSED_PRACTICAL_CONSTRAINT_FAILURE": "#e6a43a",
         "RELAY_CONNECTIVITY_INFEASIBLE": "#8469a9",
     }
+    codes = {"DIRECT_SUFFICIENT": "DIR", "RELAY_BENEFICIAL_AND_FEASIBLE": "PASS",
+             "RELAY_FUNCTIONAL_VEHICLE_RESOURCE_FAILURE": "NC",
+             "MASS_CLOSED_PRACTICAL_CONSTRAINT_FAILURE": "BOUND",
+             "RELAY_CONNECTIVITY_INFEASIBLE": "LINK"}
     altitudes = value(geometry["relay_altitudes_m"])
     separations = value(inputs["sweep"]["separations_km"])
     dwells = value(inputs["sweep"]["dwell_min"])
@@ -219,21 +228,43 @@ def architecture_figure(rows, geometry, inputs):
                 y = 94 + dwell_index * 58
                 elements.append(
                     f'<rect x="{x}" y="{y}" width="34" height="46" fill="{colors[row["state"]]}"/>'
-                    f'<text x="{x + 17}" y="{y + 28}" text-anchor="middle" fill="white" style="font:9px Arial">{row["state"].split("_")[0]}</text>'
+                    f'<text x="{x + 17}" y="{y + 28}" text-anchor="middle" fill="white" style="font:9px Arial">{codes[row["state"]]}</text>'
                 )
         for separation_index, separation in enumerate(separations):
             elements.append(
-                f'<text x="{panel_x + separation_index * 38 + 17}" y="157" text-anchor="middle" style="font:10px Arial">{separation}</text>'
+                f'<text x="{panel_x + separation_index * 38 + 17}" y="400" text-anchor="middle" style="font:10px Arial">{separation}</text>'
             )
+    elements.append('<text x="530" y="425" text-anchor="middle" style="font:12px Arial">Endpoint separation (km); rows: on-station dwell (min)</text>')
     elements.append(
-        '<text x="25" y="505" style="font:11px Arial">Blue direct sufficient; green relay feasible; orange finite closure/practical failure; red nonclosure; purple relay connectivity infeasible.</text>'
+        '<text x="25" y="455" style="font:11px Arial">DIR: direct sufficient; PASS: conditional relay/physical pass; BOUND: finite but excluded; NC: mathematical nonclosure; LINK: connectivity failure.</text>'
     )
     return (
-        '<svg xmlns="http://www.w3.org/2000/svg" width="1060" height="540">'
+        '<svg xmlns="http://www.w3.org/2000/svg" width="1060" height="480">'
         '<rect width="100%" height="100%" fill="white"/>'
         + "".join(elements)
         + "</svg>\n"
     )
+
+
+def architecture_dependencies_figure():
+    """Actual implemented dependencies, without an RF-to-payload sizing claim."""
+    return '''<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="420" viewBox="0 0 1040 420">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#3973b7"/></marker></defs>
+<style>text{font-family:Arial;fill:#172033;font-size:14px}.box{fill:#eef3fa;stroke:#9eb4cf}.arrow{stroke:#3973b7;stroke-width:2;fill:none;marker-end:url(#arrow)}</style>
+<rect width="100%" height="100%" fill="white"/>
+<text x="25" y="35" style="font-size:22px;font-weight:bold">Implemented architecture screening dependencies</text>
+<rect class="box" x="25" y="70" width="300" height="60"/><text x="40" y="95">Geometry / visibility / service assumptions</text><text x="40" y="116">and fixed payload RF output</text>
+<rect class="box" x="25" y="220" width="300" height="60"/><text x="40" y="245">Fixed payload mass / constant DC demand</text><text x="40" y="266">and dwell / carrier assumptions</text>
+<rect class="box" x="390" y="70" width="250" height="60"/><text x="405" y="95">Direct and relay connectivity</text><text x="405" y="116">Visibility gate + link margins</text>
+<rect class="box" x="390" y="210" width="250" height="80"/><text x="405" y="234">Carrier mass-power-energy closure</text><text x="405" y="256">Analytical state + exploratory</text><text x="405" y="278">physical-boundary checks</text>
+<rect class="box" x="735" y="145" width="280" height="90"/><text x="750" y="170">Hierarchical architecture classification</text><text x="750" y="192">Benefit / connectivity failure /</text><text x="750" y="214">finite exclusion / nonclosure</text>
+<path class="arrow" d="M325 100H390"/><path class="arrow" d="M325 250H390"/>
+<path class="arrow" d="M640 100H690V168H735"/><path class="arrow" d="M640 250H690V214H735"/>
+<text x="25" y="335">Payload inputs are shared assumptions: link margin does not resize equipment or electrical demand.</text>
+<text x="25" y="360">Altitude changes connectivity, not constant-density hover power. Numerical convergence is a diagnostic.</text>
+<text x="25" y="385">Stationary, one-way screening; no full-mission or validated-aircraft feasibility claim.</text>
+</svg>
+'''
 
 
 def build():
@@ -300,6 +331,7 @@ def build():
                             "vehicle_numerical_guard": vehicle["numerical_guard_exceeded"],
                             "vehicle_math_closed": vehicle["mathematical_closed"],
                             "vehicle_practical_ok": vehicle["practical_constraint_ok"],
+                            "vehicle_practical_failures": "|".join(vehicle["practical_constraint_failures"]),
                             "gross_mass_kg": round(vehicle["gross_mass_kg"], 4) if vehicle["gross_mass_kg"] is not None else None,
                             "rotor_diameter_m": round(vehicle["equivalent_rotor_diameter_m"], 4) if vehicle["equivalent_rotor_diameter_m"] is not None else None,
                             "state": state,
@@ -316,6 +348,11 @@ def build():
                 row for row in rows
                 if row["payload_role"] == "primary" and row["scenario"] == run_name
             ]),
+            "carrier_counts_before_connectivity_gating": {
+                "finite_practical_pass": sum(r["vehicle_practical_ok"] for r in rows if r["payload_role"] == "primary" and r["scenario"] == run_name),
+                "finite_practical_failure": sum(r["vehicle_math_closed"] and not r["vehicle_practical_ok"] for r in rows if r["payload_role"] == "primary" and r["scenario"] == run_name),
+                "mathematical_nonclosure": sum(not r["vehicle_math_closed"] for r in rows if r["payload_role"] == "primary" and r["scenario"] == run_name),
+            },
             "state_counts": state_counts([
                 row for row in rows
                 if row["payload_role"] == "primary" and row["scenario"] == run_name
@@ -349,6 +386,7 @@ def build():
         })
 
     summary = {
+        "classification_order": ["DIRECT_SUFFICIENT", "RELAY_CONNECTIVITY_INFEASIBLE", "RELAY_FUNCTIONAL_VEHICLE_RESOURCE_FAILURE", "MASS_CLOSED_PRACTICAL_CONSTRAINT_FAILURE", "RELAY_BENEFICIAL_AND_FEASIBLE"],
         "primary_payload_id": inputs["primary_payload_id"],
         "primary_architecture_scenario": "obstructed_reference",
         "primary_unique_mission_cases": len(primary_baseline),
@@ -363,7 +401,12 @@ def build():
             for payload in payloads
         },
         "limitations": [
-            "Free-space loss only for visible paths.",
+            "Exported margins are hypothetical unobstructed-path values; a blocked path always fails regardless of margin.",
+            "Hierarchical state counts assign one label per mission case, not independent failure frequencies or probabilities; carrier flags retain simultaneous failures.",
+            "FEASIBLE denotes relay benefit and exploratory physical-boundary pass, not standalone carrier acceptance or operational mission feasibility.",
+            "Stationary one-way Ground-to-Relay-to-Remote screening; no transit, recovery, reverse link, control-link assessment, or throughput prediction.",
+            "Payload mass and constant DC demand drive carrier sizing; link margin does not resize the payload. Altitude affects links, not constant-density hover sizing.",
+            "Payload peak_dc_power_w is source metadata, not an additional solver load. Primary dc_power_w already uses the published peak continuously; secondary DC assumptions remain exploratory.",
             "Screens are stylized visibility scenarios, not terrain prediction.",
             "Payload alternatives are sensitivity cases, not mission counts.",
             "Adverse result is bounded 12 dB sensitivity, not propagation prediction.",
@@ -374,6 +417,7 @@ def build():
         OUTPUTS / "integrated-tradespace.csv": csv_text(rows),
         OUTPUTS / "integrated-tradespace-summary.json": json.dumps(summary, indent=2) + "\n",
         OUTPUTS / "obstruction-sensitivity.csv": csv_text(sensitivity_rows),
+        OUTPUTS / "architecture-causal-chain.svg": architecture_dependencies_figure(),
         OUTPUTS / "architecture-tradespace.svg": architecture_figure(primary_baseline, geometry, inputs),
         OUTPUTS / "mission-connectivity-benefit.svg": architecture_figure(primary_baseline, geometry, inputs),
     }

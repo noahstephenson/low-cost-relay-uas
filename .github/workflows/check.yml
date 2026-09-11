@@ -14,5 +14,8 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Run scientific regression tests
+        run: python -B -m unittest discover -s tests -v
+
       - name: Validate consolidated model and generated views
         run: python scripts/validate-baseline.py --check-generated
