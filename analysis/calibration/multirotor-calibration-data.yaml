@@ -63,7 +63,7 @@
       "name": "Drone America DAx8 NASA test article",
       "group": "fit",
       "source_ids": ["SRC-CAL-001", "SRC-CAL-002", "SRC-CAL-003"],
-      "condition": "Full vehicle, hover, uniform rotor speed; run 97 point 9; no additional payload; measured supported thrust used as the mass-equivalent test condition.",
+      "condition": "Full vehicle, hover, uniform rotor speed; run 97 point 9; no additional payload; measured supported thrust used as the mass-equivalent test condition. Hover-tested inside the wind-tunnel test section, where recirculation was not quantified (Russell et al. 2016, NTRS 20160007399). Treated here as eight separate 11 in disks; the sources consulted do not confirm the DAx8 rotor arrangement (for example, whether pairs are coaxial).",
       "rotor_count": 8,
       "rotor_diameter_m": 0.2794,
       "measured_thrust_lb": 12.328,
@@ -76,7 +76,7 @@
       "name": "Straight Up Imaging Endurance NASA test article",
       "group": "fit",
       "source_ids": ["SRC-CAL-001", "SRC-CAL-002", "SRC-CAL-003"],
-      "condition": "Full vehicle, hover, uniform rotor speed; run 119 point 11; no additional payload; measured supported thrust used as the mass-equivalent test condition.",
+      "condition": "Full vehicle, hover, uniform rotor speed; run 119 point 11; no additional payload; measured supported thrust used as the mass-equivalent test condition. Hover-tested inside the wind-tunnel test section, where recirculation was not quantified (Russell et al. 2016, NTRS 20160007399).",
       "rotor_count": 4,
       "rotor_diameter_m": 0.381,
       "measured_thrust_lb": 6.423,
@@ -107,8 +107,9 @@
       "rotor_diameter_m": 0.27432,
       "mass_kg": 1.219,
       "battery_energy_wh": 99.5,
+      "battery_mass_kg": 0.401,
       "published_hover_min": 42.0,
-      "published_value": "1219 g standard takeoff weight including battery and propellers; 10.8 in propellers; 99.5 Wh battery; 42 min hover from 100% to 0%."
+      "published_value": "1219 g standard takeoff weight including battery and propellers; 10.8 in propellers; 99.5 Wh battery, 401 g battery mass; 42 min hover from 100% to 0%."
     },
     {
       "id": "DJI-MAVIC3M",
