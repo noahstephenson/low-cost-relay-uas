@@ -31,19 +31,40 @@ def ideal_power(weight_n: float, rotor_count: int, rotor_diameter_m: float, rho:
     return weight_n * math.sqrt(disk_loading / (2.0 * rho)), disk_loading
 
 
-def fitted_values(data: dict, carrier_inputs: dict) -> dict:
-    cfg = data["calibration"]
-    rho = float(cfg["air_density_kg_m3"])
-    g = float(cfg["gravity_m_s2"])
+def compute_pairs(data: dict, rho: float, rotor_count_overrides: dict[str, int] | None = None) -> list[tuple[float, float, str]]:
+    """Return (ideal_power, measured_power, vehicle_id) for every fit-split vehicle.
+
+    ``rotor_count_overrides`` lets a caller substitute an effective disk count for one
+    or more vehicles (for example, treating the DAx8 as four coaxial pairs) without
+    duplicating the thrust/voltage/current bookkeeping used by the reference fit.
+    """
+    overrides = rotor_count_overrides or {}
     fit_rows = [row for row in data["vehicles"] if row["group"] == "fit"]
     pairs = []
     for row in fit_rows:
         weight_n = float(row["measured_thrust_lb"]) * LB_TO_N
-        ideal, _ = ideal_power(weight_n, int(row["rotor_count"]), float(row["rotor_diameter_m"]), rho)
+        rotor_count = int(overrides.get(row["id"], row["rotor_count"]))
+        ideal, _ = ideal_power(weight_n, rotor_count, float(row["rotor_diameter_m"]), rho)
         measured = float(row["measured_voltage_v"]) * sum(float(v) for v in row["motor_currents_a"])
-        pairs.append((ideal, measured))
-    inverse_effective_factor = sum(x * y for x, y in pairs) / sum(x * x for x, _ in pairs)
-    effective_factor = 1.0 / inverse_effective_factor
+        pairs.append((ideal, measured, row["id"]))
+    return pairs
+
+
+def fit_effective_factor(pairs: list[tuple[float, float, str]]) -> float:
+    """Unweighted least-squares-through-the-origin fit, generalized to any pair subset.
+
+    A single pair reduces this to the direct ratio ideal/measured, which is how the
+    single-point refits and the mean/geometric-mean estimator variants are formed.
+    """
+    inverse_effective_factor = (
+        sum(x * y for x, y, _ in pairs) / sum(x * x for x, _, _ in pairs)
+    )
+    return 1.0 / inverse_effective_factor
+
+
+def fitted_values_from_effective_factor(effective_factor: float, data: dict, carrier_inputs: dict, cfg: dict) -> dict:
+    rho = float(cfg["air_density_kg_m3"])
+    g = float(cfg["gravity_m_s2"])
     fm = (
         effective_factor * float(cfg["environment_power_margin"])
         / float(cfg["motor_controller_efficiency"])
@@ -84,6 +105,26 @@ def fitted_values(data: dict, carrier_inputs: dict) -> dict:
         "structure_base_mass_kg": structure_base,
         "structural_anchor_modeled_propulsion_mass_kg": propulsion_mass,
     }
+
+
+def fitted_values(data: dict, carrier_inputs: dict) -> dict:
+    cfg = data["calibration"]
+    rho = float(cfg["air_density_kg_m3"])
+    pairs = compute_pairs(data, rho)
+    effective_factor = fit_effective_factor(pairs)
+    return fitted_values_from_effective_factor(effective_factor, data, carrier_inputs, cfg)
+
+
+def check_error(row: dict, effective_factor: float, aux_power_w: float, g: float, rho: float) -> tuple[float, float]:
+    """Modeled hover endurance and percent error for one held-out check vehicle."""
+    mass_kg = float(row["mass_kg"])
+    weight_n = mass_kg * g
+    ideal, _ = ideal_power(weight_n, int(row["rotor_count"]), float(row["rotor_diameter_m"]), rho)
+    total_power = ideal / effective_factor + aux_power_w
+    published = float(row["published_hover_min"])
+    modeled = float(row["battery_energy_wh"]) / total_power * 60.0
+    error = 100.0 * (modeled - published) / published
+    return modeled, error
 
 
 def build_outputs() -> tuple[str, str, dict]:
@@ -159,13 +200,13 @@ def build_outputs() -> tuple[str, str, dict]:
     csv_output = buffer.getvalue()
     summary = f"""# Carrier calibration summary
 
-The five-point NASA full-vehicle hover fit gives an effective `FM * eta_d / k_env` of {effective:.6f}. With motor/controller efficiency fixed at {cfg['motor_controller_efficiency']:.2f} and the declared reference environment multiplier fixed at {cfg['environment_power_margin']:.2f}, the fitted rotor figure of merit is {fitted['rotor_figure_of_merit']:.6f}. The fit uses each test article's measured supported thrust and rotor disk area, not the relay model's fixed disk loading.
+The five-point NASA full-vehicle hover fit gives an effective `FM * eta_d / k_env` of {effective:.6f}. With motor/controller efficiency fixed at {cfg['motor_controller_efficiency']:.2f} and the declared reference environment multiplier fixed at {cfg['environment_power_margin']:.2f}, the fitted rotor figure of merit is {fitted['rotor_figure_of_merit']:.6f}. The fit uses each test article's measured supported thrust and rotor disk area, not the relay model's fixed disk loading. Because `k_env` is held fixed while fitting, the fit absorbs it: the reference relation reproduces the laboratory hover power and carries no net operating-condition margin beyond that calibration.
 
-The NASA component-mass anchor gives `structure_base_mass_kg = {fitted['structure_base_mass_kg']:.6f}` while retaining the declared structural growth, disk-area, avionics, power-electronics, mount, propulsion-specific-power, and thrust-margin terms.
+The NASA component-mass anchor gives `structure_base_mass_kg = {fitted['structure_base_mass_kg']:.6f}` while retaining the declared structural growth, disk-area, avionics, power-electronics, mount, propulsion-specific-power, and thrust-margin terms. The anchor is the sized NASA 2018 baseline conceptual design, not a measured empty-airframe mass: its 1.61 lb airframe entry comes from a fuselage-weight trend plus 1% motor-support and 4% landing-gear fractions.
 
 Fit residual range: {min(fit_residuals):+.2f}% to {max(fit_residuals):+.2f}%. Held-out hover-endurance error range: {min(check_errors):+.2f}% to {max(check_errors):+.2f}%. No held-out vehicle misses the +/-20% target.
 
-The endurance check uses the manufacturers' published discharge condition and therefore does not apply the relay mission's 20% reserve or 90% depth-of-discharge policy. Forward-flight-only endurance is excluded.
+The endurance check uses the manufacturers' published discharge condition and therefore does not apply the relay mission's 20% reserve or 90% depth-of-discharge policy. Forward-flight-only endurance is excluded. The DAx8 and Endurance fit points were hover-tested inside the wind-tunnel test section, where recirculation was not quantified (Russell et al., NTRS 20160007399); the other three NASA fit points were tested in a laboratory about 30 ft from the nearest wall. The DAx8 rotor layout (eight separate disks versus coaxial pairs) is not confirmed by the sources consulted; this fit treats it as eight separate disks.
 """
     diagnostics = {"fitted": fitted, "fit_residuals": fit_residuals, "check_errors": check_errors}
     return csv_output, summary, diagnostics
