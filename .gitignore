@@ -20,3 +20,8 @@ project-*.mdzip.*
 # Local scratch
 scratch/
 *.tmp
+tmp/
+Claude outputs/
+
+# Local manuscript drafting directory (not tracked in this repository)
+/submission/
