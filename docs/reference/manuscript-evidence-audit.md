@@ -1,5 +1,7 @@
 # Manuscript evidence audit
 
+> **Superseded.** This audit predates the carrier calibration (commit `4f9e2cd`, branch `codex/carrier-calibration-v1`) and the finished manuscript. The submitted paper in `submission/relay_uas_aeroconf.tex` (local, intentionally untracked; see `.gitignore`) is the sole authority for claims and numbers. Treat everything below as historical drafting context.
+
 Audit date: 2026-09-11. Scientific baseline: `71ed88815fd5c5ebe9846bac140cc0628336825e` plus the current working tree. Documentation changes from the earlier venue-removal task were already present. No scientific input, model, experiment, or generated scientific output was changed for this audit.
 
 Read with the [writer-ready outline](../manuscript-outline.md). This record controls manuscript claims if older narrative documentation differs. It verifies a conditional calculation, not an aircraft. The defensible contribution is a reproducible architecture case study with explicit decision gates; novelty and acceptance remain uncertain.

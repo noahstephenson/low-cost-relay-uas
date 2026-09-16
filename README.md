@@ -2,9 +2,10 @@
 
 A relay aircraft carries a radio to a place where two other systems can communicate more effectively. This repository asks what the **aircraft around that radio** must do, and when a small multirotor can support the resulting mission demands.
 
-**Paper title:** System Architecture and Mission Feasibility of a Multirotor Communications Relay
+**Paper title:** System Architecture and Service Envelope of a Multirotor Communications Relay
+**Branch:** `codex/carrier-calibration-v1` (computational baseline at commit `4f9e2cd`)
 
-Examination of a recovered relay aircraft motivated the work; the analysis does not reconstruct that aircraft or claim its performance. “Low-cost” is a project objective, not an established result.
+The manuscript source is drafted locally in `submission/relay_uas_aeroconf.tex`, which is intentionally not tracked in this repository (see `.gitignore`); the repository's calibrated code, data, and reproducible case records are its computational backing. Examination of a recovered relay aircraft motivated the work; the analysis does not reconstruct that aircraft or claim its performance. “Low-cost” is a project objective, not an established result.
 
 ## Start with the communications problem
 
@@ -35,17 +36,27 @@ The reference example places endpoints 10 km apart, with the remote aircraft 100
 
 Clearance is only the first gate. **Link margin** is the calculated received signal level above an assumed receiver threshold; the two outbound relay hops must both have nonnegative margin. Then the carrier must support the payload for the required **dwell**, meaning time spent at the relay station.
 
-With the primary 0.20 kg payload and constant 14 W sizing allowance, existing calculations give:
+With the primary 0.20 kg payload and constant 14 W sizing allowance, the calibrated carrier gives:
 
 | Dwell | Carrier result | What it tells us |
 |---|---|---|
-| 30 minutes | 8.6203 kg; passes exploratory physical bounds | The declared link and carrier screens both pass |
-| 45 minutes | 106.2456 kg; outside those bounds | A finite calculation is not necessarily a plausible small aircraft |
+| 30 minutes | 4.7747 kg; passes exploratory physical bounds | The declared link and carrier screens both pass |
+| 45 minutes | 15.1456 kg; outside those bounds | A finite calculation is not necessarily a plausible small aircraft |
 | 60 minutes | No finite analytical closure | The assumed resource feedback has no finite solution |
 
 **Analytical closure** means that calculated component masses sum consistently to the gross mass used to calculate power. More battery adds mass; more mass needs more hover power; that requires more battery. The large 45-minute result is an extrapolation, not a design proposal. **Exploratory boundaries** are analysis limits used to screen results, not approved aircraft requirements.
 
 Across 90 baseline cases, the ordered counts are **18 physical passes / 6 finite exclusions / 6 nonclosures / 60 connectivity failures**. The +12 dB loss sensitivity gives **6 / 2 / 2 / 80**. These are hierarchical grid counts, not probabilities.
+
+## Headline numbers
+
+The manuscript's reference case reports, for the declared 0.20 kg / 14 W payload:
+
+- Carrier: reaches the exploratory rotor limit at **42.1 minutes**; mathematical closure ends at **52.4 minutes**.
+- Link: a midpoint relay at 120 m clears **25.0 km** of endpoint separation at baseline; a 12 dB excess-loss case reduces that to **6.3 km**.
+- Grid: of the 90 baseline separation/dwell/altitude cases, **18** pass both the link and carrier screens.
+
+These numbers, plus the revision's calibration-sensitivity variants (single-point refits, estimator variants, coaxial DAx8 hypothesis, aux-power sweep, etc.), are reproduced by `analysis/calibration/sensitivity.py` (see below).
 
 ## Read the engineering in order
 
@@ -64,7 +75,15 @@ From the repository root, using Python’s standard library:
 ```bash
 python -B -m unittest discover -s tests -v
 python -B scripts/validate-baseline.py --check-generated
+python -B analysis/calibration/calibrate_carrier.py --check
+python -B analysis/calibration/boundaries.py --check
+python -B analysis/calibration/sensitivity.py --check
+python -B analysis/feasibility.py --check
+python -B analysis/mission_connectivity.py --check
+python -B docs/reference/check-manuscript-evidence.py
 ```
+
+`analysis/calibration/boundary-results.json` reproduces the headline 42.1/52.4-minute and 25.0/6.3 km numbers directly. `analysis/calibration/sensitivity-results.json` reproduces every calibration-sensitivity variant the revision reports (single-point refits, mean/geometric-mean/quads-only estimators, the coaxial-DAx8 hypothesis, the k_env operating-margin case, the aux-power sweep, and the Matrice 4 specific-energy substitution).
 
 ## Scope note
 

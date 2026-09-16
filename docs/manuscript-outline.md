@@ -1,5 +1,7 @@
 # Writer-ready manuscript outline
 
+> **Superseded.** This outline predates the carrier calibration (commit `4f9e2cd`, branch `codex/carrier-calibration-v1`) and the finished manuscript. The submitted paper — its title, numbers, and wording — is the sole authority; it is drafted in a local `submission/` directory that is intentionally not tracked in this repository (see `.gitignore`). Treat everything below as historical drafting context, not current claims or numbers.
+
 **Fixed title:** System Architecture and Conditional Service Envelope of a Multirotor Communications Relay
 
 **Purpose:** A detailed drafting specification, not the manuscript itself. Follow the paragraph order, claim wording, equations, populated tables, and exhibit instructions. Do not strengthen claims by removing qualifications.
