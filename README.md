@@ -2,10 +2,7 @@
 
 A relay aircraft carries a radio to a place where two other systems can communicate more effectively. This repository asks what the **aircraft around that radio** must do, and when a small multirotor can support the resulting mission demands.
 
-**Paper title:** System Architecture and Service Envelope of a Multirotor Communications Relay
-**Branch:** `codex/carrier-calibration-v1` (computational baseline at commit `4f9e2cd`)
 
-The manuscript source is drafted locally in `submission/relay_uas_aeroconf.tex`, which is intentionally not tracked in this repository (see `.gitignore`); the repository's calibrated code, data, and reproducible case records are its computational backing. Examination of a recovered relay aircraft motivated the work; the analysis does not reconstruct that aircraft or claim its performance. “Low-cost” is a project objective, not an established result.
 
 ## Start with the communications problem
 
