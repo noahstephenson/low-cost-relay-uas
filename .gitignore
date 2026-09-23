@@ -20,8 +20,16 @@ project-*.mdzip.*
 # Local scratch
 scratch/
 *.tmp
-tmp/
-Claude outputs/
+# Local manuscript build tools and page previews
+/tmp/paper-review/
+/submission/*.aux
+/submission/*.log
+/submission/*.out
+/submission/*.toc
+/submission/*.xdv
+/submission/relay_uas_aeroconf_word.pdf
 
-# Local manuscript drafting directory (not tracked in this repository)
-/submission/
+# Large local tool downloads and scratch outputs
+/tmp/
+/Claude outputs/
+/submission/*.zip

@@ -31,6 +31,8 @@ No architecture state changes in any of the 1,890 existing rows. The 90 primary 
 | 45 min | 103.3074 kg | 106.2456 kg |
 | 60 min | no finite closure | no finite closure |
 
+These masses are the uncalibrated model state. Commit `4f9e2cde8c429e6b241d4a09dc5f8e7dbb877069` calibrated the carrier hover coefficient, structure base mass, and battery specific energy; the current worked-case masses are 3.5839 kg at 10 and 20 min, 4.7747 kg at 30 min, 15.1456 kg at 45 min, and no finite closure at 60 min. See [calibration results](calibration-results.md). This record is retained as history and is not the controlling number source.
+
 The 45-minute masses are extrapolations outside exploratory vehicle boundaries, not design proposals. The correction changes the affine intercept, not the endurance-driven slope or nonclosure boundary.
 
 All 225 standalone grid classes are unchanged; 15 finite-case burden values change. The 4,096-candidate sensitivity study retains 2,605 finite closures and excludes 1,491 nonclosures. Corrected aggregate scores still rank endurance, battery specific power, and payload mass first through third. Rankings are conditional on finite closure and combine mass, cost, and burden correlations; they do not rank causes of nonclosure.
