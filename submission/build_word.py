@@ -66,7 +66,11 @@ def eq(m):
 s=re.sub(r'\\begin\{equation\}.*?\\end\{equation\}',eq,s,flags=re.S)
 conv=ROOT/'tmp/paper-review/word-source.tex';conv.write_text(s,encoding='utf-8')
 raw=ROOT/'tmp/paper-review/raw.docx'
-pandoc=next((ROOT/'tmp/paper-review/bin').rglob('pandoc.exe'))
+import shutil
+# Prefer the bundled pandoc 3.x; fall back to one on PATH. Pandoc 2.x fails on
+# the CONTENTS_FIELD marker below, so a system pandoc must be 3.0 or newer.
+pandoc=next((ROOT/'tmp/paper-review/bin').rglob('pandoc.exe'), None) or shutil.which('pandoc')
+if pandoc is None: raise SystemExit('pandoc not found: no bundled copy under tmp/paper-review/bin and none on PATH')
 subprocess.run([str(pandoc),str(conv),'-f','latex','-t','docx','-o',str(raw)],check=True)
 doc=Document(raw)
 sec=doc.sections[0]
