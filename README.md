@@ -6,7 +6,7 @@ Run the checks below to reproduce the paper's calculated results and inspect the
 
 ## Paper and reproducibility
 
-The IEEE Aerospace 2027 paper 2784, [*System Architecture and Mission Feasibility of a Multirotor Communications Relay*](submission/relay_uas_aeroconf.pdf), corresponds to annotated tag `aeroconf-2027-paper-2784` at commit `c045e3e89441de4c1cf91ddedcd4120f8348f0cf`. The computational baseline was generated at commit `4f9e2cde8c429e6b241d4a09dc5f8e7dbb877069`. The manuscript source is in [`submission/relay_uas_aeroconf.tex`](submission/relay_uas_aeroconf.tex).
+The IEEE Aerospace 2027 paper 2784, [*System Architecture and Mission Feasibility of a Multirotor Communications Relay*](submission/relay_uas_aeroconf.pdf), corresponds to annotated tag `aeroconf-2027-paper-2784-r2`. The computational baseline was generated at commit `4f9e2cde8c429e6b241d4a09dc5f8e7dbb877069`. The manuscript source is in [`submission/relay_uas_aeroconf.tex`](submission/relay_uas_aeroconf.tex).
 
 From the repository root, these commands check the tests, generated baseline, and manuscript evidence:
 
