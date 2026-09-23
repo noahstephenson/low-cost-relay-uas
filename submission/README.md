@@ -5,7 +5,7 @@ Prepared for the 2027 IEEE Aerospace Conference on 2026-09-12.
 ## Files
 
 - `relay_uas_aeroconf.pdf`: compiled conference manuscript; preferred review copy.
-- `relay_uas_aeroconf.docx`: editable Word version with native equations and an updated contents list.
+- `relay_uas_aeroconf.docx`: editable Word version with native equations and an updated contents list. **Stale against the current `.tex`** (predates the abstract trim, the table-of-contents restoration, and the 28.4 km correction). The conference accepts PDF only for this submission, so the Word path is not required. To regenerate: `python build_word.py`, which needs pandoc 3.x (pandoc 2.x fails on the `CONTENTS_FIELD` marker; the bundled binary in `tmp/` is Windows-only).
 - `relay_uas_aeroconf.tex`, `IEEEAerospaceCLS.cls`, and `figs/`: LaTeX source and publication figures.
 - `relay_uas_aeroconf_latex.zip`: self-contained LaTeX package.
 

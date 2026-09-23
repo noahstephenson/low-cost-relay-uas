@@ -19,3 +19,6 @@ jobs:
 
       - name: Validate consolidated model and generated views
         run: python scripts/validate-baseline.py --check-generated
+
+      - name: Validate manuscript evidence
+        run: python -B docs/reference/check-manuscript-evidence.py
