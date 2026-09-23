@@ -74,7 +74,7 @@ Only the time on station is assessed quantitatively. A full mission would run fr
 \begin{figure*}[!tb]
 \centering
 \includegraphics[width=\textwidth]{figs/fig1_architecture_geometry.pdf}
-\caption{Relay architecture and the worked geometry. (a) The aircraft supports a black-box payload across two connections, mechanical retention and regulated power, and the operator commands the aircraft on a separate radio path. (b) At 10 km separation the ideal screen blocks the direct path and clears the relay path. The screen is a declared scenario, not measured terrain, and the command separation is an allocation, not a demonstrated fault isolation.}
+\caption{Relay architecture and the worked geometry. (a) The aircraft supports a black-box payload across two connections, mechanical retention and regulated power, and the operator commands the aircraft on a separate radio path. (b) At 10 km separation the ideal screen blocks the direct path and clears the relay path. The screen represents a declared scenario without measured terrain; the separate command path is an allocation without demonstrated fault isolation.}
 \label{fig:arch}
 \end{figure*}
 
@@ -253,7 +253,7 @@ For a midpoint relay at 120 m, solving the zero-margin condition gives a maximum
 
 The reference carrier reaches the 0.75 m rotor limit at 42.1 minutes. At that point gross mass is 10.81 kg, so the rotor limit is tighter than the 15 kg mass ceiling. Finite closure persists until the energy-branch slope reaches one at 52.4 minutes. Thus the interval between these boundaries contains finite mathematical sizes that fail the physical screen. Figure~\ref{fig:closure} shows this transition without treating the divergent branch as a buildable aircraft.
 
-The existing favorable and adverse parameter sets illustrate dependence on carrier assumptions. The favorable set gives a 126.9-minute physical boundary and a 157.0-minute energy-slope crossing. The adverse set has no physical pass even at zero dwell; its 6.4-minute energy-slope crossing is not an achievable service duration. These sets change several assumptions simultaneously. They are deterministic corners, not a confidence interval, and the reference is not a statistical midpoint.
+The existing favorable and adverse parameter sets illustrate dependence on carrier assumptions. The favorable set gives a 126.9-minute physical boundary and a 157.0-minute energy-slope crossing. The adverse set has no physical pass even at zero dwell; its 6.4-minute energy-slope crossing is not an achievable service duration. These sets change several assumptions simultaneously. They are deterministic corners and do not define a confidence interval; the reference is no statistical midpoint.
 
 \begin{figure}[!tb]
 \centering
@@ -284,7 +284,7 @@ Dwell & Mass & Rotor & Pack sized & Growth & Result \\
 
 \vspace{2pt}
 \begin{minipage}{\columnwidth}\footnotesize
-Link margins stay at 7.97 and 10.02 dB in every row, so the differences come entirely from the aircraft. The growth factor shown is the energy-limited one; the power-limited branch stays at 0.570 throughout. \gate{pass} means the relay helps and the aircraft stays within the screening limits, not that the design is validated.
+Link margins stay at 7.97 and 10.02 dB in every row, so the differences come entirely from the aircraft. The growth factor shown is the energy-limited one; the power-limited branch stays at 0.570 throughout. \gate{pass} means the relay helps and the aircraft stays within the screening limits; this does not validate the design.
 \end{minipage}
 \end{table}
 
@@ -296,7 +296,7 @@ Table~\ref{tab:worked} shows what changes instead. At 10 and 20 minutes the pack
 
 The 90-case grid shows where those two limits fall across the sampled points. Of the 90 baseline cases, 18 pass, 6 are too large, 6 have no solution, and 60 fail the link check. Figure~\ref{fig:map} shows the pattern. Every case at 60 m fails because the relay sits below the 100 m clearance threshold. At 120 and 240 m the 5, 10, and 20 km cases clear the screen and hold margin. Within those cases the 10 to 30 minute dwells pass, the 45 minute dwells are too large, and the 60 minute dwells have no solution. At 30 km and beyond the relay can see both endpoints but the first hop falls short of margin, which matches the 25.0 km limit from Section 4.
 
-Neither check alone gives the same answer as both together. In the baseline scenario 30 of the 90 cases pass the link check and 54 pass the aircraft check, but only 18 pass both. The 54 aircraft passes include 36 cases where no usable link exists. This leaves the 30 link passes, of which 12 have an aircraft that is too large or has no solution. The separate counts answer different questions. Their intersection identifies the 18 cases that satisfy both; the counts are deterministic grid totals, not probabilities or a comparison of prediction accuracy.
+Neither check alone gives the same answer as both together. In the baseline scenario 30 of the 90 cases pass the link check and 54 pass the aircraft check, but only 18 pass both. The 54 aircraft passes include 36 cases where no usable link exists. This leaves the 30 link passes, of which 12 have an aircraft that is too large or has no solution. The separate counts answer different questions. Their intersection identifies the 18 cases that satisfy both; the counts are deterministic grid totals and give neither probabilities nor a comparison of prediction accuracy.
 
 The clear comparator shows why relay benefit has to be judged against the direct path. With the screen removed, the 5 and 10 km direct paths carry positive margin, so 30 cases are labeled \gate{direct}. Only 9 cases, all at 20 km, are relay passes, because at 20 km the direct margin is $-0.07$~dB while both relay hops stay positive. The relay helps in a narrow band: close enough that two hops hold margin, far enough that one hop does not.
 
@@ -313,7 +313,7 @@ The two secondary payload cases preserve the primary classification boundaries i
 \begin{figure}[!tb]
 \centering
 \includegraphics[width=\columnwidth]{figs/fig4_thresholds.pdf}
-\caption{Relay height at which the first hop begins to clear, for the five screen cases. Thresholds above 120 m remove that altitude layer from service, while changes that stay between 60 and 120 m leave the sampled results unchanged. This is a geometric comparison, not a terrain model.}
+\caption{Relay height at which the first hop begins to clear, for the five screen cases. Thresholds above 120 m remove that altitude layer from service, while changes that stay between 60 and 120 m leave the sampled results unchanged. This comparison is geometric; no terrain model underlies it.}
 \label{fig:thresh}
 \end{figure}
 
@@ -337,7 +337,7 @@ The structural relation is anchored at one conceptual mass breakdown. Its extrap
 
 The link calculation tests visibility and received level. It omits interference, fading, diffraction, Fresnel clearance, scheduling, duplex operation, and throughput. Two of these simplifications are conservative. An opaque screen treats a grazing path as blocked, whereas knife-edge diffraction would impose a finite loss. However, omitting Fresnel clearance works in the other direction just above the geometric threshold. In the 10 km case, keeping 60 percent of the first Fresnel zone clear at the screen raises the 100 m threshold to about 108 m. This does not change the sampled results, since the 120 m layer still clears. The midpoint relay placement is also not optimal: the first hop binds, and moving the relay to 0.44 of the span balances the hops and raises the 25.0 km boundary to 28.4 km while still clearing the screen. Antenna patterns and interference could move the result in either direction. The screen scenarios are geometric constructions rather than surveyed terrain. Statistical air-to-ground blockage models address different questions \cite{alhourani}; none is fitted or validated here. No probability of availability follows from the number of passing grid cases.
 
-Only stationary outbound dwell is calculated. Transit, climb, recovery energy, return traffic, carrier-command performance, and station keeping remain outside the quantitative assessment. A follow-on assessment would need matched power measurements, installed-payload characterization, a complete mission energy budget, and communications measurements for the intended service. These are evidence needs for the candidate architecture, not capabilities demonstrated by this paper.
+Only stationary outbound dwell is calculated. Transit, climb, recovery energy, return traffic, carrier-command performance, and station keeping remain outside the quantitative assessment. A follow-on assessment would need matched power measurements, installed-payload characterization, a complete mission energy budget, and communications measurements for the intended service. These are evidence needs for the candidate architecture; this paper does not demonstrate those capabilities.
 
 
 
