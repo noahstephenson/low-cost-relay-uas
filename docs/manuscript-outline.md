@@ -1,6 +1,6 @@
 # Writer-ready manuscript outline
 
-**Fixed title:** System Architecture and Conditional Service Envelope of a Multirotor Communications Relay
+**Fixed title:** System Architecture and Mission Feasibility of a Multirotor Communications Relay
 
 **Purpose:** A detailed drafting specification, not the manuscript itself. Follow the paragraph order, claim wording, equations, populated tables, and exhibit instructions. Do not strengthen claims by removing qualifications.
 

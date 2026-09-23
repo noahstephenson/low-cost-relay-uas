@@ -2,7 +2,7 @@
 
 A relay aircraft carries a radio to a place where two other systems can communicate more effectively. This repository asks what the **aircraft around that radio** must do, and when a small multirotor can support the resulting mission demands.
 
-**Paper title:** System Architecture and Service Envelope of a Multirotor Communications Relay
+**Paper title:** System Architecture and Mission Feasibility of a Multirotor Communications Relay
 
 Examination of a recovered relay aircraft motivated the work; the analysis does not reconstruct that aircraft or claim its performance. “Low-cost” is a project objective, not an established result.
 

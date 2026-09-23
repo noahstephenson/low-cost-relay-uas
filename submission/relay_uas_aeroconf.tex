@@ -11,7 +11,7 @@
 \newcommand{\gate}[1]{\textsc{#1}}
 \renewcommand{\arraystretch}{1.12}
 \begin{document}
-\title{System Architecture and Service Envelope of a Multirotor Communications Relay}
+\title{System Architecture and Mission Feasibility of a Multirotor Communications Relay}
 \author{Noah Stephenson\\United States Military Academy\\West Point, NY 10996\\noah.stephenson@westpoint.edu
 \thanks{U.S. Government work not protected by U.S. copyright}}
 \maketitle
@@ -19,6 +19,7 @@
 \begin{abstract}
 A communications relay can clear an obstructed path while imposing an aircraft demand that a small multirotor cannot sustain. This paper develops a reproducible architecture case study that separates two questions: whether an outbound relay path has sufficient received-level margin, and whether its carrier can support the payload for the required stationary dwell. A geometric visibility test and a free-space link budget define the communications screen. A constant-disk-loading hover model then closes the battery, propulsion, and structural mass balance on energy-sized and power-sized battery branches, using an aggregate hover coefficient fitted to five published NASA test points and checked against three commercial quadrotors held out of that fit. For the declared 0.20 kg, 14 W payload, the reference link-margin boundary is 25.0 km of endpoint separation at a midpoint relay height of 120 m; a deterministic 12 dB excess-loss case reduces it to 6.3 km. The reference carrier, which carries no operating-condition margin beyond the laboratory hover calibration, reaches its exploratory rotor-size limit at 42.1 minutes and has no finite mass closure at or above 52.4 minutes. The scatter of the individual calibration points alone moves the first boundary between 33 and 49 minutes. At a fixed 10 km separation, 30 minutes closes at 4.77 kg, 45 minutes at 15.15 kg outside the physical screen, and 60 minutes has no finite solution. Of 90 baseline grid cases, 18 pass both screens, 6 have excessive finite size, 6 have no closure, and 60 fail connectivity. Identifying which mechanism binds is what supports an early architecture decision. These results describe conditional outbound hover service; full-mission energy, packet performance, and physical verification remain unresolved.
 \end{abstract}
+\tableofcontents
 %======================================================================
 \section{Introduction}
 %======================================================================
