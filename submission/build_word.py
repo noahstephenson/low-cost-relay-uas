@@ -139,19 +139,24 @@ for p in list(doc.paragraphs):
     if p.text=='BIOGRAPHY_PHOTO_MARKER':
         p.text=''
         p.alignment=WD_ALIGN_PARAGRAPH.LEFT
-        p.add_run().add_picture(str(biography_photo),width=Inches(1.0))
+        p.add_run().add_picture(str(biography_photo),width=Inches(1.25))
         p.paragraph_format.keep_with_next=True
     if p.text.startswith('FIGUREMARKER'):
         idx=int(p.text.replace('FIGUREMARKER',''));name,cap,num,wide=figures[idx]
         p.text=''
-        if wide:section_end(p._p,2)
+        word_column_figure = name == 'fig3_service_map'
+        if wide and not word_column_figure:section_end(p._p,2)
         p.alignment=WD_ALIGN_PARAGRAPH.CENTER
-        p.add_run().add_picture(str(OUT/'figs'/(name+'.png')),width=Inches(7 if wide else 3.375))
+        image_name = name + ('_word' if word_column_figure else '') + '.png'
+        picture_width = 7 if wide and not word_column_figure else 3.375
+        p.add_run().add_picture(str(OUT/'figs'/image_name),width=Inches(picture_width))
         p.paragraph_format.keep_with_next=True;p.paragraph_format.space_after=Pt(3)
+        if word_column_figure:
+            cap=cap.replace('pass means','P means').replace('size marks','S marks').replace('link fail marks','L marks')
         cp=doc.add_paragraph('Figure '+num+'. '+cap);p._p.addnext(cp._p)
         cp.alignment=WD_ALIGN_PARAGRAPH.CENTER;cp.paragraph_format.space_after=Pt(10)
         for r in cp.runs:r.bold=True;r.font.size=Pt(10)
-        if wide:
+        if wide and not word_column_figure:
             nx=cp._p.getnext()
             if nx is not None:section_end(nx,1)
     if p.text.startswith('Table '):

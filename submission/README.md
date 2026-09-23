@@ -8,7 +8,7 @@ Current source package for IEEE Aerospace 2027 paper 2784.
 - `relay_uas_aeroconf.docx`: editable conference-layout copy generated from the current LaTeX source, including the acknowledgements, biography, and author photo.
 - `relay_uas_aeroconf.tex`, `IEEEAerospaceCLS.cls`, and `figs/`: LaTeX source and publication figures.
 
-The Word and LaTeX versions carry the same substantive text, tables, equations, and figures. Their pagination differs.
+The Word and LaTeX versions carry the same substantive text, tables, equations, and figures. Their pagination differs. The Word builder uses a stacked, single-column rendering of Figure 3 from the same saved case data so its two-column layout can continue without an otherwise mostly empty page.
 
 ## Before submitting
 

@@ -70,6 +70,33 @@ for ax,h in zip(axes,[60,120,240]):
     ax.tick_params(length=0)
 save(fig,'fig3_service_map')
 
+# Word uses a narrow, stacked rendering of the same three service-map panels.
+# It avoids a full-width section break in the editable two-column edition.
+fig,axes=plt.subplots(3,1,figsize=(3.35,6.1))
+fig.subplots_adjust(left=.17,right=.99,top=.96,bottom=.07,hspace=.45)
+for ax,h in zip(axes,[60,120,240]):
+    for row in primary:
+        if float(row['relay_altitude_m'])!=h:continue
+        x=[5,10,20,30,40,60].index(int(float(row['separation_km'])))
+        y=[10,20,30,45,60].index(int(float(row['dwell_min'])))
+        state=row.get('classification',row.get('state',row.get('mission_class')))
+        if state is None:
+            state=next(v for v in row.values() if v in states)
+        label,color=states[state]
+        ax.add_patch(Rectangle((x,y),1,1,facecolor=color,edgecolor='white',linewidth=.7))
+        short_label={'Pass':'P','Size':'S','NC':'NC','Link':'L'}[label]
+        ax.text(x+.5,y+.5,short_label,ha='center',va='center',fontsize=10)
+    ax.set(xlim=(0,6),ylim=(5,0),
+           xticks=[i+.5 for i in range(6)],xticklabels=[5,10,20,30,40,60],
+           yticks=[i+.5 for i in range(5)],yticklabels=[10,20,30,45,60],
+           title=f'Relay height {h} m',xlabel='Separation (km)',ylabel='Dwell (min)')
+    ax.tick_params(length=0,labelsize=10)
+    ax.title.set_fontsize(10)
+    ax.xaxis.label.set_fontsize(10)
+    ax.yaxis.label.set_fontsize(10)
+fig.savefig(OUT/'fig3_service_map_word.png',dpi=300,bbox_inches='tight',pad_inches=.03)
+plt.close(fig)
+
 fig,ax=plt.subplots(figsize=(3.35,2.8));fig.subplots_adjust(left=.38,bottom=.2,top=.95,right=.95)
 labels=['80 m at 0.40D','60 m at 0.40D','100 m at 0.40D','80 m at 0.30D','80 m at 0.45D'];vals=[100,75,125,133.333,88.889]
 ax.scatter(vals,range(5),color=blue,zorder=3);ax.axvline(120,c=orange,ls='--',lw=1)
@@ -85,5 +112,5 @@ ax.scatter([30,45],[4.7747,15.1456],c=blue,s=20)
 ax.text(2,11.6,'Rotor-size limit',fontsize=10);ax.text(50,23,'52.4 min',ha='right',fontsize=10)
 ax.set(xlim=(0,60),ylim=(0,25),xlabel='Dwell (min)',ylabel='Closed gross mass (kg)');ax.grid(alpha=.15)
 save(fig,'fig5_closure')
-print('Wrote five figures')
+print('Wrote five paper figures and one Word layout variant')
 
