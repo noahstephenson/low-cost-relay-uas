@@ -1,5 +1,7 @@
 # Manuscript evidence audit
 
+Historical v2 audit. For the current r3 manuscript and 35-test verification, see [submission/result-audit-r3.md](../../submission/result-audit-r3.md).
+
 Audit date: 2026-09-23 (v2; original audit 2026-09-11). Scientific baseline: `4f9e2cde8c429e6b241d4a09dc5f8e7dbb877069`, the carrier-calibration commit. The v1 baseline was `71ed88815fd5c5ebe9846bac140cc0628336825e` plus its working tree. This revision re-pins every calibration-sensitive number to the generated artifacts at the current commit: the calibrated inputs are the fitted rotor figure of merit 0.620274, structure base mass 0.163173 kg, and selected battery specific energy 192.117 Wh/kg. The 90-case partition is unchanged by the calibration; the worked-case masses and the hover and slope coefficients are not. No scientific input, model, experiment, or generated scientific output was changed for this audit.
 
 Read with the [writer-ready outline](../manuscript-outline.md). This record controls manuscript claims if older narrative documentation differs. It verifies a conditional calculation, not an aircraft. The defensible contribution is a reproducible architecture case study with explicit decision gates; novelty and acceptance remain uncertain.

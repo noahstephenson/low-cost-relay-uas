@@ -1,61 +1,39 @@
-# IEEE Aerospace manuscript package
+# IEEE Aerospace 2027 manuscript package
 
-Current source package for IEEE Aerospace 2027 paper 2784.
+Paper 2784 uses the approved IEEE Aerospace class. The PDF is the submission copy; the DOCX is an editable conference-style copy built from the same LaTeX manuscript.
 
-## Files
+## Files and diagrams
 
-- `relay_uas_aeroconf.pdf`: compiled conference manuscript; preferred review copy.
-- `relay_uas_aeroconf.docx`: editable conference-layout copy generated from the current LaTeX source, including the acknowledgements, biography, and author photo.
-- `relay_uas_aeroconf.tex`, `IEEEAerospaceCLS.cls`, and `figs/`: LaTeX source and publication figures.
+- relay_uas_aeroconf.tex: manuscript source.
+- relay_uas_aeroconf.pdf and relay_uas_aeroconf.docx: current editions.
+- figs/architecture_assessment_workflow.mmd: editable workflow content used in Figure 2.
+- figs/four_flow_architecture.mmd: editable four-flow architecture draft.
+- figs/diagram-brief.md: block, connector, and MagicDraw export instructions.
+- render_workflow.py and render_architecture_word.py: render the workflow and the narrow Word variant of the existing architecture figure.
 
-The Word and LaTeX versions carry the same substantive text, tables, equations, and figures. Their pagination differs. The Word builder uses a stacked, single-column rendering of Figure 3 from the same saved case data so its two-column layout can continue without an otherwise mostly empty page.
-
-## Before submitting
-
-1. Confirm the biography and the applicability of the retained U.S. Government copyright notice. The supplied name, affiliation, and email have been incorporated. A statement that there is no copyright concern does not establish the applicable conference notice.
-2. Complete the author's scientific review, any required institutional release, and submission-portal requirements. No paper has been uploaded or approval claimed.
-
-The manuscript is a bounded architecture case study. Publication readiness does not guarantee peer-review acceptance, and the analysis does not validate a physical relay aircraft.
-
-## Revision of 2026-09-16 (adversarial review response)
-
-Text-only revision; no solver input or production code changed. Added numbers were recomputed with the repository solver at the same baseline.
-
-- States that the fitted FM absorbs k_env, so the reference case carries no operating-condition margin; reports that a separate 15% margin gives 35.7 / 44.5 min.
-- Reports the least-squares weight concentration (DAx8 79%), the single-point refit band (33.0-49.2 / 41.2-61.3 min), the alternative-estimator range (41.4-44.6 / 51.5-55.6 min), and the unconfirmed DAx8 rotor arrangement (coaxial refit 58.8 / 73.5 min).
-- Notes the in-tunnel hover tests of the DAx8 and Endurance (new reference: Russell et al., AHS Forum 2016).
-- Describes the structural anchor as a sized design value, not a weighed vehicle.
-- Adds the auxiliary-power sensitivity (0/10/40 W) of the held-out comparison.
-- States the direction of the link-model simplifications (opaque screen; midpoint placement, 28.3 km at 0.44 of span).
-- Word copy regenerated with build_word.py; update fields (or run render_word.ps1) before exporting. relay_uas_aeroconf_word.pdf predates this revision.
-- Second-review pass (same day): removed the AI-tool acknowledgment (to be re-added by the author); restored the branch name in Data Availability; added the 25 W condition to the abstract; stated why the coaxial DAx8 case is implausible; added the Matrice 4 pack value (248 Wh/kg, boundaries 54.4 / 67.7 min); added the Fresnel-clearance caveat (threshold about 108 m in the 10 km case); placed the Matrice 30 / Matrice 4 hover times (about 22 min each) beside Table 4.
-- feasibility-inputs.yaml: the 0.83 drive efficiency is now marked declared rather than sourced to ANL-SRC-001, which used 0.75. All 25 tests and the generated-artifact, calibration, and boundary checks still pass.
-
-## Scientific and editorial verification
-
-Computational baseline: `4f9e2cde8c429e6b241d4a09dc5f8e7dbb877069`.
-
-- All 35 repository tests passed.
-- Generated artifact verification passed.
-- The independent manuscript checker reconstructed all 1,890 case records.
-- The current calibrated baseline supersedes the older manuscript outline and evidence audit's numerical examples.
-- No scientific input or production solver was changed for this revision.
-- Corrected the structural anchor description, aggregate hover-coefficient interpretation, scope of commercial hover comparisons, adverse-case interpretation, and unsupported performance language.
-- Added the complete component mass balance and branch-consistency conditions.
-- Rebuilt five figures from the saved results and stated equations. The continuous mass curve is a visualization of the existing model, not a new experiment.
-- Replaced manual citation numbers with LaTeX citation keys.
-- Expanded the abstract to the conference's 250--500 word requirement and used the official 2027 class unchanged. The manuscript preamble uses the written 0.75-inch margin specification.
+The workflow applies selected system definition and analysis practices from the cited NASA Systems Engineering Handbook. Its dashed final step marks physical verification and operational validation as outstanding.
 
 ## Build
 
-The PDF is the conference submission copy. From this directory, run `pdflatex relay_uas_aeroconf.tex` twice, or use Tectonic with two TeX passes.
+From the repository root, render the two new figures with a Python environment containing Matplotlib:
 
-The editable DOCX is built from the same LaTeX source. Install Python with `python-docx` and Pandoc 3.x. From the repository root, run `python submission/build_word.py` when Pandoc is on PATH, or pass `--pandoc PATH_TO_PANDOC`. The builder uses a system temporary directory and does not require `tmp/paper-review` or a LaTeX `.aux` file. Open the DOCX in Word and update its table of contents. On Windows, `powershell -File submission/render_word.ps1` updates the contents field and saves the Word document. To inspect Word pagination, export a PDF from Microsoft Word separately.
+    python submission/render_workflow.py
+    python submission/render_architecture_word.py
 
-## Official instructions
+Build the PDF from the submission directory with two TeX passes using the supplied class:
 
-https://www.aeroconf.org/paper-submission
+    cd submission
+    pdflatex relay_uas_aeroconf.tex
+    pdflatex relay_uas_aeroconf.tex
 
-Official 2027 Word template: https://www.aeroconf.org/cms/content_attachments/76/download
+Tectonic can also resolve the LaTeX dependencies and run the passes. Build the DOCX from the repository root with Python, python-docx, and Pandoc 3.x:
 
-Official 2027 LaTeX template: https://www.aeroconf.org/cms/content_attachments/21/download
+    python submission/build_word.py
+
+Pass --pandoc PATH_TO_PANDOC when Pandoc is not on PATH. The builder uses a system temporary directory and has no dependency on tmp/paper-review. In Microsoft Word, update the document's table of contents before final export. The submission PDF remains the conference file.
+
+## Evidence and review
+
+Run the 35 unit tests, generated-baseline check, and independent 1,890-record checker described in the top-level README. The paper's numerical and source-claim review is recorded in result-audit-r3.md. These checks establish reproducibility of a conditional assessment; physical relay performance, full-mission energy, and packet delivery are unverified.
+
+Before submission, the author should review the biography and the applicability of the retained U.S. Government copyright notice, complete any required institutional release, and confirm the conference portal requirements. No upload or approval is claimed.

@@ -3,6 +3,7 @@ import argparse, copy, re, shutil, subprocess, tempfile
 from docx import Document
 from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.enum.style import WD_STYLE_TYPE
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 
@@ -91,6 +92,12 @@ major=int(re.search(r'pandoc (\d+)\.',version).group(1))
 if major<3: raise SystemExit('Pandoc 3.x is required')
 subprocess.run([str(pandoc),str(conv),'-f','latex','-t','docx','-o',str(raw)],check=True)
 doc=Document(raw)
+toc_style=doc.styles.add_style('TOC 1', WD_STYLE_TYPE.PARAGRAPH)
+toc_style.font.name='Times New Roman'
+toc_style.font.size=Pt(8)
+toc_style.paragraph_format.space_before=Pt(0)
+toc_style.paragraph_format.space_after=Pt(0)
+toc_style.paragraph_format.line_spacing=1
 sec=doc.sections[0]
 sec.page_width=Inches(8.5);sec.page_height=Inches(11)
 for k in ['top_margin','bottom_margin','left_margin','right_margin']:setattr(sec,k,Inches(.75))
@@ -128,9 +135,14 @@ au=first.insert_paragraph_before('Noah Stephenson\nUnited States Military Academ
 au.alignment=WD_ALIGN_PARAGRAPH.CENTER
 for r in au.runs:r.bold=True
 section_end(first._p,1)
-first.text='Abstract: '+first.text
+abstract_body=first.text
+first.clear()
+abstract_label=first.add_run('Abstract: ')
+abstract_label.bold=True
+abstract_label.font.size=Pt(9)
+abstract_run=first.add_run(abstract_body)
+abstract_run.font.size=Pt(9)
 first.paragraph_format.space_after=Pt(10)
-for r in first.runs:r.bold=True;r.font.size=Pt(9)
 for p in list(doc.paragraphs):
     if p.text=='CONTENTS_FIELD':
         p.text='Table of Contents';p.style='TOC Heading'
@@ -144,11 +156,11 @@ for p in list(doc.paragraphs):
     if p.text.startswith('FIGUREMARKER'):
         idx=int(p.text.replace('FIGUREMARKER',''));name,cap,num,wide=figures[idx]
         p.text=''
-        word_column_figure = name == 'fig3_service_map'
+        word_column_figure = name in ('fig1_architecture_geometry', 'fig3_service_map')
         if wide and not word_column_figure:section_end(p._p,2)
         p.alignment=WD_ALIGN_PARAGRAPH.CENTER
         image_name = name + ('_word' if word_column_figure else '') + '.png'
-        picture_width = 7 if wide and not word_column_figure else 3.375
+        picture_width = 7 if wide and not word_column_figure else (3.1 if name == 'fig5_closure' else 3.375)
         p.add_run().add_picture(str(OUT/'figs'/image_name),width=Inches(picture_width))
         p.paragraph_format.keep_with_next=True;p.paragraph_format.space_after=Pt(3)
         if word_column_figure:

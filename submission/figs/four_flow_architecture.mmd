@@ -1,0 +1,14 @@
+flowchart LR
+    G["Ground endpoint G"] -->|"mission traffic"| P["Relay payload"]
+    P -->|"mission traffic"| U["Remote aircraft U"]
+    O["Operator"] -->|"aircraft command"| A["Carrier avionics"]
+    A -->|"command and health"| O
+    B["Carrier battery and distribution"] -->|"electrical power"| A
+    B -->|"regulated electrical power"| P
+    S["Carrier airframe and mount"] -->|"mechanical support"| P
+    subgraph R["Relay aircraft boundary"]
+      P
+      A
+      B
+      S
+    end

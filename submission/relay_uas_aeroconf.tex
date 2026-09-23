@@ -17,7 +17,7 @@
 \maketitle
 \thispagestyle{plain}\pagestyle{plain}
 \begin{abstract}
-A communications relay can clear an obstructed path while imposing an aircraft demand that a small multirotor cannot sustain. This paper develops a reproducible architecture case study that separates two questions: whether an outbound relay path has sufficient received-level margin, and whether its carrier can support the payload for the required stationary dwell. A geometric visibility test and a free-space link budget define the communications screen. A constant-disk-loading hover model then closes the battery, propulsion, and structural mass balance on energy-sized and power-sized battery branches, using an aggregate hover coefficient fitted to five published NASA test points and checked against three commercial quadrotors held out of that fit. Under manufacturer conditions and an assumed 25 W auxiliary load, those three held-out aircraft reproduce published hover times within $-6.7$ to $+3.2$ percent, a limited consistency check that does not validate the proposed relay aircraft or its structural model. For the declared 0.20 kg, 14 W payload, the reference link-margin boundary is 25.0 km of endpoint separation at a midpoint relay height of 120 m; a deterministic 12 dB excess-loss case reduces it to 6.3 km. The reference carrier, which carries no operating-condition margin beyond the laboratory hover calibration, reaches its exploratory rotor-size limit at 42.1 minutes and has no finite mass closure at or above 52.4 minutes. The scatter of the individual calibration points alone moves the first boundary between 33 and 49 minutes. At a fixed 10 km separation, 30 minutes closes at 4.77 kg, 45 minutes at 15.15 kg outside the physical screen, and 60 minutes has no finite solution. Of 90 baseline grid cases, 18 pass both screens, 6 have excessive finite size, 6 have no closure, and 60 fail connectivity. Identifying which mechanism binds is what supports an early architecture decision. These results describe conditional outbound hover service; full-mission energy, packet performance, and physical verification remain unresolved.
+An airborne relay may restore a communications path that an obstruction blocks, but the carrier must hold the radio in position and supply its resources. This paper asks which parts of a small multirotor relay architecture limit a declared stationary service mission. The architecture assigns mission traffic to the payload, aircraft command to a separate carrier path, electrical power to the battery and regulated branch, and mechanical support to the airframe and mount. An assessment workflow traces those allocations through declared inputs, two coupled checks, and the evidence needed for a later physical test. A geometric visibility test and free-space link budget screen the outbound path. A constant-disk-loading hover model then closes battery, propulsion, and structural mass on energy-sized and power-sized branches. Its aggregate hover coefficient is fitted to five published NASA test points and checked against three commercial quadrotors excluded from that fit. With an assumed 25 W auxiliary load and manufacturer discharge conditions, the three comparisons reproduce published hover times within $-6.7$ to $+3.2$ percent. This checks part of the power and energy calculation; it does not validate the carrier structure or a relay aircraft. For a declared 0.20 kg, 14 W payload, the midpoint relay at 120 m has a reference link-margin boundary of 25.0 km of endpoint separation. Adding 12 dB of excess loss reduces that boundary to 6.3 km. The reference carrier reaches its exploratory rotor-size limit at 42.1 minutes and loses finite mass closure at 52.4 minutes. Its hover calibration supplies no separate operating-condition margin, and single-point refits move the first boundary between 33 and 49 minutes. At 10 km separation, a 30-minute dwell closes at 4.77 kg, a 45-minute dwell closes at 15.15 kg outside the size screen, and a 60-minute dwell has no finite solution. Of 90 baseline grid cases, 18 pass both checks, 6 exceed size limits, 6 have no closure, and 60 fail connectivity. Each failure points to a different architecture decision. These results support preliminary screening of outbound hover service; full-mission energy, packet performance, and physical verification remain unresolved.
 \end{abstract}
 \tableofcontents
 %======================================================================
@@ -28,13 +28,13 @@ A relay aircraft changes the geometry of a communications problem. A ground stat
 
 Consider a 10 km separation, a remote aircraft at 100 m, and an 80 m screen between the endpoints. A midpoint relay at 120 m clears the screen in the declared geometry. Whether it can remain there for 30, 45, or 60 minutes depends on a different calculation. More battery adds mass, greater mass requires more hover power, and that power requires additional battery. A consistent mass balance can lie within a small-aircraft envelope, lie outside it, or have no finite solution under the assumed scaling relations.
 
-This paper starts with four things the relay aircraft must handle: mission traffic, aircraft command, electrical power, and payload mounting. It then checks link margin and carrier size for the same mission. Section 2 defines the architecture and assessed interval. Section 3 states the models and evidence supporting their coefficients. Section 4 presents the worked case and sampled envelope, and Sections 5 and 6 explain the decisions and limitations. An appendix gives the complete mass balance for reproduction.
+The architecture must account for four flows: mission traffic, aircraft command, electrical power, and mechanical support. The payload handles the first. The carrier provides the other three while holding the payload at the geometry needed for service. This paper asks where that allocation stops being plausible under the declared mission and aircraft assumptions. Section 2 defines the architecture and assessed interval. Section 3 traces the assumptions through link and carrier checks. Section 4 presents the worked case and sampled envelope, and Sections 5 and 6 explain the decisions and limits. An appendix gives the mass balance for reproduction.
 
 \subsection{Related Work and Contribution}
 
 Communication and aircraft sizing research already supplies the pieces used here. Zeng, Zhang, and Lim optimized relay transmit power together with relay trajectory \cite{zengrelay}. Zeng, Xu, and Zhang combined rotary-wing propulsion energy with communication energy under throughput constraints \cite{zengenergy}. Yan et al.\ treated battery weight as a design variable that trades stored energy against the power needed to lift it \cite{yan}. Rodrigues et al.\ placed relay positioning inside a propulsion-aware energy model \cite{rodrigues}. On the aircraft side, Russell, Theodore, and Sekula built conceptual sizing models for small quadcopters from test data \cite{russell2018}. They reported that their sizing did not close for hover missions beyond a certain length. Bershadsky, Haviland, and Johnson matched motors, propellers, and batteries to mission requirements \cite{bershadsky}. Table~\ref{tab:prior} places these alongside the present study.
 
-The contribution is a reproducible assessment of one relay architecture. Payload mass and electrical demand connect the carrier calculation to fixed radio assumptions; the resulting screens identify connectivity failure, excessive finite size, and mathematical nonclosure separately. The analysis includes an aggregate hover-power fit and comparisons with published commercial hover times to examine part of the carrier model. It offers a worked engineering case, with traceable assumptions and distinguishable failure mechanisms, rather than a new optimization method or a claim of superiority over the cited approaches.
+This paper makes three contributions to a preliminary architecture assessment. First, it assigns the relay service and carrier responsibilities across four flows with a stated system boundary. Second, it connects fixed payload mass, power, and RF assumptions to separate link and aircraft checks for the same mission. Third, it traces connectivity failure, excessive finite size, and mathematical nonclosure to different decisions. An aggregate hover-power fit and published commercial hover times check part of the carrier calculation. The result is a reproducible engineering case under declared assumptions.
 
 The research question is narrow. Under the declared service and aircraft assumptions, how far apart can the endpoints be and how long can the relay stay on station before one of the two checks fails? The quantitative work covers stationary one-way service. It does not establish delivered throughput, full mission energy, or measured flight performance.
 
@@ -67,12 +67,6 @@ These are the closest conceptual precedents, not a complete survey. This study c
 
 The relay aircraft carries a communications payload and holds an assigned position. As Figure~\ref{fig:arch}(a) shows, a ground endpoint labeled G exchanges traffic with a remote aircraft labeled U, and the payload passes that traffic between them. The payload is treated as a black box. This means it is described only by what it demands from the aircraft: 0.20 kg of mass, 14 W of direct current (DC) power, and a fixed radio frequency (RF) output. The aircraft supplies the airframe, propulsion, battery and power distribution, avionics, the command radio, and the payload mount. Operators, ground equipment, the remote aircraft, and spectrum authorities stay outside this boundary.
 
-Mission traffic passes from G through the relay payload to U. The operator uses a separate path to command the carrier. The battery supplies the aircraft and the regulated payload branch. The mount carries the payload load. This split shows what the carrier must provide for the declared relay service.
-
-Two design commitments follow from that split. The aircraft-to-payload boundary carries only regulated power and mechanical retention, which defines the intended accommodation boundary. Similar mass and power alone do not establish interchangeability; mounting, voltage, thermal behavior, and electromagnetic compatibility would also need verification. The operator commands the aircraft on a separate radio path, as an architectural allocation distinct from the mission traffic. While this separation is deliberate, it is an allocation of responsibility and not a demonstrated fault isolation, since both paths still share one battery and one airframe.
-
-Only the time on station is assessed quantitatively. A full mission would run from preparation through launch, transit, establishing position, relaying, monitoring, and recovery. This paper calculates the relay interval alone, and only in the direction from G through the relay R to U. The battery reserve holds energy back from that interval, but it is not a transit or recovery calculation.
-
 \begin{figure*}[!tb]
 \centering
 \includegraphics[width=\textwidth]{figs/fig1_architecture_geometry.pdf}
@@ -80,9 +74,26 @@ Only the time on station is assessed quantitatively. A full mission would run fr
 \label{fig:arch}
 \end{figure*}
 
+Mission traffic passes from G through the relay payload to U. Aircraft command and health reporting belong to the carrier path, separate from that traffic. The battery supplies propulsion and avionics as well as the regulated payload branch. The mount transfers the payload load into the airframe. Each flow has a different failure consequence: a blocked mission path loses service, a command-path failure affects control, a power shortfall limits dwell, and an inadequate mount prevents safe support. Only the mission-link and power/mass consequences are calculated here.
+
+Two design commitments follow from that split. The aircraft-to-payload boundary supplies regulated power and mechanical retention, which defines the intended accommodation boundary. Similar mass and power alone do not establish interchangeability; mounting, voltage, thermal behavior, and electromagnetic compatibility still require verification. The operator commands the carrier over its own radio path. This is a logical allocation rather than demonstrated fault isolation, since both information paths share one battery and airframe.
+
+Only the time on station is assessed quantitatively. A full mission would run from preparation through launch, transit, establishing position, relaying, monitoring, and recovery. This paper calculates the relay interval alone, and only in the direction from G through the relay R to U. The battery reserve holds energy back from that interval, but it is not a transit or recovery calculation.
+
+
+
 %======================================================================
 \section{Method}\label{sec:methods}
 %======================================================================
+
+The assessment follows selected system definition and verification practices described in the NASA Systems Engineering Handbook \cite{nasaSEH}. It starts with the requested relay service, sets the system boundary, and allocates responsibilities before evaluating link and carrier resources. Figure~\ref{fig:workflow} shows how declared inputs enter both checks and how their results support a design decision. The independent numerical checker verifies the model's arithmetic and saved cases. No integrated aircraft was built or tested for this study, so product verification and operational validation remain future work. This is an analysis workflow, not a completed development lifecycle.
+
+\begin{figure}[!tb]
+\centering
+\includegraphics[width=\columnwidth]{figs/architecture_assessment_workflow.pdf}
+\caption{Architecture assessment workflow. The service need and four allocated flows lead to declared inputs, parallel link and carrier checks, and independent model review. Failure labels identify which architecture assumption or resource needs reconsideration. Installed-payload tests and operational validation remain outstanding.}
+\label{fig:workflow}
+\end{figure}
 
 \subsection{Declared Inputs}
 
@@ -159,7 +170,11 @@ where $FM$ is the figure of merit, $\eta$ the combined motor and controller effi
 
 The battery must satisfy two separate demands, and the larger one governs. Over a dwell $t$ in hours, the aircraft draws $P$ for hover plus a fixed 40.2 W for avionics and the payload, and only the usable fraction $u$ of the pack is available. The pack must also deliver the peak current that a thrust margin of 1.75 implies, which is 2.32 times hover power, with a further 15 percent allowance. With specific energy $e$ in Wh/kg and specific power $p$ in W/kg,
 \begin{equation}
-m_{b}=\max\!\left(\frac{(km+P_0)\,t}{u\,e},\ \frac{1.15\,(1.75^{3/2}km+P_0)}{p}\right).
+\begin{aligned}
+m_b&=\max(m_E,m_P),\\
+m_E&=\frac{(km+P_0)t}{ue},\\
+m_P&=\frac{1.15(1.75^{3/2}km+P_0)}{p}.
+\end{aligned}
 \end{equation}
 The reserve is part of the mission policy rather than the calibration. Holding back 20 percent after a 90 percent depth of discharge leaves $u=0.72$.
 
@@ -236,7 +251,7 @@ Each case then receives one label from the first check that fails. If the direct
 
 Each scenario holds 90 cases, formed from six separations, five dwell values, and three relay altitudes. The primary payload is the 0.20 kg, 14 W case. Seven scenarios and three payload cases give 1,890 saved records, which are repetitions of the same grid rather than independent missions, so every count in this paper uses the 90-case denominator.
 
-The repository carries 25 automated tests covering a hand-calculated hover case, the branch logic, the label order, the calibration script, and the two boundary calculations. A separate checker rebuilds every link from coordinates and solves the mass balance by bisection without using the production solver, then compares all saved records. All tests and checks pass at the commit cited in the Data Availability section. These confirm that the numbers follow from the stated equations. They do not confirm that a physical aircraft behaves this way.
+The repository carries 35 automated tests covering a hand-calculated hover case, branch logic, label order, calibration, and boundary calculations. A separate checker rebuilds every link from coordinates and solves the mass balance by bisection without using the production solver, then compares all saved records. The tests and checks pass at the commit cited in the Data Availability section. They confirm that the numbers follow from the stated equations. They do not establish physical aircraft behavior.
 
 %======================================================================
 \begin{figure*}[!tb]
@@ -325,11 +340,11 @@ The two secondary payload cases preserve the primary classification boundaries i
 
 \subsection{What the Result Supports}
 
-The labels point to different parts of the architecture. A connectivity failure calls for reconsidering geometry or the link budget. More battery cannot repair that failure while the RF assumptions remain fixed. A finite result outside the size screen calls for reconsidering dwell, carrier assumptions, or the permitted physical envelope. Mathematical nonclosure means the assumed battery, power, and mass relationship has no solution; relaxing a mass ceiling cannot create one.
+The labels point to different parts of the architecture. A connectivity failure calls for reconsidering relay placement, radio assumptions, or the service requirement. More battery cannot repair that failure while the RF assumptions remain fixed. A finite result outside the size screen calls for reconsidering dwell or the carrier's battery, propulsion, and structural allowances. Mathematical nonclosure means those resource relations have no finite solution under the assumed scaling; relaxing a mass ceiling cannot create one. The separate carrier command path and payload mount also need interface and physical tests before the allocation can become a verified design.
 
 The worked example makes these decisions concrete. At 30 minutes the carrier passes the exploratory screen and becomes a candidate for more detailed assessment. At 45 minutes the 15.15 kg result indicates excessive burden under the stated assumptions. At 60 minutes there is no consistent mass to size or cost. Treating both failed cases as a numerical convergence problem would lose the distinction between them.
 
-The calculations also show the limits of the coupling. The payload supplies common mass, DC, and RF assumptions, but link margin does not resize the radio and altitude does not change the fixed-density hover calculation. Consequently, the case supports an architecture screening decision without solving a joint radio, trajectory, and vehicle optimization. For a systems engineering reader, its useful output is a traceable chain from the requested service to the resource or link assumption that limits it.
+The payload supplies common mass, DC, and RF assumptions to the two checks. Link margin does not resize the radio, and altitude does not change the fixed-density hover calculation. Consequently, the assessment can identify which allocation or resource binds without optimizing the radio, trajectory, and aircraft together. The trace from requested service to limiting assumption is the principal architecture result.
 
 \subsection{Limitations}
 
@@ -347,9 +362,9 @@ Only stationary outbound dwell is calculated. Transit, climb, recovery energy, r
 \section{Conclusions}
 %======================================================================
 
-A useful relay path and a supportable carrier are separate conditions for airborne service. This case study connects them through a declared payload and reports the limiting mechanism for each sampled mission. At the reference inputs, the midpoint relay has a 25.0 km link-margin boundary at 120 m height; 12 dB of added loss reduces it to 6.3 km. Carrier size reaches the exploratory rotor limit at 42.1 minutes, while mathematical closure ends at 52.4 minutes within the assumed model. These values include no operating-condition margin, and the scatter among the individual hover calibration points alone spans 33 to 49 minutes for the first boundary.
+A useful relay path depends on the payload's mission-traffic function, while a supportable carrier depends on power and mechanical resources. This case study assigns those responsibilities, keeps aircraft command separate, and reports the limiting mechanism for each sampled mission. At the reference inputs, the midpoint relay has a 25.0 km link-margin boundary at 120 m height; 12 dB of added loss reduces it to 6.3 km. Carrier size reaches the exploratory rotor limit at 42.1 minutes, while mathematical closure ends at 52.4 minutes within the assumed model. These values include no separate operating-condition margin, and single-point hover refits span 33 to 49 minutes for the first boundary.
 
-The 10 km example distinguishes a 4.77 kg, 30-minute pass from a 15.15 kg, 45-minute exclusion and a 60-minute nonclosure. Across 90 baseline cases, 18 pass both screens. The hover calibration and published-aircraft comparisons support a limited part of the calculation, while structural scaling and full-mission performance remain unverified. The proposed architecture assigns carrier command to a separate radio path and requires the aircraft to power and support the payload. The assessment gives a systems engineer an explainable way to identify the constraint that must change before advancing a relay concept.
+The 10 km example distinguishes a 4.77 kg, 30-minute pass from a 15.15 kg, 45-minute exclusion and a 60-minute nonclosure. Across 90 baseline cases, 18 pass both screens. These outcomes call for different changes to geometry, service duration, or carrier resources. The hover calibration and published-aircraft comparisons support only part of the resource calculation. Structural scaling, the command and payload interfaces, and full-mission performance remain unverified. The workflow identifies the next engineering question without claiming a flight-ready relay.
 
 %======================================================================
 
@@ -421,7 +436,7 @@ For reproduction, the reference effective $FM$ is 0.620274, structure intercept 
 \section*{Data Availability}
 %======================================================================
 
-The computational baseline, declared inputs, calibration data, 1,890 case records, tests, and independent checker are identified at \url{https://github.com/noahstephenson/low-cost-relay-uas} (annotated tag aeroconf-2027-paper-2784-r2; computational baseline at commit 4f9e2cde8c429e6b241d4a09dc5f8e7dbb877069). The manuscript source is in the repository's submission directory under a Creative Commons Attribution 4.0 license.
+The computational baseline, declared inputs, calibration data, 1,890 case records, tests, and independent checker are archived at \url{https://github.com/noahstephenson/low-cost-relay-uas} under annotated tag \nolinkurl{aeroconf-2027-paper-2784-r3}. The baseline commit is recorded in the repository README. The manuscript source is in the submission directory under a Creative Commons Attribution 4.0 license.
 
 \acknowledgements
 
@@ -449,6 +464,7 @@ The views expressed in this paper are those of the author. They do not reflect t
 \bibitem{russell2018} C. R. Russell, C. R. Theodore, and M. K. Sekula, ``Incorporating test data for small UAS at the conceptual design level,'' in \emph{Proc. AHS Int. Tech. Meeting Aeromechanics Design Transformative Vertical Flight}, San Francisco, CA, USA, Jan. 2018. [Online]. Available: \url{https://rotorcraft.arc.nasa.gov/Publications/files/Russell_2018_TechMx.pdf}
 
 \bibitem{bershadsky} D. Bershadsky, S. Haviland, and E. N. Johnson, ``Electric multirotor UAV propulsion system sizing for performance prediction and design optimization,'' in \emph{Proc. 57th AIAA/ASCE/AHS/ASC Structures, Structural Dynamics, and Materials Conf.}, San Diego, CA, USA, Jan. 2016, doi: 10.2514/6.2016-0581.
+\bibitem{nasaSEH} NASA, \emph{NASA Systems Engineering Handbook}, NASA/SP-2016-6105 Rev. 2, 2016. [Online]. Available: \url{https://www.nasa.gov/wp-content/uploads/2018/09/nasa_systems_engineering_handbook_0.pdf}
 
 \bibitem{nasatm} C. Russell, G. Willink, C. Theodore, J. Jung, and B. Glasner, ``Wind tunnel and hover performance test results for multicopter UAS vehicles,'' NASA, Moffett Field, CA, USA, Rep. NASA/TM-2018-219758, Feb. 2018. [Online]. Available: \url{https://rotorcraft.arc.nasa.gov/Publications/files/Russell_1180_Final_TM_022218.pdf}
 

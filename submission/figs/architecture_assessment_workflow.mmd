@@ -1,0 +1,10 @@
+flowchart TD
+    N["Operational need<br/>outbound relay dwell"] --> B["System boundary<br/>carrier and black-box payload"]
+    B --> A["Allocate four flows<br/>traffic | command | power | support"]
+    A --> I["Declare geometry, radio, payload,<br/>and carrier assumptions"]
+    I --> L["Link check<br/>visibility and received level"]
+    I --> C["Carrier check<br/>power, energy, and mass closure"]
+    L --> V["Independent numerical checks<br/>and saved-case review"]
+    C --> V
+    V --> D["Design implication<br/>link | size | no closure | pass"]
+    D -.-> F["Outstanding physical verification<br/>and operational validation"]
