@@ -2,10 +2,21 @@
 
 A relay aircraft carries a radio to a place where two other systems can communicate more effectively. This repository asks what the **aircraft around that radio** must do, and when a small multirotor can support the resulting mission demands.
 
-**Paper title:** System Architecture and Mission Feasibility of a Multirotor Communications Relay
-**Branch:** `codex/carrier-calibration-v1` (computational baseline at commit `4f9e2cd`)
+Run the checks below to reproduce the paper's calculated results and inspect the saved mission cases. The results show which sampled missions fail the link check, the carrier check, or both.
 
-The manuscript source is drafted and tracked in `submission/relay_uas_aeroconf.tex`; the repository's calibrated code, data, and reproducible case records are its computational backing. Examination of a recovered relay aircraft motivated the work; the analysis does not reconstruct that aircraft or claim its performance. “Low-cost” is a project objective, not an established result.
+## Paper and reproducibility
+
+The IEEE Aerospace 2027 paper 2784, [*System Architecture and Mission Feasibility of a Multirotor Communications Relay*](submission/relay_uas_aeroconf.pdf), corresponds to annotated tag `aeroconf-2027-paper-2784` at commit `c045e3e89441de4c1cf91ddedcd4120f8348f0cf`. The computational baseline was generated at commit `4f9e2cde8c429e6b241d4a09dc5f8e7dbb877069`. The manuscript source is in [`submission/relay_uas_aeroconf.tex`](submission/relay_uas_aeroconf.tex).
+
+From the repository root, these commands check the tests, generated baseline, and manuscript evidence:
+
+```bash
+python -B -m unittest discover -s tests
+python -B scripts/validate-baseline.py --check-generated
+python -B docs/reference/check-manuscript-evidence.py
+```
+
+The repository's calibrated code, data, and reproducible case records are the paper's computational backing. Examination of a recovered relay aircraft motivated the work; the analysis does not reconstruct that aircraft or claim its performance. “Low-cost” is a project objective, not an established result.
 
 ## Start with the communications problem
 
