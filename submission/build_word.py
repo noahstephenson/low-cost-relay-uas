@@ -8,6 +8,7 @@ from docx.oxml.ns import qn
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'submission'
 s=(OUT/'relay_uas_aeroconf.tex').read_text(encoding='utf-8-sig')
+paper_title=re.search(r'\\title\{([^}]+)\}',s).group(1)
 keys=re.findall(r'\\bibitem\{([^}]+)\}',s)
 for i,k in enumerate(keys,1): s=s.replace('\\cite{'+k+'}',f'[{i}]')
 labels={}
@@ -102,7 +103,7 @@ def section_end(before,cols):
     pp.append(sp);p.append(pp);before.addprevious(p)
     return p
 first=doc.paragraphs[0]
-title=first.insert_paragraph_before('System Architecture and Service Envelope of a Multirotor Communications Relay',style='Title')
+title=first.insert_paragraph_before(paper_title,style='Title')
 title.alignment=WD_ALIGN_PARAGRAPH.CENTER
 title.paragraph_format.space_after=Pt(10)
 for r in title.runs:r.font.size=Pt(20);r.font.name='Times New Roman';r.bold=True
