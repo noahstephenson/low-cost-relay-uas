@@ -33,13 +33,15 @@ def maximum_path_km(tx_dbm: float, tx_gain_dbi: float, rx_gain_dbi: float, servi
     )
 
 
-def link_limited_separation_km(excess_loss_db: float, relay_altitude_m: float = 120.0) -> dict:
+def link_limited_separation_km(
+    excess_loss_db: float, relay_altitude_m: float = 120.0, relay_position_fraction: float | None = None
+) -> dict:
     inputs = load_json("analysis/mission-connectivity-inputs.yaml")
     payloads = load_json("analysis/relay-payloads.yaml")["payloads"]
     payload = next(row for row in payloads if row["id"] == inputs["primary_payload_id"])
     service = inputs["service_mode"]
     geometry = inputs["geometry"]
-    fraction = value(geometry["relay_position_fraction"])
+    fraction = value(geometry["relay_position_fraction"]) if relay_position_fraction is None else relay_position_fraction
     ground_altitude_km = value(geometry["ground_altitude_m"]) / 1000.0
     remote_altitude_km = value(geometry["remote_altitude_m"]) / 1000.0
     relay_altitude_km = relay_altitude_m / 1000.0
@@ -81,9 +83,14 @@ def _bisect_transition(predicate, low: float, high: float, iterations: int = 80)
     return (low + high) / 2.0
 
 
-def endurance_boundaries(case: str) -> dict:
-    inputs = load_inputs()
-    p = parameters_for_case(inputs, case)
+def endurance_boundaries_for_parameters(inputs: dict, p: dict, label: str) -> dict:
+    """Practical rotor-limit and energy-slope-one dwell boundaries for arbitrary parameters.
+
+    Shared by the named-case boundaries below and by sensitivity.py's calibration
+    variants (k_env margin, single-point refits, estimator variants, coaxial DAx8,
+    Matrice 4 specific-energy substitution), so every boundary in this repository is
+    produced by the same bisection against the same solver functions.
+    """
     payload = next(row for row in load_json("analysis/relay-payloads.yaml")["payloads"] if row["id"] == "PAY-MESH-OEM")
     overrides = {"payload_mass_kg": payload["mass_kg"], "payload_power_w": payload["dc_power_w"]}
 
@@ -99,13 +106,19 @@ def endurance_boundaries(case: str) -> dict:
     practical_boundary = _bisect_transition(practical, 0.0, 240.0) if practical_at_zero else None
     nonclosure_boundary = _bisect_transition(energy_slope_below_one, 0.0, 240.0)
     return {
-        "case": case,
+        "case": label,
         "longest_practical_dwell_min": practical_boundary,
         "practical_boundary_status": "bounded" if practical_at_zero else "no_practical_solution_at_zero_dwell",
         "energy_slope_one_dwell_min": nonclosure_boundary,
         "payload_mass_kg": payload["mass_kg"],
         "payload_power_w": payload["dc_power_w"],
     }
+
+
+def endurance_boundaries(case: str) -> dict:
+    inputs = load_inputs()
+    p = parameters_for_case(inputs, case)
+    return endurance_boundaries_for_parameters(inputs, p, case)
 
 
 def build() -> dict:

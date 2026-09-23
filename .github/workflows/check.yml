@@ -20,5 +20,20 @@ jobs:
       - name: Validate consolidated model and generated views
         run: python scripts/validate-baseline.py --check-generated
 
-      - name: Validate manuscript evidence
+      - name: Check carrier calibration is current
+        run: python -B analysis/calibration/calibrate_carrier.py --check
+
+      - name: Check calibration boundaries are current
+        run: python -B analysis/calibration/boundaries.py --check
+
+      - name: Check calibration sensitivity results are current
+        run: python -B analysis/calibration/sensitivity.py --check
+
+      - name: Check feasibility outputs are current
+        run: python -B analysis/feasibility.py --check
+
+      - name: Check mission-connectivity outputs are current
+        run: python -B analysis/mission_connectivity.py --check
+
+      - name: Check manuscript evidence is current
         run: python -B docs/reference/check-manuscript-evidence.py

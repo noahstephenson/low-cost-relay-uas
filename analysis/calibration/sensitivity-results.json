@@ -1,0 +1,184 @@
+{
+  "dax8_weight_share": {
+    "dax8_weight_share": 0.7937255185040013,
+    "all_vehicle_shares": {
+      "NASA-SOLO": 0.03785650641059007,
+      "NASA-PHANTOM3": 0.022761190007383764,
+      "NASA-IRIS": 0.024920146643018296,
+      "NASA-DAX8": 0.7937255185040013,
+      "NASA-ENDURANCE": 0.12073663843500652
+    }
+  },
+  "kenv_operating_margin_case": {
+    "reference_k_w_kg": 108.40502884221519,
+    "margin_k_w_kg": 124.66578316854745,
+    "longest_practical_dwell_min": 35.723556100747814,
+    "energy_slope_one_dwell_min": 44.51261229471703
+  },
+  "single_point_refits": {
+    "per_vehicle": {
+      "NASA-SOLO": {
+        "effective_hover_factor": 0.4386253487475587,
+        "rotor_figure_of_merit": 0.6077339169393886,
+        "longest_practical_dwell_min": 41.12865097544312,
+        "energy_slope_one_dwell_min": 51.213440584167884
+      },
+      "NASA-PHANTOM3": {
+        "effective_hover_factor": 0.36456749078777945,
+        "rotor_figure_of_merit": 0.5051236318143932,
+        "longest_practical_dwell_min": 33.00112013896948,
+        "energy_slope_one_dwell_min": 41.15607679000179
+      },
+      "NASA-IRIS": {
+        "effective_hover_factor": 0.45934386980919517,
+        "rotor_figure_of_merit": 0.6364403015428608,
+        "longest_practical_dwell_min": 43.386463670736006,
+        "energy_slope_one_dwell_min": 54.027101542430245
+      },
+      "NASA-DAX8": {
+        "effective_hover_factor": 0.4420624892727185,
+        "rotor_figure_of_merit": 0.6124962200766582,
+        "longest_practical_dwell_min": 41.5036952105047,
+        "energy_slope_one_dwell_min": 51.680218501130796
+      },
+      "NASA-ENDURANCE": {
+        "effective_hover_factor": 0.5132004391874813,
+        "rotor_figure_of_merit": 0.7110608494766306,
+        "longest_practical_dwell_min": 49.223236383871935,
+        "energy_slope_one_dwell_min": 61.341046691064435
+      }
+    },
+    "practical_dwell_range_min": [
+      33.00112013896948,
+      49.223236383871935
+    ],
+    "energy_slope_dwell_range_min": [
+      41.15607679000179,
+      61.341046691064435
+    ]
+  },
+  "estimator_variants": {
+    "per_estimator": {
+      "mean_ratio": {
+        "effective_hover_factor": 0.4435599275609466,
+        "rotor_figure_of_merit": 0.6145709839699862,
+        "longest_practical_dwell_min": 41.66702870393381,
+        "energy_slope_one_dwell_min": 51.88357682175902
+      },
+      "geometric_mean": {
+        "effective_hover_factor": 0.44091619911515934,
+        "rotor_figure_of_merit": 0.6109079867258231,
+        "longest_practical_dwell_min": 41.378638788467285,
+        "energy_slope_one_dwell_min": 51.52454755079755
+      },
+      "quads_only_lsq": {
+        "effective_hover_factor": 0.4706730073539429,
+        "rotor_figure_of_merit": 0.6521372993458245,
+        "longest_practical_dwell_min": 44.61813588292725,
+        "energy_slope_one_dwell_min": 55.56564533643997
+      }
+    },
+    "practical_dwell_range_min": [
+      41.378638788467285,
+      44.61813588292725
+    ],
+    "energy_slope_dwell_range_min": [
+      51.52454755079755,
+      55.56564533643997
+    ]
+  },
+  "coaxial_dax8_refit": {
+    "implied_dax8_effective_factor": 0.6251707677458894,
+    "five_point_effective_factor": 0.6024303087405145,
+    "rotor_figure_of_merit": 0.8346925964477009,
+    "longest_practical_dwell_min": 58.792258254368434,
+    "energy_slope_one_dwell_min": 73.45883248886898
+  },
+  "auxiliary_power_sweep": {
+    "DJI-M30": {
+      "0": {
+        "modeled_hover_min": 35.45841739695985,
+        "percent_error": -1.5043961195559656
+      },
+      "10": {
+        "modeled_hover_min": 34.67973916337782,
+        "percent_error": -3.6673912128393957
+      },
+      "25": {
+        "modeled_hover_min": 33.57380195358191,
+        "percent_error": -6.739439017828018
+      },
+      "40": {
+        "modeled_hover_min": 32.53622154102839,
+        "percent_error": -9.621606830476695
+      }
+    },
+    "DJI-M4": {
+      "0": {
+        "modeled_hover_min": 49.211520472819345,
+        "percent_error": 17.17028684004606
+      },
+      "10": {
+        "modeled_hover_min": 45.46387179971188,
+        "percent_error": 8.247313808837813
+      },
+      "25": {
+        "modeled_hover_min": 40.80292020825018,
+        "percent_error": -2.8501899803567183
+      },
+      "40": {
+        "modeled_hover_min": 37.008783431013825,
+        "percent_error": -11.883848973776608
+      }
+    },
+    "DJI-MAVIC3M": {
+      "0": {
+        "modeled_hover_min": 48.11118581955153,
+        "percent_error": 30.030231944733863
+      },
+      "10": {
+        "modeled_hover_min": 43.57357467651296,
+        "percent_error": 17.766418044629628
+      },
+      "25": {
+        "modeled_hover_min": 38.17312212021197,
+        "percent_error": 3.1706003248972197
+      },
+      "40": {
+        "modeled_hover_min": 33.96370446386777,
+        "percent_error": -8.206204151708727
+      }
+    }
+  },
+  "matrice4_specific_energy_case": {
+    "battery_energy_wh": 99.5,
+    "battery_mass_kg": 0.401,
+    "specific_energy_wh_kg": 248.1296758104738,
+    "longest_practical_dwell_min": 54.39488011418749,
+    "energy_slope_one_dwell_min": 67.73245017405341
+  },
+  "check_aircraft_with_payload": {
+    "fixed_power_w": 40.21739130434783,
+    "usable_fraction": 0.7200000000000001,
+    "DJI-M30": {
+      "gross_mass_kg": 3.97,
+      "endurance_min": 21.80335362517626
+    },
+    "DJI-M4": {
+      "gross_mass_kg": 1.419,
+      "endurance_min": 22.320189336563573
+    }
+  },
+  "relay_position_optimum": {
+    "relay_position_fraction": 0.441,
+    "endpoint_separation_km": 28.342398218349196,
+    "clearance_threshold_m": 88.2
+  },
+  "fresnel_zone_case": {
+    "separation_km": 10.0,
+    "first_fresnel_zone_radius_m": 9.988159656980526,
+    "clearance_fraction": 0.6,
+    "adjusted_screen_top_m": 85.99289579418831,
+    "clearance_threshold_m": 107.49111974273539
+  }
+}

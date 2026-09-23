@@ -520,7 +520,7 @@
       "location": "https://enterprise.dji.com/matrice-4-series/specs", "owner": "DJI", "date": "current page",
       "revision": "web specification accessed 2026-09-11", "accessed_date": "2026-09-11", "reliability": "manufacturer specification",
       "applicable_configurations": ["CFG-REP", "CFG-DOM"], "applicability_scope": "held-out carrier hover-endurance check",
-      "notes": "Standard configuration: 1219 g including battery and propellers, 10.8 in propellers, 99.5 Wh battery, 42 min hover at windless sea level from 100% to 0%."
+      "notes": "Standard configuration: 1219 g including battery and propellers, 10.8 in propellers, 99.5 Wh battery, 401 g battery mass (248 Wh/kg), 42 min hover at windless sea level from 100% to 0%."
     },
     {
       "id": "SRC-CAL-007", "title": "DJI Mavic 3M specifications",

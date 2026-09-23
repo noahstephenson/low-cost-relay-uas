@@ -3,8 +3,9 @@
 A relay aircraft carries a radio to a place where two other systems can communicate more effectively. This repository asks what the **aircraft around that radio** must do, and when a small multirotor can support the resulting mission demands.
 
 **Paper title:** System Architecture and Mission Feasibility of a Multirotor Communications Relay
+**Branch:** `codex/carrier-calibration-v1` (computational baseline at commit `4f9e2cd`)
 
-Examination of a recovered relay aircraft motivated the work; the analysis does not reconstruct that aircraft or claim its performance. “Low-cost” is a project objective, not an established result.
+The manuscript source is drafted and tracked in `submission/relay_uas_aeroconf.tex`; the repository's calibrated code, data, and reproducible case records are its computational backing. Examination of a recovered relay aircraft motivated the work; the analysis does not reconstruct that aircraft or claim its performance. “Low-cost” is a project objective, not an established result.
 
 ## Start with the communications problem
 
@@ -35,7 +36,7 @@ The reference example places endpoints 10 km apart, with the remote aircraft 100
 
 Clearance is only the first gate. **Link margin** is the calculated received signal level above an assumed receiver threshold; the two outbound relay hops must both have nonnegative margin. Then the carrier must support the payload for the required **dwell**, meaning time spent at the relay station.
 
-With the primary 0.20 kg payload and constant 14 W sizing allowance, existing calculations give:
+With the primary 0.20 kg payload and constant 14 W sizing allowance, the calibrated carrier gives:
 
 | Dwell | Carrier result | What it tells us |
 |---|---|---|
@@ -64,7 +65,15 @@ From the repository root, using Python’s standard library:
 ```bash
 python -B -m unittest discover -s tests -v
 python -B scripts/validate-baseline.py --check-generated
+python -B analysis/calibration/calibrate_carrier.py --check
+python -B analysis/calibration/boundaries.py --check
+python -B analysis/calibration/sensitivity.py --check
+python -B analysis/feasibility.py --check
+python -B analysis/mission_connectivity.py --check
+python -B docs/reference/check-manuscript-evidence.py
 ```
+
+`analysis/calibration/boundary-results.json` reproduces the headline 42.1/52.4-minute and 25.0/6.3 km numbers directly. `analysis/calibration/sensitivity-results.json` reproduces every calibration-sensitivity variant the revision reports (single-point refits, mean/geometric-mean/quads-only estimators, the coaxial-DAx8 hypothesis, the k_env operating-margin case, the aux-power sweep, and the Matrice 4 specific-energy substitution).
 
 ## Scope note
 

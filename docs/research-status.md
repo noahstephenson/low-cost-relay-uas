@@ -1,5 +1,7 @@
 # Research Status
 
+> **Superseded.** This status page predates the carrier calibration (commit `4f9e2cd`, branch `codex/carrier-calibration-v1`) and the finished manuscript. The submitted paper in `submission/relay_uas_aeroconf.tex` (local, intentionally untracked; see `.gitignore`) is the sole authority for claims and numbers; its title is "System Architecture and Service Envelope of a Multirotor Communications Relay." Treat everything below as historical drafting context.
+
 Working title: **System Architecture and Mission Feasibility of a Multirotor Communications Relay**
 
 Corrective successor to commit `2eb84259573cf7e0f216bc11002d65dbdb0f32f3`, tag `relay-uas-research-freeze-v1`. The original frozen tag is preserved. See [corrective record](reference/research-corrective-v1.md).

@@ -16,7 +16,7 @@ The five NASA rows are fit points. The three DJI hover-endurance rows are checks
 | DJI Mavic 3M | DJI, [Mavic 3M specifications](https://enterprise.dji.com/mavic-3-m/specs) | 0.951 | 0.2388 | 77.0 | Hover, wind-free sea level, to 0% remaining, standard hard propellers: 37.00 min | 38.17 min | +3.17% | check |
 | DJI Matrice 350 RTK | DJI, [M350 specifications](https://enterprise.dji.com/matrice-350-rtk/specs) | 6.470 | 0.5334 | 526.4 | 55 min at about 8 m/s, no payload, windless, to 0% | — | — | excluded: forward-flight endurance, not hover |
 
-NASA vehicle dimensions and propeller diameters are cross-checked against Russell et al., [NASA/AIAA 2016-374](https://rotorcraft.arc.nasa.gov/Publications/files/72-2016-374.pdf). The structural anchor uses the measured empty mass, 2.7216 kg, and calculated component masses for the Endurance article in Russell et al., [AHS 2018](https://rotorcraft.arc.nasa.gov/Publications/files/Russell_2018_TechMx.pdf), Table 1.
+NASA vehicle dimensions and propeller diameters are cross-checked against Russell et al., [NASA/AIAA 2016-374](https://rotorcraft.arc.nasa.gov/Publications/files/72-2016-374.pdf). The DAx8 and Endurance test articles were hover-tested inside the wind-tunnel test section, where recirculation was not quantified; the other three NASA articles were tested in a laboratory about 30 ft from the nearest wall. The DAx8 rotor layout (eight separate disks versus coaxial pairs) is not confirmed by the sources consulted. The structural anchor is not a measured empty mass: it is anchored to the sized NASA 2018 baseline conceptual-design breakdown in Russell et al., [AHS 2018](https://rotorcraft.arc.nasa.gov/Publications/files/Russell_2018_TechMx.pdf), Table 1, whose 1.61 lb airframe entry comes from a fuselage-weight trend plus 1% motor-support and 4% landing-gear fractions, not a weighed article.
 
 ## Parameter table
 
@@ -25,10 +25,12 @@ Only three feasibility inputs changed. The calibration script fits the first two
 | Parameter | Previous nominal | Calibrated nominal | Basis |
 |---|---:|---:|---|
 | Rotor figure of merit | 0.620000 | 0.620274 | Unweighted least-squares fit through the origin across five independent NASA full-vehicle hover points. With the unchanged motor/controller efficiency of 0.83 and environment multiplier of 1.15, this gives an effective `FM*eta/k_env` of 0.447676. |
-| Structure base mass (kg) | 0.950000 | 0.163173 | Back-calculated from the NASA Endurance measured empty mass after subtracting the published calculated motor, ESC, propeller, battery, autopilot, and landing-gear masses; the existing load-fraction term is unchanged. |
+| Structure base mass (kg) | 0.950000 | 0.163173 | Back-calculated from the NASA 2018 sized baseline design's 1.61 lb airframe allowance (fuselage-weight trend plus 1% motor-support and 4% landing-gear fractions) after subtracting this model's own structural-growth, disk-area, avionics, power-electronics, mount, propulsion-specific-power, and thrust-margin terms; the existing load-fraction term is unchanged. Conditional on those modeling choices, not a directly measured empty-airframe mass. |
 | Battery specific energy (Wh/kg) | 170.000 | 192.117 | Direct ratio for one DJI Matrice 30 TB30 pack: 131.6 Wh / 0.685 kg. This is a selected carrier-battery technology anchor, not a hover-fit parameter. |
 
 The machine-readable inputs retain `previous_nominal` and `calibration_source` fields in `analysis/feasibility-inputs.yaml`. Mission reserve, depth of discharge, payload, RF, and all other parameters remain unchanged.
+
+`k_env` (`environment_power_margin`) is held fixed at 1.15 while `FM` is fit, so the fit absorbs `k_env`: the product `FM*eta/k_env` is the quantity the calibration actually identifies. The reference relation therefore reproduces the laboratory hover power and carries no net operating-condition margin; `k_env` is not an additional allowance layered on top of the fitted relation. Applying a further 15% margin on top of the fitted relation raises the reference propulsion-power coefficient from 108.4 to 124.7 W/kg and moves the carrier boundaries from 42.1/52.4 minutes to 35.7/44.5 minutes (see `analysis/calibration/sensitivity-results.json`, `kenv_operating_margin_case`).
 
 ## Held-out result
 
