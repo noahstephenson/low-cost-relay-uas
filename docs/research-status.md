@@ -1,6 +1,6 @@
 # Research Status
 
-Working title: **System Architecture and Mission Feasibility of a Multirotor Communications Relay**
+Working title: **System Architecture and Service Envelope of a Multirotor Communications Relay**
 
 Corrective successor to commit `2eb84259573cf7e0f216bc11002d65dbdb0f32f3`, tag `relay-uas-research-freeze-v1`. The original frozen tag is preserved. See [corrective record](reference/research-corrective-v1.md).
 

@@ -47,7 +47,7 @@ Use the fixed title. “Low-cost” is an unestablished project aspiration and d
 3. **Method:** Fixed-payload geometry and received-level screening, branch-consistent hover mass closure, and exploratory physical limits. C03/C09/C12.
 4. **Experiment:** Ninety separation-dwell-altitude combinations, idealized opaque screen, stationary Ground → Relay → Remote assessment. C05/C14/C30.
 5. **Main result:** Eighteen physical-boundary passes, six finite exclusions, six nonclosures, and sixty connectivity failures; these are deterministic case counts. C14.
-6. **Example:** Contrast 30-minute mass 8.62 kg, 45-minute finite excluded mass 106.25 kg, and 60-minute nonclosure. Call the large mass an extrapolation. C11.
+6. **Example:** Contrast 30-minute mass 4.77 kg, 45-minute finite excluded mass 15.15 kg, and 60-minute nonclosure. Call the large mass an extrapolation. C11.
 7. **Sensitivity:** Six passes under an additional 12 dB loss scenario. C16.
 8. **Implication/limit:** Different mechanisms require different assumption changes; full mission energy and physical performance remain unvalidated. C21/C24/C30.
 
@@ -403,13 +403,13 @@ Machine labels for Supplement S3: DIRECT=`DIRECT_SUFFICIENT`; LINK FAIL=`RELAY_C
 
 | Dwell (min) | Gross mass (kg) | Rotor diameter (m) | Battery branch | Energy-branch slope | Label |
 |---:|---:|---:|---|---:|---|
-| 10 | 5.4170 | 0.5309 | Power | 0.366027 | PASS |
-| 20 | 5.4170 | 0.5309 | Power | 0.540284 | PASS |
-| 30 | 8.6203 | 0.6697 | Energy | 0.714541 | PASS |
-| 45 | 106.2456 | 2.3511 | Energy | 0.975927 | EXCLUDED |
-| 60 | No finite solution | Not defined | None admissible | 1.237313 | NO CLOSE |
+| 10 | 3.5839 | 0.4318 | Power | 0.345841 | PASS |
+| 20 | 3.5839 | 0.4318 | Power | 0.499969 | PASS |
+| 30 | 4.7747 | 0.4984 | Energy | 0.654097 | PASS |
+| 45 | 15.1456 | 0.8877 | Energy | 0.885289 | EXCLUDED |
+| 60 | No finite solution | Not defined | None admissible | 1.116481 | NO CLOSE |
 
-Power-branch slope is 0.570330 throughout. Hop margins remain 7.974/10.018 dB. At 45 min all three physical bounds fail; at 60 min never print a last-iterate or inconsistent-candidate mass as physical. Four-decimal output is for reproduction, not measurement precision; prose uses 8.62 and 106.25 kg.
+Power-branch slope is 0.570106 throughout. Hop margins remain 7.974/10.018 dB. At 45 min all three physical bounds fail; at 60 min never print a last-iterate or inconsistent-candidate mass as physical. Four-decimal output is for reproduction, not measurement precision; prose uses 4.77 and 15.15 kg.
 
 **Caption:** “Calculated dwell cases for one geometry. PASS denotes the physical screen, not validated service. The 45-minute mass is extrapolation outside the exploratory envelope; nonclosure has no reported physical size.”
 

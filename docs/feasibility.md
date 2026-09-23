@@ -59,8 +59,8 @@ The existing baseline cases at 10 km endpoint separation and 120 m relay altitud
 
 | Dwell | Analytical carrier result | Implication for the small relay UAS |
 |---|---|---|
-| 30 min | 8.6203 kg; exploratory physical-boundary pass | The declared outbound relay service and physical screening bounds are jointly satisfied; no operational or affordability approval follows |
-| 45 min | 106.2456 kg; finite practical exclusion | A finite solution can lie far outside the small-carrier envelope; this is an extrapolation, not an aircraft proposal |
+| 30 min | 4.7747 kg; exploratory physical-boundary pass | The declared outbound relay service and physical screening bounds are jointly satisfied; no operational or affordability approval follows |
+| 45 min | 15.1456 kg; finite practical exclusion | A finite solution can lie far outside the small-carrier envelope; this is an extrapolation, not an aircraft proposal |
 | 60 min | Mathematical nonclosure | Changing only an allowable mass ceiling cannot create a finite carrier solution |
 
 | Governing limitation | Architecture decision implication |

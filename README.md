@@ -2,7 +2,7 @@
 
 A relay aircraft carries a radio to a place where two other systems can communicate more effectively. This repository asks what the **aircraft around that radio** must do, and when a small multirotor can support the resulting mission demands.
 
-**Paper title:** System Architecture and Mission Feasibility of a Multirotor Communications Relay
+**Paper title:** System Architecture and Service Envelope of a Multirotor Communications Relay
 
 Examination of a recovered relay aircraft motivated the work; the analysis does not reconstruct that aircraft or claim its performance. “Low-cost” is a project objective, not an established result.
 
@@ -39,11 +39,11 @@ With the primary 0.20 kg payload and constant 14 W sizing allowance, existing ca
 
 | Dwell | Carrier result | What it tells us |
 |---|---|---|
-| 30 minutes | 8.6203 kg; passes exploratory physical bounds | The declared link and carrier screens both pass |
-| 45 minutes | 106.2456 kg; outside those bounds | A finite calculation is not necessarily a plausible small aircraft |
+| 30 minutes | 4.7747 kg; passes exploratory physical bounds | The declared link and carrier screens both pass |
+| 45 minutes | 15.1456 kg; outside those bounds | A finite calculation is not necessarily a plausible small aircraft |
 | 60 minutes | No finite analytical closure | The assumed resource feedback has no finite solution |
 
-**Analytical closure** means that calculated component masses sum consistently to the gross mass used to calculate power. More battery adds mass; more mass needs more hover power; that requires more battery. The large 45-minute result is an extrapolation, not a design proposal. **Exploratory boundaries** are analysis limits used to screen results, not approved aircraft requirements.
+**Analytical closure** means that calculated component masses sum consistently to the gross mass used to calculate power. More battery adds mass; more mass needs more hover power; that requires more battery. The 45-minute result is an extrapolation outside the exploratory envelope, not a design proposal. **Exploratory boundaries** are analysis limits used to screen results, not approved aircraft requirements.
 
 Across 90 baseline cases, the ordered counts are **18 physical passes / 6 finite exclusions / 6 nonclosures / 60 connectivity failures**. The +12 dB loss sensitivity gives **6 / 2 / 2 / 80**. These are hierarchical grid counts, not probabilities.
 
