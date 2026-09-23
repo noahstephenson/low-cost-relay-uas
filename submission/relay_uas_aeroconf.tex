@@ -17,7 +17,7 @@
 \maketitle
 \thispagestyle{plain}\pagestyle{plain}
 \begin{abstract}
-A communications relay can clear an obstructed path while imposing an aircraft demand that a small multirotor cannot sustain. This paper develops a reproducible architecture case study that separates two questions: whether an outbound relay path has sufficient received-level margin, and whether its carrier can support the payload for the required stationary dwell. A geometric visibility test and a free-space link budget define the communications screen. A constant-disk-loading hover model then closes the battery, propulsion, and structural mass balance on energy-sized and power-sized battery branches, using an aggregate hover coefficient fitted to five published NASA test points and checked against three commercial quadrotors held out of that fit. For the declared 0.20 kg, 14 W payload, the reference link-margin boundary is 25.0 km of endpoint separation at a midpoint relay height of 120 m; a deterministic 12 dB excess-loss case reduces it to 6.3 km. The reference carrier, which carries no operating-condition margin beyond the laboratory hover calibration, reaches its exploratory rotor-size limit at 42.1 minutes and has no finite mass closure at or above 52.4 minutes. The scatter of the individual calibration points alone moves the first boundary between 33 and 49 minutes. At a fixed 10 km separation, 30 minutes closes at 4.77 kg, 45 minutes at 15.15 kg outside the physical screen, and 60 minutes has no finite solution. Of 90 baseline grid cases, 18 pass both screens, 6 have excessive finite size, 6 have no closure, and 60 fail connectivity. Identifying which mechanism binds is what supports an early architecture decision. These results describe conditional outbound hover service; full-mission energy, packet performance, and physical verification remain unresolved.
+A communications relay can clear an obstructed path while imposing an aircraft demand that a small multirotor cannot sustain. This paper develops a reproducible architecture case study that separates two questions: whether an outbound relay path has sufficient received-level margin, and whether its carrier can support the payload for the required stationary dwell. A geometric visibility test and a free-space link budget define the communications screen. A constant-disk-loading hover model then closes the battery, propulsion, and structural mass balance on energy-sized and power-sized battery branches, using an aggregate hover coefficient fitted to five published NASA test points and checked against three commercial quadrotors held out of that fit. Under manufacturer conditions and an assumed 25 W auxiliary load, those three held-out aircraft reproduce published hover times within $-6.7$ to $+3.2$ percent, a limited consistency check that does not validate the proposed relay aircraft or its structural model. For the declared 0.20 kg, 14 W payload, the reference link-margin boundary is 25.0 km of endpoint separation at a midpoint relay height of 120 m; a deterministic 12 dB excess-loss case reduces it to 6.3 km. The reference carrier, which carries no operating-condition margin beyond the laboratory hover calibration, reaches its exploratory rotor-size limit at 42.1 minutes and has no finite mass closure at or above 52.4 minutes. The scatter of the individual calibration points alone moves the first boundary between 33 and 49 minutes. At a fixed 10 km separation, 30 minutes closes at 4.77 kg, 45 minutes at 15.15 kg outside the physical screen, and 60 minutes has no finite solution. Of 90 baseline grid cases, 18 pass both screens, 6 have excessive finite size, 6 have no closure, and 60 fail connectivity. Identifying which mechanism binds is what supports an early architecture decision. These results describe conditional outbound hover service; full-mission energy, packet performance, and physical verification remain unresolved.
 \end{abstract}
 \tableofcontents
 %======================================================================
@@ -203,7 +203,7 @@ DJI Mavic 3M \cite{djimavic} & check & 0.95 & 0.239 & 77.0 & 37.0 min & 38.2 min
 
 \vspace{2pt}
 \begin{minipage}{\textwidth}\footnotesize
-Fit rows compare measured electrical hover power at the test article's own thrust and rotor size. Check rows were held out of the fit and compare published hover endurance at the manufacturer's stated discharge condition, which does not include the 20 percent mission reserve used elsewhere in this paper. The DAx8 and Endurance were hover-tested inside the wind-tunnel test section, where recirculation was not quantified; the other three NASA articles were tested in a laboratory about 30 ft from the nearest wall \cite{russell2016}. The DJI Matrice 350 was excluded because its published 55 minutes is forward flight at about 8 m/s rather than hover.
+Fit rows compare measured electrical hover power at the test article's own thrust and rotor size. Check rows were held out of the fit and compare published hover endurance at the manufacturer's stated discharge condition, which does not include the 20 percent mission reserve used elsewhere in this paper. The DAx8 and Endurance were hover-tested inside the wind-tunnel test section, where recirculation was not quantified; the other three NASA articles were tested in a laboratory about 30 ft from the nearest wall \cite{russell2016}. The DJI Matrice 350 was excluded because its published 55 minutes is forward flight at about 8 m/s rather than hover. The rotor diameters for the three check aircraft are derived from the published propeller designation rather than quoted directly.
 \end{minipage}
 \end{table*}
 
@@ -421,7 +421,9 @@ For reproduction, the reference effective $FM$ is 0.620274, structure intercept 
 
 The computational baseline, declared inputs, calibration data, 1,890 case records, tests, and independent checker are identified at \url{https://github.com/noahstephenson/low-cost-relay-uas} (branch codex/carrier-calibration-v1; computational baseline at commit 4f9e2cd). The manuscript source is in the repository's submission directory under a Creative Commons Attribution 4.0 license.
 
-\section*{Acknowledgments}
+\acknowledgements
+
+The author used generative artificial-intelligence tools during the preparation of this paper, including assistance with drafting, editing, and the supporting analysis code and documentation. The author reviewed and verified all content and takes full responsibility for it.
 
 The views expressed in this paper are those of the author. They do not reflect the official policy or position of the United States Military Academy, the Department of the Army, the Department of Defense, or the U.S. Government.
 
@@ -470,9 +472,12 @@ The views expressed in this paper are those of the author. They do not reflect t
 
 \end{thebibliography}
 
-\section*{Biography}
+\thebiography
 
-\noindent\textbf{Noah Stephenson} is a cadet in the Class of 2027 at the United States Military Academy at West Point, where he majors in Systems Engineering with a track in Cyber Security Engineering. His interests include defense technology, systems architecture, and translating operational problems into system designs. His current work applies model-based systems engineering to small uncrewed aircraft and communications systems.
+\begin{biographywithpic}
+{Noah Stephenson}{figs/author_photo.jpg}
+is a cadet in the Class of 2027 at the United States Military Academy at West Point, where he majors in Systems Engineering with a track in Cyber Security Engineering. His interests include defense technology, systems architecture, and translating operational problems into system designs. His current work applies model-based systems engineering to small uncrewed aircraft and communications systems.
+\end{biographywithpic}
 
 \end{document}
 
