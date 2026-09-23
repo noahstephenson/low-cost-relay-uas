@@ -1,2 +1,22 @@
+# This working directory is used by Git for Windows and by a Linux shell at the
+# same time. Without a fixed end-of-line policy the two disagree and every text
+# file shows as modified with no content change. Store LF in the repository and
+# check LF out on every platform.
+* text=auto eol=lf
+
+# Windows-only scripts keep CRLF.
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+*.pdf   binary
+*.docx  binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.zip   binary
+*.mdzip binary
+*.exe   binary
+
 # Preserve archived source evidence byte for byte on every platform.
 docs/archive/*.source.html -text
