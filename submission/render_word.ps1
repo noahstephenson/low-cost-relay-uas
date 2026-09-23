@@ -9,8 +9,6 @@ try {
  foreach($toc in $doc.TablesOfContents){$toc.Update()}
  $doc.Repaginate()
  $doc.Save()
- $pdf=Join-Path (Split-Path $path) 'relay_uas_aeroconf_word.pdf'
- $doc.ExportAsFixedFormat($pdf,17)
  Write-Output ('WORD-PAGES: '+$doc.ComputeStatistics(2))
  $doc.Close(0)
 } finally {$word.Quit()}

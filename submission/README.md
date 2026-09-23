@@ -1,21 +1,19 @@
 # IEEE Aerospace manuscript package
 
-Prepared for the 2027 IEEE Aerospace Conference on 2026-09-12.
+Current source package for IEEE Aerospace 2027 paper 2784.
 
 ## Files
 
 - `relay_uas_aeroconf.pdf`: compiled conference manuscript; preferred review copy.
-- `relay_uas_aeroconf.docx`: editable Word version with native equations and an updated contents list. **Stale against the current `.tex`** (predates the abstract trim, the table-of-contents restoration, and the 28.4 km correction). The conference accepts PDF only for this submission, so the Word path is not required. To regenerate: `python build_word.py`, which needs pandoc 3.x (pandoc 2.x fails on the `CONTENTS_FIELD` marker; the bundled binary in `tmp/` is Windows-only).
+- `relay_uas_aeroconf.docx`: editable conference-layout copy generated from the current LaTeX source, including the acknowledgements, biography, and author photo.
 - `relay_uas_aeroconf.tex`, `IEEEAerospaceCLS.cls`, and `figs/`: LaTeX source and publication figures.
-- `relay_uas_aeroconf_latex.zip`: self-contained LaTeX package.
 
-The Word and LaTeX versions have the same substantive text, tables, and equations. Their pagination differs. The original files in `Claude outputs/` are preserved.
+The Word and LaTeX versions carry the same substantive text, tables, equations, and figures. Their pagination differs.
 
 ## Before submitting
 
-1. Add the author's headshot. The conference instructions request a 1.25 by 1.5 inch image at 300 dpi. No portrait was supplied or invented.
-2. Confirm the biography and the applicability of the retained U.S. Government copyright notice. The supplied name, affiliation, and email have been incorporated. A statement that there is no copyright concern does not establish the applicable conference notice.
-3. Complete the author's scientific review, any required institutional release, abstract acceptance, and submission-portal requirements. No paper has been uploaded or approval claimed.
+1. Confirm the biography and the applicability of the retained U.S. Government copyright notice. The supplied name, affiliation, and email have been incorporated. A statement that there is no copyright concern does not establish the applicable conference notice.
+2. Complete the author's scientific review, any required institutional release, and submission-portal requirements. No paper has been uploaded or approval claimed.
 
 The manuscript is a bounded architecture case study. Publication readiness does not guarantee peer-review acceptance, and the analysis does not validate a physical relay aircraft.
 
@@ -37,7 +35,7 @@ Text-only revision; no solver input or production code changed. Added numbers we
 
 Computational baseline: `4f9e2cde8c429e6b241d4a09dc5f8e7dbb877069`.
 
-- All 25 repository tests passed.
+- All 35 repository tests passed.
 - Generated artifact verification passed.
 - The independent manuscript checker reconstructed all 1,890 case records.
 - The current calibrated baseline supersedes the older manuscript outline and evidence audit's numerical examples.
@@ -50,9 +48,9 @@ Computational baseline: `4f9e2cde8c429e6b241d4a09dc5f8e7dbb877069`.
 
 ## Build
 
-From this directory, run `latexmk -pdf relay_uas_aeroconf.tex`, or run `pdflatex relay_uas_aeroconf.tex` twice. This task used Tectonic. The computational revision and full inputs remain in the repository.
+The PDF is the conference submission copy. From this directory, run `pdflatex relay_uas_aeroconf.tex` twice, or use Tectonic with two TeX passes.
 
-For Word regeneration, `build_word.py` converts the LaTeX content through Pandoc, then applies conference layout with python-docx. `render_word.ps1` updates fields and exports through Microsoft Word on Windows. The packaged LibreOffice renderer was attempted but unavailable; native Word export was used for visual verification.
+The editable DOCX is built from the same LaTeX source. Install Python with `python-docx` and Pandoc 3.x. From the repository root, run `python submission/build_word.py` when Pandoc is on PATH, or pass `--pandoc PATH_TO_PANDOC`. The builder uses a system temporary directory and does not require `tmp/paper-review` or a LaTeX `.aux` file. Open the DOCX in Word and update its table of contents. On Windows, `powershell -File submission/render_word.ps1` updates the contents field and saves the Word document. To inspect Word pagination, export a PDF from Microsoft Word separately.
 
 ## Official instructions
 

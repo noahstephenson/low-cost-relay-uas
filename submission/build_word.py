@@ -1,24 +1,41 @@
 from pathlib import Path
-import re, subprocess, copy
+import argparse, copy, re, shutil, subprocess, tempfile
 from docx import Document
 from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
+
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'submission'
+parser=argparse.ArgumentParser(description='Build the editable Word copy from the LaTeX manuscript.')
+parser.add_argument('--pandoc', help='Path to Pandoc 3.x; defaults to pandoc on PATH')
+args=parser.parse_args()
 s=(OUT/'relay_uas_aeroconf.tex').read_text(encoding='utf-8-sig')
 paper_title=re.search(r'\\title\{([^}]+)\}',s).group(1)
 keys=re.findall(r'\\bibitem\{([^}]+)\}',s)
 for i,k in enumerate(keys,1): s=s.replace('\\cite{'+k+'}',f'[{i}]')
 labels={}
-aux=OUT/'relay_uas_aeroconf.aux'
-if aux.exists():
-    for k,n in re.findall(r'\\newlabel\{([^}]+)\}\{\{([^}]+)\}',aux.read_text()):labels[k]=n
-for k,n in labels.items():s=s.replace('\\ref{'+k+'}',n)
+for kind in ('figure','table'):
+    blocks=re.findall(r'\\begin\{'+kind+r'\*?\}.*?\\end\{'+kind+r'\*?\}',s,re.S)
+    for number,block in enumerate(blocks,1):
+        match=re.search(r'\\label\{([^}]+)\}',block)
+        if match: labels[match.group(1)]=str(number)
+for number,match in enumerate(re.finditer(r'\\section\{[^}]+\}\\label\{([^}]+)\}',s),1):
+    labels[match.group(1)]=str(number)
+for key,number in labels.items(): s=s.replace('\\ref{'+key+'}',number)
+unresolved=re.findall(r'\\ref\{([^}]+)\}',s)
+if unresolved: raise ValueError(f'Unresolved LaTeX references: {unresolved}')
 s=s[s.index('\\begin{abstract}')+len('\\begin{abstract}'):]
 s=s.replace('\\end{abstract}', '\n\\section*{CONTENTS_FIELD}\n')
 s=s.replace('\\tableofcontents','')
+s=s.replace('\\acknowledgements',r'\section*{Acknowledgements}')
+s=s.replace('\\thebiography',r'\section*{Biography}')
+bio=re.search(r'\\begin\{biographywithpic\}\s*\{([^}]+)\}\{([^}]+)\}\s*(.*?)\\end\{biographywithpic\}',s,re.S)
+if bio is None: raise ValueError('Expected biographywithpic block not found')
+biography_photo=OUT/bio.group(2)
+if not biography_photo.is_file(): raise FileNotFoundError(biography_photo)
+s=s.replace(bio.group(0),'\nBIOGRAPHY_PHOTO_MARKER\n\n\\textbf{'+bio.group(1)+'} '+bio.group(3).strip()+'\n')
 s=re.sub(r'^%.*$', '', s, flags=re.M)
 s=re.sub(r'\\begin\{minipage\}\{[^}]+\}', '', s)
 s=s.replace('\\end{minipage}','').replace('\\footnotesize','').replace('\\small','')
@@ -58,20 +75,20 @@ s=re.sub(r'\\setlength\{\\itemsep\}\{[^}]+\}','',s)
 for i,k in enumerate(keys,1):s=s.replace('\\bibitem{'+k+'}',f'\n[{i}] ')
 s=s.replace('\\end{thebibliography}','').replace('\\end{document}','')
 s=s.replace('\\nolinkurl','\\texttt')
-# Number equations in the Word copy using the same source order.
 eqnum=0
 def eq(m):
     global eqnum
     eqnum+=1
     return m.group(0).replace('\\end{equation}',r'\qquad\text{('+str(eqnum)+r')}\end{equation}')
 s=re.sub(r'\\begin\{equation\}.*?\\end\{equation\}',eq,s,flags=re.S)
-conv=ROOT/'tmp/paper-review/word-source.tex';conv.write_text(s,encoding='utf-8')
-raw=ROOT/'tmp/paper-review/raw.docx'
-import shutil
-# Prefer the bundled pandoc 3.x; fall back to one on PATH. Pandoc 2.x fails on
-# the CONTENTS_FIELD marker below, so a system pandoc must be 3.0 or newer.
-pandoc=next((ROOT/'tmp/paper-review/bin').rglob('pandoc.exe'), None) or shutil.which('pandoc')
-if pandoc is None: raise SystemExit('pandoc not found: no bundled copy under tmp/paper-review/bin and none on PATH')
+work=tempfile.TemporaryDirectory(prefix='relay-word-')
+conv=Path(work.name)/'word-source.tex';conv.write_text(s,encoding='utf-8')
+raw=Path(work.name)/'raw.docx'
+pandoc=args.pandoc or shutil.which('pandoc')
+if pandoc is None: raise SystemExit('Pandoc 3.x is required; install it on PATH or pass --pandoc PATH')
+version=subprocess.run([str(pandoc),'--version'],capture_output=True,text=True,check=True).stdout
+major=int(re.search(r'pandoc (\d+)\.',version).group(1))
+if major<3: raise SystemExit('Pandoc 3.x is required')
 subprocess.run([str(pandoc),str(conv),'-f','latex','-t','docx','-o',str(raw)],check=True)
 doc=Document(raw)
 sec=doc.sections[0]
@@ -117,8 +134,13 @@ for r in first.runs:r.bold=True;r.font.size=Pt(9)
 for p in list(doc.paragraphs):
     if p.text=='CONTENTS_FIELD':
         p.text='Table of Contents';p.style='TOC Heading'
-        f=OxmlElement('w:fldSimple');f.set(qn('w:instr'),'TOC \\o "1-1" \\h \\z \\u')
+        f=OxmlElement('w:fldSimple');f.set(qn('w:instr'),'TOC \\o "1-1" \\t "Unnumbered Section,1" \\h \\z')
         np=OxmlElement('w:p');np.append(f);p._p.addnext(np)
+    if p.text=='BIOGRAPHY_PHOTO_MARKER':
+        p.text=''
+        p.alignment=WD_ALIGN_PARAGRAPH.LEFT
+        p.add_run().add_picture(str(biography_photo),width=Inches(1.0))
+        p.paragraph_format.keep_with_next=True
     if p.text.startswith('FIGUREMARKER'):
         idx=int(p.text.replace('FIGUREMARKER',''));name,cap,num,wide=figures[idx]
         p.text=''
@@ -180,8 +202,9 @@ for root in [doc.styles.element,doc.element]:
   rf.set(qn('w:ascii'),'Times New Roman');rf.set(qn('w:hAnsi'),'Times New Roman')
 un=doc.styles.add_style('Unnumbered Section',1);un.base_style=doc.styles['Normal'];un.font.name='Times New Roman';un.font.size=Pt(12);un.font.bold=True;un.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER;un.paragraph_format.space_before=Pt(10);un.paragraph_format.keep_with_next=True
 for p in doc.paragraphs:
- if p.text in ['Data Availability','Acknowledgments','Biography']:
+ if p.text in ['Data Availability','Acknowledgements','References','Biography']:
   p.style=un
   pp=p._p.get_or_add_pPr();ol=OxmlElement('w:outlineLvl');ol.set(qn('w:val'),'9');pp.append(ol)
 out=OUT/'relay_uas_aeroconf.docx';doc.save(out)
-print('Wrote',out,'equations',eqnum,'tables',len(doc.tables),'figures',len(figures))
+work.cleanup()
+print('Wrote',out,'equations',eqnum,'tables',len(doc.tables),'figures',len(figures),'plus biography photo')
