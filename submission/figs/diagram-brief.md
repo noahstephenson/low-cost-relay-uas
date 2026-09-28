@@ -1,10 +1,10 @@
-# Diagram brief for MagicDraw
+# Diagram brief
 
-The paper uses architecture_assessment_workflow.mmd as the editable content source for its assessment-workflow figure. four_flow_architecture.mmd is a separate architecture view for a possible later redraw. Both describe the proposed architecture and analysis; neither records a completed aircraft integration or flight test.
+The paper uses architecture_assessment_workflow.mmd as the editable Mermaid source for Figure 3. Its gray frame adapts selected system design practices in the cited NASA Systems Engineering Handbook: define a service need, derive candidate criteria, and allocate functions. This is an analyst-defined study frame, not a NASA-prescribed named workflow or an approved requirements baseline. four_flow_architecture.mmd is a separate architecture view for a possible later redraw. Neither diagram records a completed aircraft integration or flight test.
 
 ## Workflow activity diagram
 
-Keep three labeled regions. The gray method frame sets the outbound relay target, allocates carrier and payload roles, and declares the scenario and limits. The blue analysis region shows the two calculations performed here: an obstruction and link-margin screen, and a hover-power and mass screen. Their results are checked independently before a candidate placement and dwell are selected. A dashed connector leads to installed relay tests and operational validation, which remain outstanding. Use the labels as well as color so the distinction survives grayscale printing.
+The gray NASA-aligned frame sets the need, candidate criteria, and functional allocation. The blue study boxes show the two screens actually performed here (clearance and link margin; hover power and mass) and the candidate placement and dwell comparison. A dashed connector leads to installed tests and field validation, which remain outstanding. Labels make the distinction legible in grayscale.
 
 ## Four-flow architecture view
 
@@ -12,4 +12,4 @@ Put the relay payload, carrier avionics, battery and distribution, and airframe 
 
 ## Export handoff
 
-In MagicDraw, recreate the workflow as an activity diagram or the four-flow view as a SysML internal block diagram. Preserve the labels, arrow direction, boundary, and dashed future-work connector. Export vector PDF for LaTeX and a PNG at 300 dpi or higher for Word. Place an export in submission/figs/ with the corresponding Mermaid base name; the existing Mermaid source remains the reviewable content specification. Use only one workflow figure in the manuscript.
+Render the Mermaid workflow with `python submission/render_workflow.py`; the script generates its PDF and PNG assets in this directory. If a later MagicDraw version is needed, preserve the labels, arrow direction, color distinction, and dashed future-work connector. Use only one workflow figure in the manuscript.

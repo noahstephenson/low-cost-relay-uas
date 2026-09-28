@@ -6,16 +6,16 @@ The author-supplied relay_uas_aeroconf.pdf is the current 15-page project report
 
 - relay_uas_aeroconf.tex: earlier working source; do not use it to overwrite the final PDF.
 - relay_uas_aeroconf.pdf: current author-supplied paper.
-- figs/architecture_assessment_workflow.mmd: editable draft of the study-specific workflow (Figure 3 in the final PDF).
+- figs/architecture_assessment_workflow.mmd: editable Mermaid source of the study-specific workflow (Figure 3 in the final PDF).
 - figs/four_flow_architecture.mmd: editable four-flow architecture draft.
 - figs/diagram-brief.md: block, connector, and MagicDraw export instructions.
-- render_workflow.py and render_architecture_word.py: render the workflow and the narrow Word variant of the existing architecture figure.
+- render_workflow.py and render_architecture_word.py: render the Mermaid workflow and the narrow Word variant of the existing architecture figure.
 
-The workflow applies selected system definition and analysis practices from the cited NASA Systems Engineering Handbook. Its dashed final step marks physical verification and operational validation as outstanding.
+The workflow adapts selected system design practices from the cited NASA Systems Engineering Handbook. Its analyst-defined criteria are not an approved requirements baseline. The dashed final step marks installed verification and field validation as outstanding.
 
 ## Earlier source build
 
-For the earlier LaTeX revision, render its figures with a Python environment containing Matplotlib:
+Render the Mermaid workflow with Node.js, Mermaid CLI (version 12.0.0), PyMuPDF, and Pillow; render the earlier architecture variant with Python and Matplotlib:
 
     python submission/render_workflow.py
     python submission/render_architecture_word.py

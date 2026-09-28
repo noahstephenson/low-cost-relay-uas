@@ -1,17 +1,15 @@
+%%{init: {"theme": "base", "look": "classic", "themeVariables": {"fontFamily": "Arial", "fontSize": "18px", "lineColor": "#16486b"}, "flowchart": {"wrappingWidth": 300, "nodeSpacing": 22, "rankSpacing": 20}}}%%
 flowchart TB
-    subgraph M["METHOD FRAME"]
-      N["Define outbound relay target"] --> B["Allocate carrier and payload roles"] --> I["Declare scenario and limits"]
-    end
-    subgraph A["ANALYSIS PERFORMED"]
-      L["Link screen: obstruction and margin"] --> D["Choose placement and dwell; independent case check"]
-      C["Carrier screen: hover power and mass"] --> D
-    end
-    I --> L
-    I --> C
-    D -.-> F["STILL TO TEST: installed and operational tests"]
-    classDef method fill:#f1f4f6,stroke:#738794,color:#172b39
-    classDef study fill:#e8f2f8,stroke:#16486b,color:#172b39
-    classDef future fill:#fff8e9,stroke:#9b6c20,stroke-dasharray:5 3,color:#172b39
-    class N,B,I method
-    class L,C,D study
+    M["<b>NASA-ALIGNED FRAME</b><br/>Need → criteria → allocation"]
+    S["<b>PAPER SCREENS</b><br/>Link: clearance + margin<br/>Carrier: hover power + mass"]
+    D["<b>CANDIDATE COMPARISON</b><br/>Placement + dwell"]
+    F["<b>STILL TO TEST</b><br/>Installed + field validation"]
+    M --> S
+    S --> D
+    D -.-> F
+    classDef method fill:#f1f4f6,stroke:#738794,stroke-width:2px,color:#172b39
+    classDef study fill:#e8f2f8,stroke:#16486b,stroke-width:2px,color:#172b39
+    classDef future fill:#fff8e9,stroke:#9b6c20,stroke-width:2px,stroke-dasharray:5 3,color:#172b39
+    class M method
+    class S,D study
     class F future
