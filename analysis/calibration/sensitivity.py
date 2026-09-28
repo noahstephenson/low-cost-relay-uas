@@ -367,13 +367,33 @@ def build() -> dict:
     }
 
 
+def same_results(expected, saved) -> bool:
+    """Ignore only last-bit floating-point variation across Python runtimes."""
+    if type(expected) is not type(saved):
+        return False
+    if isinstance(expected, float):
+        return math.isclose(expected, saved, rel_tol=1e-14, abs_tol=1e-14)
+    if isinstance(expected, dict):
+        return expected.keys() == saved.keys() and all(
+            same_results(expected[key], saved[key]) for key in expected
+        )
+    if isinstance(expected, list):
+        return len(expected) == len(saved) and all(
+            same_results(a, b) for a, b in zip(expected, saved)
+        )
+    return expected == saved
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
-    text = json.dumps(build(), indent=2) + "\n"
+    results = build()
+    text = json.dumps(results, indent=2) + "\n"
     if args.check:
-        if not OUTPUT_PATH.exists() or OUTPUT_PATH.read_text(encoding="utf-8-sig") != text:
+        if not OUTPUT_PATH.exists() or not same_results(
+            results, json.loads(OUTPUT_PATH.read_text(encoding="utf-8-sig"))
+        ):
             raise SystemExit("SENSITIVITY-RESULTS-STALE")
         print("SENSITIVITY-RESULTS-CURRENT")
         return 0
