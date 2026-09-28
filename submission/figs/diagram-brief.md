@@ -4,7 +4,7 @@ The paper uses architecture_assessment_workflow.mmd as the editable content sour
 
 ## Workflow activity diagram
 
-Keep the arrows in this order: operational need; carrier and black-box payload boundary; allocation of mission traffic, aircraft command, electrical power, and mechanical support; declared geometry, radio, payload, and carrier assumptions. Then split to parallel link and carrier checks and merge at independent numerical review. The decision node reports link failure, excessive finite size, mathematical nonclosure, or a conditional pass. Use a dashed connector to outstanding physical verification and operational validation. The dashed connector is essential: those activities have not been performed.
+Keep three labeled regions. The gray method frame sets the outbound relay target, allocates carrier and payload roles, and declares the scenario and limits. The blue analysis region shows the two calculations performed here: an obstruction and link-margin screen, and a hover-power and mass screen. Their results are checked independently before a candidate placement and dwell are selected. A dashed connector leads to installed relay tests and operational validation, which remain outstanding. Use the labels as well as color so the distinction survives grayscale printing.
 
 ## Four-flow architecture view
 
