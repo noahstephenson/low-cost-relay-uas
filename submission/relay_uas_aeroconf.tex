@@ -69,7 +69,7 @@ Only the time on station is assessed quantitatively. A full mission would run fr
 
 \subsection{Aircraft-Payload Boundary}
 
-Four flows organize the system responsibilities, but only electrical power and mechanical support physically cross the carrier--payload interface. Mission traffic passes through the payload; aircraft command stays on the carrier path. Their failure consequences differ: a blocked mission path loses service, a command-path failure affects control, a power shortfall limits dwell, and an inadequate mount prevents safe support. Table~\ref{tab:alloc} records these allocations and the unresolved interface attributes. The calculations address the mission link and the mass and power consequences; command continuity and payload retention require separate evidence.
+Four flows organize the system responsibilities, but only electrical power and mechanical support physically cross the carrier--payload interface. Mission traffic passes through the payload; aircraft command stays on the carrier path. Table~\ref{tab:alloc} connects each flow to its failure consequence and the evidence needed next. The calculations address the mission link and the mass and power consequences; command continuity and payload retention require separate evidence. The unresolved interface attributes are identified with each flow below.
 
 \emph{Mission traffic.} Traffic passes from G through the relay payload to U, as Figure~\ref{fig:arch}(a) shows, so the payload owns this flow. The carrier only has to place the payload at the required position and keep it there. The link check establishes that the declared geometry and RF assumptions give two clear hops with positive margin at some sampled points. However, the RF assumptions do not select a radio protocol or waveform, and they do not show that the payload is compatible with the ground radio or the remote aircraft. Data rate, endpoint compatibility, and a delivery criterion remain open. This flow would need an installed two-hop communication test before any service claim.
 
@@ -83,17 +83,18 @@ Four flows organize the system responsibilities, but only electrical power and m
 \end{figure*}
 
 \begin{table*}[!tb]
-\caption{Four-flow allocation and unresolved interface attributes}
+\vspace{4pt}
+\caption{Failure consequences and evidence needed for the four flows}
 \label{tab:alloc}
-\centering\footnotesize
-\begin{tabular}{@{}L{0.78in}L{1.45in}L{1.78in}L{2.27in}@{}}
+\centering\small
+\begin{tabular}{@{}L{1.05in}L{1.25in}L{1.65in}L{2.40in}@{}}
 \toprule
-Flow & Function and allocated element & Proposed crossing & Attributes still needed for integration \\
+Flow & Allocated element & Consequence if lost & Next evidence \\
 \midrule
-Mission traffic & G to payload to U; relay payload & IFC-EXT-001 and -002 RF paths & Protocol, waveform, data rate, endpoint compatibility, and delivery criterion \\
-Aircraft command & Operator to carrier avionics; health returns & IFC-EXT-005 and -007, separate logical path & Command and status format, response criterion, fault indication, and carrier response to a payload fault \\
-Electrical power & Battery and distribution to payload & IFC-INT-003 regulated branch; 14 W study load & Rail voltage, current, connector, protection, and thermal behavior \\
-Mechanical support & Airframe mount retains payload & IFC-INT-007; 0.20 kg study mass & Geometry, load envelope, retention margin, and inspection criterion \\
+Mission traffic & Relay payload & Relay service is lost & Installed two-hop delivery test \\
+Aircraft command & Carrier avionics & Aircraft control is at risk & Command continuity during a bounded payload fault \\
+Electrical power & Carrier distribution & Relay dwell or carrier control is at risk & Payload-rail load and fault-protection test \\
+Mechanical support & Carrier mount & Payload retention is at risk & Fit, load, and vibration checks \\
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -102,7 +103,7 @@ Mechanical support & Airframe mount retains payload & IFC-INT-007; 0.20 kg study
 
 \emph{Mechanical support.} The carrier mount retains the payload and transfers its load into the airframe. The model includes the 0.20 kg payload and a mount allowance of 0.20 kg plus 18 percent of payload mass; it does not assess strength or vibration. Detailed design must specify the mount geometry, load envelope, retention criterion, and inspection access. Repository requirement REQ-012 addresses fit, mass, and volume. Retention needs an additional, explicit requirement and supporting inspection and load-test evidence before flight.
 
-This allocation lets the designer change placement without changing the assumed payload installation. Changing the radio is a different decision: similar mass and power do not establish interchangeability. Mounting, voltage, thermal behavior, and electromagnetic compatibility must also match. Table~\ref{tab:alloc} is an interface-development record, not evidence of a verified installation.
+This allocation lets the designer change placement without changing the assumed payload installation. Changing the radio is a different decision: similar mass and power do not establish interchangeability. Mounting, voltage, thermal behavior, and electromagnetic compatibility must also match. Table~\ref{tab:alloc} identifies evidence still needed; it is not evidence of a verified installation.
 
 \subsection{Study Measures and Candidate Criteria}
 
