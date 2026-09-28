@@ -1,26 +1,18 @@
-# Low-Cost Communications Relay UAS
+# Communications Relay Drone: Student Engineering Project
 
-A relay aircraft carries a radio to a place where two other systems can communicate more effectively. This repository asks what the **aircraft around that radio** must do, and when a small multirotor can support the resulting mission demands.
+This student engineering project explores how a small multirotor could carry a communications relay. It combines a system architecture with simple link and aircraft-sizing models to ask where a relay could be useful and how long the aircraft could stay in place.
 
-Run the checks below to reproduce the paper's calculated results and inspect the saved mission cases. The results show which sampled missions fail the link check, the carrier check, or both.
+The repository contains the model, declared assumptions, generated results, diagrams, and engineering notes. The calculations are a feasibility study, not a built or flight-tested drone. Run the checks below to reproduce the results and inspect which sampled missions fail the link check, the aircraft check, or both.
 
-## Paper and reproducibility
+## Project materials
 
-The IEEE Aerospace 2027 paper 2784, [*System Architecture and Mission Feasibility of a Multirotor Communications Relay*](submission/relay_uas_aeroconf.pdf), corresponds to annotated tag `aeroconf-2027-paper-2784-r3`. The computational baseline was generated at commit `4f9e2cde8c429e6b241d4a09dc5f8e7dbb877069`. The manuscript source is in [`submission/relay_uas_aeroconf.tex`](submission/relay_uas_aeroconf.tex); the [assessment workflow](submission/figs/architecture_assessment_workflow.mmd) and [four-flow diagram](submission/figs/four_flow_architecture.mmd) are editable Mermaid sources.
+Start with the [architecture](docs/architecture.md), [feasibility analysis](docs/feasibility.md), and [engineering status](docs/engineering-status.md). The `model/` directory holds the system description; `analysis/` holds inputs, calculations, and saved results; `tests/` checks the model. A [project report PDF](submission/relay_uas_aeroconf.pdf) brings the study together. Its accompanying LaTeX file is an earlier working draft and does not reproduce that PDF. The [assessment workflow](submission/figs/architecture_assessment_workflow.mmd) and [four-flow diagram](submission/figs/four_flow_architecture.mmd) are editable diagram sources.
 
-From the repository root, these commands check the tests, generated baseline, and manuscript evidence:
-
-```bash
-python -B -m unittest discover -s tests
-python -B scripts/validate-baseline.py --check-generated
-python -B docs/reference/check-manuscript-evidence.py
-```
-
-The repository's calibrated code, data, and reproducible case records are the paper's computational backing. Examination of a recovered relay aircraft motivated the work; the analysis does not reconstruct that aircraft or claim its performance. “Low-cost” is a project objective, not an established result.
+Examination of a recovered relay aircraft motivated the project; the analysis does not reconstruct that aircraft or claim its performance. “Low-cost” is a design objective, not an established result.
 
 ## Start with the communications problem
 
-Imagine a ground station communicating with a remote aircraft. An obstruction can block their direct path. Putting a relay above that obstruction may restore a useful path, but creates a second engineering problem: another aircraft must lift, power, and hold the radio in position.
+A relay can restore a path blocked by an obstruction if its carrier can lift, power, and hold the radio in position.
 
 That is the research question: **What architecture lets a small multirotor support airborne relay service, and under what declared mission demands does it remain plausible?**
 
@@ -65,9 +57,7 @@ Across 90 baseline cases, the ordered counts are **18 physical passes / 6 finite
 2. [Feasibility](docs/feasibility.md): follow assumptions through calculations and decision gates.
 3. [Engineering Status](docs/engineering-status.md): distinguish evidence from remaining decisions.
 4. [Engineering Reference](docs/reference/README.md): inspect requirements, interfaces, sources, and traceability.
-5. [Manuscript outline](docs/manuscript-outline.md): develop the paper argument, evidence, and submission priorities.
-
-The model catalogs define architecture records; generators turn them into views. Analysis inputs feed executable models and generated results. Passing checks establishes consistency and reproducibility, not aircraft validation. [The reference guide](docs/reference/README.md) explains this evidence trail and provides regeneration commands.
+5. [Project report](submission/relay_uas_aeroconf.pdf): read the complete study and its limitations.
 
 ## Reproduce and validate
 
@@ -84,8 +74,8 @@ python -B analysis/mission_connectivity.py --check
 python -B docs/reference/check-manuscript-evidence.py
 ```
 
-`analysis/calibration/boundary-results.json` reproduces the headline 42.1/52.4-minute and 25.0/6.3 km numbers directly. `analysis/calibration/sensitivity-results.json` reproduces every calibration-sensitivity variant the revision reports (single-point refits, mean/geometric-mean/quads-only estimators, the coaxial-DAx8 hypothesis, the k_env operating-margin case, the aux-power sweep, and the Matrice 4 specific-energy substitution).
+`analysis/calibration/boundary-results.json` reproduces the headline 42.1/52.4-minute and 25.0/6.3 km numbers directly. `analysis/calibration/sensitivity-results.json` reproduces every calibration-sensitivity variant the revision reports (single-point and combined hover stresses, estimator variants, the auxiliary-power sweep, and the Matrice 4 battery substitution).
 
 ## Scope note
 
-The project establishes a proposed architecture and a conditional service envelope. Affordability, hardware selection, safety, airworthiness, interoperability, physical performance, and operational readiness remain unresolved. The low-order link budget uses declared assumptions; it is not a radio design or spectrum authorization. See [research status](docs/research-status.md) for precise claims and [LICENSE](LICENSE) for licensing.
+The analysis supports a proposed architecture and conditional service envelope. Hardware performance and operational readiness remain open. See [research status](docs/research-status.md) and [LICENSE](LICENSE).

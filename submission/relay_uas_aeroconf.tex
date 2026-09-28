@@ -17,26 +17,22 @@
 \maketitle
 \thispagestyle{plain}\pagestyle{plain}
 \begin{abstract}
-An airborne relay may restore a communications path across an obstruction, but the carrier must hold the radio in position and supply its resources. This paper presents an architecture-screening method that allocates mission traffic to a relay payload and aircraft command, electrical power, and mechanical support to the carrier. Declared geometry and radio inputs feed a visibility and received-level check; dwell and payload demands feed a coupled battery, propulsion, and structural mass closure. An independent checker repeats the numerical decisions. A notional multirotor relay demonstrates the method. At the reference inputs, a midpoint relay at 120 m reaches a 25.0 km endpoint-separation boundary; 12 dB of added loss reduces it to 6.3 km. The reference carrier reaches the exploratory rotor-size screen at 42.1 minutes and loses finite mass closure at 52.4 minutes. In the 90-case baseline grid, 18 cases pass both link and carrier screens. A hover-power coefficient fitted to five published NASA test points and published hover times for three other aircraft provide limited checks of the carrier model. Only the Matrice 30 comparison remains within 10 percent across the stated auxiliary-load sweep. The result identifies whether placement, radio assumptions, or carrier resources bind the declared outbound hover service. It does not establish return-link delivery, full-mission energy, installed interfaces, or operational suitability. Product verification and validation remain future work.
+An airborne relay can restore a radio path across an obstruction, but the aircraft must carry and power the payload long enough to provide useful service. This paper examines which placement and dwell targets warrant further development for a notional multirotor relay. The architecture assigns mission traffic to the payload and aircraft command, electrical power, and mechanical support to the carrier. That allocation defines two screens: a link check on both relay hops and a carrier check that closes the battery, mass, and hover-power loop. At 10 km separation and 120 m relay height, the reference 30-minute case closes at 4.77 kg with a 0.50 m rotor, while the 45-minute case exceeds both size limits. Moving the relay toward the ground endpoint raises the weaker-hop margin by about 1 dB without changing modeled hover demand, which makes it a provisional candidate for site assessment. Published hover data constrain one power coefficient. Fitting it to each test point alone moves the rotor-size boundary from 33 to 49 minutes, and pairing the least favorable point with a 15 percent hover-power allowance places that boundary near 28 minutes. The 30-minute target is therefore a candidate that installed hover-power measurements must confirm. Site-specific link measurements and a payload-fault check address the other risks to that decision. The contribution is a traceable path from each failed screen to the design decision and interface test it calls for. Return traffic, full-mission energy, and installed-system performance remain outside the assessment.
 \end{abstract}
 \tableofcontents
-%======================================================================
-\section{Introduction}
-%======================================================================
 
-A relay aircraft changes the geometry of a communications problem. A ground station may be unable to reach a remote aircraft because an obstruction crosses the direct path. Placing a radio above the obstruction can provide two clear paths, one to each endpoint. Research on unmanned aircraft systems (UAS) has examined this opportunity through aerial networking and mobile relaying \cite{zengmag}, \cite{tutorial}, \cite{zengrelay}. The aircraft must sustain the useful geometry while carrying and powering the radio. This makes the communications requirement an aircraft resource requirement as well.
+\section{Introduction}\label{sec:intro}
 
-Consider a 10 km separation, a remote aircraft at 100 m, and an 80 m screen between the endpoints. A midpoint relay at 120 m clears the screen in the declared geometry. Whether it can remain there for 30, 45, or 60 minutes depends on a different calculation. More battery adds mass, greater mass requires more hover power, and that power requires additional battery. A consistent mass balance can lie within a small-aircraft envelope, lie outside it, or have no finite solution under the assumed scaling relations.
+Consider an operator at a ground station who is tracking a remote aircraft on a map but cannot reach it by radio because an obstruction sits on the direct path. The operator does not need a stronger radio as much as a better vantage point. A relay aircraft provides one. Placing a radio above the obstruction can provide two clear paths, one to each endpoint. Research on unmanned aircraft systems (UAS) has examined this opportunity through aerial networking and mobile relaying \cite{zengmag}, \cite{tutorial}, \cite{zengrelay}. The aircraft must sustain the useful geometry while carrying and powering the radio. This makes the communications requirement an aircraft resource requirement as well.
 
-The architecture must account for four flows: mission traffic, aircraft command, electrical power, and mechanical support. The payload handles the first. The carrier provides the other three while holding the payload at the geometry needed for service. This paper asks where that allocation stops being plausible under the declared mission and aircraft assumptions. Section 2 defines the architecture and assessed interval. Section 3 traces the assumptions through link and carrier checks. Section 4 presents the worked case and sampled envelope, and Sections 5 and 6 explain the decisions and limits. An appendix gives the mass balance for reproduction.
+The hard part is keeping the relay there. Suppose the two endpoints are 10 km apart, the remote aircraft flies at 100 m, and an 80 m screen stands between them. A midpoint relay at 120 m clears the screen in the declared geometry. Whether it can remain there for 30, 45, or 60 minutes depends on a different calculation. More battery adds mass, greater mass requires more hover power, and that power requires additional battery. A consistent mass balance can lie within a small-aircraft envelope, lie outside it, or have no finite solution under the assumed scaling relations.
+
+The design question is what to carry forward: a different relay position, a longer dwell, or a different carrier. The architecture assigns mission traffic to the payload and aircraft command, electrical power, and mechanical support to the carrier. These responsibilities establish what each analysis must check. The study first asks whether both radio hops pass, then whether a consistent aircraft can sustain the requested dwell within the size limits. It uses the results to recommend a candidate for further assessment and identify what could overturn that recommendation. Section~\ref{sec:arch} defines the service and system boundary. Section~\ref{sec:methods} presents the models and evidence, Section~\ref{sec:results} compares the resulting choices, and Sections~\ref{sec:discussion} and~\ref{sec:conclusions} identify the next decisions and tests. The appendices retain the derivation and calibration details.
 
 \subsection{Related Work and Contribution}
 
-Communication and aircraft sizing research already supplies the pieces used here. Zeng, Zhang, and Lim optimized relay transmit power together with relay trajectory \cite{zengrelay}. Zeng, Xu, and Zhang combined rotary-wing propulsion energy with communication energy under throughput constraints \cite{zengenergy}. Yan et al.\ treated battery weight as a design variable that trades stored energy against the power needed to lift it \cite{yan}. Rodrigues et al.\ placed relay positioning inside a propulsion-aware energy model \cite{rodrigues}. On the aircraft side, Russell, Theodore, and Sekula built conceptual sizing models for small quadcopters from test data \cite{russell2018}. They reported that their sizing did not close for hover missions beyond a certain length. Bershadsky, Haviland, and Johnson matched motors, propellers, and batteries to mission requirements \cite{bershadsky}. Table~\ref{tab:prior} places these alongside the present study.
+Communication and aircraft sizing research already supplies the pieces used here. Zeng, Zhang, and Lim optimized relay transmit power together with relay trajectory \cite{zengrelay}. Zeng, Xu, and Zhang combined rotary-wing propulsion energy with communication energy under throughput constraints \cite{zengenergy}. Yan et al. treated battery weight as a design variable that trades stored energy against the power needed to lift it \cite{yan}. Rodrigues et al. placed relay positioning inside a propulsion-aware energy model \cite{rodrigues}. On the aircraft side, Russell, Theodore, and Sekula built conceptual sizing models for small quadcopters from test data \cite{russell2018}. They reported that their sizing did not close for hover missions beyond a certain length. Bershadsky, Haviland, and Johnson matched motors, propellers, and batteries to mission requirements \cite{bershadsky}. Table~\ref{tab:prior} places these alongside the present study.
 
-The contribution is a reproducible screening method that connects a four-flow responsibility allocation to link and carrier resource checks, then keeps the two check results visible when assigning a case label. The notional relay demonstrates the method. The hover-power fit and published-aircraft comparisons check part of the carrier model; they are evidence for the case study rather than a new architecture method.
-
-The research question is which declared service and carrier assumptions bind a stationary outbound relay, and what architecture decision each failure suggests. Endpoint separation and dwell make that question measurable. The quantitative work covers one-way service during hover. It does not establish delivered throughput, full-mission energy, or measured flight performance.
 
 \begin{table}[!tb]
 \caption{Related work and its relationship to this study}
@@ -51,21 +47,33 @@ Zeng et al., 2019 \cite{zengenergy} & Propulsion and communication energy togeth
 Yan et al., 2021 \cite{yan} & Battery weight and available energy & Battery mass tradeoffs are prior work \\
 Rodrigues et al., 2022 \cite{rodrigues} & Propulsion-aware relay positioning & Relay endurance and service are prior work \\
 Russell et al., 2018 \cite{russell2018} & Small quadcopter sizing from test data & Sizing feedback and failure to close are prior work \\
-Present study & Architecture screening with a hover-power fit & Conditional envelope with explicit failure mechanisms \\
+Present study & Placement and dwell screening with a hover-power fit & Candidate recommendation and decision-specific evidence needs \\
 \bottomrule
 \end{tabular}
 
 \vspace{2pt}
 \begin{minipage}{\columnwidth}\footnotesize
-These are the closest conceptual precedents, not a complete survey. This study claims no methodological advantage over them.
+These are the closest conceptual precedents, not a complete survey.
 \end{minipage}
 \end{table}
 
-%======================================================================
-\section{System and Assessment Boundary}\label{sec:arch}
-%======================================================================
+This paper makes three primary contributions. First, it states an explicit aircraft--payload allocation of four flows and uses that allocation to decide which analysis or test each flow requires. Second, it pairs a two-hop link screen with a carrier screen that closes battery, mass, and hover power, and it compares placement and dwell choices against both. Third, it retains both failure flags for every case and maps each failed screen to a design decision and to the interface or installed test that could overturn the recommendation. In this paper, system architecture means this bounded allocation and its assessment. The study does not compare every possible relay architecture, and it offers no new link-budget equation, sizing law, or optimization algorithm. Selected practices from the NASA Systems Engineering Handbook \cite{nasaSEH} organize the trace from service need to criteria, allocation, and candidate design. This trace matters because it shows which evidence would change the decision.
 
-The relay aircraft carries a communications payload and holds an assigned position. As Figure~\ref{fig:arch}(a) shows, a ground endpoint labeled G exchanges traffic with a remote aircraft labeled U, and the payload passes that traffic between them. The payload is treated as a black box. This means it is described only by what it demands from the aircraft: 0.20 kg of mass, 14 W of direct current (DC) power, and a fixed radio frequency (RF) output. The aircraft supplies the airframe, propulsion, battery and power distribution, avionics, the command radio, and the payload mount. Operators, ground equipment, the remote aircraft, and spectrum authorities stay outside this boundary.
+The research question is whether the declared 10 km, 30-minute outbound service target merits further development, and whether placement or carrier changes should come first. The 20 km separation and 45-minute dwell objectives provide more demanding comparison points. This is an analyst-defined case study without stakeholder-approved requirements or built hardware. Its quantitative scope is one-way radio-path screening during hover; delivered throughput, return traffic, and full-mission performance are not established.
+
+\section{System and Assessment Boundary}\label{sec:arch}
+
+The relay aircraft carries a communications payload and holds an assigned position. In Figure~\ref{fig:arch}(a), traffic travels from ground endpoint G through the payload to remote aircraft U. The payload is a black box for this assessment: its accommodation demands are 0.20 kg of mass and 14 W of direct current (DC) power, and the link model uses a fixed radio frequency (RF) output. The carrier supplies the airframe, propulsion, battery and power distribution, avionics, command radio, and mount. Operators, ground equipment, the remote aircraft, and spectrum authorities are external to the relay system.
+
+Only the time on station is assessed quantitatively. A full mission would run from preparation through launch, transit, establishing position, relaying, monitoring, and recovery. This paper calculates the relay interval alone, and only in the direction from G through the relay R to U. The battery reserve holds energy back from that interval, but it is not a transit or recovery calculation.
+
+\subsection{Aircraft-Payload Boundary}
+
+Four flows organize the system responsibilities, but only electrical power and mechanical support physically cross the carrier--payload interface. Mission traffic passes through the payload; aircraft command stays on the carrier path. Their failure consequences differ: a blocked mission path loses service, a command-path failure affects control, a power shortfall limits dwell, and an inadequate mount prevents safe support. Table~\ref{tab:alloc} records these allocations and the unresolved interface attributes. The calculations address the mission link and the mass and power consequences; command continuity and payload retention require separate evidence.
+
+\emph{Mission traffic.} Traffic passes from G through the relay payload to U, as Figure~\ref{fig:arch}(a) shows, so the payload owns this flow. The carrier only has to place the payload at the required position and keep it there. The link check establishes that the declared geometry and RF assumptions give two clear hops with positive margin at some sampled points. However, the RF assumptions do not select a radio protocol or waveform, and they do not show that the payload is compatible with the ground radio or the remote aircraft. Data rate, endpoint compatibility, and a delivery criterion remain open. This flow would need an installed two-hop communication test before any service claim.
+
+\emph{Aircraft command.} The operator commands the carrier and receives its health data over a path separate from the relayed traffic. The intent is to retain aircraft control if the payload fails. Sharing a battery and airframe means that logical separation alone is not fault isolation. A payload overcurrent, for example, could disturb the carrier supply unless the power distribution prevents it. A protected payload branch is therefore a candidate design response, not an implemented feature. Its assessment would monitor carrier voltage, command continuity, and fault indication during a safely bounded payload-load fault. Protection thresholds, allowable interruptions, and the carrier's response must be specified before that test can establish compliance.
 
 \begin{figure*}[!tb]
 \centering
@@ -73,8 +81,6 @@ The relay aircraft carries a communications payload and holds an assigned positi
 \caption{Relay architecture and the worked geometry. (a) The aircraft supports a black-box payload across two connections, mechanical retention and regulated power, and the operator commands the aircraft on a separate radio path. (b) At 10 km separation the ideal screen blocks the direct path and clears the relay path. The screen represents a declared scenario without measured terrain; the separate command path is an allocation without demonstrated fault isolation.}
 \label{fig:arch}
 \end{figure*}
-
-Table~\ref{tab:alloc} makes the proposed functional-to-physical allocation explicit. The interface IDs come from the repository architecture catalog. The RF assumptions used for the numerical screen do not specify a radio protocol or demonstrate compatibility with the remote aircraft. Power and retention cross the carrier-to-payload boundary; mission traffic remains in the payload path and aircraft command remains in the carrier path.
 
 \begin{table*}[!tb]
 \caption{Four-flow allocation and unresolved interface attributes}
@@ -85,24 +91,25 @@ Table~\ref{tab:alloc} makes the proposed functional-to-physical allocation expli
 Flow & Function and allocated element & Proposed crossing & Attributes still needed for integration \\
 \midrule
 Mission traffic & G to payload to U; relay payload & IFC-EXT-001 and -002 RF paths & Protocol, waveform, data rate, endpoint compatibility, and delivery criterion \\
-Aircraft command & Operator to carrier avionics; health returns & IFC-EXT-005 and -007, separate logical path & Command and status format, response criterion, and fault behavior \\
+Aircraft command & Operator to carrier avionics; health returns & IFC-EXT-005 and -007, separate logical path & Command and status format, response criterion, fault indication, and carrier response to a payload fault \\
 Electrical power & Battery and distribution to payload & IFC-INT-003 regulated branch; 14 W study load & Rail voltage, current, connector, protection, and thermal behavior \\
 Mechanical support & Airframe mount retains payload & IFC-INT-007; 0.20 kg study mass & Geometry, load envelope, retention margin, and inspection criterion \\
 \bottomrule
 \end{tabular}
 \end{table*}
 
-Mission traffic passes from G through the relay payload to U. Aircraft command and health reporting belong to the carrier path, separate from that traffic. The battery supplies propulsion and avionics as well as the regulated payload branch. The mount transfers the payload load into the airframe. Each flow has a different failure consequence: a blocked mission path loses service, a command-path failure affects control, a power shortfall limits dwell, and an inadequate mount prevents safe support. Only the mission-link and power/mass consequences are calculated here.
+\emph{Electrical power.} The carrier battery supplies propulsion, avionics, and a regulated payload branch, so the carrier owns the power flow up to the payload connector. The carrier analysis assumes a continuous 14 W payload load behind a regulator with 0.92 efficiency, and it shows how that load and the 25 W auxiliary allowance affect dwell and gross mass. It does not specify the rail voltage, the peak current, the connector, protection, or thermal behavior. This 14 W value is a study assumption for sizing and is not an electrical interface specification. Since no payload radio has been selected, those values remain open, and the rail would need a load test across its specified voltage and current envelope.
 
-Two design commitments follow from that split. The aircraft-to-payload boundary supplies regulated power and mechanical retention, which defines the intended accommodation boundary. Similar mass and power alone do not establish interchangeability; mounting, voltage, thermal behavior, and electromagnetic compatibility still require verification. The operator commands the carrier over its own radio path. This is a logical allocation rather than demonstrated fault isolation, since both information paths share one battery and airframe.
+\emph{Mechanical support.} The carrier mount retains the payload and transfers its load into the airframe. The model includes the 0.20 kg payload and a mount allowance of 0.20 kg plus 18 percent of payload mass; it does not assess strength or vibration. Detailed design must specify the mount geometry, load envelope, retention criterion, and inspection access. Repository requirement REQ-012 addresses fit, mass, and volume. Retention needs an additional, explicit requirement and supporting inspection and load-test evidence before flight.
 
-Only the time on station is assessed quantitatively. A full mission would run from preparation through launch, transit, establishing position, relaying, monitoring, and recovery. This paper calculates the relay interval alone, and only in the direction from G through the relay R to U. The battery reserve holds energy back from that interval, but it is not a transit or recovery calculation.
+This allocation lets the designer change placement without changing the assumed payload installation. Changing the radio is a different decision: similar mass and power do not establish interchangeability. Mounting, voltage, thermal behavior, and electromagnetic compatibility must also match. Table~\ref{tab:alloc} is an interface-development record, not evidence of a verified installation.
 
 \subsection{Study Measures and Candidate Criteria}
 
-The declared use case is a ground operator seeking an outbound path to a remote UAS when the direct path is blocked. If either relay hop fails the modeled screen, that outbound service is unavailable under the stated assumptions. The consequence for a real mission has not been established. Two candidate measures of effectiveness (MOEs) make the case study judgeable: the endpoint separation that can be served at a specified dwell and the dwell that can be served at a specified separation. Link margin and carrier mass are lower-level performance measures and constraints that determine those MOEs.
+The study represents a ground operator seeking an outbound path to a remote UAS across an obstruction. It does not assume that this path alone restores operational command and telemetry. Two candidate measures of effectiveness (MOEs) describe the service: separation at a specified dwell, and dwell at a specified separation. Link margin, gross mass, and rotor size provide the technical measures and constraints used to screen those targets. Following the distinction in the NASA handbook \cite{nasaSEH}, gross mass and installed hover power are also candidates for technical performance measures (TPMs) once a specific design is tracked through development.
 
-Table~\ref{tab:moe} states analyst-selected threshold and objective points taken from the existing sampled grid. They are comparison points for this paper, not stakeholder-approved targets or amendments to repository requirements REQ-001, REQ-010, and REQ-011, whose acceptance values remain open. The 15 kg and 0.75 m size screens, 0.20 kg and 14 W payload assumptions, and logical command-path separation also remain declared study constraints. The rotor screen binds before the mass screen at the reference disk loading. A modeled pass at a study point is evidence about these assumptions, not system requirement verification.
+Table~\ref{tab:moe} retains the analyst-selected comparison points from the existing grid. The 10 km, 30-minute case is the reference decision; 20 km and 45 minutes separately increase the requested reach and dwell. This arrangement makes the trade easy to interpret, but it is not evidence that these targets meet an operator's need. The 15 kg mass ceiling and 0.75 m rotor limit define the study's size class. These criteria do not amend repository requirements REQ-001, REQ-010, or REQ-011, whose acceptance values remain open. A pass means that a candidate survives the declared screen, not that it satisfies an approved operational requirement.
+
 
 \begin{table}[!tb]
 \caption{Candidate service measures for the notional study}
@@ -118,12 +125,47 @@ MOE-2: dwell at 10 km, 120 m relay height & 30 min & 45 min \\
 \end{tabular}
 \end{table}
 
+Analyst-selected comparison points from the sampled grid.
 
-%======================================================================
 \section{Method}\label{sec:methods}
-%======================================================================
 
-The assessment uses selected processes from the NASA Systems Engineering Handbook \cite{nasaSEH}. A declared use case stands in for stakeholder-expectations definition; no stakeholder elicitation or approved concept of operations is claimed. The service measures and candidate screening criteria below correspond to technical-requirements definition, while the four-flow allocation is a logical decomposition and proposed design solution. The link and carrier calculations provide technical analysis, and Table~\ref{tab:verify} records what evidence would be needed for later product verification. Figure~\ref{fig:workflow} shows the sequence. The independent checker verifies the model's arithmetic and saved cases. No integrated aircraft was built or tested, so system product verification and operational validation remain future work. This is an analysis workflow, not a completed development lifecycle.
+Figure~\ref{fig:workflow} shows the assessment sequence: define the service, allocate responsibilities, declare the inputs, and screen the link and carrier separately. This structure draws on the NASA handbook's system design processes \cite{nasaSEH} without claiming a completed lifecycle. The baseline grid holds placement at the midpoint and varies separation, height, and dwell. A supplementary analytical comparison moves the relay toward the ground endpoint while retaining the same radio, payload, height, and carrier assumptions. It uses the same path-loss relation and explicitly checks screen clearance. That comparison is separate from the saved 90-case midpoint grid and does not change its counts.
+
+For a fixed payload, the two screens are separable: dwell does not enter the link calculation, and separation and altitude do not change the constant-density hover model. Their intersection is a joint feasibility screen, not a coupled aircraft--radio optimization. The carrier model itself retains the battery-mass-power feedback. The decision rule is to carry forward a candidate that meets the declared target, examine which sensitivities change that result, and specify evidence for the remaining uncertainties. The independent checker addresses implementation consistency; published hover data address only part of the physical model.
+
+\subsection{Declared Inputs}
+
+The study samples declared geometries and durations rather than observed operations. Heights are measured from a common ground datum, with the ground endpoint at 0 m and the remote aircraft at 100 m. The relay sits at the horizontal midpoint at 60, 120, or 240 m. Endpoint separation takes six values from 5 to 60 km and dwell takes five values from 10 to 60 minutes. Table~\ref{tab:inputs} lists these inputs. The baseline scenario places an 80 m opaque screen at 40 percent of the separation. Four variants change the screen's height or position, one variant adds 12 dB of loss, and one comparator removes the screen entirely. These are stylized visibility cases, not terrain.
+
+The payload values come from a commercial mesh radio module with a published mass of 102 g, 5 W receive consumption, 14 W peak consumption, and 1.6 W maximum transmit power \cite{doodle}. The model adds 98 g for unselected integration hardware and, as a sizing assumption, applies the 14 W peak value continuously. The stated maximum RF output and DC consumption have not been verified as a simultaneous operating point. The receiver threshold of $-90$ dBm is one common assumption applied to every receiver, and the 5 MHz bandwidth is recorded as context that never enters the margin calculation.
+
+Each scenario holds 90 cases, formed from six separations, five dwell values, and three relay altitudes. The primary payload is the 0.20 kg, 14 W case. Seven scenarios and three payload cases give 1,890 saved records, which are repetitions of the same grid rather than independent missions, so every count in this paper uses the 90-case denominator.
+
+\subsection{Link Check}
+
+The link check asks two questions about each path: is it clear, and is the received signal strong enough? A path is clear when the straight line between its endpoints passes above the screen. By similar triangles, the relay height at which the first hop begins to clear depends on the screen height and its position along the path.
+
+For the baseline 80 m screen at 40 percent of the separation and a midpoint relay, this threshold is 100 m. This means a relay at or below 100 m leaves the first hop blocked. Heights are compared strictly, so a path that just grazes the screen counts as blocked. In every screened scenario the screen sits on the first hop, so the second hop does not cross it. The screen is an opaque plane, and the model includes no diffraction, Fresnel-zone clearance, or earth curvature.
+
+For a clear path, the check computes free-space loss from distance and frequency with the standard transmission relation \cite{itu525}, \cite{friis}.
+
+The link margin is the received level above the receiver threshold,
+
+\begin{equation}
+M=P_t+G_t+G_r-L-L_0-L_x-S,
+\end{equation}
+
+where L is the free-space loss. Here Pt is the transmit level in dBm, Gt and Gr are antenna gains in dBi, and S is the $-90$ dBm threshold. L0 is a 6 dB allowance for other losses, and Lx is the scenario loss. The ground endpoint transmits at 30 dBm and the relay transmits at 32.04 dBm, which is the 1.6 W maximum expressed in dBm. A relay path passes only when both hops are clear and both margins are at least 0 dB. The check covers signal level only, so it says nothing about interference, scheduling, or delivered data rate.
+
+\subsection{Carrier Sizing}
+
+The aircraft side of the assessment asks whether an aircraft of consistent mass can hover with the payload for the requested time. Rotor disk area is set by holding disk loading constant at 60 N/m\textsuperscript{2}, so area grows in proportion to mass. Momentum theory then gives ideal hover power, and dividing by the rotor figure of merit and the drive efficiency converts that to electrical power \cite{leishman}, \cite{ndarc}. The result is proportional to gross mass \emph{m},
+
+\begin{equation}
+P=k\,m,\qquad k=\frac{g\,k_{env}}{FM\,\eta}\sqrt{\frac{DL}{2\rho}},
+\end{equation}
+
+where FM is the rotor figure of merit, $\eta$ the drive efficiency, DL the disk loading, $\rho$ the air density, and kenv a multiplier for operating conditions. The calibration identifies only the combined term FM $\eta$/kenv, so the reference relation reproduces laboratory hover power with no margin for operating conditions. At the calibrated values in Table~\ref{tab:inputs}, k is 108.4 W/kg. This means the model describes a family of aircraft that are resized as mass grows, not one airframe carrying a bigger battery. A separate 15 percent hover-power margin would move the carrier boundaries from 42.1 and 52.4 minutes to 35.7 and 44.5 minutes.
 
 \begin{figure}[!tb]
 \centering
@@ -132,7 +174,10 @@ The assessment uses selected processes from the NASA Systems Engineering Handboo
 \label{fig:workflow}
 \end{figure}
 
-\subsection{Declared Inputs}
+The battery must satisfy two separate demands, and the larger one governs. The energy demand covers hover power plus a fixed 40.2 W for avionics and the payload over the full dwell, using only the usable fraction of the pack. The power demand covers the peak current that a 1.75 thrust ratio implies, with a further 15 percent allowance. Dividing each demand by the pack's specific energy or specific power gives a battery mass, and Appendix A states both relations.
+
+Holding back 20 percent after a 90 percent depth of discharge leaves a usable fraction of 0.72. This reserve is part of the mission policy rather than the calibration.
+
 
 \begin{table}[!tb]
 \caption{Declared inputs and calibrated coefficients}
@@ -175,67 +220,29 @@ Declared values are analysis assumptions rather than approved requirements. The 
 \end{minipage}
 \end{table}
 
-The reference screen uses an explicit set of allowances: 90 percent permitted battery depth of discharge followed by a 20 percent withheld reserve gives $u=0.72$; the battery power branch uses a 1.75 thrust ratio and a further 15 percent peak-power allowance; and the link budget includes 6 dB of other loss. These are analyst-selected sizing policies, not an approved project margin standard. The hover coefficient is fitted with its operating-condition multiplier held fixed, so it carries no separate operating-condition margin. A 15 percent additional hover-power case is reported as a stress test rather than silently included in the reference results. The owner would have to approve a service and margin policy before a physical design could be accepted.
+Declared values are analysis assumptions rather than approved requirements. The aggregate hover fit, structural anchor, and battery reference are explained below. The appendix gives all mass-model coefficients.
 
-The study samples declared geometries and durations rather than observed operations. Heights are measured from a common ground datum, with the ground endpoint at 0 m and the remote aircraft at 100 m. The relay sits at the horizontal midpoint at 60, 120, or 240 m. Endpoint separation takes six values from 5 to 60 km and dwell takes five values from 10 to 60 minutes. Table~\ref{tab:inputs} lists these inputs. The baseline scenario places an 80 m opaque screen at 40 percent of the separation. Four variants move that screen, one variant adds 12 dB of loss, and one comparator removes the screen entirely. These are stylized visibility cases, not terrain.
+The reference screen includes a 20 percent battery reserve, a 1.75 thrust ratio, a 15 percent peak-power allowance, and 6 dB of other link loss. These are separate allowances, not one interchangeable safety margin. In particular, the hover calibration absorbs the declared operating-condition multiplier and supplies no additional operating-power margin. A separate 15 percent hover-power stress case tests that omission. The allowances must ultimately be justified against the chosen equipment, mission, and acceptance criteria.
 
-The payload values come from a commercial mesh radio module with a published mass of 102 g, 5 W receive consumption, 14 W peak consumption, and 1.6 W maximum transmit power \cite{doodle}. The model adds 98 g for unselected integration hardware and applies the 14 W peak value continuously. Applying the listed peak continuously is a sizing assumption. The stated maximum RF output and DC consumption have not been verified as a simultaneous operating point. The receiver threshold of $-90$~dBm is one common assumption applied to every receiver, and the 5 MHz bandwidth is recorded as context that never enters the margin calculation.
+Adding the remaining masses closes the loop. Propulsion mass scales with peak power and rotor area, and structure carries a base mass plus a fraction of everything it supports. The payload, avionics, power electronics, and mount contribute a fixed 1.116 kg, and Appendix A defines each allowance. Since every term is either fixed or proportional to gross mass, each battery branch reduces to a fixed mass plus a growth factor times the trial mass.
 
-\subsection{Link Check}
-
-The link check asks two questions about each path: is it clear, and is the received signal strong enough. A path is clear when the straight line between its endpoints passes above the screen. For a screen of height $H$ standing at a fraction $s$ of the separation, similar triangles give the relay height at which the first hop begins to clear,
-\begin{equation}
-h_{th}=z_G+\frac{(H-z_G)\,r}{s},
-\end{equation}
-where $z_G$ is the ground endpoint height and $r$ is the relay position as a fraction of the separation. At the baseline values of 80 m, $s=0.40$, and $r=0.5$, this threshold is 100 m. This means a relay at or below 100 m leaves the first hop blocked. Heights are compared strictly, so a path that just grazes the screen counts as blocked. This expression applies to a screen between the ground endpoint and the relay, as in every screened scenario here. The second hop does not cross that screen. The screen is an opaque plane, and the model includes no diffraction, Fresnel-zone clearance, or earth curvature.
-
-For a clear path, free-space loss over a distance $d$ in kilometers at frequency $f$ in megahertz is
-\begin{equation}
-L=32.44+20\log_{10}f+20\log_{10}d,
-\end{equation}
-following the free-space transmission relation \cite{itu525}, \cite{friis}. The implementation retains 32.44 for the unit conversion; P.525 prints the rounded value 32.4. The link margin is the received level above the receiver threshold,
-\begin{equation}
-M=P_t+G_t+G_r-L-L_0-L_x-S,
-\end{equation}
-where $P_t$ is the transmit level in dBm, $G_t$ and $G_r$ are antenna gains in dBi, $L_0$ is a 6 dB miscellaneous loss allowance, $L_x$ is the scenario loss, and $S$ is the $-90$~dBm threshold. The ground endpoint transmits at 30 dBm and the relay transmits at 32.04 dBm, which is the 1.6 W maximum expressed in dBm. A relay path passes only when both hops are clear and both margins are at least 0 dB. The check covers signal level only, so it says nothing about interference, scheduling, or delivered data rate.
-
-\subsection{Carrier Sizing}
-
-The aircraft side of the assessment asks whether an aircraft of consistent mass can hover with the payload for the requested time. Rotor disk area is set by holding disk loading constant at 60 N/m$^2$, so area grows in proportion to mass. Momentum theory then gives ideal hover power, and dividing by the rotor figure of merit and the drive efficiency converts that to electrical power \cite{leishman}, \cite{ndarc}. The result is proportional to gross mass $m$,
-\begin{equation}
-P=k\,m,\qquad k=\frac{g\,k_{env}}{FM\,\eta}\sqrt{\frac{DL}{2\rho}},
-\end{equation}
-where $FM$ is the figure of merit, $\eta$ the combined motor and controller efficiency, $DL$ the disk loading, $\rho$ the air density, and $k_{env}$ an assumed multiplier for operating conditions. Because this multiplier is held fixed during fitting, the fitted $FM$ absorbs it: the product $FM\,\eta/k_{env}$ is what the calibration identifies. The reference relation therefore reproduces the laboratory hover power and carries no net margin for operating conditions. At the calibrated values in Table~\ref{tab:inputs}, $k$ is 108.4 W/kg. The model therefore describes a family of aircraft that are resized as mass grows, not one airframe carrying a bigger battery. Applying a separate 15 percent operating margin on top of the fitted relation would raise $k$ to 124.7 W/kg and move the carrier boundaries reported in Section~4 from 42.1 and 52.4 minutes to 35.7 and 44.5 minutes.
-
-The battery must satisfy two separate demands, and the larger one governs. Over a dwell $t$ in hours, the aircraft draws $P$ for hover plus a fixed 40.2 W for avionics and the payload, and only the usable fraction $u$ of the pack is available. The pack must also deliver the peak current that a thrust margin of 1.75 implies, which is 2.32 times hover power, with a further 15 percent allowance. With specific energy $e$ in Wh/kg and specific power $p$ in W/kg,
-\begin{equation}
-\begin{aligned}
-m_b&=\max(m_E,m_P),\\
-m_E&=\frac{(km+P_0)t}{ue},\\
-m_P&=\frac{1.15(1.75^{3/2}km+P_0)}{p}.
-\end{aligned}
-\end{equation}
-The reserve is part of the mission policy rather than the calibration. Holding back 20 percent after a 90 percent depth of discharge leaves $u=0.72$.
-
-Adding the remaining masses closes the loop. Propulsion mass scales with peak power and rotor area, and structure carries a base mass plus a fraction of everything it supports. The payload, avionics, power electronics, and mount contribute $F=1.116$ kg. The appendix defines each component allowance. On each battery branch $j$, the terms are constant or proportional to $m$, so the implied mass is
-\begin{equation}
-m_{new,j}=a_jm+b_j.
-\end{equation}
-Here $b_j$ collects fixed masses in kilograms and $a_j$ is the branch growth factor, which is the fraction of any added kilogram that the aircraft must add again as battery, propulsion, and structure. Table~\ref{tab:inputs} gives the inputs behind both. The energy branch grows with dwell. The power branch remains unchanged. The physical mass map takes the larger battery requirement at each trial mass.
+The growth factor is the fraction of any added kilogram that the aircraft must add again as battery, propulsion, and structure. The energy branch grows with dwell, while the power branch does not. At each trial mass the model takes the larger battery requirement.
 
 \subsection{When the Aircraft Closes}
 
-A consistent sizing result is a fixed point: the mass implied by the resource calculation equals the trial gross mass. Each branch gives a candidate
-\begin{equation}
-m_j^*=\frac{b_j}{1-a_j}.
-\end{equation}
-For the positive intercepts and nonnegative coefficients used here, a candidate must have $a_j<1$, positive mass, and a battery requirement at least as large as the other branch at that mass. The appendix states these tests explicitly. A finite candidate on the wrong branch is not a solution.
+A consistent sizing result is a fixed point, where the mass implied by the resource calculation equals the trial gross mass. Each branch gives a candidate equal to its fixed mass divided by one minus its growth factor, and Appendix A states the tests a candidate must pass to count as a solution.
 
-The denominator explains why a longer dwell can have a disproportionate mass penalty. As the governing slope approaches one, a small increase in demand produces a large increase in closed mass. Once the energy slope reaches one, its positive intercept prevents a finite positive fixed point. This is a property of the assumed model; it is not a universal endurance limit for multirotors.
+The denominator explains why a longer dwell can have a disproportionate mass penalty. As the governing slope approaches one, a small increase in demand produces a large increase in closed mass. Once the energy slope reaches one, its positive intercept prevents a finite positive fixed point. This is a property of the assumed model, not a universal endurance limit for multirotors.
 
-The power-branch slope is 0.5701 at the reference inputs. It governs the 10- and 20-minute examples, while energy governs the 30- and 45-minute examples. The implementation also applies relaxed iteration as a diagnostic, starting at 5 kg with a 200-iteration limit. The analytical branch test controls all reported physical quantities, so a timeout or the 50 kg iteration guard cannot be mistaken for physical nonclosure.
+At the reference inputs, power governs the 10- and 20-minute examples, while energy governs the 30- and 45-minute examples. For the architecture, this means the carrier's limiting resource shifts from delivered power to stored energy as the requested dwell grows. The implementation checks this analytical test with a separate iterative solution, described in Appendix A.
 
 \subsection{Calibration and Check}
+
+The hover calibration estimates one aggregate coefficient from five hover test points reported in the 2018 NASA technical memorandum \cite{nasatm}. For each point, ideal induced power uses the measured supported thrust and the sum of that test article's nominal rotor swept areas. Measured electrical power is voltage multiplied by the sum of motor currents. An unweighted least-squares fit through the origin relates measured electrical power to ideal induced power. The fit identifies the combined effect of rotor, drive, and operating conditions, not an independently measured rotor figure of merit. Its residuals range from -18.6 to +14.6 percent. The Phantom 3 point is the largest disagreement: the fitted relation gives 140.1 W against a published measurement of 172.1 W. That point is kept in the calibration set, and the fit does not remove the disagreement.
+
+Because the fit passes through the origin, each point's influence scales with the square of its ideal power; the DAx8 carries 79 percent of that weight. The two highest-leverage observations were also collected inside the wind-tunnel test section, as the 2016 AHS Forum paper describes \cite{russell2016}. To expose this dependence, the analysis also refits the coefficient to each test point alone. These single-point refits measure sensitivity to the selected calibration point and give no statistical bound on endurance; Section~\ref{sec:results} reports the boundaries they produce. Appendix B examines other estimators and documents the DAx8 eight-disk area definition against the source photographs.
+
+The structural intercept is inferred separately from the NASA conceptual-design mass breakdown \cite{russell2018}. That breakdown describes a sized baseline design rather than a weighed vehicle. The calculation reproduces its airframe allowance after subtracting the present model's structural growth and disk-area terms, and several carried masses in that subtraction are model allowances. The resulting 0.163 kg is therefore conditional on those choices. It is not a directly measured empty-airframe mass or a separately validated structural law. The reference specific energy, 192 Wh/kg, comes from the published TB30 pack energy divided by its mass \cite{djim30}. That reference does not establish the assumed 900 W/kg continuous power capability for a selected relay battery. It is also the lowest pack value among the check aircraft. The Matrice 4 pack stores 99.5 Wh in 401 g, or 248 Wh/kg \cite{djim4}, and Section~\ref{sec:results} uses that value as a battery sensitivity case.
 
 \begin{table*}[!tb]
 \caption{Hover calibration and held-out endurance check}
@@ -263,36 +270,31 @@ Fit rows compare measured electrical hover power at the test article's own thrus
 \end{minipage}
 \end{table*}
 
-The hover calibration estimates one aggregate coefficient from five NASA test points \cite{nasatm}. For each point, ideal induced power uses the measured supported thrust and that test article's total rotor disk area. Measured electrical power is voltage multiplied by the sum of motor currents. An unweighted least-squares fit through the origin gives $P_{\mathrm{elec}}=\gamma P_i$, with $1/\gamma=0.447676$. Holding drive efficiency at 0.83 and the environment multiplier at 1.15 gives an effective $FM$ parameter of 0.620274. The fit identifies their combined effect, not an independently measured rotor figure of merit. Its residuals range from $-18.6$ to $+14.6$ percent. Because the fit passes through the origin, each point's influence scales with the square of its ideal power, and the DAx8 carries 79 percent of that weight. Refitting to any single point moves the reference boundaries of Section~4 to between 33.0 and 49.2 minutes (rotor limit) and between 41.2 and 61.3 minutes (energy-slope crossing). The Phantom 3 and Endurance points, whose disk loadings of 67 and 63 N/m$^2$ are nearest the reference value, set both ends of that range. Other defensible estimators (mean ratio, geometric mean, quadrotors only) give 41.4 to 44.6 and 51.5 to 55.6 minutes. The two highest-leverage points were also the two tested inside the wind tunnel \cite{russell2016}. The fit treats the DAx8 as eight separate 11 in disks; the sources consulted do not state its rotor arrangement. If its rotors were coaxial pairs with four effective disks, the refit boundaries would rise to 58.8 and 73.5 minutes, although the implied DAx8 hover factor of 0.63 would then be well above that of the four quadrotors. Since interference between stacked rotors should lower that factor rather than raise it, this result argues for the eight-disk treatment used here.
-
-The structural intercept is inferred separately from the NASA conceptual-design mass breakdown \cite{russell2018}. That breakdown describes a sized baseline design rather than a weighed vehicle: its 1.61 lb airframe comes from a fuselage weight trend plus motor-support and landing-gear fractions. The calculation reproduces its airframe allowance after subtracting the present model's structural growth and disk-area terms. Several carried masses in that subtraction are model allowances. The resulting 0.163173 kg is therefore conditional on those choices; it is not a directly measured empty-airframe mass or a separately validated structural law. The reference specific energy, 192.117 Wh/kg, comes from the published TB30 pack energy divided by its mass \cite{djim30}. That reference does not establish the assumed 900 W/kg continuous power capability for a selected relay battery. It is also the lowest pack value among the check aircraft. The Matrice 4 pack stores 99.5 Wh in 401 g, or 248 Wh/kg \cite{djim4}, and using that value moves the two carrier boundaries to 54.4 and 67.7 minutes.
-
-Three commercial quadrotors are excluded from the five-point fit and used for a separate hover-time comparison \cite{djim30}, \cite{djim4}, \cite{djimavic}. Their own mass, rotor area, and nominal battery energy enter the calibrated power relation, with a common assumed 25 W auxiliary load. The calculation uses the published maximum-hover discharge condition without the relay mission's depth-of-discharge and reserve reductions. Differences range from $-6.7$ to $+3.2$ percent (Table~\ref{tab:calib} and Figure~\ref{fig:calib}). The auxiliary allowance matters for the two smaller aircraft. With 0, 10, and 40 W instead of 25 W, the Matrice 30, Matrice 4, and Mavic 3M differences become $-1.5$, $+17.2$, and $+30.0$ percent; $-3.7$, $+8.2$, and $+17.8$ percent; and $-9.6$, $-11.9$, and $-8.2$ percent. Only the Matrice 30, whose hover power is large relative to the allowance, stays within 10 percent across that range. The two smaller aircraft are therefore consistent with the fitted relation rather than an independent test of it. The Matrice 350 figure is excluded because it describes forward flight. These comparisons provide a limited consistency check on hover power and energy accounting. They do not test the structural mass model, flight control, or a physical relay aircraft, and three published values do not establish a general prediction-error bound.
-
 \begin{figure*}[!tb]
 \centering
 \includegraphics[width=\textwidth]{figs/fig2_calibration.pdf}
-\caption{Hover evidence shown on separate axes. Left: measured and fitted electrical powers for the five NASA points. Right: published and calculated maximum-hover times for three aircraft excluded from the fit. A diagonal indicates agreement; neither panel validates carrier mass closure.}
+\caption{Hover evidence shown on separate axes. (a) Measured and fitted electrical powers for the five NASA points. (b) Published and calculated maximum-hover times for three aircraft excluded from the fit. A diagonal indicates agreement; neither panel validates carrier mass closure.}
 \label{fig:calib}
 \end{figure*}
 
+
+Three commercial quadrotors are excluded from the five-point fit and used for a separate hover-time comparison \cite{djim30}, \cite{djim4}, \cite{djimavic}. Their own mass, rotor area, and nominal battery energy enter the calibrated power relation, with a common assumed 25 W auxiliary load. The calculation uses the published maximum-hover discharge condition without the relay mission's depth-of-discharge and reserve reductions. Differences range from -6.7 to +3.2 percent (Table~\ref{tab:calib} and Figure~\ref{fig:calib}). The auxiliary allowance matters for the two smaller aircraft. Only the Matrice 30, whose hover power is large relative to the allowance, stays within 10 percent across a 0 to 40 W sweep (Appendix B). The two smaller aircraft are therefore consistent with the fitted relation rather than an independent test of it. The Matrice 350 figure is excluded because it describes forward flight. These comparisons provide a limited consistency check on hover power and energy accounting. They do not test the structural mass model, flight control, or a physical relay aircraft, and three published values do not establish a general prediction-error bound.
+
 \subsection{Size Limits and Decision Order}
 
-A closed aircraft is screened against two size limits that keep the result in the small relay class. Gross mass must not exceed 15 kg, and the equivalent rotor diameter must not exceed 0.75 m, where the diameter comes from the total disk area $A=mg/DL$ shared across four rotors,
-\begin{equation}
-d=\sqrt{\frac{4A}{n\pi}}.
-\end{equation}
-At the reference disk loading the rotor limit binds first, since a 0.75 m rotor corresponds to a gross mass of 10.81 kg. A separate span check is twice the rotor diameter, so it repeats the rotor limit rather than adding a new one. These limits screen results. They are not approved requirements, and nothing in the analysis prevents a larger aircraft from existing.
+A closed aircraft is screened against two size limits that keep the result in the small relay class. Gross mass must not exceed 15 kg, and the equivalent rotor diameter must not exceed 0.75 m. The diameter comes from the total disk area shared equally across four rotors.
 
-Each case then receives one label from the first check that fails. If the direct path passes the assumed service screen, the case is \gate{direct}: relay benefit is not required by this criterion. Otherwise, if either relay hop is blocked or short of margin, the case is \gate{link fail}. Otherwise, if the aircraft has no solution, the case is \gate{no solution}, and if it has a solution outside the size limits, the case is \gate{too large}. What remains is a \gate{pass}, meaning a blocked or insufficient direct path, two passing outbound relay hops, and a finite carrier within the exploratory limits. Because connectivity is checked first, a \gate{link fail} label can hide an aircraft failure in the same case, so the case records keep both flags.
+At the reference disk loading the rotor limit binds first, since a 0.75 m rotor corresponds to a gross mass of 10.81 kg. A separate span check is twice the rotor diameter, so it repeats the rotor limit rather than adding a new one. These limits screen results, and nothing in the analysis prevents a larger aircraft from existing.
 
-\subsection{Evidence and Verification Plan}
+Each case then receives one label from the first check that fails. If the direct path passes the assumed service screen, the case is \textsc{direct}: relay benefit is not required by this criterion. Otherwise, if either relay hop is blocked or short of margin, the case is \textsc{link fail}. Otherwise, if the aircraft has no solution, the case is \textsc{no solution}, and if it has a solution outside the size limits, the case is \textsc{too large}. What remains is a \textsc{pass}, meaning a blocked or insufficient direct path, two passing outbound relay hops, and a finite carrier within the exploratory limits. Because connectivity is checked first, a \textsc{link fail} label can hide an aircraft failure in the same case, so the case records keep both flags.
 
-Each scenario holds 90 cases, formed from six separations, five dwell values, and three relay altitudes. The primary payload is the 0.20 kg, 14 W case. Seven scenarios and three payload cases give 1,890 saved records, which are repetitions of the same grid rather than independent missions, so every count in this paper uses the 90-case denominator.
+\subsection{Verification and Validation Plan}
 
-Four evidence levels matter here. Model verification asks whether the code implements the stated equations: 35 automated tests and a separate checker rebuild every link from coordinates, solve the mass balance by independent bisection, and compare all saved records. Model validation asks whether those equations represent aircraft and links in use: five published hover-power observations constrain one aggregate coefficient, while commercial-aircraft hover times give a limited external consistency check. The two smaller check aircraft are sensitive to the assumed auxiliary load; only the Matrice 30 stays within 10 percent across the stated sweep. Neither the link nor structural model has been validated against the proposed installation. System verification would compare a built relay against its accepted requirements, and system validation would establish that it serves its operator's mission. Neither has been performed.
+The evidence separates implementation checks from physical comparisons and planned installation tests. The documented equations are evaluated by scripted analysis code that generates every case record. That code carries 35 automated tests, and a separate checker rebuilds each link from coordinates, solves the mass balance by independent bisection, and compares its results with the saved records. This shows that the implementation follows the equations, although it cannot show that the equations predict a particular relay. Five published hover observations calibrate one aggregate coefficient. Commercial-aircraft hover times provide a limited external consistency check, with the auxiliary-load sensitivity described above. Neither the structural model nor the installed radio paths have corresponding validation evidence.
 
-Table~\ref{tab:verify} connects existing candidate requirement IDs to current analysis and the next evidence. Its planned checks are not completed procedures. Acceptance thresholds that depend on an owner, an interface specification, or a measured environment remain open. The numerical study screens are analyst choices and do not convert those candidates into approved system requirements.
+Verification asks whether a product meets its specified requirements; validation asks whether it serves its intended use \cite{nasaSEH}. Early analysis and review can support those activities without a flight-ready aircraft. Here, the missing evidence is more specific: the service criteria have not been agreed with an operator, and no integrated relay has been assessed against an accepted requirement set. The modeled passes therefore support design selection, not a claim of installed-system compliance. Before hardware acceptance, each relevant criterion must name the configuration, conditions, observable result, and acceptable threshold.
+
+Table~\ref{tab:verify} records the existing evidence and planned checks using analysis, inspection, demonstration, and test. It is a planning matrix, not a set of completed procedures. For the candidate carried forward, the key checks are the two installed radio hops, hover power with the payload fitted, and command continuity under a bounded payload fault. Their acceptance thresholds remain to be specified. An operational trial would then assess the agreed service with an operator at a representative site, including the mission phases omitted from this model.
 
 \begin{table*}[!tb]
 \caption{Candidate requirement trace and verification planning; no integrated relay has been verified}
@@ -302,49 +304,33 @@ Table~\ref{tab:verify} connects existing candidate requirement IDs to current an
 \toprule
 Candidate & Allocated function or constraint & Current evidence & Planned verification and acceptance basis \\
 \midrule
-REQ-001 & Relay outbound traffic & Geometry and received-level analysis only & Installed two-hop communication test; owner-selected delivery criterion remains open \\
-REQ-004 & Accept aircraft commands & Separate logical command allocation & Demonstrate command and health path with payload traffic present and absent; control criterion remains open \\
-REQ-010 & On-station endurance & Coupled hover mass closure for declared dwells & Timed installed-payload hover with mission reserve; owner dwell target remains open \\
-REQ-011 & Limit gross mass & Model mass and exploratory size screens & Weigh configured aircraft against an owner-approved mass ceiling \\
-REQ-012 & Accommodate payload & Assumed 0.20 kg mass; volume not modeled & Inspect installed payload fit against selected mass and volume envelope \\
-REQ-015 & Regulated payload power & Assumed continuous 14 W demand & Load-test rail across its specified voltage and current envelope; values remain open \\
-REQ-016 & Limit carrier-payload crossings & Model review of power and mechanical allocation & Inspect as-built interface for the two specified crossings \\
+REQ-001 & Relay outbound traffic & Geometry and received-level analysis only & Test: two-hop communication with the payload installed; owner-selected delivery criterion remains open \\
+REQ-004 & Accept aircraft commands & Allocation only; no evidence yet & Demonstration: command and health path with payload traffic present, absent, and faulted, showing that a payload fault does not interrupt command; fault indication, carrier response, and control criterion remain open \\
+REQ-010 & On-station endurance & Coupled hover mass closure for declared dwells & Test: timed hover with the payload installed and mission reserve held; owner dwell target remains open \\
+REQ-011 & Limit gross mass & Model mass and exploratory size screens & Test: weigh the configured aircraft against an owner-approved mass ceiling \\
+REQ-012 & Accommodate payload & Assumed 0.20 kg mass; volume and mount loads not modeled & Inspection: check installed payload fit against the selected mass and volume envelope; mount load path and retention not yet specified \\
+REQ-015 & Regulated payload power & Study assumption of continuous 14 W; not an interface specification; rail voltage, peak current, connector, protection, and thermal limits open & Test: load the rail across its specified voltage and current envelope once a payload radio is selected \\
+REQ-016 & Limit carrier-payload crossings & Model review of power and mechanical allocation & Inspection: check that the as-built interface has only the two specified crossings \\
 \bottomrule
 \end{tabular}
 \end{table*}
 
-%======================================================================
-
-
-\begin{figure*}[!tb]
-\centering
-\includegraphics[width=\textwidth]{figs/fig3_service_map.pdf}
-\caption{Baseline results for the 90 primary cases. \gate{pass} means the relay helps and the aircraft stays within the screening limits, \gate{size} marks a solution outside those limits, \gate{NC} marks a case with no solution, and \gate{link fail} marks the earlier link check. All cells in the 60 m panel fail visibility. Link failures in the 120 m and 240 m panels are clear but short of margin. No case in the baseline is direct-sufficient.}
-\label{fig:map}
-\end{figure*}
-
 \section{Results}\label{sec:results}
-%======================================================================
 
 \subsection{Where the Envelope Ends}
 
-For a midpoint relay at 120 m, solving the zero-margin condition gives a maximum endpoint separation of 25.0 km under the baseline RF assumptions. The ground-to-relay hop binds first. A 12 dB excess-loss allowance reduces that separation to 6.3 km. Both statements require a clear path. Dwell has no effect on this boundary because time does not enter the link model.
+The baseline supports further assessment of the 10 km, 30-minute target, but not the 45-minute objective with the reference carrier assumptions. Figure~\ref{fig:map} shows the midpoint grid, and the link and carrier boundaries explain its labels. At 120 m, the midpoint relay reaches a calculated 25.0 km separation before the ground-to-relay hop runs out of margin. Adding 12 dB of loss reduces that boundary to 6.3 km, below even the 10 km target. More battery cannot repair this failure while the radio assumptions stay fixed. The designer must reconsider placement, radio performance, or the requested separation. The carrier boundaries below answer a different question: how long a radio path that passes can be supported.
 
-The reference carrier reaches the 0.75 m rotor limit at 42.1 minutes. At that point gross mass is 10.81 kg, so the rotor limit is tighter than the 15 kg mass ceiling. Finite closure persists until the energy-branch slope reaches one at 52.4 minutes. Thus the interval between these boundaries contains finite mathematical sizes that fail the physical screen. Figure~\ref{fig:closure} shows this transition without treating the divergent branch as a buildable aircraft.
 
-The existing favorable and adverse parameter sets illustrate dependence on carrier assumptions. The favorable set gives a 126.9-minute physical boundary and a 157.0-minute energy-slope crossing. The adverse set has no physical pass even at zero dwell; its 6.4-minute energy-slope crossing is not an achievable service duration. These sets change several assumptions simultaneously. They are deterministic corners and do not define a confidence interval; the reference is no statistical midpoint.
+The reference carrier reaches the 0.75 m rotor limit at 42.1 minutes. At that point gross mass is 10.81 kg, so the rotor limit is tighter than the 15 kg mass ceiling. Finite closure persists until the energy-branch slope reaches one at 52.4 minutes. This means the interval between these boundaries holds aircraft that close mathematically but fail the physical screen. Figure~\ref{fig:closure} shows this transition without treating the divergent branch as a buildable aircraft.
 
-\begin{figure}[!tb]
-\centering
-\includegraphics[width=\columnwidth]{figs/fig5_closure.pdf}
-\caption{Reference carrier mass versus dwell, evaluated from the stated branch equations. The rotor screen binds at 42.1 minutes; the energy slope reaches one at 52.4 minutes. The plotted finite curve is clipped at 25 kg for readability.}
-\label{fig:closure}
-\end{figure}
+The existing favorable and adverse parameter sets illustrate dependence on carrier assumptions. The favorable set gives a 126.9-minute physical boundary and a 157.0-minute energy-slope crossing. The adverse set has no physical pass even at zero dwell; its 6.4-minute energy-slope crossing is not an achievable service duration. These sets change several assumptions simultaneously. They are deterministic corners, not a confidence interval, and the reference is not a statistical midpoint.
 
-\subsection{One Geometry, Three Outcomes}
+The decision should not use 42.1 minutes as available endurance. Refitting the hover coefficient to each test point alone moves the rotor boundary from 33.0 to 49.2 minutes and the energy-slope crossing from 41.2 to 61.3 minutes. A separate 15 percent hover-power allowance moves the reference boundaries to 35.7 and 44.5 minutes. Since both stresses act through the power coefficient k in (2), they compound when applied together. Pairing the least favorable refit, the Phantom 3 point, with the 15 percent allowance places the rotor boundary near 28 minutes; at 30 minutes that carrier closes only at about 16 kg with a 0.92 m rotor. The other four refits paired with the allowance keep the rotor boundary between about 35 and 42 minutes. This means the 30-minute target passes each stress applied alone but fails the least favorable pairing. Therefore, the study carries 30 minutes forward as a candidate that installed hover-power measurement must confirm, and it defers any 45-minute commitment.
+Substituting 248 Wh/kg while holding the other battery assumptions fixed moves the reference boundaries to 54.4 and 67.7 minutes, but that sensitivity does not establish a compatible pack with the required power capability. A longer dwell would therefore need a justified change to the carrier itself, such as a qualified higher-energy pack or lower installed hover power, because adding battery to the same design raises the mass that the battery must lift.
 
 \begin{table}[!tb]
-\caption{Worked case at 10 km separation and 120 m relay altitude}
+\caption{Worked case at 10 km separation and 120 m relay height}
 \label{tab:worked}
 \centering\small
 \setlength{\tabcolsep}{4pt}
@@ -367,17 +353,38 @@ Link margins stay at 7.97 and 10.02 dB in every row, so the differences come ent
 \end{minipage}
 \end{table}
 
+\begin{figure*}[!tb]
+\centering
+\includegraphics[width=\textwidth]{figs/fig3_service_map.pdf}
+\caption{Baseline results for the 90 primary cases. \gate{pass} means the relay helps and the aircraft stays within the screening limits, \gate{size} marks a solution outside those limits, \gate{NC} marks a case with no solution, and \gate{link fail} marks the earlier link check. All cells in the 60 m panel fail visibility. Link failures in the 120 m and 240 m panels are clear but short of margin. No case in the baseline is direct-sufficient.}
+\label{fig:map}
+\end{figure*}
+
+
+
+Hop margins are 7.97 and 10.02 dB throughout. The energy-branch factor is tabulated; the power-branch factor is 0.570. PASS requires relay benefit and compliance with both size limits.
+
+\begin{figure}[!tb]
+\centering
+\includegraphics[width=\columnwidth]{figs/fig5_closure.pdf}
+\caption{Reference carrier mass versus dwell, evaluated from the stated branch equations. The rotor screen binds at 42.1 minutes; the energy slope reaches one at 52.4 minutes. The plotted finite curve is clipped at 25 kg for readability.}
+\label{fig:closure}
+\end{figure}
+
+\subsection{One Geometry, Three Outcomes}
+
 The worked case fixes the geometry and varies only dwell, which isolates the aircraft behavior. At 10 km separation the screen stands 4 km from the ground endpoint. The direct line passes it at 40 m, below the 80 m top, so the direct path is blocked. With the relay at 120 m the first hop passes the screen at 96 m and is clear, as Figure~\ref{fig:arch}(b) shows. The two hop margins are 7.97 and 10.02 dB, and they do not change with dwell. This is what makes the case useful: every difference that follows belongs to the aircraft. The saved record also lists a 5.96 dB direct margin, which is the margin the direct path would have if the screen were not there.
 
-Table~\ref{tab:worked} shows what changes instead. At 10 and 20 minutes the pack is sized by peak power rather than by energy. This means both cases close at the same 3.58 kg, and the installed 231 Wh exceeds the 99 and 198 Wh of pack capacity those dwells require under the same reserve and depth-of-discharge policy. At 30 minutes energy takes over, the aircraft closes at 4.77 kg with a 0.50 m rotor, and the battery reaches 42 percent of gross mass. At 45 minutes the growth factor is 0.885 and the aircraft still closes, but at 15.1 kg with a 0.89 m rotor, which fails both size limits. At 60 minutes the growth factor passes one and there is no solution to report at all. The last two rows are the two failure stages from Section 3 seen in one geometry. The short-dwell masses can be compared with the check aircraft. Under the same fitted relation, fixed loads, and usable fraction, a Matrice 30 carrying the payload weighs 3.97 kg and a Matrice 4 weighs 1.42 kg, and both hover for about 22 minutes against the 3.58 kg, 20-minute reference result. The reference family is therefore deliberately heavy at short dwell, since its 1.116 kg of fixed allowances exceeds the whole takeoff mass of a Matrice 4 and its pack is sized by peak power rather than by energy.
+Table~\ref{tab:worked} shows what changes instead. At 10 and 20 minutes the battery is sized by the power it has to deliver rather than the energy it has to store. This means both cases close at the same 3.58 kg, and the installed 231 Wh is more than either dwell needs. At 30 minutes energy takes over, the aircraft closes at 4.77 kg with a 0.50 m rotor, and the battery reaches 42 percent of gross mass. At 45 minutes the aircraft still closes, but only at 15.15 kg with a 0.89 m rotor, which fails both size limits. At 60 minutes each added kilogram of battery calls for more than another kilogram to lift it, so there is no aircraft to report at all. The last two rows are the two failure stages from Section~\ref{sec:methods} seen in one geometry.
+
+The short-dwell result also needs a scale check. Adding the assumed 0.20 kg payload to the published masses gives 3.97 kg for the Matrice 30 and 1.42 kg for the Matrice 4. Under the fitted power relation and stated energy policy, both yield about 22 minutes, compared with the 3.58 kg, 20-minute reference case. These are calculations, not demonstrations that either aircraft accepts the payload installation. The reference family's 1.116 kg fixed allowance approaches the 1.22 kg Matrice 4 mass in Table~\ref{tab:calib}, and its short-dwell pack is power-sized. That bookkeeping helps explain the difference; it does not prove that a custom carrier is preferable. Selecting an actual airframe remains the next step for the 30-minute candidate.
 
 \subsection{The Sampled Grid}
 
-The 90-case grid shows where those two limits fall across the sampled points. Of the 90 baseline cases, 18 pass, 6 are too large, 6 have no solution, and 60 fail the link check. Figure~\ref{fig:map} shows the pattern. Every case at 60 m fails because the relay sits below the 100 m clearance threshold. At 120 and 240 m the 5, 10, and 20 km cases clear the screen and hold margin. Within those cases the 10 to 30 minute dwells pass, the 45 minute dwells are too large, and the 60 minute dwells have no solution. At 30 km and beyond the relay can see both endpoints but the first hop falls short of margin, which matches the 25.0 km limit from Section 4.
+The 90-case grid shows where those two limits fall across the sampled points. Of the 90 baseline cases, 18 pass, 6 are too large, 6 have no solution, and 60 fail the link check. Figure~\ref{fig:map} shows the pattern. Every case at 60 m fails because the relay sits below the 100 m clearance threshold. At 120 and 240 m the 5, 10, and 20 km cases clear the screen and hold margin. Within those cases, dwells from 10 to 30 minutes pass, the 45-minute cases are too large, and the 60-minute cases have no solution. At 30 km and beyond the relay can see both endpoints but the first hop falls short of margin, which matches the 25.0 km limit above.
 
+Of the 90 cases, 30 pass the link check and 54 pass the carrier check; 18 pass both. Table~\ref{tab:joint} retains the joint failures hidden by the ordered labels. Because the screens depend on separate grid coordinates, their intersection follows from the model structure and reveals no new physical coupling. Its value is diagnostic. Of the 60 link failures, 24 also fail the carrier screen, so improving only the radio path would not recover them. This is why the assessment keeps both flags for every case. Link failures dominate this selected grid, which need not represent an operating population. At 30 minutes and 120 m, both the 10 km threshold and 20 km objective pass nominally.
 
-
-Neither check alone gives the same answer as both together. Of the 90 baseline cases, 30 pass the link check and 54 pass the aircraft check, but only 18 pass both. The cross-tabulation in Table~\ref{tab:joint} retains joint failures that the ordered case labels hide. These are deterministic grid totals, not probabilities or a comparison of prediction accuracy.
 
 \begin{table}[!tb]
 \caption{Joint link and carrier screens for 90 baseline cases}
@@ -393,17 +400,13 @@ Link fail & 36 & 24 \\
 \end{tabular}
 \end{table}
 
-The clear comparator shows why relay benefit has to be judged against the direct path. With the screen removed, the 5 and 10 km direct paths carry positive margin, so 30 cases are labeled \gate{direct}. Only 9 cases, all at 20 km, are relay passes, because at 20 km the direct margin is $-0.07$~dB while both relay hops stay positive. The relay helps in a narrow band: close enough that two hops hold margin, far enough that one hop does not.
-
-
+The clear comparator shows why relay benefit has to be judged against the direct path. With the screen removed, the 5 and 10 km direct paths carry positive margin, so 30 cases are labeled \textsc{direct}. Only 9 cases, all at 20 km, are relay passes, because at 20 km the direct margin is $-0.07$ dB while both relay hops stay positive. The relay helps in a narrow band: close enough that two hops hold margin, far enough that one hop does not.
 
 \subsection{Scenario Sensitivity}
 
-Adding 12 dB of loss to every clear path leaves 6 passes, 2 too large, 2 with no solution, and 80 link failures. Only the 5 km cases keep both margins positive, since at 10 km the first hop falls to $-4.03$~dB. The aircraft results do not move, because no aircraft input changes. This single stress case shrinks the envelope more than any screen variant does.
+Adding 12 dB of loss leaves 6 passes, 2 too large, 2 with no solution, and 80 link failures. Only the 5 km cases retain both hop margins; at 10 km the first hop falls to $-4.03$ dB. Carrier results remain unchanged. This stress case reverses the nominal 10 km service decision, so site-specific link evidence matters before committing to that target. It does not establish a universal test priority: the 12 dB excursion is analyst-selected, and the other sensitivity cases vary different quantities over different ranges.
 
-Moving the screen changes the clearance threshold in (1) and therefore changes which altitude layers work. Figure~\ref{fig:thresh} shows the five thresholds. Lowering the screen to 60 m or moving it to 0.45 of the span drops the threshold to 75.0 and 88.9 m. This leaves the sampled results unchanged, since 60 m is still blocked and 120 m is still clear. Raising the screen to 100 m or moving it to 0.30 of the span raises the threshold to 125.0 and 133.3 m. This blocks the 120 m layer and halves the passes to 9. While the two lower thresholds produce no change at all, that is a statement about the sampled altitudes rather than evidence of insensitivity, since no altitude between 75 and 120 m was tested.
-
-The two secondary payload cases preserve the primary classification boundaries in the baseline grid. Mass, DC demand, and RF output change together, so this is a comparison of declared payload cases, not an isolated mass or power experiment. Unchanged coarse labels do not establish hardware equivalence or insensitivity between sampled points.
+Moving the screen changes the first-hop clearance threshold and therefore changes which altitude layers work. Figure~\ref{fig:thresh} shows the five thresholds. Lowering the screen to 60 m or moving it to 0.45 of the span drops the threshold to 75.0 and 88.9 m. This leaves the sampled results unchanged, since 60 m is still blocked and 120 m is still clear. Raising the screen to 100 m or moving it to 0.30 of the span raises the threshold to 125.0 and 133.3 m. This blocks the 120 m layer and halves the passes to 9. While the two lower thresholds produce no change at all, that is a statement about the sampled altitudes rather than evidence of insensitivity, since no altitude between 75 and 120 m was tested. For siting, the relay height has to be chosen against the actual obstruction, because a screen that raises the threshold above 120 m removes that altitude layer from service.
 
 \begin{figure}[!tb]
 \centering
@@ -412,43 +415,66 @@ The two secondary payload cases preserve the primary classification boundaries i
 \label{fig:thresh}
 \end{figure}
 
-%======================================================================
-\section{Discussion}
-%======================================================================
+The two secondary payload cases preserve the primary classification boundaries in the baseline grid. Mass, DC demand, and RF output change together, so this is a comparison of declared payload cases, not an isolated mass or power experiment. Unchanged coarse labels do not establish hardware equivalence or insensitivity between sampled points.
 
-\subsection{What the Result Supports}
+\subsection{Placement Choice for the 30-Minute Candidate}
 
-The labels point to different parts of the architecture. A connectivity failure calls for reconsidering relay placement, radio assumptions, or the service requirement. More battery cannot repair that failure while the RF assumptions remain fixed. A finite result outside the size screen calls for reconsidering dwell or the carrier's battery, propulsion, and structural allowances. Mathematical nonclosure means those resource relations have no finite solution under the assumed scaling; relaxing a mass ceiling cannot create one. The separate carrier command path and payload mount also need interface and physical tests before the allocation can become a verified design.
+The midpoint is a useful baseline, but it need not be the preferred site. Under the declared asymmetric transmit powers, shifting the relay toward G balances the two hop margins at approximately 0.442 of the endpoint separation. This follows by finding each hop's allowable slant distance at zero margin, converting it to horizontal distance at the stated heights, and placing the relay in proportion to those distances. The rounded position describes a candidate and makes no claim of optimality under real terrain and antenna constraints.
 
-The worked example makes these decisions concrete. At 30 minutes the carrier passes the exploratory screen and becomes a candidate for more detailed assessment. At 45 minutes the 15.15 kg result indicates excessive burden under the stated assumptions. At 60 minutes there is no consistent mass to size or cost. Treating both failed cases as a numerical convergence problem would lose the distinction between them.
+Table~\ref{tab:placement} compares the two placements at 10 km separation, 120 m height, and 30 minutes. The midpoint leaves about 10.0 dB on the second hop but only 7.97 dB on the first, while the offset leaves about 9.0 dB on each, and both first hops clear the 80 m screen. The calculated separation boundary rises from 25.0 km to about 28 km. Since the comparison uses the same free-space and opaque-screen assumptions as the baseline, it does not establish installed coverage.
 
-The payload supplies common mass, DC, and RF assumptions to the two checks. Link margin does not resize the radio, and altitude does not change the fixed-density hover calculation. Consequently, the assessment can identify which allocation or resource binds without optimizing the radio, trajectory, and aircraft together. The trace from requested service to limiting assumption is the principal architecture result.
+Both positions retain the reference 4.77 kg carrier and 0.50 m rotor because placement does not enter the hover model. The roughly 1 dB gain on the weaker hop is useful because it costs nothing in the carrier screen, but it is modest beside the 6 dB other-loss allowance and cannot absorb the 12 dB stress loss. The offset is therefore carried forward provisionally for site assessment, with the midpoint retained as the reproducibility baseline. A real siting decision must also account for access, terrain, antenna patterns, command coverage, and the energy needed to reach and leave the position.
+
+\begin{table}[!tb]
+\caption{Placement comparison at 10 km separation and 120 m relay height}
+\label{tab:placement}
+\centering\small
+\begin{tabular}{@{}L{1.20in}L{0.40in}r r@{}}
+\toprule
+Measure & Unit & Midpoint & Offset \\
+\midrule
+Carrier mass & kg & 4.77 & 4.77 \\
+First-hop height at screen & m & 96.0 & 108.6 \\
+Weaker-hop margin & dB & 7.97 & 9.04 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Discussion}\label{sec:discussion}
+
+\subsection{What to Carry Forward}
+
+The evidence supports carrying the 10 km, 30-minute target forward, with a relay near 0.442 of the span at 120 m as the candidate for site assessment and the midpoint case as the comparison baseline. This is a recommendation to investigate a configuration, and it does not extend to procuring or flying one. While the offset improves the weaker hop under the declared geometry, the carrier result is the less certain half of the decision. The 30-minute target survives each hover stress applied alone, but the least favorable calibration point combined with the 15 percent power allowance moves the rotor boundary below it. Installed hover-power measurement therefore bears directly on whether the dwell target holds. Neither result removes the need to select compatible hardware or confirm the intended service with an operator.
+
+The present carrier evidence does not support a 45-minute commitment. Its nominal 15.15 kg result already exceeds both size limits, and the calibration sensitivity changes whether that dwell is supportable. At 60 minutes the reference relations have no finite mass solution. These are different failures. The first asks for a change in size, resources, or demand, while the second requires a change in the scaling assumptions or demand before resizing can help. Relaxing the mass ceiling therefore cannot repair mathematical nonclosure.
+
+The useful systems result is a diagnosis tied to an action. Each failed screen points back to one of the four flows. A weak radio path is a mission-traffic problem and calls for a siting or radio decision. An excessive carrier is a power and mechanical-support problem and calls for a dwell or resource decision. A payload fault that can disturb aircraft command sits where the power and command flows meet, and it calls for an interface decision. This is the practical value of the allocation, although it does not rank all possible architectures. In particular, a radio upgrade would need its RF benefit, mass, DC load, antenna installation, and compatibility assessed together. A gain in one screen is not automatically a gain for the complete relay.
+
+The next evidence should address whichever uncertainty can reverse the intended decision. Agreeing the service comes first, including return traffic, delivery criteria, dwell, and reserve policy, since those criteria define what a compatible payload--carrier candidate must satisfy. Where site loss is poorly known, installed measurements of both hops at the midpoint and offset placements would test the link half of the recommendation. Where dwell drives selection, repeated installed hover-power measurements that record mass, battery state, and operating conditions would test the carrier half, and a later energy budget would add climb, transit, and recovery. Where command independence is essential, the bounded payload-fault assessment described in Section~\ref{sec:arch} would test the power and command interface. Each test needs acceptance criteria defined before it runs. These activities can proceed in parallel, and the largest change in an analyst-selected sensitivity sweep does not by itself justify testing one item first.
 
 \subsection{Limitations}
 
-The carrier result depends on a resized family with constant disk loading, aggregate hover efficiency, and parametric component masses. The five-point fit provides evidence for an aggregate power coefficient over those test conditions. It does not resolve scale effects, rotor interference, or environmental variation for the proposed carrier. The least-squares fit also gives greater numerical influence to high-power observations, so the DAx8 dominates it, and that point and the Endurance point were measured in the tunnel with unquantified recirculation. The spread of single-point fits, 33 to 49 minutes for the rotor-limit boundary, is a better statement of the hover-model uncertainty than the fitted value alone, and it exceeds the effect of any other estimator choice. The reference case includes no operating-condition margin beyond the laboratory calibration. The commercial hover comparisons use nominal energy and a common auxiliary-load allowance; their small discrepancies could include compensating assumptions. They should not be read as a seven-percent accuracy guarantee.
+The carrier model describes a resized family at constant disk loading, not an existing aircraft with interchangeable batteries. Its aggregate hover fit does not resolve scale effects, rotor interference, or environmental variation. The DAx8 dominates the fit, and the two highest-leverage points were measured in the tunnel with unquantified recirculation. The single-point range and the combined pairings with the 15 percent allowance are sensitivity results, and they do not bound all model error. Other pairings of a calibration stress with an individual battery or structural assumption were not examined. The commercial hover comparisons use nominal battery energy and an assumed auxiliary load, so small discrepancies may include compensating assumptions.
 
-The structural relation is anchored at one conceptual mass breakdown. Its extrapolation becomes especially consequential near the closure singularity. Neither that anchor nor the power fit establishes packaging, strength, vibration response, thermal compatibility, or a realizable combination of battery energy and power. The nominal bounds remain exploratory rather than approved aircraft requirements. The repository name retains a low-cost objective, but this paper establishes no affordability result.
+The structural relation is anchored at one conceptual mass breakdown. Its extrapolation becomes especially consequential near the closure singularity. Neither that anchor nor the power fit establishes packaging, strength, vibration response, thermal compatibility, or a realizable combination of battery energy and power.
 
-The link calculation tests visibility and received level. It omits interference, fading, diffraction, Fresnel clearance, scheduling, duplex operation, and throughput. Two of these simplifications are conservative. An opaque screen treats a grazing path as blocked, whereas knife-edge diffraction would impose a finite loss. However, omitting Fresnel clearance works in the other direction just above the geometric threshold. In the 10 km case, keeping 60 percent of the first Fresnel zone clear at the screen raises the 100 m threshold to about 108 m. This does not change the sampled results, since the 120 m layer still clears. The midpoint relay placement is also not optimal: the first hop binds, and moving the relay to 0.44 of the span balances the hops and raises the 25.0 km boundary to 28.4 km while still clearing the screen. Antenna patterns and interference could move the result in either direction. The screen scenarios are geometric constructions rather than surveyed terrain. Statistical air-to-ground blockage models address different questions \cite{alhourani}; none is fitted or validated here. No probability of availability follows from the number of passing grid cases.
+The link calculation tests visibility and received level. It omits interference, fading, diffraction, Fresnel clearance, scheduling, duplex operation, and throughput. These simplifications do not all err in the same direction. An opaque screen treats a grazing path as blocked, whereas knife-edge diffraction would impose a finite loss. However, omitting Fresnel clearance works in the other direction just above the geometric threshold. In the 10 km case, keeping 60 percent of the first Fresnel zone clear raises the 100 m threshold to about 108 m, which the 120 m layer still clears.
 
-Only stationary outbound dwell is calculated. Transit, climb, recovery energy, return traffic, carrier-command performance, and station keeping remain outside the quantitative assessment. A follow-on assessment would need matched power measurements, installed-payload characterization, a complete mission energy budget, and communications measurements for the intended service. These are evidence needs for the candidate architecture; this paper does not demonstrate those capabilities.
+The offset-placement comparison is limited to the same ideal screen and fixed antenna gains as the baseline. A more favorable path in this geometry need not be a better installed site: terrain, antenna patterns, interference, command coverage, and mission energy may change the choice. Statistical air-to-ground blockage models address different questions \cite{alhourani}; none is fitted or validated here. Neither the placement result nor the count of grid passes supplies a probability of service availability.
 
+Only stationary outbound dwell is calculated. Transit, climb, recovery energy, return traffic, carrier-command performance, including the carrier's response to a payload fault, and station keeping remain outside the quantitative assessment. A follow-on assessment would need matched power measurements, installed-payload characterization, a complete mission energy budget, and communications measurements for the intended service.
 
+\section{Conclusions}\label{sec:conclusions}
 
-%======================================================================
-\section{Conclusions}
-%======================================================================
+For the declared 10 km outbound service, the study carries a 30-minute dwell target forward for detailed assessment and identifies a relay near 0.442 of the span at 120 m as a candidate for site evaluation. The reference carrier closes at 4.77 kg with a 0.50 m rotor, and the offset improves the weaker hop by about 1 dB without changing modeled hover demand. The 45-minute reference case exceeds both size limits. However, the 30-minute target does not survive every stress examined, since pairing the least favorable calibration point with a 15 percent hover-power allowance places the rotor boundary near 28 minutes. The nominal 42.1-minute boundary is therefore a model result and should not be read as available endurance.
 
-A useful relay path depends on the payload's mission-traffic function, while a supportable carrier depends on power and mechanical resources. This case study assigns those responsibilities, keeps aircraft command separate, and reports the limiting mechanism for each sampled mission. At the reference inputs, the midpoint relay has a 25.0 km link-margin boundary at 120 m height; 12 dB of added loss reduces it to 6.3 km. Carrier size reaches the exploratory rotor limit at 42.1 minutes, while mathematical closure ends at 52.4 minutes within the assumed model. These values include no separate operating-condition margin, and single-point hover refits span 33 to 49 minutes for the first boundary.
+The contribution is the connection, made through the four-flow allocation, between a failed screen and the next engineering decision. Placement can improve a radio path but cannot cure excessive carrier mass, and additional battery cannot recover a blocked or inadequate link. Before committing to hardware, the service criteria and payload--carrier interfaces must be specified. Site-specific link measurements, installed hover-power measurements, and a bounded payload-fault assessment address different ways the recommendation could fail. Full-mission energy and operational validation remain subsequent work. The result is a candidate worth testing, with a stated reason for each test. It is not a flight-ready relay.
 
-The 10 km example distinguishes a 4.77 kg, 30-minute pass from a 15.15 kg, 45-minute exclusion and a 60-minute nonclosure. Across 90 baseline cases, 18 pass both screens. These outcomes call for different changes to geometry, service duration, or carrier resources. The hover calibration and published-aircraft comparisons support only part of the resource calculation. Structural scaling, the command and payload interfaces, and full-mission performance remain unverified. The workflow identifies the next engineering question without claiming a flight-ready relay.
-
-%======================================================================
 
 \appendices
+\renewcommand{\theHsection}{appendix.\Alph{section}}
 \section{Complete Carrier Mass Balance}
-The following equations specify the component bookkeeping used in the results. Mass is in kilograms, power in watts, energy in watt-hours, area in square metres, and dwell $t$ in hours. Write $q=g/DL$, so total rotor disk area is $A=qm$, and let $k$ denote electrical propulsion power per unit mass from (4). Define
+The following equations specify the component bookkeeping used in the results. Mass is in kilograms, power in watts, energy in watt-hours, area in square metres, and dwell $t$ in hours. Write $q=g/DL$, so total rotor disk area is $A=qm$, and let $k$ denote electrical propulsion power per unit mass from (2). Define
 \begin{equation}
 P_0=P_{\mathrm{aux}}+P_L/\eta_r,\qquad u=d_b(1-r_b).
 \end{equation}
@@ -511,10 +537,17 @@ Thrust ratio $\tau$; margin $\mu_b$ & 1.75; 1.15 \\
 
 For reproduction, the reference effective $FM$ is 0.620274, structure intercept is 0.163173 kg, and specific energy is 192.117 Wh/kg. Other nominal values appear in Table~\ref{tab:inputs}. These numerical precisions identify inputs, not measurement accuracy. The 1.5 m span proxy equals twice rotor diameter and repeats the 0.75 m rotor screen. The full input catalog supplies the simultaneous favorable and adverse parameter sets; those corners are not used for the primary 90-case counts.
 
-\section*{Data Availability}
-%======================================================================
+\section{Hover Calibration Sensitivity}
 
-The computational baseline, declared inputs, calibration data, 1,890 case records, tests, and independent checker are archived at \url{https://github.com/noahstephenson/low-cost-relay-uas} under annotated tag \nolinkurl{aeroconf-2027-paper-2784-r3}. The baseline commit is recorded in the repository README. The manuscript source is in the submission directory under a Creative Commons Attribution 4.0 license.
+The single-point refits in Section~\ref{sec:methods} describe sensitivity to the calibration observations; they do not bound all hover-model uncertainty. The Phantom 3 and Endurance points, whose disk loadings of 67 and 63 N/m\textsuperscript{2} are nearest the reference value, set both ends of that range. Other defensible estimators (mean ratio, geometric mean, quadrotors only) give 41.4 to 44.6 minutes for the rotor limit and 51.5 to 55.6 minutes for the energy-slope crossing. This means the choice of estimator moves the boundaries less than the choice of test point.
+
+The DAx8 area uses eight 11 in rotor disks. NASA lists eight rotors of that diameter, and its test-article photographs show eight laterally separated rotor positions rather than four coaxial pairs \cite[Table 1 and Figs. 5 and 12]{russell2016}. Their summed geometric area is approximately 0.490 m$^2$. The reference calibration therefore retains the eight-disk convention. A four-disk substitution does not represent the documented arrangement and is not used to support a longer dwell. This resolves the geometry question, not the limits of the calibration: rotor interference remains embedded in the aggregate coefficient, and the DAx8 still dominates the fit. The single-point and alternative-estimator checks remain the relevant tests of calibration sensitivity.
+
+The hover-time comparison in Section~\ref{sec:methods} is also sensitive to the assumed auxiliary load. With a 0 W allowance, the Matrice 30, Matrice 4, and Mavic 3M differences become $-1.5$, +17.2, and +30.0 percent. With 10 W they become $-3.7$, +8.2, and +17.8 percent, and with 40 W they become $-9.6$, $-11.9$, and $-8.2$ percent. Only the Matrice 30 remains within 10 percent across this sweep; its calculated discrepancy still depends on the allowance.
+
+
+\section*{Data Availability}
+The computational baseline, declared inputs, calibration data, 1,890 saved cases, tests, and independent checker are archived at \url{https://github.com/noahstephenson/low-cost-relay-uas} under annotated tag \nolinkurl{aeroconf-2027-paper-2784-r3}, which covers the midpoint grid, calibration, and checks. The offset-placement comparison and combined hover-stress pairings in this revision were calculated from the equations and inputs reported here and are not contained in that tag.
 
 \acknowledgements
 
@@ -542,11 +575,8 @@ The views expressed in this paper are those of the author. They do not reflect t
 \bibitem{russell2018} C. R. Russell, C. R. Theodore, and M. K. Sekula, ``Incorporating test data for small UAS at the conceptual design level,'' in \emph{Proc. AHS Int. Tech. Meeting Aeromechanics Design Transformative Vertical Flight}, San Francisco, CA, USA, Jan. 2018. [Online]. Available: \url{https://rotorcraft.arc.nasa.gov/Publications/files/Russell_2018_TechMx.pdf}
 
 \bibitem{bershadsky} D. Bershadsky, S. Haviland, and E. N. Johnson, ``Electric multirotor UAV propulsion system sizing for performance prediction and design optimization,'' in \emph{Proc. 57th AIAA/ASCE/AHS/ASC Structures, Structural Dynamics, and Materials Conf.}, San Diego, CA, USA, Jan. 2016, doi: 10.2514/6.2016-0581.
+
 \bibitem{nasaSEH} NASA, \emph{NASA Systems Engineering Handbook}, NASA/SP-2016-6105 Rev. 2, 2016. [Online]. Available: \url{https://www.nasa.gov/wp-content/uploads/2018/09/nasa_systems_engineering_handbook_0.pdf}
-
-\bibitem{nasatm} C. Russell, G. Willink, C. Theodore, J. Jung, and B. Glasner, ``Wind tunnel and hover performance test results for multicopter UAS vehicles,'' NASA, Moffett Field, CA, USA, Rep. NASA/TM-2018-219758, Feb. 2018. [Online]. Available: \url{https://rotorcraft.arc.nasa.gov/Publications/files/Russell_1180_Final_TM_022218.pdf}
-
-\bibitem{djim30} DJI, ``Matrice 30 series specifications,'' product page. Accessed: Sep. 11, 2026. [Online]. Available: \url{https://enterprise.dji.com/matrice-30/specs}
 
 \bibitem{doodle} Doodle Labs, ``OEM Mesh Rider Radio: Hardware and RF specifications,'' product page. Accessed: Sep. 11, 2026. [Online]. Available: \url{https://doodlelabs.com/product/oem/}
 
@@ -558,11 +588,15 @@ The views expressed in this paper are those of the author. They do not reflect t
 
 \bibitem{ndarc} W. Johnson, ``NDARC: NASA Design and Analysis of Rotorcraft, Theory, Appendix 3,'' NASA, Moffett Field, CA, USA, Rep. NASA/TP-2009-215402, Release 1.7, Dec. 2012. [Online]. Available: \url{https://rotorcraft.arc.nasa.gov/Publications/files/NASA\%20TP-2009-215402-app3.pdf}
 
+\bibitem{nasatm} C. Russell, G. Willink, C. Theodore, J. Jung, and B. Glasner, ``Wind tunnel and hover performance test results for multicopter UAS vehicles,'' NASA, Moffett Field, CA, USA, Rep. NASA/TM-2018-219758, Feb. 2018. [Online]. Available: \url{https://rotorcraft.arc.nasa.gov/Publications/files/Russell_1180_Final_TM_022218.pdf}
+
+\bibitem{djim30} DJI, ``Matrice 30 series specifications,'' product page. Accessed: Sep. 11, 2026. [Online]. Available: \url{https://enterprise.dji.com/matrice-30/specs}
+
+\bibitem{russell2016} C. Russell, J. Jung, G. Willink, and B. Glasner, ``Wind tunnel and hover performance test results for multicopter UAS vehicles,'' in \emph{Proc. AHS 72nd Annual Forum}, West Palm Beach, FL, USA, May 2016. [Online]. Available: \url{https://ntrs.nasa.gov/citations/20160007399}
+
 \bibitem{djim4} DJI, ``Matrice 4 series specifications,'' product page. Accessed: Sep. 11, 2026. [Online]. Available: \url{https://enterprise.dji.com/matrice-4-series/specs}
 
 \bibitem{djimavic} DJI, ``Mavic 3M specifications,'' product page. Accessed: Sep. 11, 2026. [Online]. Available: \url{https://enterprise.dji.com/mavic-3-m/specs}
-
-\bibitem{russell2016} C. Russell, J. Jung, G. Willink, and B. Glasner, ``Wind tunnel and hover performance test results for multicopter UAS vehicles,'' in \emph{Proc. AHS 72nd Annual Forum}, West Palm Beach, FL, USA, May 2016. [Online]. Available: \url{https://ntrs.nasa.gov/citations/20160007399}
 
 \bibitem{alhourani} A. Al-Hourani, S. Kandeepan, and S. Lardner, ``Optimal LAP altitude for maximum coverage,'' \emph{IEEE Wireless Commun. Lett.}, vol. 3, no. 6, pp. 569-572, Dec. 2014, doi: 10.1109/LWC.2014.2342736.
 
@@ -576,4 +610,3 @@ is a cadet in the Class of 2027 at the United States Military Academy at West Po
 \end{biographywithpic}
 
 \end{document}
-

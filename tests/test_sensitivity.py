@@ -32,6 +32,19 @@ class SensitivityResultsTests(unittest.TestCase):
         self.assertAlmostEqual(band["energy_slope_dwell_range_min"][0], 41.2, places=1)
         self.assertAlmostEqual(band["energy_slope_dwell_range_min"][1], 61.3, places=1)
 
+        rows = self.results["combined_refit_and_hover_margin"]["per_vehicle"]
+        phantom = rows["NASA-PHANTOM3"]
+        self.assertAlmostEqual(phantom["longest_practical_dwell_min"], 27.7, places=1)
+        self.assertAlmostEqual(phantom["gross_mass_at_30_min_kg"], 16.2, places=1)
+        self.assertAlmostEqual(phantom["rotor_diameter_at_30_min_m"], 0.92, places=2)
+        self.assertFalse(phantom["practical_at_30_min"])
+        others = [row for name, row in rows.items() if name != "NASA-PHANTOM3"]
+        self.assertEqual(len(others), 4)
+        self.assertTrue(all(row["practical_at_30_min"] for row in others))
+        self.assertAlmostEqual(min(row["longest_practical_dwell_min"] for row in others), 34.9, places=1)
+        self.assertAlmostEqual(max(row["longest_practical_dwell_min"] for row in others), 42.0, places=1)
+
+
     def test_estimator_variant_band(self):
         band = self.results["estimator_variants"]
         self.assertAlmostEqual(band["practical_dwell_range_min"][0], 41.4, places=1)

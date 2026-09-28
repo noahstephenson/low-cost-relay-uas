@@ -29,7 +29,7 @@ try:
         endurance_boundaries_for_parameters,
         link_limited_separation_km,
     )
-    from analysis.feasibility import load_inputs, parameters_for_case
+    from analysis.feasibility import load_inputs, parameters_for_case, solve_point
     from analysis.mission_connectivity import (
         load_json,
         predicted_midpoint_clearance_threshold_m,
@@ -52,7 +52,7 @@ except ModuleNotFoundError:
         endurance_boundaries_for_parameters,
         link_limited_separation_km,
     )
-    from analysis.feasibility import load_inputs, parameters_for_case
+    from analysis.feasibility import load_inputs, parameters_for_case, solve_point
     from analysis.mission_connectivity import (
         load_json,
         predicted_midpoint_clearance_threshold_m,
@@ -142,6 +142,38 @@ def single_point_refits() -> dict:
         "per_vehicle": rows,
         "practical_dwell_range_min": [min(practical), max(practical)],
         "energy_slope_dwell_range_min": [min(slope), max(slope)],
+    }
+
+
+def combined_refit_and_hover_margin() -> dict:
+    """Pair each single-point hover refit with the 15% operating-power stress."""
+    inputs = load_inputs()
+    payload = next(
+        row for row in load_json("analysis/relay-payloads.yaml")["payloads"]
+        if row["id"] == PRIMARY_PAYLOAD_ID
+    )
+    refits = single_point_refits()["per_vehicle"]
+    rows = {}
+    for vehicle_id, refit in refits.items():
+        p = parameters_for_case(inputs, "reference")
+        p["rotor_figure_of_merit"] = refit["rotor_figure_of_merit"]
+        p["environment_power_margin"] *= 1.15
+        boundary = endurance_boundaries_for_parameters(inputs, p, vehicle_id)
+        worked = solve_point(inputs, p, {
+            "payload_mass_kg": payload["mass_kg"],
+            "payload_power_w": payload["dc_power_w"],
+            "endurance_min": 30.0,
+        })
+        rows[vehicle_id] = {
+            "longest_practical_dwell_min": boundary["longest_practical_dwell_min"],
+            "gross_mass_at_30_min_kg": worked["gross_mass_kg"],
+            "rotor_diameter_at_30_min_m": worked["equivalent_rotor_diameter_m"],
+            "practical_at_30_min": worked["practical_constraint_ok"],
+        }
+    return {
+        "stress_factor_on_hover_power": 1.15,
+        "refit_assumption": "each published hover point fitted alone; structural intercept held fixed",
+        "per_vehicle": rows,
     }
 
 
@@ -324,6 +356,7 @@ def build() -> dict:
         "dax8_weight_share": dax8_weight_share(),
         "kenv_operating_margin_case": kenv_margin_case(),
         "single_point_refits": single_point_refits(),
+        "combined_refit_and_hover_margin": combined_refit_and_hover_margin(),
         "estimator_variants": estimator_variants(),
         "coaxial_dax8_refit": coaxial_dax8_refit(),
         "auxiliary_power_sweep": auxiliary_power_sweep(),

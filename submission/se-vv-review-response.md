@@ -13,7 +13,7 @@ This branch is a review draft. The published aeroconf-2027-paper-2784-r3 tag rem
 
 ## Reviewer points that require qualification
 
-- The current LaTeX bibliography is already in first-citation order. This was checked by comparing the first appearance of each citation key with the bibliography sequence.
+- The LaTeX source cites keys in bibliography order, but float placement can change the visible reading order in PDF or Word. The Word copy reportedly shows [12] before [10] and [11], and [19] before [17] and [18]. Check the final rendered reading order and correct any mismatch before submission.
 - The manuscript already states that the two smaller commercial hover comparisons are sensitive to the assumed auxiliary load. Only the Matrice 30 stays within 10 percent across the sweep.
 - The approved title is retained. The text states that only stationary outbound hover service is calculated.
 - Existing REQ values for endurance, mass, payload envelope, and rail specifications remain TBD in the architecture catalog. The study points do not close those owner decisions.

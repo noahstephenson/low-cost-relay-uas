@@ -108,7 +108,7 @@ for t in ts:
 fig,ax=plt.subplots(figsize=(3.35,2.75));fig.subplots_adjust(left=.18,bottom=.20,top=.95,right=.96)
 ax.plot(ts,ms,c=blue,lw=1.5);ax.axhline(10.8119,c=orange,ls='--',lw=1);ax.axvline(52.4426,c=red,ls=':',lw=1)
 ax.scatter([30,45],[4.7747,15.1456],c=blue,s=20)
-ax.text(2,11.6,'Rotor-size limit',fontsize=10);ax.text(50,23,'52.4 min',ha='right',fontsize=10)
+ax.text(2,11.6,'Rotor-size limit',fontsize=10);ax.text(50,4.5,'52.4 min',ha='right',fontsize=10)
 ax.set(xlim=(0,60),ylim=(0,25),xlabel='Dwell (min)',ylabel='Closed gross mass (kg)');ax.grid(alpha=.15)
 save(fig,'fig5_closure')
 print('Wrote five paper figures and one Word layout variant')

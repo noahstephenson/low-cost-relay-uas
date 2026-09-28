@@ -1,6 +1,6 @@
 # Research Status
 
-> **Superseded.** This status page predates the carrier calibration (commit `4f9e2cd`, branch `codex/carrier-calibration-v1`) and the finished manuscript. The submitted paper in `submission/relay_uas_aeroconf.tex` (local, intentionally untracked; see `.gitignore`) is the sole authority for claims and numbers; its title is "System Architecture and Service Envelope of a Multirotor Communications Relay." Treat everything below as historical drafting context.
+> **Historical drafting context.** This page predates the carrier calibration and current report. Start with the [project overview](../README.md), [engineering status](engineering-status.md), and [current report PDF](../submission/relay_uas_aeroconf.pdf) for the present scope and results. The material below records an earlier stage of the student project.
 
 Working title: **System Architecture and Mission Feasibility of a Multirotor Communications Relay**
 

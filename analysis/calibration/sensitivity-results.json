@@ -57,6 +57,42 @@
       61.341046691064435
     ]
   },
+  "combined_refit_and_hover_margin": {
+    "stress_factor_on_hover_power": 1.15,
+    "refit_assumption": "each published hover point fitted alone; structural intercept held fixed",
+    "per_vehicle": {
+      "NASA-SOLO": {
+        "longest_practical_dwell_min": 34.85775707303506,
+        "gross_mass_at_30_min_kg": 6.790956335537865,
+        "rotor_diameter_at_30_min_m": 0.5943951337924965,
+        "practical_at_30_min": true
+      },
+      "NASA-PHANTOM3": {
+        "longest_practical_dwell_min": 27.73497239128352,
+        "gross_mass_at_30_min_kg": 16.15097476042308,
+        "rotor_diameter_at_30_min_m": 0.9166618254956583,
+        "practical_at_30_min": false
+      },
+      "NASA-IRIS": {
+        "longest_practical_dwell_min": 36.8382229070462,
+        "gross_mass_at_30_min_kg": 6.016732894603724,
+        "rotor_diameter_at_30_min_m": 0.5594871833535456,
+        "practical_at_30_min": true
+      },
+      "NASA-DAX8": {
+        "longest_practical_dwell_min": 35.18667801506601,
+        "gross_mass_at_30_min_kg": 6.643589030760913,
+        "rotor_diameter_at_30_min_m": 0.5879104177386912,
+        "practical_at_30_min": true
+      },
+      "NASA-ENDURANCE": {
+        "longest_practical_dwell_min": 41.96158466390604,
+        "gross_mass_at_30_min_kg": 4.800741857479458,
+        "rotor_diameter_at_30_min_m": 0.49976283117714654,
+        "practical_at_30_min": true
+      }
+    }
+  },
   "estimator_variants": {
     "per_estimator": {
       "mean_ratio": {
